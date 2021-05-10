@@ -80,7 +80,7 @@ public class MockServer {
 		completion(.success(true))
 	}
 
-	/// Finalise by writing the contract file onto disk
+	/// Finalise tests by writing the contract file onto disk
 	public func finalize(pact: Data, completion: ((Result<String, MockServerError>) -> Void)?) {
 		Logger.log(message: "Starting up MockServer to finalize writing Pact with data:", data: pact)
 
@@ -100,6 +100,15 @@ public class MockServer {
 		}
 
 		shutdownMockServer()
+	}
+
+	/// Generates an example string based on the provided regex.
+	public static func generate_value(regex: String) -> String? {
+		guard let stringPointer = generate_regex_value(regex).ok._0 else {
+			return nil
+		}
+
+		return String(cString: stringPointer)
 	}
 
 }

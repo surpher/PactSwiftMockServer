@@ -29,6 +29,10 @@
 		AD15984E2648ED4D007CFAA5 /* VerificationError.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD15984C2648ED4D007CFAA5 /* VerificationError.swift */; };
 		AD1598522648F2E1007CFAA5 /* MockServerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD1598512648F2E1007CFAA5 /* MockServerTests.swift */; };
 		AD1598532648F2E1007CFAA5 /* MockServerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD1598512648F2E1007CFAA5 /* MockServerTests.swift */; };
+		ADB97FD726493D1800C54CA9 /* VerificationErrorTypeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADB97FD626493D1800C54CA9 /* VerificationErrorTypeTests.swift */; };
+		ADB97FD826493D1800C54CA9 /* VerificationErrorTypeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADB97FD626493D1800C54CA9 /* VerificationErrorTypeTests.swift */; };
+		ADB97FDA26493D5900C54CA9 /* MockServerErrorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADB97FD926493D5900C54CA9 /* MockServerErrorTests.swift */; };
+		ADB97FDB26493D5900C54CA9 /* MockServerErrorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADB97FD926493D5900C54CA9 /* MockServerErrorTests.swift */; };
 		ADBEF2FA2648FCBC00486C4A /* VerificationErrorHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADBEF2F92648FCBC00486C4A /* VerificationErrorHandler.swift */; };
 		ADBEF2FB2648FCBC00486C4A /* VerificationErrorHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADBEF2F92648FCBC00486C4A /* VerificationErrorHandler.swift */; };
 		ADBEF3012648FCF200486C4A /* PactError.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADBEF2FC2648FCF200486C4A /* PactError.swift */; };
@@ -78,6 +82,8 @@
 		AD15984A2648ED1D007CFAA5 /* libpact_mock_server.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libpact_mock_server.a; sourceTree = "<group>"; };
 		AD15984C2648ED4D007CFAA5 /* VerificationError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerificationError.swift; sourceTree = "<group>"; };
 		AD1598512648F2E1007CFAA5 /* MockServerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockServerTests.swift; sourceTree = "<group>"; };
+		ADB97FD626493D1800C54CA9 /* VerificationErrorTypeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerificationErrorTypeTests.swift; sourceTree = "<group>"; };
+		ADB97FD926493D5900C54CA9 /* MockServerErrorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockServerErrorTests.swift; sourceTree = "<group>"; };
 		ADBEF2EA2648FB0600486C4A /* Target-macOS-Tests-Shared.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "Target-macOS-Tests-Shared.xcconfig"; sourceTree = "<group>"; };
 		ADBEF2EB2648FB0600486C4A /* Target-iOS-Tests-Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "Target-iOS-Tests-Debug.xcconfig"; sourceTree = "<group>"; };
 		ADBEF2EC2648FB0600486C4A /* Target-macOS-Tests-Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "Target-macOS-Tests-Debug.xcconfig"; sourceTree = "<group>"; };
@@ -234,7 +240,9 @@
 		AD1598342648E522007CFAA5 /* Tests */ = {
 			isa = PBXGroup;
 			children = (
+				ADB97FD926493D5900C54CA9 /* MockServerErrorTests.swift */,
 				AD1598512648F2E1007CFAA5 /* MockServerTests.swift */,
+				ADB97FD626493D1800C54CA9 /* VerificationErrorTypeTests.swift */,
 			);
 			path = Tests;
 			sourceTree = "<group>";
@@ -478,6 +486,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				ADB97FD726493D1800C54CA9 /* VerificationErrorTypeTests.swift in Sources */,
+				ADB97FDA26493D5900C54CA9 /* MockServerErrorTests.swift in Sources */,
 				AD1598522648F2E1007CFAA5 /* MockServerTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -504,6 +514,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				ADB97FD826493D1800C54CA9 /* VerificationErrorTypeTests.swift in Sources */,
+				ADB97FDB26493D5900C54CA9 /* MockServerErrorTests.swift in Sources */,
 				AD1598532648F2E1007CFAA5 /* MockServerTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

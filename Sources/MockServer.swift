@@ -22,26 +22,26 @@ import Foundation
 import PactMockServer
 #endif
 
-class MockServer {
+public class MockServer {
 
 	// MARK: - Properties
 
 	/// The URL on which MockServer is running.
-	var baseUrl: String {
+	public var baseUrl: String {
 		"\(transferProtocol.protocol)://\(socketAddress):\(port)"
 	}
 
-	private let socketAddress = "0.0.0.0"
-	private let port: Int32
-	private var transferProtocol: TransferProtocol = .standard
-	private var tls: Bool {
+	let socketAddress = "0.0.0.0"
+	let port: Int32
+	var transferProtocol: TransferProtocol = .standard
+	var tls: Bool {
 		transferProtocol == .secure ? true : false
 	}
 
 	// MARK: - Lifecycle
 
 	/// Initializes a MockServer on a given port. If none is provided a random unused port will be used
-	init(port: Int? = nil) {
+	public init(port: Int? = nil) {
 		if let port = port {
 			self.port = Int32(port)
 		} else {
@@ -56,7 +56,7 @@ class MockServer {
 	// MARK: - Interface
 
 	/// Spin up a Mock Server with expected interactions as defined in Pact.
-	func setup(pact: Data, protocol: TransferProtocol = .standard, completion: (Result<Int, MockServerError>) -> Void) {
+	public func setup(pact: Data, protocol: TransferProtocol = .standard, completion: (Result<Int, MockServerError>) -> Void) {
 		Logger.log(message: "Setting up libpact_mock_server", data: pact)
 		transferProtocol = `protocol`
 		Logger.log(message: "Setting up MockServer for Pact interaction test")
@@ -72,7 +72,7 @@ class MockServer {
 	}
 
 	/// Verify interactions
-	func verify(completion: (Result<Bool, VerificationError>) -> Void) {
+	public func verify(completion: (Result<Bool, VerificationError>) -> Void) {
 		guard requestsMatched else {
 			completion(.failure(.reason(mismatchDescription)))
 			return
@@ -81,7 +81,7 @@ class MockServer {
 	}
 
 	/// Finalise by writing the contract file onto disk
-	func finalize(pact: Data, completion: ((Result<String, MockServerError>) -> Void)?) {
+	public func finalize(pact: Data, completion: ((Result<String, MockServerError>) -> Void)?) {
 		Logger.log(message: "Starting up MockServer to finalize writing Pact with data:", data: pact)
 
 		create_mock_server(

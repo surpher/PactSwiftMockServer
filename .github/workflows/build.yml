@@ -39,7 +39,7 @@ jobs:
 
       - name: Upload code coverage
         run: |
-          bash <(curl -s https://codecov.io/bash) -J 'PactSwift'
+          bash <(curl -s https://codecov.io/bash) -J 'PactSwiftMockServer'
 
   test_carthage:
     needs: [test]

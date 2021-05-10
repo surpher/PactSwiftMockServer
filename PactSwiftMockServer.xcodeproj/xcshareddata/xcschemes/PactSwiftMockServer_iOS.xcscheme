@@ -15,7 +15,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "AD1597F22648DE0E007CFAA5"
-               BuildableName = "PactSwiftMockServer_iOS.framework"
+               BuildableName = "PactSwiftMockServer.framework"
                BlueprintName = "PactSwiftMockServer_iOS"
                ReferencedContainer = "container:PactSwiftMockServer.xcodeproj">
             </BuildableReference>
@@ -62,7 +62,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "AD1597F22648DE0E007CFAA5"
-            BuildableName = "PactSwiftMockServer_iOS.framework"
+            BuildableName = "PactSwiftMockServer.framework"
             BlueprintName = "PactSwiftMockServer_iOS"
             ReferencedContainer = "container:PactSwiftMockServer.xcodeproj">
          </BuildableReference>

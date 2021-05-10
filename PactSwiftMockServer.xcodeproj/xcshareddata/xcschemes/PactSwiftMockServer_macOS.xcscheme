@@ -14,9 +14,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "AD1597F22648DE0E007CFAA5"
-               BuildableName = "PactSwiftMockServer_iOS.framework"
-               BlueprintName = "PactSwiftMockServer_iOS"
+               BlueprintIdentifier = "AD1598172648DF73007CFAA5"
+               BuildableName = "PactSwiftMockServer_macOS.framework"
+               BlueprintName = "PactSwiftMockServer_macOS"
                ReferencedContainer = "container:PactSwiftMockServer.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -33,9 +33,9 @@
             skipped = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "AD1597FB2648DE0E007CFAA5"
-               BuildableName = "PactSwiftMockServer_iOSTests.xctest"
-               BlueprintName = "PactSwiftMockServer_iOSTests"
+               BlueprintIdentifier = "AD15981F2648DF73007CFAA5"
+               BuildableName = "PactSwiftMockServer_macOSTests.xctest"
+               BlueprintName = "PactSwiftMockServer_macOSTests"
                ReferencedContainer = "container:PactSwiftMockServer.xcodeproj">
             </BuildableReference>
          </TestableReference>
@@ -61,9 +61,9 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "AD1597F22648DE0E007CFAA5"
-            BuildableName = "PactSwiftMockServer_iOS.framework"
-            BlueprintName = "PactSwiftMockServer_iOS"
+            BlueprintIdentifier = "AD1598172648DF73007CFAA5"
+            BuildableName = "PactSwiftMockServer_macOS.framework"
+            BlueprintName = "PactSwiftMockServer_macOS"
             ReferencedContainer = "container:PactSwiftMockServer.xcodeproj">
          </BuildableReference>
       </MacroExpansion>

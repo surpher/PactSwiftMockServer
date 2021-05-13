@@ -1,0 +1,41 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+# Pre-requisites:
+# 1. `pact-reference` repo and `PactSwiftMockServer` repo are on the same folder level
+#
+# usage: 
+# ../../../PactSwiftMockServer/Support/build_rust_dependency
+#  
+# Run in pact-reference/rust/libpact_mock_serer_ffi
+# Update Cargo.toml to:
+#
+# ...
+# [lib]
+# crate-type = ["staticlib"]
+# ...
+# [profile.release]
+# opt-level = 'z'
+# lto = true
+# panic = 'abort'
+#
+
+# Steps
+
+echo "ℹ️  Build libpact_mock_server.a for x86_64 iOS Simulator"
+cargo build --target=x86_64-apple-ios --release
+
+echo "ℹ️  Build libpact_mock_server.a for arm64 iOS device"
+cargo build --target=aarch64-apple-ios --release
+
+echo "ℹ️  Build libpact_mock_server.a for x86_64 Darwin machine"
+cargo build --target=x86_64-apple-darwin --release
+
+# Move the compiled binaries into `PactSwiftMockServer` folder
+echo "ℹ️  Copying files to ../../../PactSwiftMockServer"
+cp ../target/aarch64-apple-ios/release/libpact_mock_server_ffi.a ../../../PactSwiftMockServer/Resources/arm64-iOS/libpact_mock_server.a
+cp ../target/x86_64-apple-ios/release/libpact_mock_server_ffi.a ../../../PactSwiftMockServer/Resources/x86_64-iOS/libpact_mock_server.a
+cp ../target/x86_64-apple-darwin/release/libpact_mock_server_ffi.a ../../../PactSwiftMockServer/Resources/x86_64-darwin/libpact_mock_server.a
+
+echo "👍  Done!"

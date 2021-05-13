@@ -112,3 +112,4 @@ Carthage/
 Submodules/pact-reference/rust/target/**
 /PactSwiftMockServer.xcodeproj/project.xcworkspace/xcuserdata/marko.xcuserdatad/UserInterfaceState.xcuserstate
 /PactSwiftMockServer.xcodeproj/xcuserdata/marko.xcuserdatad/xcschemes/xcschememanagement.plist
+/Resources/arm64-iOS/libpact_mock_server.a

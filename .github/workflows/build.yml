@@ -11,9 +11,9 @@ jobs:
       fail-fast: true
       matrix:
         include:
-          - scheme: "PactSwiftMockServer_iOS"
+          - scheme: "PactSwiftMockServer-iOS"
             destination: "platform=iOS Simulator,name=iPhone 12 Pro"
-          - scheme: "PactSwiftMockServer_macOS"
+          - scheme: "PactSwiftMockServer-macOS"
             destination: "arch=x86_64"
 
     env:

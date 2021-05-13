@@ -66,6 +66,7 @@ public class MockServer {
 			tls
 		)
 
+		Logger.log(message: "MockServer started on port \(mockServerPort)")
 		return (mockServerPort > 1_200)
 			? completion(Result.success(Int(mockServerPort)))
 			: completion(Result.failure(MockServerError(code: Int(mockServerPort))))
@@ -84,13 +85,16 @@ public class MockServer {
 	public func finalize(pact: Data, completion: ((Result<String, MockServerError>) -> Void)?) {
 		Logger.log(message: "Starting up MockServer to finalize writing Pact with data:", data: pact)
 
-		create_mock_server(
+		let newPort = SocketBinder.unusedPort()
+		Logger.log(message: "Creating MockServer on port \(newPort)")
+		let port = create_mock_server(
 			String(data: pact, encoding: .utf8)?.replacingOccurrences(of: "\\", with: ""),
-			"\(socketAddress):\(port)",
+			"\(socketAddress):\(newPort)",
 			tls
 		)
+		Logger.log(message: "Created a MockServer on port \(port) to write a Pact contract file")
 
-		writePactContractFile {
+		writePactContractFile(port: port) {
 			switch $0 {
 			case .success(let message):
 				completion?(.success(message))
@@ -131,14 +135,15 @@ private extension MockServer {
 	}
 
 	/// Writes the Pact file to disk
-	func writePactContractFile(completion: (Result<String, MockServerError>) -> Void) {
+	func writePactContractFile(port: Int32? = nil, completion: (Result<String, MockServerError>) -> Void) {
 		guard PactFileManager.isPactDirectoryAvailable() else {
 			completion(.failure(.failedToWriteFile))
 			return
 		}
 
 		let pactDir = PactFileManager.pactDirectoryPath
-		let writeResult = write_pact_file(port, pactDir)
+		Logger.log(message: "Writing Pact contract in \(pactDir) using MockServer on port: \(port ?? self.port)")
+		let writeResult = write_pact_file(port ?? self.port, pactDir)
 		guard writeResult == 0 else {
 			completion(.failure(MockServerError(code: Int(writeResult))))
 			return

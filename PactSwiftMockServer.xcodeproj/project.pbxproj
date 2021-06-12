@@ -23,7 +23,6 @@
 		AD1598432648EBD3007CFAA5 /* pact_mock_server.h in Headers */ = {isa = PBXBuildFile; fileRef = AD1598402648EA99007CFAA5 /* pact_mock_server.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		AD1598442648EC16007CFAA5 /* PactSwiftMockServer.h in Headers */ = {isa = PBXBuildFile; fileRef = AD1597F62648DE0E007CFAA5 /* PactSwiftMockServer.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		AD1598452648EC1A007CFAA5 /* pact_mock_server.h in Headers */ = {isa = PBXBuildFile; fileRef = AD1598402648EA99007CFAA5 /* pact_mock_server.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		AD1598492648ED15007CFAA5 /* libpact_mock_server.a in Frameworks */ = {isa = PBXBuildFile; fileRef = AD1598482648ED15007CFAA5 /* libpact_mock_server.a */; };
 		AD15984B2648ED1D007CFAA5 /* libpact_mock_server.a in Frameworks */ = {isa = PBXBuildFile; fileRef = AD15984A2648ED1D007CFAA5 /* libpact_mock_server.a */; };
 		AD15984D2648ED4D007CFAA5 /* VerificationError.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD15984C2648ED4D007CFAA5 /* VerificationError.swift */; };
 		AD15984E2648ED4D007CFAA5 /* VerificationError.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD15984C2648ED4D007CFAA5 /* VerificationError.swift */; };
@@ -61,6 +60,7 @@
 		ADD7CB14264B4A080091A286 /* MismatchErrorType.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADBEF2FD2648FCF200486C4A /* MismatchErrorType.swift */; };
 		ADD7CB15264B4A5B0091A286 /* pact_mock_server.h in Sources */ = {isa = PBXBuildFile; fileRef = AD1598402648EA99007CFAA5 /* pact_mock_server.h */; };
 		ADD7CB16264B4CCB0091A286 /* PactSwiftMockServer.h in Headers */ = {isa = PBXBuildFile; fileRef = AD1597F62648DE0E007CFAA5 /* PactSwiftMockServer.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		ADF2E58126745E340029507D /* libpact_mock_server.a in Frameworks */ = {isa = PBXBuildFile; fileRef = ADF2E58026745E340029507D /* libpact_mock_server.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -101,7 +101,6 @@
 		AD15983A2648E72A007CFAA5 /* TransferProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferProtocol.swift; sourceTree = "<group>"; };
 		AD15983D2648EA2C007CFAA5 /* MockServerError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockServerError.swift; sourceTree = "<group>"; };
 		AD1598402648EA99007CFAA5 /* pact_mock_server.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = pact_mock_server.h; sourceTree = "<group>"; };
-		AD1598482648ED15007CFAA5 /* libpact_mock_server.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libpact_mock_server.a; sourceTree = "<group>"; };
 		AD15984A2648ED1D007CFAA5 /* libpact_mock_server.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libpact_mock_server.a; sourceTree = "<group>"; };
 		AD15984C2648ED4D007CFAA5 /* VerificationError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerificationError.swift; sourceTree = "<group>"; };
 		AD1598512648F2E1007CFAA5 /* MockServerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockServerTests.swift; sourceTree = "<group>"; };
@@ -134,6 +133,7 @@
 		ADBEF2FE2648FCF200486C4A /* MismatchError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MismatchError.swift; sourceTree = "<group>"; };
 		ADBEF2FF2648FCF200486C4A /* RequestError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RequestError.swift; sourceTree = "<group>"; };
 		ADBEF3002648FCF200486C4A /* VerificationErrorType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VerificationErrorType.swift; sourceTree = "<group>"; };
+		ADF2E58026745E340029507D /* libpact_mock_server.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libpact_mock_server.a; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -158,7 +158,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				AD1598492648ED15007CFAA5 /* libpact_mock_server.a in Frameworks */,
+				ADF2E58126745E340029507D /* libpact_mock_server.a in Frameworks */,
 				AD1598372648E59E007CFAA5 /* PactSwiftToolbox in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -237,7 +237,7 @@
 		AD15980F2648DEE3007CFAA5 /* x86_64-darwin */ = {
 			isa = PBXGroup;
 			children = (
-				AD1598482648ED15007CFAA5 /* libpact_mock_server.a */,
+				ADF2E58026745E340029507D /* libpact_mock_server.a */,
 			);
 			path = "x86_64-darwin";
 			sourceTree = "<group>";

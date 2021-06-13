@@ -114,3 +114,9 @@ Submodules/pact-reference/rust/target/**
 /PactSwiftMockServer.xcodeproj/xcuserdata/marko.xcuserdatad/xcschemes/xcschememanagement.plist
 /Resources/arm64-iOS/libpact_mock_server.a
 .tmp
+
+
+####################
+# Binaries        ##
+####################y
+*.a

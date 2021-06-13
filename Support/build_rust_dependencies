@@ -54,7 +54,7 @@ rustup target add \
 	x86_64-apple-darwin \
 	aarch64-apple-darwin
 
-# TODO: - Add the following triple once it is available in Tier2 
+# TODO: - Add the following triple once it is available in Tier2
 # aarch64-apple-ios-sim
 
 ##############################################

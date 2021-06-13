@@ -92,7 +92,9 @@ echo "✅  libpact_mock_server.a binaries built"
 echo "🏗  Copying binaries to ../../../PactSwiftMockServer"
 
 # Copy iOS device binary
+echo "🚚  Moving arm64-ios (iOS device) binary..."
 cp ../target/aarch64-apple-ios/release/libpact_mock_server_ffi.a ../../../PactSwiftMockServer/Resources/arm64-iOS/libpact_mock_server.a
+echo "👍  Moved arm64-ios binary."
 
 # TODO: - Create a fat iOS Simulator binary and move it to PactSwiftMockServer project
 #lipo -create \
@@ -100,15 +102,25 @@ cp ../target/aarch64-apple-ios/release/libpact_mock_server_ffi.a ../../../PactSw
 #	../target/arm64-apple-ios-sim/release/libpact_mock_server_ffi.a \
 #	-output ../../../PactSwiftMockServer/Resources/x86_64-iOS/libpact_mock_serer.a
 
+echo "🚚  Moving x86_64-ios (Simulator) binary..."
 cp ../target/x86_64-apple-ios/release/libpact_mock_server_ffi.a ../../../PactSwiftMockServer/Resources/x86_64-iOS/libpact_mock_server.a
+echo "👍  Moved x86_64-ios binary."
+
+# Copy x86_64-darwin binary into PactSwiftMockServer project
+echo "🚚  Moving x86_64-darwin binary (for CI)..."
+cp ../target/x86_64-apple-darwin/release/libpact_mock_server_ffi.a ../../../PactSwiftMockServer/Resources/x86_64-iOS/libpact_mock_server_ffi.a
+echo "👍  Moved x86_64-darwin binary."
+
 
 # Create a fat darwin binary and move it to PactSwiftMockServer project
+echo "🚚  Moving x86_64-darwin and arm64-darwin fat binary..."
 lipo -create \
 	../target/x86_64-apple-darwin/release/libpact_mock_server_ffi.a \
 	../target/aarch64-apple-darwin/release/libpact_mock_server_ffi.a \
 	-output ../../../PactSwiftMockServer/Resources/x86_64-darwin/libpact_mock_server.a
+echo "👍  Moved x86_64-darwin and arm64-darwin fattie."
 
 #######################
 # Cleanup             #
 #######################
-echo "👍  Done!"
+echo "🎉  All done!"

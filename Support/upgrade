@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+
+# upgrade
+#
+# 🚨🚨🚨 --- HOL' UP A MINUTE --- 🚨🚨🚨
+#
+# Make sure `pact-reference` and `PactSwiftMockServer` are siblings on the file system!
+# Upgrades libpact_mock_server binaries and builds a fresh XCFramework
+#
+
+set -euo pipefail
+
+# TODO: - This is Work in Progress
+
+echo "🏗  Running ./Support/build_rust_dependencies"
+echo "⚠️  Skipped..."
+#./build_rust_depednecies
+
+echo "🏗  Runing ./Support/build_xcframework"
+echo "⚠️  Skipped..."
+#./build_xcframework
+
+echo "⚠️  Build and test the project, check `git status`, commit and push if all seems okay."

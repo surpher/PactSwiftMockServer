@@ -1,0 +1,114 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+# Pre-requisites:
+# 1. `pact-reference` repo and `PactSwiftMockServer` repo are on the same folder level
+# 2. `cd pact-reference/rust/pact_mock_server_ffi`
+#
+# Usage:
+# ../../../PactSwiftMockServer/Support/build_rust_dependencies
+#
+# Run in pact-reference/rust/libpact_mock_serer_ffi
+# Update Cargo.toml to:
+#
+# ...
+# [lib]
+# crate-type = ["staticlib"]
+# ...
+# [profile.release]
+# opt-level = 'z'
+# lto = true
+# panic = 'abort'
+#
+
+#######################
+# Setup               #
+#######################
+
+# Validate dependencies
+
+echo "--- 👮‍♀️ Checking if Rust is installed..."
+if which cargo >/dev/null; then
+	echo "👍  cargo installed"
+elif command -v ~/.cargo/bin/cargo &> /dev/null; then
+	echo "👍  cargo installed in ~/.cargo/bin/"
+else
+	echo "🚨  Rust/Cargo not installed"
+	echo "ERROR: cargo is required and is was found on this machine.\nInstall Rust using either homebrew or follow instructions at https://www.rust-lang.org/tools/install"
+ 	exit 1
+fi
+
+# Set the nightly toolchain
+echo "⚠️  Installing a nightly toolchain..."
+rustup install nightly
+rustup toolchain install nightly
+
+echo "⚠️  Setting nightly toolchain as default..."
+rustup default nightly-x86_64-apple-darwin
+
+# Add all the required triples
+rustup target add \
+	x86_64-apple-ios \
+	aarch64-apple-ios \
+	x86_64-apple-darwin \
+	aarch64-apple-darwin
+
+# TODO: - Add the following triple once it is available in Tier2 
+# aarch64-apple-ios-sim
+
+##############################################
+# Build libpact_mock_server_ffi binaries     #
+##############################################
+
+echo "🏗  Building libpact_mock_server_ffi.a for x86_64 iOS Simulator"
+echo "cargo build --target=x86_64-apple-ios --release"
+cargo build --target=x86_64-apple-ios --release
+
+echo "🏗  Building libpact_mock_server_ffi.a for arm64 iOS Simulator"
+# TODO: - Build for arm64 iOS Simulator
+# cargo build --target=aarch64-apple-ios-sim --release
+echo "ℹ  Skipped..."
+
+echo "🏗  Building libpact_mock_server_ffi.a for arm64 iOS device"
+echo "cargo build --target=aarch64-apple-ios --release"
+cargo build --target=aarch64-apple-ios --release
+
+echo "🏗  Building libpact_mock_server_ffi.a for x86_64 Darwin"
+echo "cargo build --target=x86_64-apple-darwin --release"
+cargo build --target=x86_64-apple-darwin --release
+
+echo "🏗  Building libpact_mock_server.a for arm64 Darwin"
+echo "cargo build --target=aarch64-apple-darwin --release"
+cargo build --target=aarch64-apple-darwin --release
+
+echo "✅  libpact_mock_server.a binaries built"
+
+#######################
+# Pact Mock Server    #
+#######################
+
+# Move the compiled binaries into `PactSwiftMockServer` folder
+echo "🏗  Copying binaries to ../../../PactSwiftMockServer"
+
+# Copy iOS device binary
+cp ../target/aarch64-apple-ios/release/libpact_mock_server_ffi.a ../../../PactSwiftMockServer/Resources/arm64-iOS/libpact_mock_server.a
+
+# TODO: - Create a fat iOS Simulator binary and move it to PactSwiftMockServer project
+#lipo -create \
+#	../target/x86_64-apple-ios/release/libpact_mock_server_ffi.a \
+#	../target/arm64-apple-ios-sim/release/libpact_mock_server_ffi.a \
+#	-output ../../../PactSwiftMockServer/Resources/x86_64-iOS/libpact_mock_serer.a
+
+cp ../target/x86_64-apple-ios/release/libpact_mock_server_ffi.a ../../../PactSwiftMockServer/Resources/x86_64-iOS/libpact_mock_server.a
+
+# Create a fat darwin binary and move it to PactSwiftMockServer project
+lipo -create \
+	../target/x86_64-apple-darwin/release/libpact_mock_server_ffi.a \
+	../target/aarch64-apple-darwin/release/libpact_mock_server_ffi.a \
+	-output ../../../PactSwiftMockServer/Resources/x86_64-darwin/libpact_mock_server.a
+
+#######################
+# Cleanup             #
+#######################
+echo "👍  Done!"

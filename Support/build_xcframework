@@ -39,6 +39,7 @@ xcodebuild archive \
 echo "👍  Framework for arm64 built"
 
 echo "ℹ️  Building for iOS Simulator..."
+# Once arm64-apple-ios-sim triple is available, add it as `-arch arm64`
 xcodebuild archive \
     -sdk iphonesimulator IPHONEOS_DEPLOYMENT_TARGET=12.0 \
     -arch x86_64 \

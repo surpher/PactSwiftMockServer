@@ -20,7 +20,6 @@ let package = Package(
 	],
 
 	dependencies: [
-		.package(url: "https://github.com/surpher/PactMockServer.git", from: "0.0.1-beta"),
 		.package(url: "https://github.com/surpher/PactSwiftToolbox.git", from: "0.1.0")
 	],
 

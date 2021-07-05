@@ -9,7 +9,7 @@
 	<key>CFBundleExecutable</key>
 	<string>PactSwiftMockServer</string>
 	<key>CFBundleIdentifier</key>
-	<string>au.com.pact-foundation.macOS.PactSwift</string>
+	<string>au.com.pact-foundation.macOS.PactSwiftMockServer</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>

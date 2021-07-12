@@ -53,10 +53,10 @@ public class MockServer {
 
 	/// Spin up a Mock Server with expected interactions as defined in Pact.
 	public func setup(pact: Data, protocol: TransferProtocol = .standard, completion: (Result<Int, MockServerError>) -> Void) {
-		Logger.log(message: "Setting up libpact_mock_server", data: pact)
+		Logger.log(message: "Setting up Pact mock Server", data: pact)
 		transferProtocol = `protocol`
 		Logger.log(message: "Setting up MockServer for Pact interaction test")
-		let mockServerPort = create_mock_server(
+		let mockServerPort = pactffi_create_mock_server(
 			String(data: pact, encoding: .utf8),
 			"\(socketAddress):\(port)",
 			tls
@@ -83,7 +83,7 @@ public class MockServer {
 
 		let newPort = SocketBinder.unusedPort()
 		Logger.log(message: "Creating MockServer on port \(newPort)")
-		let port = create_mock_server(
+		let port = pactffi_create_mock_server(
 			String(data: pact, encoding: .utf8)?.replacingOccurrences(of: "\\", with: ""),
 			"\(socketAddress):\(newPort)",
 			tls
@@ -104,7 +104,7 @@ public class MockServer {
 
 	/// Generates an example string based on the provided regex.
 	public static func generate_value(regex: String) -> String? {
-		guard let stringPointer = generate_regex_value(regex).ok._0 else {
+		guard let stringPointer = pactffi_generate_regex_value(regex).ok._0 else {
 			return nil
 		}
 
@@ -117,12 +117,12 @@ private extension MockServer {
 
 	/// `true` when all expected requests have successfully matched
 	var requestsMatched: Bool {
-		mock_server_matched(port)
+		pactffi_mock_server_matched(port)
 	}
 
 	/// Descripton of mismatching requests
 	var mismatchDescription: String {
-		guard let mismatches = mock_server_mismatches(port) else {
+		guard let mismatches = pactffi_mock_server_mismatches(port) else {
 			return "No response! There might be something fishy going on with your Mock Server..."
 		}
 
@@ -139,7 +139,7 @@ private extension MockServer {
 
 		let pactDir = PactFileManager.pactDirectoryPath
 		Logger.log(message: "Writing Pact contract in \(pactDir) using MockServer on port: \(port ?? self.port)")
-		let writeResult = write_pact_file(port ?? self.port, pactDir)
+		let writeResult = pactffi_write_pact_file(port ?? self.port, pactDir, true)
 		guard writeResult == 0 else {
 			completion(.failure(MockServerError(code: Int(writeResult))))
 			return
@@ -152,7 +152,7 @@ private extension MockServer {
 		let port = port ?? self.port
 		if port > 0 {
 			Logger.log(message: "Shutting down mock server on port \(port)")
-			cleanup_mock_server(port)
+			pactffi_cleanup_mock_server(port)
 		}
 	}
 

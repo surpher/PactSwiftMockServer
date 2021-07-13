@@ -3,29 +3,60 @@
 set -euo pipefail
 
 # ### Pre-requisites:
-# 1. `pact-reference` repo and `PactSwiftMockServer` repo are on the same folder level
-# 2. `cd pact-reference/rust/pact_ffi`
+#
+# `pact-reference` repo and `PactSwiftMockServer` repo are on the same folder level
 #
 # ### Usage:
-# ../../../../PactSwiftMockServer/Support/build_rust_dependencies
+# ./Support/build_rust_dependencies
 #
-# Run in pact-reference/rust/libpact_ffi
-# Update Cargo.toml to:
+# In order to minimise the built binary size update $LIBPACT_FFI_DI/Cargo.toml and append the following:
 #
-# ...
 # [lib]
 # crate-type = ["staticlib"]
-# ...
+#
 # [profile.release]
 # opt-level = 'z'
 # lto = true
 # panic = 'abort'
 #
-# ### Update pact_ffi.h
-# cd pact-reference/rust/pact_ffi
-# cbindgen src/lib.rs -l c > pact_ffi.h
-# cp pact_ffi.h ../PactSwiftMockServer/Sources/pact_ffi.h
-#
+#######################
+
+WORKSPACE=${GITHUB_WORKSPACE:-$PWD}
+LIBPACT_FFI_DIR="${WORKSPACE}/../pact-reference/rust/pact_ffi"
+CI=${CI:-"false"}
+PACT_FOUNDATION_REPO="https://github.com/pact-foundation/pact-reference.git"
+
+#######################
+# Pre-requisite       #
+#######################
+
+if [ ! -d "$PWD/PactSwiftMockServer.xcodeproj" ]
+then
+	echo "🚨 Run this from the same folder where your 'PactSwiftMockServer.xcodeproj' lives."
+	echo "⚠️  You are runing it in $PWD"
+	exit 1
+fi
+
+#######################
+# If CI               #
+#######################
+
+echo "👮‍♀️  Verifying project and dependencies' folder setup..."
+
+if [[ "$CI" == true ]]; then
+	cd ..
+	echo "ℹ️ Cloning ${PACT_FOUNDATION_REPO}"
+	git clone $PACT_FOUNDATION_REPO
+elif [ ! -d "$PWD/../pact-reference" ]; then
+	echo "🚨 Missing pact-foundation/pact-reference repo."
+	echo "⚠️  Make sure you 'git clone ${PACT_FOUNDATION_REPO}' at the same folder level as your PactSwiftMockServer."
+	exit 1
+else
+	echo "👍  Project setup seems to be in order."
+fi
+
+echo "ℹ️  Changing location to ${LIBPACT_FFI_DIR}"
+cd $LIBPACT_FFI_DIR
 
 #######################
 # Setup               #
@@ -33,7 +64,7 @@ set -euo pipefail
 
 # Validate dependencies
 
-echo "--- 👮‍♀️ Checking if Rust is installed..."
+echo "👮‍♀️  Checking if Rust is installed..."
 if which cargo >/dev/null; then
 	echo "👍  cargo installed"
 elif command -v ~/.cargo/bin/cargo &> /dev/null; then
@@ -61,14 +92,6 @@ rustup target add \
 
 # TODO: - Add the following triple once it is available in Tier2
 # aarch64-apple-ios-sim
-
-##############################################
-# Generate pact_ffi.h                        #
-##############################################
-
-echo "📄  Generating a pact_ffi.h header file"
-cbindgen src/lib.rs -l c > pact_ffi.h
-cp pact_ffi.h ../../../PactSwiftMockServer/Sources/pact_ffi.h
 
 ##############################################
 # Build libpact_ffi binaries                 #
@@ -101,39 +124,35 @@ echo "✅  libpact_ffi.a binaries built"
 # Pact Mock Server    #
 #######################
 
-# Move the compiled binaries into `PactSwiftMockServer` folder
-echo "🏗  Copying binaries to ../../../PactSwiftMockServer"
+# Copy the compiled binaries into PactSwiftMockServer project
+echo "🏗  Copying binaries to ${WORKSPACE}"
 
-# Copy iOS device binary
-echo "🚚  Moving arm64-ios (iOS device) binary..."
-cp ../target/aarch64-apple-ios/release/libpact_ffi.a ../../../PactSwiftMockServer/Resources/arm64-iOS/libpact_ffi.a
-echo "👍  Moved arm64-ios binary."
+# Copy binary for an iOS device
+echo "🚚  Copying arm64-ios (iOS device) binary..."
+cp ../target/aarch64-apple-ios/release/libpact_ffi.a $WORKSPACE/Resources/arm64-iOS/libpact_ffi.a
+echo "👍  Copied arm64-ios binary."
 
-# TODO: - Create a fat iOS Simulator binary and move it to PactSwiftMockServer project
+# TODO: - Create a fat iOS Simulator binary and drop it in PactSwiftMockServer project
 #lipo -create \
 #	../target/x86_64-apple-ios/release/libpact_ffi.a \
 #	../target/arm64-apple-ios-sim/release/libpact_ffi.a \
-#	-output ../../../PactSwiftMockServer/Resources/x86_64-iOS/libpact_ffi.a
+#	-output $WORKSPACE/Resources/x86_64-iOS/libpact_ffi.a
 
-echo "🚚  Moving x86_64-ios (Simulator) binary..."
-cp ../target/x86_64-apple-ios/release/libpact_ffi.a ../../../PactSwiftMockServer/Resources/x86_64-iOS/libpact_ffi.a
-echo "👍  Moved x86_64-ios binary."
+# Copy binary for Simulator running on Intel machines
+echo "🚚  Copying x86_64-ios (Simulator) binary..."
+cp ../target/x86_64-apple-ios/release/libpact_ffi.a $WORKSPACE/Resources/x86_64-iOS/libpact_ffi.a
+echo "👍  Copied x86_64-ios binary."
 
-# Copy x86_64-darwin binary into PactSwiftMockServer project
-echo "🚚  Moving x86_64-darwin binary (for CI)..."
-cp ../target/x86_64-apple-darwin/release/libpact_ffi.a ../../../PactSwiftMockServer/Resources/x86_64-iOS/libpact_ffi.a
-echo "👍  Moved x86_64-darwin binary."
-
-
-# Create a fat darwin binary and move it to PactSwiftMockServer project
-echo "🚚  Moving x86_64-darwin and arm64-darwin fat binary..."
+# Create a fat darwin binary and drop it in PactSwiftMockServer project
+echo "🚚  Copying x86_64-darwin and arm64-darwin into a fat binary..."
 lipo -create \
 	../target/x86_64-apple-darwin/release/libpact_ffi.a \
 	../target/aarch64-apple-darwin/release/libpact_ffi.a \
-	-output ../../../PactSwiftMockServer/Resources/x86_64-darwin/libpact_ffi.a
-echo "👍  Moved x86_64-darwin and arm64-darwin fattie."
+	-output $WORKSPACE/Resources/x86_64-darwin/libpact_ffi.a
+echo "👍  Copied x86_64-darwin and arm64-darwin fattie."
 
 #######################
 # Cleanup             #
 #######################
+
 echo "🎉  All done!"

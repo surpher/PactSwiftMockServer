@@ -5,7 +5,7 @@ on: [push]
 jobs:
   test:
     name: Run tests
-    runs-on: macOS-latest
+    runs-on: macos-11
 
     strategy:
       fail-fast: true
@@ -32,6 +32,7 @@ jobs:
       - name: Prepare Tools
         run: |
           Support/prepare_build_tools
+          Support/build_rust_dependencies
 
       - name: Run tests (Xcode)
         run: |

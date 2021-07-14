@@ -36,7 +36,12 @@ public class MockServer {
 
 	// MARK: - Lifecycle
 
-	/// Initializes a MockServer on a given port. If none is provided a random unused port will be used
+	/// Initializes a MockServer on a given port.
+	/// If none is provided a random unused port will be used.
+	///
+	/// - Parameters:
+	///   - port: The port number
+	///
 	public init(port: Int? = nil) {
 		if let port = port {
 			self.port = Int32(port)
@@ -51,7 +56,13 @@ public class MockServer {
 
 	// MARK: - Interface
 
-	/// Spin up a Mock Server with expected interactions as defined in Pact.
+	/// Spins up a `MockServer` with expected interactions as defined in Pact.
+	///
+	/// - Parameters:
+	///   - pact: The pact contract
+	///   - protocol: HTTP protocol
+	///   - completion: Completion block to run when setup completes
+	///
 	public func setup(pact: Data, protocol: TransferProtocol = .standard, completion: (Result<Int, MockServerError>) -> Void) {
 		Logger.log(message: "Setting up Pact mock Server", data: pact)
 		transferProtocol = `protocol`
@@ -68,7 +79,14 @@ public class MockServer {
 			: completion(Result.failure(MockServerError(code: Int(mockServerPort))))
 	}
 
-	/// Verify interactions
+	/// Verifies all interactions passed to `MockServer`.
+	///
+	/// - Parameters:
+	///   - completion: Completion block to run when verification completes
+	///
+	/// By default pact files are written to `/tmp/pacts`.
+	/// Use `PACT_OUTPUT_DIR` environment variable with absolute path to your custom path in schema `run` configuration.
+	///
 	public func verify(completion: (Result<Bool, VerificationError>) -> Void) {
 		guard requestsMatched else {
 			completion(.failure(.reason(mismatchDescription)))
@@ -77,7 +95,12 @@ public class MockServer {
 		completion(.success(true))
 	}
 
-	/// Finalise tests by writing the contract file onto disk
+	/// Finalises Pact tests by writing the Pact contract file to disk.
+	///
+	/// - Parameters:
+	///   - pact: The pact contract to write
+	///   - completion: Completion block to run when setup completes
+	///
 	public func finalize(pact: Data, completion: ((Result<String, MockServerError>) -> Void)?) {
 		Logger.log(message: "Starting up MockServer to finalize writing Pact with data:", data: pact)
 
@@ -102,8 +125,19 @@ public class MockServer {
 		shutdownMockServer()
 	}
 
+}
+// MARK: - Static methods
+
+public extension MockServer {
+
 	/// Generates an example string based on provided regex pattern.
-	public static func generate_value(regex: String) -> String? {
+	///
+	/// Only supports basic regex patterns.
+	///
+	/// - Parameters:
+	///   - regex: The pattern to use
+	///
+	static func generate_value(regex: String) -> String? {
 		guard let stringPointer = pactffi_generate_regex_value(regex).ok._0 else {
 			return nil
 		}
@@ -114,7 +148,13 @@ public class MockServer {
 	}
 
 	/// Generates an example datetime string based on provided format. Returns nil if provided format is invalid.
-	public static func generate_date(format: String) -> String? {
+	///
+	/// Returns `nil` if the provided format is invalid.
+	///
+	/// - Parameters:
+	///   - format: The format of date to generate
+	///
+	static func generate_date(format: String) -> String? {
 		guard let stringPointer = pactffi_generate_datetime_string(format).ok._0 else {
 			return nil
 		}
@@ -126,6 +166,8 @@ public class MockServer {
 	}
 
 }
+
+// MARK: - Private
 
 private extension MockServer {
 

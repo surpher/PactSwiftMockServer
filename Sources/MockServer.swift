@@ -102,13 +102,27 @@ public class MockServer {
 		shutdownMockServer()
 	}
 
-	/// Generates an example string based on the provided regex.
+	/// Generates an example string based on provided regex pattern.
 	public static func generate_value(regex: String) -> String? {
 		guard let stringPointer = pactffi_generate_regex_value(regex).ok._0 else {
 			return nil
 		}
+		let generatedString = String(cString: stringPointer)
+		pactffi_free_string(stringPointer)
 
-		return String(cString: stringPointer)
+		return generatedString
+	}
+
+	/// Generates an example datetime string based on provided format. Returns nil if provided format is invalid.
+	public static func generate_date(format: String) -> String? {
+		guard let stringPointer = pactffi_generate_datetime_string(format).ok._0 else {
+			return nil
+		}
+
+		let generatedDatetime = String(cString: stringPointer)
+		pactffi_free_string(stringPointer)
+
+		return generatedDatetime
 	}
 
 }

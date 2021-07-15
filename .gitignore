@@ -118,5 +118,6 @@ Submodules/pact-reference/rust/target/**
 
 ####################
 # Binaries        ##
-####################y
+####################
 *.a
+Resources/**/*.a

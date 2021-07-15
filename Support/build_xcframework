@@ -36,12 +36,12 @@ xcodebuild archive \
     BUILD_LIBRARY_FOR_DISTRIBUTION=YES \
     SKIP_INSTALL=NO | xcbeautify
 
-echo "👍  Framework for arm64 built"
+echo "👍  Framework for arm64 device built"
 
 echo "🏗  Building for iOS Simulator..."
 xcodebuild archive \
     -sdk iphonesimulator IPHONEOS_DEPLOYMENT_TARGET=12.0 \
-    -arch x86_64 arm64 \
+    -arch x86_64 -arch arm64 \
     -scheme "${PRODUCT_NAME}-iOS" \
     -archivePath "${TMP_DIR}/iphonesimulator/${PRODUCT_NAME}.xcarchive" \
     BUILD_LIBRARY_FOR_DISTRIBUTION=YES \

@@ -90,8 +90,8 @@ rustup target add \
 	x86_64-apple-darwin \
 	aarch64-apple-darwin
 
-# TODO: - Add the following triple once it is available in Tier2
-# aarch64-apple-ios-sim
+# Add the nightly toolchain for aarch64-apple-ios-sim (while aarch64-apple-ios-sim is still Tier 3)
+rustup component add rust-src --toolchain nightly-x86_64-apple-darwin
 
 ##############################################
 # Build libpact_ffi binaries                 #
@@ -102,9 +102,7 @@ echo "cargo build --target=x86_64-apple-ios --release"
 cargo build --target=x86_64-apple-ios --release
 
 echo "🏗  Building libpact_ffi.a for arm64 iOS Simulator"
-# TODO: - Build for arm64 iOS Simulator
-# cargo build --target=aarch64-apple-ios-sim --release
-echo "ℹ  Skipped..."
+cargo +nightly build -Z build-std --target aarch64-apple-ios-sim --release
 
 echo "🏗  Building libpact_ffi.a for arm64 iOS device"
 echo "cargo build --target=aarch64-apple-ios --release"
@@ -129,19 +127,15 @@ echo "🏗  Copying binaries to ${WORKSPACE}"
 
 # Copy binary for an iOS device
 echo "🚚  Copying arm64-ios (iOS device) binary..."
-cp ../target/aarch64-apple-ios/release/libpact_ffi.a $WORKSPACE/Resources/arm64-iOS/libpact_ffi.a
+cp ../target/aarch64-apple-ios/release/libpact_ffi.a $WORKSPACE/Resources/iOS-device/libpact_ffi.a
 echo "👍  Copied arm64-ios binary."
 
-# TODO: - Create a fat iOS Simulator binary and drop it in PactSwiftMockServer project
-#lipo -create \
-#	../target/x86_64-apple-ios/release/libpact_ffi.a \
-#	../target/arm64-apple-ios-sim/release/libpact_ffi.a \
-#	-output $WORKSPACE/Resources/x86_64-iOS/libpact_ffi.a
-
-# Copy binary for Simulator running on Intel machines
-echo "🚚  Copying x86_64-ios (Simulator) binary..."
-cp ../target/x86_64-apple-ios/release/libpact_ffi.a $WORKSPACE/Resources/x86_64-iOS/libpact_ffi.a
-echo "👍  Copied x86_64-ios binary."
+echo "🚚  Creating a fat binary for iOS Simulator (x86_64 and arm64)..."
+lipo -create \
+	../target/x86_64-apple-ios/release/libpact_ffi.a \
+	../target/aarch64-apple-ios-sim/release/libpact_ffi.a \
+	-output $WORKSPACE/Resources/iOS-simulator/libpact_ffi.a
+echo "👍  Copied x86_64-ios and arm64-ios-sim fattie."
 
 # Create a fat darwin binary and drop it in PactSwiftMockServer project
 echo "🚚  Copying x86_64-darwin and arm64-darwin into a fat binary..."

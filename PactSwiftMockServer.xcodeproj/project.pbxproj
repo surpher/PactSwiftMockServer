@@ -25,12 +25,12 @@
 		AD1598532648F2E1007CFAA5 /* MockServerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD1598512648F2E1007CFAA5 /* MockServerTests.swift */; };
 		AD38D300264A33E800124396 /* PactSwiftMockServer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AD38D2F7264A33E800124396 /* PactSwiftMockServer.framework */; };
 		AD38D30F264A33F200124396 /* PactSwiftToolbox in Frameworks */ = {isa = PBXBuildFile; productRef = AD38D30E264A33F200124396 /* PactSwiftToolbox */; };
+		AD63D08226A02C28002682EB /* libpact_ffi.a in Frameworks */ = {isa = PBXBuildFile; fileRef = AD63D08126A02C28002682EB /* libpact_ffi.a */; };
+		AD63D08F26A02C64002682EB /* libpact_ffi.a in Frameworks */ = {isa = PBXBuildFile; fileRef = AD9336A5269C33EB0004EBD8 /* libpact_ffi.a */; };
 		AD933643269C2DD80004EBD8 /* libpact_ffi.a in Frameworks */ = {isa = PBXBuildFile; fileRef = AD933642269C2DD80004EBD8 /* libpact_ffi.a */; };
 		AD93364D269C2EC30004EBD8 /* pact_ffi.h in Headers */ = {isa = PBXBuildFile; fileRef = AD93364C269C2EC30004EBD8 /* pact_ffi.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		AD93364E269C2EC30004EBD8 /* pact_ffi.h in Headers */ = {isa = PBXBuildFile; fileRef = AD93364C269C2EC30004EBD8 /* pact_ffi.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		AD93364F269C2EC30004EBD8 /* pact_ffi.h in Headers */ = {isa = PBXBuildFile; fileRef = AD93364C269C2EC30004EBD8 /* pact_ffi.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		AD93369E269C33D40004EBD8 /* libpact_ffi.a in Frameworks */ = {isa = PBXBuildFile; fileRef = AD93369D269C33D40004EBD8 /* libpact_ffi.a */; };
-		AD9336A6269C33EB0004EBD8 /* libpact_ffi.a in Frameworks */ = {isa = PBXBuildFile; fileRef = AD9336A5269C33EB0004EBD8 /* libpact_ffi.a */; };
 		ADB97FD726493D1800C54CA9 /* VerificationErrorTypeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADB97FD626493D1800C54CA9 /* VerificationErrorTypeTests.swift */; };
 		ADB97FD826493D1800C54CA9 /* VerificationErrorTypeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADB97FD626493D1800C54CA9 /* VerificationErrorTypeTests.swift */; };
 		ADB97FDA26493D5900C54CA9 /* MockServerErrorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADB97FD926493D5900C54CA9 /* MockServerErrorTests.swift */; };
@@ -104,9 +104,9 @@
 		AD38D313264A346900124396 /* Target-iPhone-iOS-Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "Target-iPhone-iOS-Release.xcconfig"; sourceTree = "<group>"; };
 		AD38D314264A347A00124396 /* Target-iPhone-iOS-Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "Target-iPhone-iOS-Debug.xcconfig"; sourceTree = "<group>"; };
 		AD38D315264A34CD00124396 /* Target-iPhone-iOS-Shared.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "Target-iPhone-iOS-Shared.xcconfig"; sourceTree = "<group>"; };
+		AD63D08126A02C28002682EB /* libpact_ffi.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libpact_ffi.a; sourceTree = "<group>"; };
 		AD933642269C2DD80004EBD8 /* libpact_ffi.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libpact_ffi.a; sourceTree = "<group>"; };
 		AD93364C269C2EC30004EBD8 /* pact_ffi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pact_ffi.h; sourceTree = "<group>"; };
-		AD93369D269C33D40004EBD8 /* libpact_ffi.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libpact_ffi.a; path = "Resources/arm64-ios/libpact_ffi.a"; sourceTree = SOURCE_ROOT; };
 		AD9336A5269C33EB0004EBD8 /* libpact_ffi.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libpact_ffi.a; sourceTree = "<group>"; };
 		ADB97FD626493D1800C54CA9 /* VerificationErrorTypeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerificationErrorTypeTests.swift; sourceTree = "<group>"; };
 		ADB97FD926493D5900C54CA9 /* MockServerErrorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockServerErrorTests.swift; sourceTree = "<group>"; };
@@ -140,7 +140,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				AD1598122648DF36007CFAA5 /* PactSwiftToolbox in Frameworks */,
-				AD9336A6269C33EB0004EBD8 /* libpact_ffi.a in Frameworks */,
+				AD63D08F26A02C64002682EB /* libpact_ffi.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -174,7 +174,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				AD38D30F264A33F200124396 /* PactSwiftToolbox in Frameworks */,
-				AD93369E269C33D40004EBD8 /* libpact_ffi.a in Frameworks */,
+				AD63D08226A02C28002682EB /* libpact_ffi.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -218,19 +218,19 @@
 		AD15980D2648DECB007CFAA5 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				AD38D310264A33F800124396 /* arm64-iOS */,
+				AD38D310264A33F800124396 /* iOS-device */,
 				AD15980F2648DEE3007CFAA5 /* x86_64-darwin */,
-				AD15980E2648DED2007CFAA5 /* x86_64-iOS */,
+				AD15980E2648DED2007CFAA5 /* iOS-simulator */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
 		};
-		AD15980E2648DED2007CFAA5 /* x86_64-iOS */ = {
+		AD15980E2648DED2007CFAA5 /* iOS-simulator */ = {
 			isa = PBXGroup;
 			children = (
 				AD9336A5269C33EB0004EBD8 /* libpact_ffi.a */,
 			);
-			path = "x86_64-iOS";
+			path = "iOS-simulator";
 			sourceTree = "<group>";
 		};
 		AD15980F2648DEE3007CFAA5 /* x86_64-darwin */ = {
@@ -322,12 +322,12 @@
 			path = Model;
 			sourceTree = "<group>";
 		};
-		AD38D310264A33F800124396 /* arm64-iOS */ = {
+		AD38D310264A33F800124396 /* iOS-device */ = {
 			isa = PBXGroup;
 			children = (
-				AD93369D269C33D40004EBD8 /* libpact_ffi.a */,
+				AD63D08126A02C28002682EB /* libpact_ffi.a */,
 			);
-			path = "arm64-iOS";
+			path = "iOS-device";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -702,6 +702,10 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = ADBEF2F42648FB0600486C4A /* Target-iOS-Debug.xcconfig */;
 			buildSettings = {
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Resources/iOS-simulator",
+				);
 			};
 			name = Debug;
 		};
@@ -709,6 +713,10 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = ADBEF2F82648FB0600486C4A /* Target-iOS-Release.xcconfig */;
 			buildSettings = {
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Resources/iOS-simulator",
+				);
 			};
 			name = Release;
 		};
@@ -761,6 +769,7 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Resources/arm64-ios",
+					"$(PROJECT_DIR)/Resources/iOS-device",
 				);
 			};
 			name = Debug;
@@ -772,6 +781,7 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Resources/arm64-ios",
+					"$(PROJECT_DIR)/Resources/iOS-device",
 				);
 			};
 			name = Release;

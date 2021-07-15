@@ -41,7 +41,10 @@ public class MockServer {
   public func setup(pact: Foundation.Data, protocol: PactSwiftMockServer.TransferProtocol = .standard, completion: (Swift.Result<Swift.Int, PactSwiftMockServer.MockServerError>) -> Swift.Void)
   public func verify(completion: (Swift.Result<Swift.Bool, PactSwiftMockServer.VerificationError>) -> Swift.Void)
   public func finalize(pact: Foundation.Data, completion: ((Swift.Result<Swift.String, PactSwiftMockServer.MockServerError>) -> Swift.Void)?)
+}
+extension MockServer {
   public static func generate_value(regex: Swift.String) -> Swift.String?
+  public static func generate_date(format: Swift.String) -> Swift.String?
 }
 public enum VerificationError : Swift.Error {
   case reason(Swift.String)

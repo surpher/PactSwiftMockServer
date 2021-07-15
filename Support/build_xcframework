@@ -27,7 +27,7 @@ rm -fr $TMP_DIR
 
 # iOS
 
-echo "ℹ️  Building for iOS..."
+echo "🏗  Building for iOS..."
 xcodebuild archive \
     -sdk iphoneos IPHONEOS_DEPLOYMENT_TARGET=12.0 \
     -arch arm64 \
@@ -38,20 +38,19 @@ xcodebuild archive \
 
 echo "👍  Framework for arm64 built"
 
-echo "ℹ️  Building for iOS Simulator..."
-# Once arm64-apple-ios-sim triple is available, add it as `-arch arm64`
+echo "🏗  Building for iOS Simulator..."
 xcodebuild archive \
     -sdk iphonesimulator IPHONEOS_DEPLOYMENT_TARGET=12.0 \
-    -arch x86_64 \
+    -arch x86_64 arm64 \
     -scheme "${PRODUCT_NAME}-iOS" \
     -archivePath "${TMP_DIR}/iphonesimulator/${PRODUCT_NAME}.xcarchive" \
     BUILD_LIBRARY_FOR_DISTRIBUTION=YES \
     SKIP_INSTALL=NO | xcbeautify
-echo "👍  Framework for iOS Simulator built for x86_64 architecture"
+echo "👍  Framework for iOS Simulator built for x86_64 and arm64 architecture"
 
 # macOS
 
-echo "ℹ️  Building for macOS..."
+echo "🏗  Building for macOS..."
 xcodebuild archive \
     -sdk macosx MACOSX_DEPLOYMENT_TARGET=11.0 \
     -arch x86_64 -arch arm64 \
@@ -63,7 +62,7 @@ echo "👍  Framework for macOS built for x86_64 and arm64 architectures"
 
 # XCFramework
 
-echo "ℹ️  Building XCFramework..."
+echo "🏗  Building XCFramework..."
 xcodebuild -create-xcframework -output ./$PRODUCT_NAME.xcframework \
     -framework $TMP_DIR/iphoneos/$PRODUCT_NAME.xcarchive/Products/Library/Frameworks/$PRODUCT_NAME.framework \
     -framework $TMP_DIR/iphonesimulator/$PRODUCT_NAME.xcarchive/Products/Library/Frameworks/$PRODUCT_NAME.framework \
@@ -73,4 +72,4 @@ xcodebuild -create-xcframework -output ./$PRODUCT_NAME.xcframework \
 echo "ℹ️  Removing $TMP_DIR folder..."
 rm -fr $TMP_DIR
 
-echo "👍 Done!"
+echo "🎉 Done!"

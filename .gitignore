@@ -121,3 +121,5 @@ Submodules/pact-reference/rust/target/**
 ####################
 *.a
 Resources/**/*.a
+/Resources/x86_64-iOS/libpact_ffi.a
+/Resources/x86_64-darwin/libpact_ffi.a

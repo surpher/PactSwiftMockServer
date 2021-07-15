@@ -9,9 +9,9 @@ If you're missing any when trying to build/run/test from source, see `./Support/
 
 The folder structure **MUST** be as follows (case sensitive!):
 |- Resources
-  |- arm64-ios
+  |- iOS-device
+  |- iOS-simulator
   |- x86_64-darwin
-  |- x86_64_iOS
 
 If there are no binaries in these folders, build them using ./Support/build_rust_dependencies script.
 

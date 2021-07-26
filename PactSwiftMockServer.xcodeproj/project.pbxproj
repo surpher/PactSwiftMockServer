@@ -766,11 +766,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = AD38D314264A347A00124396 /* Target-iPhone-iOS-Debug.xcconfig */;
 			buildSettings = {
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/Resources/arm64-ios",
-					"$(PROJECT_DIR)/Resources/iOS-device",
-				);
 			};
 			name = Debug;
 		};
@@ -778,11 +773,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = AD38D313264A346900124396 /* Target-iPhone-iOS-Release.xcconfig */;
 			buildSettings = {
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/Resources/arm64-ios",
-					"$(PROJECT_DIR)/Resources/iOS-device",
-				);
 			};
 			name = Release;
 		};

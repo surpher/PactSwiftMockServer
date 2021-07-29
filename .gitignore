@@ -125,3 +125,4 @@ Resources/**/*.a
 /Resources/x86_64-darwin/libpact_ffi.a
 /CHANGELOG.md.next
 /CHANGELOG.md.backup
+/Package.resolved

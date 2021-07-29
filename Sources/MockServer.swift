@@ -18,6 +18,10 @@
 import Foundation
 @_implementationOnly import PactSwiftToolbox
 
+#if SWIFT_PACKAGE
+import PactMockServer
+#endif
+
 public class MockServer {
 
 	// MARK: - Properties
@@ -46,7 +50,11 @@ public class MockServer {
 		if let port = port {
 			self.port = Int32(port)
 		} else {
+			#if os(Linux)
+			self.port = 0
+			#else
 			self.port = SocketBinder.unusedPort()
+			#endif
 		}
 	}
 
@@ -104,7 +112,12 @@ public class MockServer {
 	public func finalize(pact: Data, completion: ((Result<String, MockServerError>) -> Void)?) {
 		Logger.log(message: "Starting up MockServer to finalize writing Pact with data:", data: pact)
 
+		#if os(Linux)
+		let newPort = 0
+		#else
 		let newPort = SocketBinder.unusedPort()
+		#endif
+
 		Logger.log(message: "Creating MockServer on port \(newPort)")
 		let port = pactffi_create_mock_server(
 			String(data: pact, encoding: .utf8)?.replacingOccurrences(of: "\\", with: ""),

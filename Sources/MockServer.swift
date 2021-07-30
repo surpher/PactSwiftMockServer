@@ -32,30 +32,20 @@ public class MockServer {
 	}
 
 	let socketAddress = "0.0.0.0"
-	let port: Int32
+
+	var port: Int32 = 0
 	var transferProtocol: TransferProtocol = .standard
+
 	var tls: Bool {
 		transferProtocol == .secure ? true : false
 	}
 
 	// MARK: - Lifecycle
 
-	/// Initializes a MockServer on a given port.
-	/// If none is provided a random unused port will be used.
+	/// Initializes a mock server on a random available port
 	///
-	/// - Parameters:
-	///   - port: The port number
-	///
-	public init(port: Int? = nil) {
-		if let port = port {
-			self.port = Int32(port)
-		} else {
-			#if os(Linux)
-			self.port = 0
-			#else
-			self.port = SocketBinder.unusedPort()
-			#endif
-		}
+	public init() {
+		// Intentionally left blank
 	}
 
 	deinit {
@@ -64,33 +54,34 @@ public class MockServer {
 
 	// MARK: - Interface
 
-	/// Spins up a `MockServer` with expected interactions as defined in Pact.
+	/// Spins up a mock server with expected interactions defined in the provided Pact
 	///
 	/// - Parameters:
 	///   - pact: The pact contract
 	///   - protocol: HTTP protocol
-	///   - completion: Completion block to run when setup completes
+	///   - completion: A completion block called when setup completes
 	///
 	public func setup(pact: Data, protocol: TransferProtocol = .standard, completion: (Result<Int, MockServerError>) -> Void) {
 		Logger.log(message: "Setting up Pact mock Server", data: pact)
 		transferProtocol = `protocol`
 		Logger.log(message: "Setting up MockServer for Pact interaction test")
-		let mockServerPort = pactffi_create_mock_server(
+		port = pactffi_create_mock_server(
 			String(data: pact, encoding: .utf8),
-			"\(socketAddress):\(port)",
+			"\(socketAddress):0",
 			tls
 		)
 
-		Logger.log(message: "MockServer started on port \(mockServerPort)")
-		return (mockServerPort > 1_200)
-			? completion(Result.success(Int(mockServerPort)))
-			: completion(Result.failure(MockServerError(code: Int(mockServerPort))))
+		Logger.log(message: "MockServer started on port \(port)")
+
+		return (port > 1_200)
+			? completion(Result.success(Int(port)))
+			: completion(Result.failure(MockServerError(code: Int(port))))
 	}
 
 	/// Verifies all interactions passed to `MockServer`.
 	///
 	/// - Parameters:
-	///   - completion: Completion block to run when verification completes
+	///   - completion: A completion block called when setup completes
 	///
 	/// By default pact files are written to `/tmp/pacts`.
 	/// Use `PACT_OUTPUT_DIR` environment variable with absolute path to your custom path in schema `run` configuration.
@@ -103,25 +94,19 @@ public class MockServer {
 		completion(.success(true))
 	}
 
-	/// Finalises Pact tests by writing the Pact contract file to disk.
+	/// Finalises Pact tests by writing the Pact contract file to disk
 	///
 	/// - Parameters:
-	///   - pact: The pact contract to write
-	///   - completion: Completion block to run when setup completes
+	///   - pact: The Pact contract to write
+	///   - completion: A completion block called when setup completes
 	///
 	public func finalize(pact: Data, completion: ((Result<String, MockServerError>) -> Void)?) {
 		Logger.log(message: "Starting up MockServer to finalize writing Pact with data:", data: pact)
 
-		#if os(Linux)
-		let newPort = 0
-		#else
-		let newPort = SocketBinder.unusedPort()
-		#endif
-
-		Logger.log(message: "Creating MockServer on port \(newPort)")
-		let port = pactffi_create_mock_server(
+		Logger.log(message: "Creating MockServer on a random port")
+		port = pactffi_create_mock_server(
 			String(data: pact, encoding: .utf8)?.replacingOccurrences(of: "\\", with: ""),
-			"\(socketAddress):\(newPort)",
+			"\(socketAddress):0",
 			tls
 		)
 		Logger.log(message: "Created a MockServer on port \(port) to write a Pact contract file")
@@ -143,7 +128,7 @@ public class MockServer {
 
 public extension MockServer {
 
-	/// Generates an example string based on provided regex pattern.
+	/// Generates an example string based on provided regex pattern
 	///
 	/// Only supports basic regex patterns.
 	///
@@ -160,9 +145,9 @@ public extension MockServer {
 		return generatedString
 	}
 
-	/// Generates an example datetime string based on provided format. Returns nil if provided format is invalid.
+	/// Generates an example datetime string based on provided format
 	///
-	/// Returns `nil` if the provided format is invalid.
+	/// Returns `nil` if the provided format is invalid
 	///
 	/// - Parameters:
 	///   - format: The format of date to generate
@@ -208,6 +193,7 @@ private extension MockServer {
 
 		let pactDir = PactFileManager.pactDirectoryPath
 		Logger.log(message: "Writing Pact contract in \(pactDir) using MockServer on port: \(port ?? self.port)")
+
 		let writeResult = pactffi_write_pact_file(port ?? self.port, pactDir, true)
 		guard writeResult == 0 else {
 			completion(.failure(MockServerError(code: Int(writeResult))))

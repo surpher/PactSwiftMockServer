@@ -57,7 +57,7 @@ class MockServerTests: XCTestCase {
 		mockServer.setup(pact: "{\"foo\":\"bar\"}".data(using: .utf8)!) {
 			switch $0 {
 			case .success(let port):
-				XCTAssertEqual(mockServer.baseUrl, "http://0.0.0.0:\(port)")
+				XCTAssertEqual(mockServer.baseUrl, "http://127.0.0.1:\(port)")
 			default:
 				XCTFail("Expected Pact Mock Server to start on a port greater than 1200")
 			}
@@ -69,7 +69,7 @@ class MockServerTests: XCTestCase {
 		mockServer.setup(pact: "{\"foo\":\"bar\"}".data(using: .utf8)!, protocol: .secure) {
 			switch $0 {
 			case .success(let port):
-				XCTAssertEqual(mockServer.baseUrl, "https://0.0.0.0:\(port)")
+				XCTAssertEqual(mockServer.baseUrl, "https://127.0.0.1:\(port)")
 			default:
 				XCTFail("Expected Pact Mock Server to start on a port greater than 1200")
 			}
@@ -215,7 +215,7 @@ extension MockServerTests: URLSessionDelegate {
 		guard
 			secureProtocol,
 			challenge.protectionSpace.authenticationMethod == NSURLAuthenticationMethodServerTrust,
-			(challenge.protectionSpace.host.contains("0.0.0.0") || challenge.protectionSpace.host.contains("localhost")),
+			(challenge.protectionSpace.host.contains("127.0.0.1") || challenge.protectionSpace.host.contains("0.0.0.0") || challenge.protectionSpace.host.contains("localhost")),
 			let serverTrust = challenge.protectionSpace.serverTrust
 		else {
 			completionHandler(.performDefaultHandling, nil)

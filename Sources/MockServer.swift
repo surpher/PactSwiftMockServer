@@ -31,7 +31,7 @@ public class MockServer {
 		"\(transferProtocol.protocol)://\(socketAddress):\(port)"
 	}
 
-	let socketAddress = "0.0.0.0"
+	let socketAddress = "127.0.0.1"
 
 	var port: Int32 = 0
 	var transferProtocol: TransferProtocol = .standard

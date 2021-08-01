@@ -91,7 +91,7 @@ Packages
 
 # Packages/
 # Package.pins
-# Package.resolved
+Package.resolved
 .build/
 
 # Add this line if you want to avoid checking in Xcode SPM integration.
@@ -106,15 +106,9 @@ Packages
 Carthage/
 .swiftpm*
 
-####################
-## Submodules     ##
-####################
-Submodules/pact-reference/rust/target/**
 /PactSwiftMockServer.xcodeproj/project.xcworkspace/xcuserdata/marko.xcuserdatad/UserInterfaceState.xcuserstate
 /PactSwiftMockServer.xcodeproj/xcuserdata/marko.xcuserdatad/xcschemes/xcschememanagement.plist
-/Resources/arm64-iOS/libpact_mock_server.a
 .tmp
-
 
 ####################
 # Binaries        ##
@@ -123,6 +117,7 @@ Submodules/pact-reference/rust/target/**
 Resources/**/*.a
 /Resources/x86_64-iOS/libpact_ffi.a
 /Resources/x86_64-darwin/libpact_ffi.a
+/Resources/iOS-simulator/**
+/Resources/iOS-device/**
 /CHANGELOG.md.next
 /CHANGELOG.md.backup
-/Package.resolved

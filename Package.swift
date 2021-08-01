@@ -26,7 +26,7 @@ let package = Package(
 
 	dependencies: [
 		.package(name: "PactSwiftToolbox", url: "https://github.com/surpher/PactSwiftToolbox.git", from: "0.1.2"),
-		.package(name: "PactMockServer", url: "https://github.com/surpher/PactMockServer.git", from: "0.1.1"),
+		.package(name: "PactFFI", url: "https://github.com/surpher/PactMockServer.git", .branch("master")),
 	],
 
 	// MARK: - Targets
@@ -39,11 +39,11 @@ let package = Package(
 			path: "PactSwiftMockServer.xcframework"
 		),
 
-		// Vending the framework for Linux platform
+		// Vending for Linux platform
 		.target(
 			name: "PactSwiftMockServerLinux",
 			dependencies: [
-				"PactMockServer",
+				"PactFFI",
 				"PactSwiftToolbox",
 			],
 			path: "./Sources"

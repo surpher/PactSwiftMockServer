@@ -19,7 +19,7 @@ import Foundation
 @_implementationOnly import PactSwiftToolbox
 
 #if SWIFT_PACKAGE
-import PactFFI
+import PactMockServer
 #endif
 
 public class MockServer {

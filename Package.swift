@@ -25,8 +25,8 @@ let package = Package(
 	],
 
 	dependencies: [
-		.package(name: "PactSwiftToolbox", url: "https://github.com/surpher/PactSwiftToolbox.git", from: "0.1.2"),
-		.package(name: "PactFFI", url: "https://github.com/surpher/PactMockServer.git", .branch("master")),
+		.package(name: "PactSwiftToolbox", url: "https://github.com/surpher/PactSwiftToolbox.git", from: "0.1.0"),
+		.package(name: "PactMockServer", url: "https://github.com/surpher/PactMockServer.git", .branch("master")),
 	],
 
 	// MARK: - Targets
@@ -39,15 +39,30 @@ let package = Package(
 			path: "PactSwiftMockServer.xcframework"
 		),
 
-		// Vending for Linux platform
+		// Vending the framework for Linux platform
 		.target(
 			name: "PactSwiftMockServerLinux",
 			dependencies: [
-				"PactFFI",
+				"PactMockServer",
 				"PactSwiftToolbox",
 			],
 			path: "./Sources"
 		),
+
+		// Tests (Linux)
+
+		// `swift test` fails with:
+		//  Users/marko/Developer/pact-foundation/PactSwiftMockServer/Tests/MockServerErrorTests.swift:20:18: error: no such module 'PactSwiftMockServer'
+		//  @testable import PactSwiftMockServer
+		//                   ^
+
+		// .testTarget(
+		// 	name: "PactSwiftMockServerTests",
+		// 	dependencies: [
+		// 		"PactSwiftMockServerLinux",
+		// 	],
+		// 	path: "./Tests"
+		// ),
 
 	],
 

@@ -1,3 +1,5 @@
+# 0.2.2 - Bugfix
+* 1394ff8 - fix: Defines a port at MockServer init (Marko Justinek)
 # 0.2.1 - Linux support
 * 904a874 - chore: Update dependency verisons (Marko Justinek)
 * 8a70a40 - chore: Revert dependency name change (Marko Justinek)

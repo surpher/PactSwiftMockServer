@@ -86,9 +86,11 @@ public class MockServer {
 	public func verify(completion: (Result<Bool, VerificationError>) -> Void) {
 		guard requestsMatched else {
 			completion(.failure(.reason(mismatchDescription)))
+			shutdownMockServer()
 			return
 		}
 		completion(.success(true))
+		shutdownMockServer()
 	}
 
 	/// Finalises Pact tests by writing the Pact contract file to disk

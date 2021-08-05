@@ -47,13 +47,7 @@ class MockServerTests: XCTestCase {
 		}
 	}
 
-	// Removed the port argument. MockServer randomly assigns an available port
-//	func testMockServer_InitializesWithPort() {
-//		let mockServer = MockServer(port: 1235)
-//		XCTAssertEqual(mockServer.baseUrl, "http://0.0.0.0:1235")
-//	}
-
-	func testMockServer_SetsBaseURL_WithPort() {
+	func testMockServer_SetsBaseURL() {
 		mockServer.setup(pact: "{\"foo\":\"bar\"}".data(using: .utf8)!) {
 			switch $0 {
 			case .success(let port):
@@ -64,7 +58,7 @@ class MockServerTests: XCTestCase {
 		}
 	}
 
-	func testMockServer_SetsBaseSSLURL_WithPort() {
+	func testMockServer_SetsBaseSSLURL() {
 		secureProtocol = true
 		mockServer.setup(pact: "{\"foo\":\"bar\"}".data(using: .utf8)!, protocol: .secure) {
 			switch $0 {
@@ -87,7 +81,7 @@ class MockServerTests: XCTestCase {
 		}
 	}
 
-	func test_MOCK_SERVER_SANITY_TEST_TLS() {
+	func testMocServer_SanityTestTLS() {
 		let session = URLSession(configuration: .ephemeral, delegate: self, delegateQueue: .main)
 		let dataTaskExpectation = expectation(description: "dataTask")
 		secureProtocol = true
@@ -127,7 +121,7 @@ class MockServerTests: XCTestCase {
 		}
 	}
 
-	func test_MOCK_SERVER_SANITY_TEST_STANDARD_HTTP() {
+	func testMockServer_SanityTestHTTP() {
 		let session = URLSession(configuration: .ephemeral, delegate: self, delegateQueue: .main)
 		let dataTaskExpectation = expectation(description: "dataTask")
 		secureProtocol = true

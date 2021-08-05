@@ -6,7 +6,7 @@
 	<dict>
 		<key>Resources/Info.plist</key>
 		<data>
-		Enw226DJLqVT0effGVcbEc9oe4M=
+		+D+tJMgypr1bvO1yN7tu/Tg+OYo=
 		</data>
 	</dict>
 	<key>files2</key>
@@ -36,7 +36,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			S0P9xRbGzFxHqB96edAjCRf9pYOXbZ+tKiqvTpWQAoA=
+			MYan+pUI3AL+2pJKWm6CR8SCoIcIpBi5HtIKl0Z5C6I=
 			</data>
 		</dict>
 		<key>Modules/PactSwiftMockServer.swiftmodule/arm64-apple-macos.swiftinterface</key>
@@ -57,7 +57,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			S0P9xRbGzFxHqB96edAjCRf9pYOXbZ+tKiqvTpWQAoA=
+			MYan+pUI3AL+2pJKWm6CR8SCoIcIpBi5HtIKl0Z5C6I=
 			</data>
 		</dict>
 		<key>Modules/PactSwiftMockServer.swiftmodule/arm64.swiftinterface</key>
@@ -78,7 +78,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			Qv3Q8GGuB6oo7MPg2MsHt1rCzBgo9fnrLuUQwx4MA9E=
+			Ntkrlwi+oAdV80TjEx+dgu0oeURLDoT0AcB0faf7CQI=
 			</data>
 		</dict>
 		<key>Modules/PactSwiftMockServer.swiftmodule/x86_64-apple-macos.swiftinterface</key>
@@ -99,7 +99,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			Qv3Q8GGuB6oo7MPg2MsHt1rCzBgo9fnrLuUQwx4MA9E=
+			Ntkrlwi+oAdV80TjEx+dgu0oeURLDoT0AcB0faf7CQI=
 			</data>
 		</dict>
 		<key>Modules/PactSwiftMockServer.swiftmodule/x86_64.swiftinterface</key>
@@ -127,7 +127,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			sWbIYoPFh0Ti56NFsyHjJVn8wc3r99CSoDet7zbZlZM=
+			MG6aPu2B2Dk/5gTnO/lyNWpkCj0sc2+6yzdA8OmYhVM=
 			</data>
 		</dict>
 	</dict>

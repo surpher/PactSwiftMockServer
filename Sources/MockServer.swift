@@ -42,11 +42,7 @@ public class MockServer {
 
 	/// Initializes a MockServer on a random port
 	public init() {
-		#if os(Linux)
-		self.port = 0
-		#else
 		self.port = SocketBinder.unusedPort()
-		#endif
 	}
 
 	deinit {

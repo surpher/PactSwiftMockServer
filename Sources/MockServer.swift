@@ -34,17 +34,19 @@ public class MockServer {
 	let socketAddress = "127.0.0.1"
 	var port: Int32 = 0
 	var transferProtocol: TransferProtocol = .standard
-
 	var tls: Bool {
 		transferProtocol == .secure ? true : false
 	}
 
 	// MARK: - Lifecycle
 
-	/// Initializes a mock server object
-	///
+	/// Initializes a MockServer on a random port
 	public init() {
-		// Intentionally left blank
+		#if os(Linux)
+		self.port = 0
+		#else
+		self.port = SocketBinder.unusedPort()
+		#endif
 	}
 
 	deinit {
@@ -64,17 +66,16 @@ public class MockServer {
 		Logger.log(message: "Setting up Pact mock Server", data: pact)
 		transferProtocol = `protocol`
 		Logger.log(message: "Setting up MockServer for Pact interaction test")
-		port = pactffi_create_mock_server(
+		let mockServerPort = pactffi_create_mock_server(
 			String(data: pact, encoding: .utf8),
-			"\(socketAddress):0",
+			"\(socketAddress):\(port)",
 			tls
 		)
 
-		Logger.log(message: "MockServer started on port \(port)")
-
-		return (port > 1_200)
-			? completion(Result.success(Int(port)))
-			: completion(Result.failure(MockServerError(code: Int(port))))
+		Logger.log(message: "MockServer started on port \(mockServerPort)")
+		return (mockServerPort > 1_200)
+			? completion(Result.success(Int(mockServerPort)))
+			: completion(Result.failure(MockServerError(code: Int(mockServerPort))))
 	}
 
 	/// Verifies all interactions passed to `MockServer`.
@@ -104,10 +105,16 @@ public class MockServer {
 	public func finalize(pact: Data, completion: ((Result<String, MockServerError>) -> Void)?) {
 		Logger.log(message: "Starting up MockServer to finalize writing Pact with data:", data: pact)
 
-		Logger.log(message: "Creating MockServer on a random port")
-		port = pactffi_create_mock_server(
+		#if os(Linux)
+		let newPort = 0
+		#else
+		let newPort = SocketBinder.unusedPort()
+		#endif
+
+		Logger.log(message: "Creating MockServer on port \(newPort)")
+		let port = pactffi_create_mock_server(
 			String(data: pact, encoding: .utf8)?.replacingOccurrences(of: "\\", with: ""),
-			"\(socketAddress):0",
+			"\(socketAddress):\(newPort)",
 			tls
 		)
 		Logger.log(message: "Created a MockServer on port \(port) to write a Pact contract file")

@@ -6,7 +6,7 @@
 	<dict>
 		<key>Resources/Info.plist</key>
 		<data>
-		c8jLPfzmmMjf8YfFTGBhrg+YHxU=
+		Enw226DJLqVT0effGVcbEc9oe4M=
 		</data>
 	</dict>
 	<key>files2</key>
@@ -36,7 +36,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			4MVL7YdKc8FMQdWUszASZrZG/6Npa5XIlfYY+eeVPSg=
+			S0P9xRbGzFxHqB96edAjCRf9pYOXbZ+tKiqvTpWQAoA=
 			</data>
 		</dict>
 		<key>Modules/PactSwiftMockServer.swiftmodule/arm64-apple-macos.swiftinterface</key>
@@ -50,14 +50,14 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			zjEPCQKAqcRL8RyMOd7wNYsvVwIN/xHkZaX+n/HLGRE=
+			aAdtUkaCzwoyHGO4CHY63+A0uY5OE0YKH+TnMSEP6PM=
 			</data>
 		</dict>
 		<key>Modules/PactSwiftMockServer.swiftmodule/arm64.swiftdoc</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			4MVL7YdKc8FMQdWUszASZrZG/6Npa5XIlfYY+eeVPSg=
+			S0P9xRbGzFxHqB96edAjCRf9pYOXbZ+tKiqvTpWQAoA=
 			</data>
 		</dict>
 		<key>Modules/PactSwiftMockServer.swiftmodule/arm64.swiftinterface</key>
@@ -71,14 +71,14 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			zjEPCQKAqcRL8RyMOd7wNYsvVwIN/xHkZaX+n/HLGRE=
+			aAdtUkaCzwoyHGO4CHY63+A0uY5OE0YKH+TnMSEP6PM=
 			</data>
 		</dict>
 		<key>Modules/PactSwiftMockServer.swiftmodule/x86_64-apple-macos.swiftdoc</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			ncaGf282EuukdLWeUNzRNNMgV+g/fIM5/zVxAxr5Anw=
+			Qv3Q8GGuB6oo7MPg2MsHt1rCzBgo9fnrLuUQwx4MA9E=
 			</data>
 		</dict>
 		<key>Modules/PactSwiftMockServer.swiftmodule/x86_64-apple-macos.swiftinterface</key>
@@ -92,14 +92,14 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			LtpYFVcrhjMWDhWi1ojWTNL+uQocWARIN2Jrh844IOo=
+			jle3pwJ3LajMJ2RyNB6iU6S4eyCJrr02ayLFxFCRAcg=
 			</data>
 		</dict>
 		<key>Modules/PactSwiftMockServer.swiftmodule/x86_64.swiftdoc</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			ncaGf282EuukdLWeUNzRNNMgV+g/fIM5/zVxAxr5Anw=
+			Qv3Q8GGuB6oo7MPg2MsHt1rCzBgo9fnrLuUQwx4MA9E=
 			</data>
 		</dict>
 		<key>Modules/PactSwiftMockServer.swiftmodule/x86_64.swiftinterface</key>
@@ -113,7 +113,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			LtpYFVcrhjMWDhWi1ojWTNL+uQocWARIN2Jrh844IOo=
+			jle3pwJ3LajMJ2RyNB6iU6S4eyCJrr02ayLFxFCRAcg=
 			</data>
 		</dict>
 		<key>Modules/module.modulemap</key>
@@ -127,7 +127,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			Fw5rFJrDIxH2TGTrHY4qD9HwbTjzxzYRTBCvPaujEqw=
+			sWbIYoPFh0Ti56NFsyHjJVn8wc3r99CSoDet7zbZlZM=
 			</data>
 		</dict>
 	</dict>

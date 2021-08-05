@@ -1,3 +1,6 @@
+# 0.2.3 - v0.2.3
+* 73622c6 - feat: Each test runs on own port (Marko Justinek)
+* 0734852 - refactor: Shutdown mock server on verify (Marko Justinek)
 # 0.2.2 - Bugfix
 * 1394ff8 - fix: Defines a port at MockServer init (Marko Justinek)
 # 0.2.1 - Linux support

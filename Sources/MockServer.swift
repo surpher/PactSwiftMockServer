@@ -109,11 +109,17 @@ public class MockServer {
 
 		Logger.log(message: "Creating MockServer on port \(newPort)")
 		let port = pactffi_create_mock_server(
-			String(data: pact, encoding: .utf8)?.replacingOccurrences(of: "\\", with: ""),
+			String(data: pact, encoding: .utf8),
 			"\(socketAddress):\(newPort)",
 			tls
 		)
-		Logger.log(message: "Created a MockServer on port \(port) to write a Pact contract file")
+
+		guard port > 0 else {
+			completion?(.failure(MockServerError(code: Int(port))))
+			return
+		}
+
+		Logger.log(message: "Created a MockServer on port \(port) to write a Pact contract file", data: pact)
 
 		writePactContractFile(port: port) {
 			switch $0 {

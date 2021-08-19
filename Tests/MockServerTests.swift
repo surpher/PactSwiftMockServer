@@ -48,7 +48,7 @@ class MockServerTests: XCTestCase {
 	}
 
 	func testMockServer_SetsBaseURL() {
-		mockServer.setup(pact: "{\"foo\":\"bar\"}".data(using: .utf8)!) {
+		mockServer.setup(pact: "{\"foo\":\"bar\", \"baz\":\"[\\\"key\\\":\\\"value\\\"]\"}".data(using: .utf8)!) {
 			switch $0 {
 			case .success(let port):
 				XCTAssertEqual(mockServer.baseUrl, "http://127.0.0.1:\(port)")

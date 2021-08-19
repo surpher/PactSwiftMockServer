@@ -41,7 +41,7 @@ public enum MockServerError: Error {
 		case -3: self = .failedToStart
 		case 1, -4: self = .methodPanicked
 		case -5: self = .invalidSocketAddress
-		case 999: self = .validationFaliure
+		case 999: self = .validationFaliure // swiftlint:disable:this numbers_smell
 		default: self = .unknown
 		}
 	}

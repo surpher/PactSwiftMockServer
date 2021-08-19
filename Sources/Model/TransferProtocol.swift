@@ -17,22 +17,28 @@
 
 import Foundation
 
-/// Network transfer protocol
 #if !os(Linux)
+
+// MARK: - Apple platforms
+
+/// Network transfer protocol
 @objc public enum TransferProtocol: Int {
-
 	case standard
 	case secure
-
 }
-#else
-public enum TransferProtocol: Int {
 
+#else
+
+// MARK: - Linux platform
+
+/// Network transfer protocol
+public enum TransferProtocol: Int {
 	case standard
 	case secure
-
 }
 #endif
+
+// MARK: - Extension
 
 extension TransferProtocol {
 

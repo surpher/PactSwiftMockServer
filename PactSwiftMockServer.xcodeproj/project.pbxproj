@@ -131,6 +131,7 @@
 		ADBEF2FE2648FCF200486C4A /* MismatchError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MismatchError.swift; sourceTree = "<group>"; };
 		ADBEF2FF2648FCF200486C4A /* RequestError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RequestError.swift; sourceTree = "<group>"; };
 		ADBEF3002648FCF200486C4A /* VerificationErrorType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VerificationErrorType.swift; sourceTree = "<group>"; };
+		ADE254F526CDDB8300FA21A9 /* Support */ = {isa = PBXFileReference; lastKnownFileType = text; path = Support; sourceTree = SOURCE_ROOT; };
 		ADF2E5832674623F0029507D /* Package.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Package.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -192,13 +193,14 @@
 		AD1597E92648DE0E007CFAA5 = {
 			isa = PBXGroup;
 			children = (
-				ADF2E5832674623F0029507D /* Package.swift */,
+				ADE254FE26CDE58700FA21A9 /* .swiftlint.yml */,
 				AD1598332648E486007CFAA5 /* Configurations */,
+				AD1598352648E59E007CFAA5 /* Frameworks */,
+				ADF2E5832674623F0029507D /* Package.swift */,
 				AD1597F42648DE0E007CFAA5 /* Products */,
 				AD15980D2648DECB007CFAA5 /* Resources */,
 				AD15982F2648E31A007CFAA5 /* Sources */,
 				AD1598342648E522007CFAA5 /* Tests */,
-				AD1598352648E59E007CFAA5 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -369,6 +371,7 @@
 			buildPhases = (
 				AD1597EE2648DE0E007CFAA5 /* Headers */,
 				AD1597EF2648DE0E007CFAA5 /* Sources */,
+				ADE254FC26CDE3A100FA21A9 /* SwiftLint */,
 				AD1597F02648DE0E007CFAA5 /* Frameworks */,
 				AD1597F12648DE0E007CFAA5 /* Resources */,
 			);
@@ -408,6 +411,7 @@
 			buildPhases = (
 				AD1598132648DF73007CFAA5 /* Headers */,
 				AD1598142648DF73007CFAA5 /* Sources */,
+				ADE254FD26CDE3C700FA21A9 /* SwiftLint */,
 				AD1598152648DF73007CFAA5 /* Frameworks */,
 				AD1598162648DF73007CFAA5 /* Resources */,
 			);
@@ -583,6 +587,45 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		ADE254FC26CDE3A100FA21A9 /* SwiftLint */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = SwiftLint;
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Run SwiftLint before even attempting to compile\n\"${PROJECT_DIR}\"/Support/build_file_list_and_swiftlint PactSwiftMockServer ./.swiftlint.yml\n";
+		};
+		ADE254FD26CDE3C700FA21A9 /* SwiftLint */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = SwiftLint;
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Run SwiftLint before even attempting to compile\n\"${PROJECT_DIR}\"/Support/build_file_list_and_swiftlint PactSwiftMockServer ./.swiftlint.yml\n";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		AD1597EF2648DE0E007CFAA5 /* Sources */ = {

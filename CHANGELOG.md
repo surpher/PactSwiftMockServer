@@ -1,3 +1,5 @@
+# 0.2.5 - v0.2.5
+* accd74e - fix: Writing Pact that includes strings with escape characters (Marko Justinek)
 # 0.2.4 - v0.2.4
 * 073d2db - fix: Use same unusedPort api (Marko Justinek)
 * 57ee570 - feat: Initializes on random port (Marko Justinek)

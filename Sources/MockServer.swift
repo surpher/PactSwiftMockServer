@@ -32,7 +32,7 @@ public class MockServer {
 	}
 
 	let socketAddress = "127.0.0.1"
-	var port: Int32 = 0
+	let port: Int32
 	var transferProtocol: TransferProtocol = .standard
 	var tls: Bool {
 		transferProtocol == .secure ? true : false
@@ -42,7 +42,7 @@ public class MockServer {
 
 	/// Initializes a MockServer on a random port
 	public init() {
-		self.port = SocketBinder.unusedPort()
+		self.port = Self.randomPort
 	}
 
 	deinit {
@@ -59,22 +59,21 @@ public class MockServer {
 	///   - completion: A completion block called when setup completes
 	///
 	public func setup(pact: Data, protocol: TransferProtocol = .standard, completion: (Result<Int, MockServerError>) -> Void) {
-		Logger.log(message: "Setting up Pact mock Server", data: pact)
+		Logger.log(message: "Setting up pact mock server for consumer verification", data: pact)
 		transferProtocol = `protocol`
-		Logger.log(message: "Setting up MockServer for Pact interaction test")
-		let mockServerPort = pactffi_create_mock_server(
-			String(data: pact, encoding: .utf8),
-			"\(socketAddress):\(port)",
-			tls
-		)
 
-		Logger.log(message: "MockServer started on port \(mockServerPort)")
-		return (mockServerPort > 1_200)
-			? completion(Result.success(Int(mockServerPort)))
-			: completion(Result.failure(MockServerError(code: Int(mockServerPort))))
+		Logger.log(message: "Starting up mock server for pact interaction test")
+		let mockServerPort = createMockServer(pact: pact)
+
+		guard mockServerPort > 1_200 else {
+			return completion(.failure(MockServerError(code: Int(mockServerPort))))
+		}
+
+		Logger.log(message: "Mock server started on port \(mockServerPort)")
+		return completion(.success(Int(mockServerPort)))
 	}
 
-	/// Verifies all interactions passed to `MockServer`.
+	/// Verifies all interactions passed to mock server
 	///
 	/// - Parameters:
 	///   - completion: A completion block called when setup completes
@@ -92,35 +91,25 @@ public class MockServer {
 		shutdownMockServer()
 	}
 
-	/// Finalises Pact tests by writing the Pact contract file to disk
+	/// Finalises Pact tests by writing the pact contract file to disk
 	///
 	/// - Parameters:
 	///   - pact: The Pact contract to write
 	///   - completion: A completion block called when setup completes
 	///
 	public func finalize(pact: Data, completion: ((Result<String, MockServerError>) -> Void)?) {
-		Logger.log(message: "Starting up MockServer to finalize writing Pact with data:", data: pact)
+		Logger.log(message: "Starting up mock server to finalize writing pact with data:", data: pact)
+		let randomPort = Self.randomPort
 
-		#if os(Linux)
-		let newPort = 0
-		#else
-		let newPort = SocketBinder.unusedPort()
-		#endif
+		Logger.log(message: "Starting mock server on port \(randomPort)")
+		let port = createMockServer(pact: pact, port: randomPort)
 
-		Logger.log(message: "Creating MockServer on port \(newPort)")
-		let port = pactffi_create_mock_server(
-			String(data: pact, encoding: .utf8),
-			"\(socketAddress):\(newPort)",
-			tls
-		)
-
-		guard port > 0 else {
-			completion?(.failure(MockServerError(code: Int(port))))
+		guard port > 1_200 else {
+			completion?(.failure(MockServerError(code: Int(randomPort))))
 			return
 		}
 
-		Logger.log(message: "Created a MockServer on port \(port) to write a Pact contract file", data: pact)
-
+		Logger.log(message: "Mock server started on port \(port). Attempting to write pact file with data:", data: pact)
 		writePactContractFile(port: port) {
 			switch $0 {
 			case .success(let message):
@@ -173,6 +162,16 @@ public extension MockServer {
 		return generatedDatetime
 	}
 
+	/// Finds an unsued port on Darwin. Returns ``0`` on Linux.
+	private static var randomPort: Int32 {
+		#if os(Linux)
+		return 0
+		#else
+		// Darwin doesn't seem to use a random available port if ``0`` is sent to pactffi_create_mock_server(_:_:_:)
+		return SocketBinder.unusedPort()
+		#endif
+	}
+
 }
 
 // MARK: - Private
@@ -194,6 +193,18 @@ private extension MockServer {
 		return errorDescription
 	}
 
+	/// Creates a mock server with pact data on a given port.
+	///
+	/// - Parameters:
+	///   - pact: Pact data
+	///   - port: The port on which to run mock server
+	///
+	/// If value for ``port`` is not provider, the ``port`` from ``MockServer`` instance is used.
+	///
+	func createMockServer(pact: Data, port: Int32? = nil) -> Int32 {
+		pactffi_create_mock_server(String(data: pact, encoding: .utf8), "\(socketAddress):\(port ?? self.port)", tls)
+	}
+
 	/// Writes the Pact file to disk
 	func writePactContractFile(port: Int32? = nil, completion: (Result<String, MockServerError>) -> Void) {
 		guard PactFileManager.isPactDirectoryAvailable() else {
@@ -202,17 +213,18 @@ private extension MockServer {
 		}
 
 		let pactDir = PactFileManager.pactDirectoryPath
-		Logger.log(message: "Writing Pact contract in \(pactDir) using MockServer on port: \(port ?? self.port)")
-
+		Logger.log(message: "Writing pact contract in \(pactDir) using mock server on port: \(port ?? self.port)")
 		let writeResult = pactffi_write_pact_file(port ?? self.port, pactDir, true)
+
 		guard writeResult == 0 else {
 			completion(.failure(MockServerError(code: Int(writeResult))))
 			return
 		}
+
 		completion(.success("Pact written to \(pactDir)"))
 	}
 
-	/// Shuts down the MockServer and releases the socket address
+	/// Shuts down the mock server and releases the socket address
 	func shutdownMockServer(on port: Int32? = nil) {
 		let port = port ?? self.port
 		if port > 0 {

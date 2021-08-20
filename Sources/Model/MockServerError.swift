@@ -26,6 +26,7 @@ public enum MockServerError: Error {
 	case methodPanicked
 	case nullPointer
 	case portNotFound
+	case tlsConfigurationFailed
 	case validationFaliure
 	case unknown
 
@@ -41,6 +42,7 @@ public enum MockServerError: Error {
 		case -3: self = .failedToStart
 		case 1, -4: self = .methodPanicked
 		case -5: self = .invalidSocketAddress
+		case -6: self = .tlsConfigurationFailed
 		case 999: self = .validationFaliure // swiftlint:disable:this numbers_smell
 		default: self = .unknown
 		}
@@ -57,6 +59,7 @@ public enum MockServerError: Error {
 		case .methodPanicked: return describing("PactMockServer's method panicked.")
 		case .nullPointer: return describing("Either Pact JSON or Socket Address passed as null pointer.")
 		case .portNotFound: return describing("Mock Server with specified port not running.")
+		case .tlsConfigurationFailed: return describing("Could not create the TLS configuration with the self-signed certificate")
 		case .validationFaliure: return describing("Interactions failed to verify successfully. Check your tests.")
 		case .unknown: return describing("Reason unknown!")
 		}

@@ -2,6 +2,7 @@ $(SRCROOT)/Sources/Verifier.swift
 $(SRCROOT)/Sources/MockServer.swift
 $(SRCROOT)/Sources/Model/TransferProtocol.swift
 $(SRCROOT)/Sources/Model/VerificationErrorHandler.swift
+$(SRCROOT)/Sources/Model/ProviderVerificationError.swift
 $(SRCROOT)/Sources/Model/MismatchErrorType.swift
 $(SRCROOT)/Sources/Model/VerificationErrorType.swift
 $(SRCROOT)/Sources/Model/PactError.swift

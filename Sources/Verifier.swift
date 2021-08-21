@@ -18,8 +18,12 @@
 import Foundation
 @_implementationOnly import PactSwiftToolbox
 
-/// Class used to verify the provider side of an HTTP API contract
+/// Used to verify the provider side of a pact contract
 public final class Verifier {
+
+	public init() {
+		// Intentionally left blank
+	}
 
 	/// Replays the requests from provided contracts against a provider at provided ``url``
 	///
@@ -27,12 +31,9 @@ public final class Verifier {
 	///   - options: Verification options
 	///
 	public func verifyProvider(options: VerificationOptions) -> Result<Bool, ProviderVerificationError> {
-		// Convert VerificationOptions into args to be passed into verifier command
-		// TODO: - This little diddy didn't go all the way
-		let args = String(data: Data("blahblah".utf8), encoding: .utf8)
-
 		// Run verification command
-		let verificationResult = pactffi_verify(args)
+		Logger.log(message: "VerificationOptions", data: Data(options.args.utf8))
+		let verificationResult = pactffi_verify(options.args)
 
 		// Errors are returned as non-zero numeric values
 		guard verificationResult == 0 else {

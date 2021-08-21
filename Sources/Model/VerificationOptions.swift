@@ -20,114 +20,97 @@ import Foundation
 /// Defines the options to use when verifying a provider
 public struct VerificationOptions {
 
+	// MARK: - Types
+
+	public enum LogLevel: String {
+		case error
+		case warn
+		case info
+		case debug
+		case trace
+		case none
+	}
+
+	public enum PactLocation {
+		case directories([String])
+	}
+
+	// MARK: - Properties
+
+	/// The port of provider being verified
+	let port: Int
+
 	/// URL of the provider being verified
-	///
-	/// When specified alongside ``pactURLs``, ``pactFiles`` or ``pactDirs`` it will run
-	/// the verification once for each dynaic pact (Broker) discovered and user specified (URL) pact.
-	///
-	let baseURL: String
+	let providerURL: String?
 
-	/// URL of the build to associate with the published verification results
-	let buildURL: String?
-
-	/// Validates only against listed consumers
-	let filterConsumers: [String]?
-
-	/// Validates only against interactions whose descriptions match the provided filter
-	let filterDescriptions: [String]?
-
-	/// Validates only against interactions whose provider states match the provided filter
-	let filterStates: [String]?
-
-	/// Validates only against interactions that do not have a provide state
+	/// Validates only against interactions that do not have a provider state
 	let filterNoState: Bool
 
-	/// HTTP paths to Pact files
-	///
-	/// When specified alongside ``pactURLs``, ``pactFiles`` or ``pactDirs`` it will run
-	/// the verification once for each dynaic pact (Broker) discovered and user specified (URL) pact.
-	///
-	let pactURLs: [String]?
-
-	/// Local paths to Pact files
-	///
-	/// When specified alongside ``pactURLs``, ``pactFiles`` or ``pactDirs`` it will run
-	/// the verification once for each dynaic pact (Broker) discovered and user specified (URL) pact.
-	///
-	let pactFiles: [String]?
-
 	/// Local paths to directories containing Pact files
-	///
-	/// When specified alongside ``pactURLs``, ``pactFiles`` or ``pactDirs`` it will run
-	/// the verification once for each dynaic pact (Broker) discovered and user specified (URL) pact.
-	///
 	let pactDirs: [String]?
 
-	/// Selectors are the way we specify which pacticipants and versions we want to use when configuring verifications
+	/// Sets the log level
+	let logLevel: LogLevel
+
+	// MARK: - Initialization
+
+	/// Defines the options to use when verifying a provider
 	///
-	/// See [https://docs.pact.io/selectors](https://docs.pact.io/selectors) for more.
+	/// - Parameters:
+	///   - port: The port on which the provider being verified is running
+	///   - providerURL: The URL of provider being verified (defaults to ``http://localhost``)
+	///   - pactLocation: The locations of pacts
+	///   - filterNoState: Whether to only validate interactions that do not have a defined state
+	///   - logLevel: Logging level
 	///
-	let consumerVersionSelectors: [VersionSelector]?
+	public init(
+		port: Int,
+		pactLocation: PactLocation,
+		providerURL: String? = nil,
+		filterNoState: Bool = false,
+		logLevel: LogLevel = .warn
+	) {
+		self.providerURL = providerURL
+		self.port = port
+		self.filterNoState = filterNoState
+		self.logLevel = logLevel
 
-	/// Retrieve the latest pacts with this consumer version tag
-	let consumerTags: [String]?
-
-	/// Tags to apply to the provider application version
-	let providerTags: [String]?
-
-	/// The endpoint to post current provider state to on the Provider API
-	@available(*, deprecated, message: "Use StateHandlers instead")
-	let providerStatesSetupURL: String
-
-	/// The name of the Providing service
-	let providerName: String
-
-	/// The provider version being verified
-	let providerVersion: String
-
-	/// Pact broker configuration
-	let broker: PactBroker?
-
-	/// Framework returns an error if no pacts were found
-	// TODO: - Perhaps this should be in `PactBroker` type?
-	let failIfNoPactFound: Bool
-
-	/// A mapped list of message states to functions that are used to setup a given provider state prior to the message verification step
-	let stateHandlers: [StateHandler]?
-
-// TODO: - figure this one out
-//	let beforeEachHook
-
-// TODO: - figure this one out
-//	let afterEachHook
-
-// TODO: - figure this one out
-//	let requestFilter: Proxy.Middleware
-
-// TODO: - figure this one out
-	/// Custom TLS Configuration to use when making the requests to/from
-	/// the Provider API.
-	///
-	/// Useful for setting custom certificates, MASSL etc.
-	///
-//	let tlsConfig: TLS.Config
-
-	/// Allow pending pacts to be included in verification
-	///
-	/// See [https://docs.pact.io/pact_broker/advanced_topics/pending_pacts/](https://docs.pact.io/pact_broker/advanced_topics/pending_pacts/) for more.
-	let enablePending: Bool
-
-	/// Pull in new WIP pacts from _any_ tag
-	///
-	/// See [https://pact.io/wip](https://pact.io/wip) for more.
-	///
-	let includeWIPPactsSice: Date
+		switch pactLocation {
+		case .directories(let pactDirs): self.pactDirs = pactDirs
+		}
+	}
 
 }
 
-/*
+extension VerificationOptions {
 
-logLevel:
--l, --loglevel <loglevel>:	Log level (defaults to warn) [possible values: error, warn, info, debug,trace, none]
+	/// Newline delimited verification arguments
+	internal var args: String {
+		var args = [String]()
 
-*/
+		// Set verified provider port
+		args.append("-p\n\(self.port)")
+
+		// Set verified provider url
+		if let providerURL = providerURL {
+			args.append("--hostname\n\(providerURL)")
+		}
+
+		// Set directories option
+		if let pactDirs = pactDirs, pactDirs.isEmpty == false {
+			pactDirs.forEach { args.append("--dir\n\($0)") }
+		}
+
+		// Set no-state filter
+		if filterNoState {
+			args.append("--filter-no-state\ntrue")
+		}
+
+		// Set logging level
+		args.append("--loglevel\n\(self.logLevel.rawValue)")
+
+		// Convert to a ``String``
+		return args.joined(separator: "\n")
+	}
+
+}

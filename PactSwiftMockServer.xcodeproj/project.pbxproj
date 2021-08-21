@@ -50,6 +50,8 @@
 		ADC15DB026CE98140010D900 /* ProviderVerificationError.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADC15DAF26CE98140010D900 /* ProviderVerificationError.swift */; };
 		ADC15DB126CE98140010D900 /* ProviderVerificationError.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADC15DAF26CE98140010D900 /* ProviderVerificationError.swift */; };
 		ADC15DB226CE98140010D900 /* ProviderVerificationError.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADC15DAF26CE98140010D900 /* ProviderVerificationError.swift */; };
+		ADC6C61326D0AFBD00844000 /* VerifierTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADC6C61226D0AFBD00844000 /* VerifierTests.swift */; };
+		ADC6C61426D0AFBD00844000 /* VerifierTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADC6C61226D0AFBD00844000 /* VerifierTests.swift */; };
 		ADD7CB0B264B4A080091A286 /* VerificationErrorHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADBEF2F92648FCBC00486C4A /* VerificationErrorHandler.swift */; };
 		ADD7CB0C264B4A080091A286 /* MismatchError.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADBEF2FE2648FCF200486C4A /* MismatchError.swift */; };
 		ADD7CB0D264B4A080091A286 /* PactError.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADBEF2FC2648FCF200486C4A /* PactError.swift */; };
@@ -150,6 +152,7 @@
 		ADBEF2FF2648FCF200486C4A /* RequestError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RequestError.swift; sourceTree = "<group>"; };
 		ADBEF3002648FCF200486C4A /* VerificationErrorType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VerificationErrorType.swift; sourceTree = "<group>"; };
 		ADC15DAF26CE98140010D900 /* ProviderVerificationError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProviderVerificationError.swift; sourceTree = "<group>"; };
+		ADC6C61226D0AFBD00844000 /* VerifierTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerifierTests.swift; sourceTree = "<group>"; };
 		ADE254FF26CE334A00FA21A9 /* StateHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StateHandler.swift; sourceTree = "<group>"; };
 		ADE2550026CE334A00FA21A9 /* VersionSelector.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VersionSelector.swift; sourceTree = "<group>"; };
 		ADE2550126CE334A00FA21A9 /* VerificationOptions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VerificationOptions.swift; sourceTree = "<group>"; };
@@ -311,6 +314,7 @@
 				ADB97FD926493D5900C54CA9 /* MockServerErrorTests.swift */,
 				AD1598512648F2E1007CFAA5 /* MockServerTests.swift */,
 				ADB97FD626493D1800C54CA9 /* VerificationErrorTypeTests.swift */,
+				ADC6C61226D0AFBD00844000 /* VerifierTests.swift */,
 			);
 			path = Tests;
 			sourceTree = "<group>";
@@ -684,6 +688,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				ADB97FD726493D1800C54CA9 /* VerificationErrorTypeTests.swift in Sources */,
+				ADC6C61326D0AFBD00844000 /* VerifierTests.swift in Sources */,
 				ADB97FDA26493D5900C54CA9 /* MockServerErrorTests.swift in Sources */,
 				AD1598522648F2E1007CFAA5 /* MockServerTests.swift in Sources */,
 			);
@@ -717,6 +722,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				ADB97FD826493D1800C54CA9 /* VerificationErrorTypeTests.swift in Sources */,
+				ADC6C61426D0AFBD00844000 /* VerifierTests.swift in Sources */,
 				ADB97FDB26493D5900C54CA9 /* MockServerErrorTests.swift in Sources */,
 				AD1598532648F2E1007CFAA5 /* MockServerTests.swift in Sources */,
 			);

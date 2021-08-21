@@ -4,6 +4,21 @@
 import Foundation
 @_exported import PactSwiftMockServer
 import Swift
+public enum ProviderVerificationError : Swift.Error {
+  case verificationFailed
+  case nullPointer
+  case methodPanicked
+  case invalidArguments
+  case unknown
+  public var description: Swift.String {
+    get
+  }
+  public static func == (a: PactSwiftMockServer.ProviderVerificationError, b: PactSwiftMockServer.ProviderVerificationError) -> Swift.Bool
+  public func hash(into hasher: inout Swift.Hasher)
+  public var hashValue: Swift.Int {
+    get
+  }
+}
 public enum MockServerError : Swift.Error {
   case invalidPactJSON
   case invalidSocketAddress
@@ -12,6 +27,7 @@ public enum MockServerError : Swift.Error {
   case methodPanicked
   case nullPointer
   case portNotFound
+  case tlsConfigurationFailed
   case validationFaliure
   case unknown
   public var description: Swift.String {
@@ -22,6 +38,31 @@ public enum MockServerError : Swift.Error {
   public var hashValue: Swift.Int {
     get
   }
+}
+public struct VerificationOptions {
+  public enum LogLevel : Swift.String {
+    case error
+    case warn
+    case info
+    case debug
+    case trace
+    case none
+    public init?(rawValue: Swift.String)
+    public typealias RawValue = Swift.String
+    public var rawValue: Swift.String {
+      get
+    }
+  }
+  public enum PactLocation {
+    case directories([Swift.String])
+  }
+  public init(port: Swift.Int, pactLocation: PactSwiftMockServer.VerificationOptions.PactLocation, providerURL: Swift.String? = nil, filterNoState: Swift.Bool = false, logLevel: PactSwiftMockServer.VerificationOptions.LogLevel = .warn)
+}
+public struct PactBroker {
+  public let username: Swift.String
+  public let password: Swift.String
+  public let token: Swift.String
+  public let publishVerificationResult: Swift.Bool
 }
 public enum VerificationError : Swift.Error {
   case reason(Swift.String)
@@ -43,6 +84,13 @@ extension MockServer {
   public static func generate_value(regex: Swift.String) -> Swift.String?
   public static func generate_date(format: Swift.String) -> Swift.String?
 }
+public struct VersionSelector {
+}
+final public class Verifier {
+  public init()
+  final public func verifyProvider(options: PactSwiftMockServer.VerificationOptions) -> Swift.Result<Swift.Bool, PactSwiftMockServer.ProviderVerificationError>
+  @objc deinit
+}
 @objc public enum TransferProtocol : Swift.Int {
   case standard
   case secure
@@ -52,8 +100,15 @@ extension MockServer {
     get
   }
 }
+public struct StateHandler {
+}
+extension PactSwiftMockServer.ProviderVerificationError : Swift.Equatable {}
+extension PactSwiftMockServer.ProviderVerificationError : Swift.Hashable {}
 extension PactSwiftMockServer.MockServerError : Swift.Equatable {}
 extension PactSwiftMockServer.MockServerError : Swift.Hashable {}
+extension PactSwiftMockServer.VerificationOptions.LogLevel : Swift.Equatable {}
+extension PactSwiftMockServer.VerificationOptions.LogLevel : Swift.Hashable {}
+extension PactSwiftMockServer.VerificationOptions.LogLevel : Swift.RawRepresentable {}
 extension PactSwiftMockServer.TransferProtocol : Swift.Equatable {}
 extension PactSwiftMockServer.TransferProtocol : Swift.Hashable {}
 extension PactSwiftMockServer.TransferProtocol : Swift.RawRepresentable {}

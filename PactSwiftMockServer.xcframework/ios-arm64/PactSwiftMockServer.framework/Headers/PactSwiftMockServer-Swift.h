@@ -205,6 +205,7 @@ typedef unsigned int swift_uint4  __attribute__((__ext_vector_type__(4)));
 # pragma pop_macro("any")
 #endif
 
+/// Network transfer protocol
 typedef SWIFT_ENUM(NSInteger, TransferProtocol, open) {
   TransferProtocolStandard = 0,
   TransferProtocolSecure = 1,

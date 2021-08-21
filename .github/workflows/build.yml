@@ -1,6 +1,19 @@
 name: Build
 
-on: [push]
+on:
+  push:
+    branches:
+      - 'main'
+      - 'chore/**'
+      - 'docs/**'
+      - 'feat/**'
+      - 'feature/**'
+      - 'fix/**'
+      - 'refactor/**'
+      - 'releases/**'
+      - 'style/**'
+      - 'test/**'
+      - 'tech/**'
 
 jobs:
   test:

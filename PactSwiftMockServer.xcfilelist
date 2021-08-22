@@ -3,12 +3,12 @@ $(SRCROOT)/Sources/MockServer.swift
 $(SRCROOT)/Sources/Model/TransferProtocol.swift
 $(SRCROOT)/Sources/Model/VerificationErrorHandler.swift
 $(SRCROOT)/Sources/Model/ProviderVerificationError.swift
+$(SRCROOT)/Sources/Model/Verifier+Options.swift
 $(SRCROOT)/Sources/Model/MismatchErrorType.swift
 $(SRCROOT)/Sources/Model/VerificationErrorType.swift
 $(SRCROOT)/Sources/Model/PactError.swift
 $(SRCROOT)/Sources/Model/PactBroker.swift
 $(SRCROOT)/Sources/Model/StateHandler.swift
-$(SRCROOT)/Sources/Model/VerificationOptions.swift
 $(SRCROOT)/Sources/Model/MismatchError.swift
 $(SRCROOT)/Sources/Model/MockServerError.swift
 $(SRCROOT)/Sources/Model/VerificationError.swift

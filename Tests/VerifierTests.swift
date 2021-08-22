@@ -42,13 +42,13 @@ class VerifierTests: XCTestCase {
 	// MARK: - Tests
 
 	func testVerificationFails() {
-		let testOptions = VerificationOptions(port: 1234, pactLocation: .directories(["../TestSharedPacts"]), logLevel: .none)
+		let testOptions = Verifier.Options(port: 1234, pactLocation: .directories(["../TestSharedPacts"]), logLevel: .none)
 		let result = testSubject.verifyProvider(options: testOptions)
 		XCTAssertEqual(result, .failure(.verificationFailed))
 	}
 
 	func testInvalidArguments() {
-		let testOptions = VerificationOptions(port: 1234, pactLocation: .directories(["../_newLine_/some\n_invalidArgument_/"]))
+		let testOptions = Verifier.Options(port: 1234, pactLocation: .directories(["../_newLine_/some\n_invalidArgument_/"]))
 		let result = testSubject.verifyProvider(options: testOptions)
 		XCTAssertEqual(result, .failure(.invalidArguments))
 	}

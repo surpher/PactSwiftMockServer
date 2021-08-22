@@ -30,7 +30,7 @@ public final class Verifier {
 	/// - Parameters:
 	///   - options: Verification options
 	///
-	public func verifyProvider(options: VerificationOptions) -> Result<Bool, ProviderVerificationError> {
+	public func verifyProvider(options: Options) -> Result<Bool, ProviderVerificationError> {
 		// Run verification command
 		Logger.log(message: "VerificationOptions", data: Data(options.args.utf8))
 		let verificationResult = pactffi_verify(options.args)

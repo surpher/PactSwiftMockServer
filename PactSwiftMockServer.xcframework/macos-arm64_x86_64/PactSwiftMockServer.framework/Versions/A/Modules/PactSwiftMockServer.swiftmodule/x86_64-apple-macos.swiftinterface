@@ -19,24 +19,26 @@ public enum ProviderVerificationError : Swift.Error {
     get
   }
 }
-public struct VerificationOptions {
-  public enum LogLevel : Swift.String {
-    case error
-    case warn
-    case info
-    case debug
-    case trace
-    case none
-    public init?(rawValue: Swift.String)
-    public typealias RawValue = Swift.String
-    public var rawValue: Swift.String {
-      get
+extension Verifier {
+  public struct Options {
+    public enum LogLevel : Swift.String {
+      case error
+      case warn
+      case info
+      case debug
+      case trace
+      case none
+      public init?(rawValue: Swift.String)
+      public typealias RawValue = Swift.String
+      public var rawValue: Swift.String {
+        get
+      }
     }
+    public enum PactLocation {
+      case directories([Swift.String])
+    }
+    public init(port: Swift.Int, pactLocation: PactSwiftMockServer.Verifier.Options.PactLocation, providerURL: Swift.String? = nil, filterNoState: Swift.Bool = false, logLevel: PactSwiftMockServer.Verifier.Options.LogLevel = .warn)
   }
-  public enum PactLocation {
-    case directories([Swift.String])
-  }
-  public init(port: Swift.Int, pactLocation: PactSwiftMockServer.VerificationOptions.PactLocation, providerURL: Swift.String? = nil, filterNoState: Swift.Bool = false, logLevel: PactSwiftMockServer.VerificationOptions.LogLevel = .warn)
 }
 public enum MockServerError : Swift.Error {
   case invalidPactJSON
@@ -77,7 +79,7 @@ public struct VersionSelector {
 }
 final public class Verifier {
   public init()
-  final public func verifyProvider(options: PactSwiftMockServer.VerificationOptions) -> Swift.Result<Swift.Bool, PactSwiftMockServer.ProviderVerificationError>
+  final public func verifyProvider(options: PactSwiftMockServer.Verifier.Options) -> Swift.Result<Swift.Bool, PactSwiftMockServer.ProviderVerificationError>
   @objc deinit
 }
 public class MockServer {
@@ -104,9 +106,9 @@ public enum VerificationError : Swift.Error {
 }
 extension PactSwiftMockServer.ProviderVerificationError : Swift.Equatable {}
 extension PactSwiftMockServer.ProviderVerificationError : Swift.Hashable {}
-extension PactSwiftMockServer.VerificationOptions.LogLevel : Swift.Equatable {}
-extension PactSwiftMockServer.VerificationOptions.LogLevel : Swift.Hashable {}
-extension PactSwiftMockServer.VerificationOptions.LogLevel : Swift.RawRepresentable {}
+extension PactSwiftMockServer.Verifier.Options.LogLevel : Swift.Equatable {}
+extension PactSwiftMockServer.Verifier.Options.LogLevel : Swift.Hashable {}
+extension PactSwiftMockServer.Verifier.Options.LogLevel : Swift.RawRepresentable {}
 extension PactSwiftMockServer.MockServerError : Swift.Equatable {}
 extension PactSwiftMockServer.MockServerError : Swift.Hashable {}
 extension PactSwiftMockServer.TransferProtocol : Swift.Equatable {}

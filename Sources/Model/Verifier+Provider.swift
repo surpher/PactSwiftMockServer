@@ -1,5 +1,5 @@
 //
-//  Created by Marko Justinek on 19/8/21.
+//  Created by Marko Justinek on 21/8/21.
 //  Copyright © 2021 Marko Justinek. All rights reserved.
 //
 //  Permission to use, copy, modify, and/or distribute this software for any
@@ -15,29 +15,28 @@
 //  IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 //
 
-/* TODO:
-
-  1. Should it be set up as `Either<SimpleAuth, Token>`? Using this approach there wouldn't be any optionals here.
-
-*/
-
 import Foundation
 
-public struct PactBroker {
+public extension Verifier {
 
-	/// The URL of Pact Broker for broker-based verification
-	let url: String
+	/// The provider being verified
+	struct Provider {
 
-	/// Username when authenticating with a Pact Broker
-	public let username: String
+		/// The port of provider being verified
+		let port: Int
 
-	/// Password when authenticating with a Pact Broker
-	public let password: String
+		/// URL of the provider being verified
+		let url: URL?
 
-	/// Token is required when authenticating using the Bearer token mechanism
-	public let token: String
+		/// The name of the provider being verified
+		let name: String?
 
-	/// Whether to publish the verification results to the Pact Broker
-	public let publishVerificationResult: Bool
+		/// The provider being verified
+		public init(url: URL? = nil, port: Int, name: String? = nil) {
+			self.url = url
+			self.port = port
+			self.name = name
+		}
+	}
 
 }

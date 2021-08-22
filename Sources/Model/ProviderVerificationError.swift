@@ -18,7 +18,7 @@
 import Foundation
 
 /// Errors that can occure during provider verification
-public enum ProviderVerificationError: Error {
+public enum ProviderVerificationError: Error, Equatable {
 
 	/// Verification process failed
 	case verificationFailed
@@ -31,6 +31,9 @@ public enum ProviderVerificationError: Error {
 
 	/// Invalid arguments provided to the verification process
 	case invalidArguments
+
+	/// Provider verification used in unsupported ways
+	case usageError(String)
 
 	/// Unknown error
 	case unknown
@@ -53,6 +56,7 @@ public enum ProviderVerificationError: Error {
 		case .nullPointer: return describing("A null pointer was received.")
 		case .methodPanicked: return describing("The method panicked.")
 		case .invalidArguments: return describing("Invalid arguments were provided to the verification process.")
+		case .usageError(let message): return describing(message)
 		case .unknown: return describing("Unknown error!")
 		}
 	}

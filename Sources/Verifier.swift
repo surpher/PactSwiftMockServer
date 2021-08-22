@@ -25,23 +25,32 @@ public final class Verifier {
 		// Intentionally left blank
 	}
 
-	/// Replays the requests from provided contracts against a provider at provided ``url``
+	/// Replays the requests from provided contracts against a provider
 	///
 	/// - Parameters:
 	///   - options: Verification options
 	///
 	public func verifyProvider(options: Options) -> Result<Bool, ProviderVerificationError> {
-		// Run verification command
-		Logger.log(message: "VerificationOptions", data: Data(options.args.utf8))
-		let verificationResult = pactffi_verify(options.args)
+		do {
+			let args = try options.args()
+			Logger.log(message: "VerificationOptions", data: Data(args.utf8))
+			let verificationResult = pactffi_verify(args)
 
-		// Errors are returned as non-zero numeric values
-		guard verificationResult == 0 else {
-			return .failure(ProviderVerificationError(code: verificationResult))
+			// Errors are returned as non-zero numeric values
+			guard verificationResult == 0 else {
+				return .failure(ProviderVerificationError(code: verificationResult))
+			}
+
+			// Verification completed successfully
+			return .success(true)
+
+		} catch ProviderVerificationError.usageError(let reason) {
+			// Failed due to usage error
+			return .failure(ProviderVerificationError.usageError(reason))
+		} catch {
+			// Failed due to unknown reason
+			return .failure(ProviderVerificationError.unknown)
 		}
-
-		// Verification completed successfully
-		return .success(true)
 	}
 
 }

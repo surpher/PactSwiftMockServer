@@ -63,21 +63,9 @@
 		ADD7CB13264B4A080091A286 /* VerificationErrorType.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADBEF3002648FCF200486C4A /* VerificationErrorType.swift */; };
 		ADD7CB14264B4A080091A286 /* MismatchErrorType.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADBEF2FD2648FCF200486C4A /* MismatchErrorType.swift */; };
 		ADD7CB16264B4CCB0091A286 /* PactSwiftMockServer.h in Headers */ = {isa = PBXBuildFile; fileRef = AD1597F62648DE0E007CFAA5 /* PactSwiftMockServer.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		ADDA4FF226D22C9C00257475 /* Verifier+Provider.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADDA4FF126D22C9C00257475 /* Verifier+Provider.swift */; };
-		ADDA4FF326D22C9C00257475 /* Verifier+Provider.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADDA4FF126D22C9C00257475 /* Verifier+Provider.swift */; };
-		ADDA4FF426D22C9C00257475 /* Verifier+Provider.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADDA4FF126D22C9C00257475 /* Verifier+Provider.swift */; };
 		ADE2550326CE334B00FA21A9 /* StateHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADE254FF26CE334A00FA21A9 /* StateHandler.swift */; };
 		ADE2550426CE334B00FA21A9 /* StateHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADE254FF26CE334A00FA21A9 /* StateHandler.swift */; };
 		ADE2550526CE334B00FA21A9 /* StateHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADE254FF26CE334A00FA21A9 /* StateHandler.swift */; };
-		ADE2550626CE334B00FA21A9 /* Verifier+VersionSelector.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADE2550026CE334A00FA21A9 /* Verifier+VersionSelector.swift */; };
-		ADE2550726CE334B00FA21A9 /* Verifier+VersionSelector.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADE2550026CE334A00FA21A9 /* Verifier+VersionSelector.swift */; };
-		ADE2550826CE334B00FA21A9 /* Verifier+VersionSelector.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADE2550026CE334A00FA21A9 /* Verifier+VersionSelector.swift */; };
-		ADE2550926CE334B00FA21A9 /* Verifier+Options.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADE2550126CE334A00FA21A9 /* Verifier+Options.swift */; };
-		ADE2550A26CE334B00FA21A9 /* Verifier+Options.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADE2550126CE334A00FA21A9 /* Verifier+Options.swift */; };
-		ADE2550B26CE334B00FA21A9 /* Verifier+Options.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADE2550126CE334A00FA21A9 /* Verifier+Options.swift */; };
-		ADE2550C26CE334B00FA21A9 /* Verifier+Broker.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADE2550226CE334A00FA21A9 /* Verifier+Broker.swift */; };
-		ADE2550D26CE334B00FA21A9 /* Verifier+Broker.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADE2550226CE334A00FA21A9 /* Verifier+Broker.swift */; };
-		ADE2550E26CE334B00FA21A9 /* Verifier+Broker.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADE2550226CE334A00FA21A9 /* Verifier+Broker.swift */; };
 		ADE2551026CE335400FA21A9 /* Verifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADE2550F26CE335400FA21A9 /* Verifier.swift */; };
 		ADE2551126CE335400FA21A9 /* Verifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADE2550F26CE335400FA21A9 /* Verifier.swift */; };
 		ADE2551226CE335400FA21A9 /* Verifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADE2550F26CE335400FA21A9 /* Verifier.swift */; };
@@ -156,11 +144,7 @@
 		ADBEF3002648FCF200486C4A /* VerificationErrorType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VerificationErrorType.swift; sourceTree = "<group>"; };
 		ADC15DAF26CE98140010D900 /* ProviderVerificationError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProviderVerificationError.swift; sourceTree = "<group>"; };
 		ADC6C61226D0AFBD00844000 /* VerifierTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerifierTests.swift; sourceTree = "<group>"; };
-		ADDA4FF126D22C9C00257475 /* Verifier+Provider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Verifier+Provider.swift"; sourceTree = "<group>"; };
 		ADE254FF26CE334A00FA21A9 /* StateHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StateHandler.swift; sourceTree = "<group>"; };
-		ADE2550026CE334A00FA21A9 /* Verifier+VersionSelector.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Verifier+VersionSelector.swift"; sourceTree = "<group>"; };
-		ADE2550126CE334A00FA21A9 /* Verifier+Options.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Verifier+Options.swift"; sourceTree = "<group>"; };
-		ADE2550226CE334A00FA21A9 /* Verifier+Broker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Verifier+Broker.swift"; sourceTree = "<group>"; };
 		ADE2550F26CE335400FA21A9 /* Verifier.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Verifier.swift; sourceTree = "<group>"; };
 		ADF2E5832674623F0029507D /* Package.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Package.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -353,10 +337,6 @@
 				AD15984C2648ED4D007CFAA5 /* VerificationError.swift */,
 				ADBEF2F92648FCBC00486C4A /* VerificationErrorHandler.swift */,
 				ADBEF3002648FCF200486C4A /* VerificationErrorType.swift */,
-				ADE2550226CE334A00FA21A9 /* Verifier+Broker.swift */,
-				ADE2550126CE334A00FA21A9 /* Verifier+Options.swift */,
-				ADDA4FF126D22C9C00257475 /* Verifier+Provider.swift */,
-				ADE2550026CE334A00FA21A9 /* Verifier+VersionSelector.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -673,18 +653,14 @@
 				ADBEF3092648FCF200486C4A /* VerificationErrorType.swift in Sources */,
 				ADC15DB026CE98140010D900 /* ProviderVerificationError.swift in Sources */,
 				ADBEF3012648FCF200486C4A /* PactError.swift in Sources */,
-				ADE2550926CE334B00FA21A9 /* Verifier+Options.swift in Sources */,
 				AD15983E2648EA2C007CFAA5 /* MockServerError.swift in Sources */,
 				AD15983B2648E72A007CFAA5 /* TransferProtocol.swift in Sources */,
-				ADE2550C26CE334B00FA21A9 /* Verifier+Broker.swift in Sources */,
 				ADBEF3032648FCF200486C4A /* MismatchErrorType.swift in Sources */,
 				ADBEF3072648FCF200486C4A /* RequestError.swift in Sources */,
-				ADE2550626CE334B00FA21A9 /* Verifier+VersionSelector.swift in Sources */,
 				ADE2551026CE335400FA21A9 /* Verifier.swift in Sources */,
 				AD1598312648E32F007CFAA5 /* MockServer.swift in Sources */,
 				ADBEF2FA2648FCBC00486C4A /* VerificationErrorHandler.swift in Sources */,
 				ADE2550326CE334B00FA21A9 /* StateHandler.swift in Sources */,
-				ADDA4FF226D22C9C00257475 /* Verifier+Provider.swift in Sources */,
 				AD15984D2648ED4D007CFAA5 /* VerificationError.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -708,18 +684,14 @@
 				ADBEF30A2648FCF200486C4A /* VerificationErrorType.swift in Sources */,
 				ADC15DB126CE98140010D900 /* ProviderVerificationError.swift in Sources */,
 				ADBEF3022648FCF200486C4A /* PactError.swift in Sources */,
-				ADE2550A26CE334B00FA21A9 /* Verifier+Options.swift in Sources */,
 				AD15983F2648EA2C007CFAA5 /* MockServerError.swift in Sources */,
 				AD15983C2648E72A007CFAA5 /* TransferProtocol.swift in Sources */,
-				ADE2550D26CE334B00FA21A9 /* Verifier+Broker.swift in Sources */,
 				ADBEF3042648FCF200486C4A /* MismatchErrorType.swift in Sources */,
 				ADBEF3082648FCF200486C4A /* RequestError.swift in Sources */,
-				ADE2550726CE334B00FA21A9 /* Verifier+VersionSelector.swift in Sources */,
 				ADE2551126CE335400FA21A9 /* Verifier.swift in Sources */,
 				AD1598322648E32F007CFAA5 /* MockServer.swift in Sources */,
 				ADBEF2FB2648FCBC00486C4A /* VerificationErrorHandler.swift in Sources */,
 				ADE2550426CE334B00FA21A9 /* StateHandler.swift in Sources */,
-				ADDA4FF326D22C9C00257475 /* Verifier+Provider.swift in Sources */,
 				AD15984E2648ED4D007CFAA5 /* VerificationError.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -743,18 +715,14 @@
 				ADD7CB0E264B4A080091A286 /* RequestError.swift in Sources */,
 				ADC15DB226CE98140010D900 /* ProviderVerificationError.swift in Sources */,
 				ADD7CB0F264B4A080091A286 /* MockServerError.swift in Sources */,
-				ADE2550B26CE334B00FA21A9 /* Verifier+Options.swift in Sources */,
 				ADD7CB0B264B4A080091A286 /* VerificationErrorHandler.swift in Sources */,
 				ADD7CB13264B4A080091A286 /* VerificationErrorType.swift in Sources */,
-				ADE2550E26CE334B00FA21A9 /* Verifier+Broker.swift in Sources */,
 				ADD7CB11264B4A080091A286 /* VerificationError.swift in Sources */,
 				ADD7CB12264B4A080091A286 /* MockServer.swift in Sources */,
-				ADE2550826CE334B00FA21A9 /* Verifier+VersionSelector.swift in Sources */,
 				ADE2551226CE335400FA21A9 /* Verifier.swift in Sources */,
 				ADD7CB14264B4A080091A286 /* MismatchErrorType.swift in Sources */,
 				ADD7CB10264B4A080091A286 /* TransferProtocol.swift in Sources */,
 				ADE2550526CE334B00FA21A9 /* StateHandler.swift in Sources */,
-				ADDA4FF426D22C9C00257475 /* Verifier+Provider.swift in Sources */,
 				ADD7CB0D264B4A080091A286 /* PactError.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

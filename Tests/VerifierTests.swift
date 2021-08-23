@@ -42,23 +42,25 @@ class VerifierTests: XCTestCase {
 	// MARK: - Tests
 
 	func testVerificationFails() {
-		let testOptions = Verifier.Options(provider: Verifier.Provider(port: 1234), pactsSource: .directories(["../NonExistingDir"]), logLevel: .trace)
-		let result = testSubject.verifyProvider(options: testOptions)
+		let result = testSubject.verifyProvider(options: validArgs)
 		XCTAssertEqual(result, .failure(.verificationFailed))
 	}
 
 	func testInvalidArguments() {
-		let testOptions = Verifier.Options(
-			provider: Verifier.Provider(port: 1234, name: "test-invalid-provider"),
-			pactsSource: Verifier.Options.PactsSource.directories(["../_newLine_/some\n_invalidArgument_/"]),
-			filterStates: nil,
-			includePending: false,
-			consumerTags: nil,
-			providerTags: nil,
-			logLevel: .none
-		)
-		let result = testSubject.verifyProvider(options: testOptions)
+		let result = testSubject.verifyProvider(options: invalidArgs)
 		XCTAssertEqual(result, .failure(.invalidArguments))
+	}
+
+}
+
+private extension VerifierTests {
+
+	var validArgs: String {
+		"--port\n1234\n--dir\n../NonExistingDir"
+	}
+
+	var invalidArgs: String {
+		"--port\n1234\n--dir\n../Non\n/Existing/invalid/\npath"
 	}
 
 }

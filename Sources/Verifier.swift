@@ -18,6 +18,10 @@
 import Foundation
 @_implementationOnly import PactSwiftToolbox
 
+#if SWIFT_PACKAGE
+import PactMockServer
+#endif
+
 /// Used to verify the provider side of a pact contract
 public final class Verifier {
 
@@ -28,29 +32,21 @@ public final class Verifier {
 	/// Replays the requests from provided contracts against a provider
 	///
 	/// - Parameters:
-	///   - options: Verification options
+	///   - options: Newline delimited args
 	///
-	public func verifyProvider(options: Options) -> Result<Bool, ProviderVerificationError> {
-		do {
-			let args = try options.args()
-			Logger.log(message: "VerificationOptions", data: Data(args.utf8))
-			let verificationResult = pactffi_verify(args)
+	/// See [pact_verifier_cli](https://docs.pact.io/implementation_guides/rust/pact_verifier_cli) for more
+	///
+	public func verifyProvider(options args: String) -> Result<Bool, ProviderVerificationError> {
+		Logger.log(message: "VerificationOptions", data: Data(args.utf8))
+		let verificationResult = pactffi_verify(args)
 
-			// Errors are returned as non-zero numeric values
-			guard verificationResult == 0 else {
-				return .failure(ProviderVerificationError(code: verificationResult))
-			}
-
-			// Verification completed successfully
-			return .success(true)
-
-		} catch ProviderVerificationError.usageError(let reason) {
-			// Failed due to usage error
-			return .failure(ProviderVerificationError.usageError(reason))
-		} catch {
-			// Failed due to unknown reason
-			return .failure(ProviderVerificationError.unknown)
+		// Errors are returned as non-zero numeric values
+		guard verificationResult == 0 else {
+			return .failure(ProviderVerificationError(code: verificationResult))
 		}
+
+		// Verification completed successfully
+		return .success(true)
 	}
 
 }

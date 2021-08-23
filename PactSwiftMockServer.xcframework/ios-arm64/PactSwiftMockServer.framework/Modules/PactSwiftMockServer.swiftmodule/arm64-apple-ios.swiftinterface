@@ -4,20 +4,17 @@
 import Foundation
 @_exported import PactSwiftMockServer
 import Swift
-public enum ProviderVerificationError : Swift.Error {
+public enum ProviderVerificationError : Swift.Error, Swift.Equatable {
   case verificationFailed
   case nullPointer
   case methodPanicked
   case invalidArguments
+  case usageError(Swift.String)
   case unknown
   public var description: Swift.String {
     get
   }
   public static func == (a: PactSwiftMockServer.ProviderVerificationError, b: PactSwiftMockServer.ProviderVerificationError) -> Swift.Bool
-  public func hash(into hasher: inout Swift.Hasher)
-  public var hashValue: Swift.Int {
-    get
-  }
 }
 public enum MockServerError : Swift.Error {
   case invalidPactJSON
@@ -39,33 +36,6 @@ public enum MockServerError : Swift.Error {
     get
   }
 }
-extension Verifier {
-  public struct Options {
-    public enum LogLevel : Swift.String {
-      case error
-      case warn
-      case info
-      case debug
-      case trace
-      case none
-      public init?(rawValue: Swift.String)
-      public typealias RawValue = Swift.String
-      public var rawValue: Swift.String {
-        get
-      }
-    }
-    public enum PactLocation {
-      case directories([Swift.String])
-    }
-    public init(port: Swift.Int, pactLocation: PactSwiftMockServer.Verifier.Options.PactLocation, providerURL: Swift.String? = nil, filterNoState: Swift.Bool = false, logLevel: PactSwiftMockServer.Verifier.Options.LogLevel = .warn)
-  }
-}
-public struct PactBroker {
-  public let username: Swift.String
-  public let password: Swift.String
-  public let token: Swift.String
-  public let publishVerificationResult: Swift.Bool
-}
 public enum VerificationError : Swift.Error {
   case reason(Swift.String)
   public var description: Swift.String {
@@ -86,11 +56,9 @@ extension MockServer {
   public static func generate_value(regex: Swift.String) -> Swift.String?
   public static func generate_date(format: Swift.String) -> Swift.String?
 }
-public struct VersionSelector {
-}
 final public class Verifier {
   public init()
-  final public func verifyProvider(options: PactSwiftMockServer.Verifier.Options) -> Swift.Result<Swift.Bool, PactSwiftMockServer.ProviderVerificationError>
+  final public func verifyProvider(options args: Swift.String) -> Swift.Result<Swift.Bool, PactSwiftMockServer.ProviderVerificationError>
   @objc deinit
 }
 @objc public enum TransferProtocol : Swift.Int {
@@ -104,13 +72,8 @@ final public class Verifier {
 }
 public struct StateHandler {
 }
-extension PactSwiftMockServer.ProviderVerificationError : Swift.Equatable {}
-extension PactSwiftMockServer.ProviderVerificationError : Swift.Hashable {}
 extension PactSwiftMockServer.MockServerError : Swift.Equatable {}
 extension PactSwiftMockServer.MockServerError : Swift.Hashable {}
-extension PactSwiftMockServer.Verifier.Options.LogLevel : Swift.Equatable {}
-extension PactSwiftMockServer.Verifier.Options.LogLevel : Swift.Hashable {}
-extension PactSwiftMockServer.Verifier.Options.LogLevel : Swift.RawRepresentable {}
 extension PactSwiftMockServer.TransferProtocol : Swift.Equatable {}
 extension PactSwiftMockServer.TransferProtocol : Swift.Hashable {}
 extension PactSwiftMockServer.TransferProtocol : Swift.RawRepresentable {}

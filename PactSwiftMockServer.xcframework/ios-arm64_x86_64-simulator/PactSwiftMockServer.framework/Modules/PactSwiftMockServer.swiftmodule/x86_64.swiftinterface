@@ -45,7 +45,10 @@ public enum MockServerError : Swift.Error {
     get
   }
 }
-final public class Verifier {
+public protocol ProviderVerifying {
+  func verifyProvider(options args: Swift.String) -> Swift.Result<Swift.Bool, PactSwiftMockServer.ProviderVerificationError>
+}
+final public class Verifier : PactSwiftMockServer.ProviderVerifying {
   public init()
   final public func verifyProvider(options args: Swift.String) -> Swift.Result<Swift.Bool, PactSwiftMockServer.ProviderVerificationError>
   @objc deinit

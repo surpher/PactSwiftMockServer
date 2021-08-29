@@ -22,14 +22,21 @@ import Foundation
 import PactMockServer
 #endif
 
+public protocol ProviderVerifying {
+
+	/// Triggers the provider verification task
+	func verifyProvider(options args: String) -> Result<Bool, ProviderVerificationError>
+
+}
+
 /// Used to verify the provider side of a pact contract
-public final class Verifier {
+public final class Verifier: ProviderVerifying {
 
 	public init() {
 		// Intentionally left blank
 	}
 
-	/// Replays the requests from provided contracts against a provider
+	/// Triggers the provider verification task by replaying the requests from provided contracts
 	///
 	/// - Parameters:
 	///   - options: Newline delimited args

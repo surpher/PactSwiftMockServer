@@ -49,7 +49,7 @@ jobs:
 
       - name: Run tests (Xcode)
         run: |
-          set -o pipefail && xcodebuild clean test -project PactSwiftMockServer.xcodeproj -scheme "$SCHEME" -destination "$DESTINATION" GCC_INSTRUMENT_PROGRAM_FLOW_ARCS=YES GCC_GENERATE_TEST_COVERAGE_FILES=YES | xcbeautify
+          ./Support/build_test
 
       - name: Upload code coverage
         run: |

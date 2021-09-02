@@ -1,5 +1,22 @@
 #!/usr/bin/env bash
 
+#  PactSwiftMockService
+#
+#  Created by Marko Justinek on 19/8/21.
+#  Copyright © 2021 Marko Justinek. All rights reserved.
+#  Permission to use, copy, modify, and/or distribute this software for any
+#  purpose with or without fee is hereby granted, provided that the above
+#  copyright notice and this permission notice appear in all copies.
+#
+#  THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+#  WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+#  MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY
+#  SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+#  WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+#  ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR
+#  IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+#
+
 set -euo pipefail
 
 # ### Pre-requisites:
@@ -7,7 +24,7 @@ set -euo pipefail
 # `pact-reference` repo and `PactSwiftMockServer` repo are on the same folder level
 #
 # ### Usage:
-# ./Support/build_rust_dependencies
+# ./Support/build_rust_dependencies tag-name
 #
 # In order to minimise the built binary size update $LIBPACT_FFI_DI/Cargo.toml and append the following:
 #
@@ -30,9 +47,10 @@ PACT_FOUNDATION_REPO="https://github.com/pact-foundation/pact-reference.git"
 # Pre-requisite       #
 #######################
 
+# Check whether this script is being run in the right folder
 if [ ! -d "$PWD/PactSwiftMockServer.xcodeproj" ]
 then
-	echo "🚨 Run this from the same folder where your 'PactSwiftMockServer.xcodeproj' lives."
+	echo "🚨  Run this from the same folder where your 'PactSwiftMockServer.xcodeproj' lives."
 	echo "⚠️  You are runing it in $PWD"
 	exit 1
 fi
@@ -44,11 +62,22 @@ fi
 echo "👮‍♀️  Verifying project and dependencies' folder setup..."
 
 if [[ "$CI" == true ]]; then
+	# Check whether tag has been provided
+	if [ $# -lt 1 ]; then
+		echo "🚨  Missing libpact_ffi version tag!"
+		echo "Please run something like ./build_rust_dependencies libpact_ffi-vX.X.X"
+		exit 1
+	fi
+
+	# Move a level up
 	cd ..
-	echo "ℹ️ Cloning ${PACT_FOUNDATION_REPO}"
-	git clone $PACT_FOUNDATION_REPO
+
+	# Clone the pact-foundation/pact-reference repo
+	echo "ℹ️ Cloning ${PACT_FOUNDATION_REPO} at tag: $1"
+	git clone --depth 1 -b $1 $PACT_FOUNDATION_REPO
+
 elif [ ! -d "$PWD/../pact-reference" ]; then
-	echo "🚨 Missing pact-foundation/pact-reference repo."
+	echo "🚨  Missing pact-foundation/pact-reference repo."
 	echo "⚠️  Make sure you 'git clone ${PACT_FOUNDATION_REPO}' at the same folder level as your PactSwiftMockServer."
 	exit 1
 else

@@ -1,3 +1,5 @@
+# 0.3.1 - v0.3.1
+* 367764f - fix: Returns a valid port on Linux (Marko Justinek)
 # 0.3.0 - v0.3.0
 * 0e81924 - chore: Upgrade libpact_ffi to v0.0.2 (Marko Justinek)
 * 0ee3d6e - tech: Add a reusable build_test script (Marko Justinek)

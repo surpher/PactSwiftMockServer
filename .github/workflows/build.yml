@@ -32,6 +32,7 @@ jobs:
     env:
       SCHEME: ${{ matrix.scheme }}
       DESTINATION: ${{ matrix.destination }}
+      LIBPACT_FFI_TAG: "libpact_ffi-v0.0.2"
 
     steps:
       - name: Checkout repository
@@ -45,7 +46,7 @@ jobs:
       - name: Prepare Tools
         run: |
           Support/prepare_build_tools
-          Support/build_rust_dependencies
+          Support/build_rust_dependencies $LIBPACT_FFI_TAG
 
       - name: Run tests (Xcode)
         run: |

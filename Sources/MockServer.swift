@@ -32,7 +32,9 @@ public class MockServer {
 	}
 
 	let socketAddress = "127.0.0.1"
-	let port: Int32
+
+	// `port` is a var to support Linux platforms
+	var port: Int32 = 0
 	var transferProtocol: TransferProtocol = .standard
 	var tls: Bool {
 		transferProtocol == .secure ? true : false
@@ -63,14 +65,14 @@ public class MockServer {
 		transferProtocol = `protocol`
 
 		Logger.log(message: "Starting up mock server for pact interaction test")
-		let mockServerPort = createMockServer(pact: pact)
+		port = createMockServer(pact: pact)
 
-		guard mockServerPort > 1_200 else {
-			return completion(.failure(MockServerError(code: Int(mockServerPort))))
+		guard port > 1_200 else {
+			return completion(.failure(MockServerError(code: Int(port))))
 		}
 
-		Logger.log(message: "Mock server started on port \(mockServerPort)")
-		return completion(.success(Int(mockServerPort)))
+		Logger.log(message: "Mock server started on port \(port)")
+		return completion(.success(Int(port)))
 	}
 
 	/// Verifies all interactions passed to mock server
@@ -102,10 +104,10 @@ public class MockServer {
 		let randomPort = Self.randomPort
 
 		Logger.log(message: "Starting mock server on port \(randomPort)")
-		let port = createMockServer(pact: pact, port: randomPort)
+		port = createMockServer(pact: pact, port: randomPort)
 
 		guard port > 1_200 else {
-			completion?(.failure(MockServerError(code: Int(randomPort))))
+			completion?(.failure(MockServerError(code: Int(port))))
 			return
 		}
 

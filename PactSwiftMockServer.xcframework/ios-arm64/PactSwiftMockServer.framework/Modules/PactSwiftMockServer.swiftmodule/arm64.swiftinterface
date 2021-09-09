@@ -46,7 +46,7 @@ public class MockServer {
   public var baseUrl: Swift.String {
     get
   }
-  public init()
+  public init(directory: Foundation.URL? = nil)
   @objc deinit
   public func setup(pact: Foundation.Data, protocol: PactSwiftMockServer.TransferProtocol = .standard, completion: (Swift.Result<Swift.Int, PactSwiftMockServer.MockServerError>) -> Swift.Void)
   public func verify(completion: (Swift.Result<Swift.Bool, PactSwiftMockServer.VerificationError>) -> Swift.Void)

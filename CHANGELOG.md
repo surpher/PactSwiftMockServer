@@ -1,3 +1,6 @@
+# 0.3.2 - v0.3.2
+* 3eed423 - chore: Rebuild XCFramework (Marko Justinek)
+* c22e5e6 - feat: Initialize with directory path (Marko Justinek)
 # 0.3.1 - v0.3.1
 * 367764f - fix: Returns a valid port on Linux (Marko Justinek)
 # 0.3.0 - v0.3.0

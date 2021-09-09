@@ -39,12 +39,18 @@ public class MockServer {
 	var tls: Bool {
 		transferProtocol == .secure ? true : false
 	}
+	let directoryURL: URL?
 
 	// MARK: - Lifecycle
 
 	/// Initializes a MockServer on a random port
-	public init() {
+	///
+	/// - Parameters:
+	///   - directory: The directory URL to write the Pact contract into
+	///
+	public init(directory: URL? = nil) {
 		self.port = Self.randomPort
+		self.directoryURL = directory
 	}
 
 	deinit {
@@ -214,7 +220,6 @@ private extension MockServer {
 			return
 		}
 
-		let pactDir = PactFileManager.pactDirectoryPath
 		Logger.log(message: "Writing pact contract in \(pactDir) using mock server on port: \(port ?? self.port)")
 		let writeResult = pactffi_write_pact_file(port ?? self.port, pactDir, true)
 
@@ -232,6 +237,16 @@ private extension MockServer {
 		if port > 0 {
 			Logger.log(message: "Shutting down mock server on port \(port)")
 			pactffi_cleanup_mock_server(port)
+		}
+	}
+
+	/// Defines the directory to write the Pact contract file into as String
+	var pactDir: String {
+		if let directory = directoryURL, directory.isFileURL {
+			return directory.path
+		} else {
+			Logger.log(message: "None or invalid directory URL provided.")
+			return PactFileManager.pactDirectoryPath
 		}
 	}
 

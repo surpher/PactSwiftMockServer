@@ -1,3 +1,6 @@
+# 0.3.3 - v0.3.3
+* a0c50de - chore: Recompiles pact_ffi for v0.0.3 (Marko Justinek)
+* 27fc482 - doco: Add description for tag in build_rust_dependencies script (Marko Justinek)
 # 0.3.2 - v0.3.2
 * 3eed423 - chore: Rebuild XCFramework (Marko Justinek)
 * c22e5e6 - feat: Initialize with directory path (Marko Justinek)

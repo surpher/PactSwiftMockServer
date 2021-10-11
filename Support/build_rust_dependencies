@@ -21,10 +21,11 @@ set -euo pipefail
 
 # ### Pre-requisites:
 #
-# `pact-reference` repo and `PactSwiftMockServer` repo are on the same folder level
+# `pact-reference` repo and `PactSwiftMockServer` repo are on the same folder level.
+# Use the release tag for libpact_ffi-vX.X.X found at https://github.com/pact-foundation/pact-reference/releases
 #
 # ### Usage:
-# ./Support/build_rust_dependencies tag-name
+# ./Support/build_rust_dependencies libpact_ffi-v0.0.3
 #
 # In order to minimise the built binary size update $LIBPACT_FFI_DI/Cargo.toml and append the following:
 #

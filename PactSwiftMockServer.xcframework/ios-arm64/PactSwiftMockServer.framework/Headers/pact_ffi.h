@@ -219,6 +219,11 @@ int32_t pactffi_create_mock_server_for_pact(PactHandle pact,
  *
  * Returns a NULL pointer if the buffer can't be fetched. This can occur is there is not
  * sufficient memory to make a copy of the contents or the buffer contains non-UTF-8 characters.
+ *
+ * # Safety
+ *
+ * This function will fail if the log_id pointer is invalid or does not point to a NULL
+ * terminated string.
  */
 const char *pactffi_fetch_log_buffer(const char *log_id);
 
@@ -353,17 +358,22 @@ void pactffi_init_with_log_level(const char *level);
  * * `log_level` - String. One of TRACE, DEBUG, INFO, WARN, ERROR
  * * `message` - Message to log
  *
- * Exported functions are inherently unsafe.
+ * # Safety
+ * This function will fail if any of the pointers passed to it are invalid.
  */
 void pactffi_log_message(const char *source, const char *log_level, const char *message);
 
 /**
- * Convenience function to direct all logging to a thread local memory buffer.
+ * Convenience function to direct all logging to a task local memory buffer.
  */
 int pactffi_log_to_buffer(LevelFilter level_filter);
 
 /**
  * Convenience function to direct all logging to a file.
+ *
+ * # Safety
+ * This function will fail if the file_name pointer is invalid or does not point to a NULL
+ * terminated string.
  */
 int pactffi_log_to_file(const char *file_name, LevelFilter level_filter);
 
@@ -586,6 +596,57 @@ bool pactffi_response_status(InteractionHandle interaction, unsigned short statu
  * * `description` - The interaction description. It needs to be unique for each interaction.
  */
 bool pactffi_upon_receiving(InteractionHandle interaction, const char *description);
+
+/**
+ * External interface to retrieve the options and arguments available when calling the CLI interface,
+ * returning them as a JSON string.
+ *
+ * The purpose is to then be able to use in other languages which wrap the FFI library, to implement
+ * the same CLI functionality automatically without manual maintenance of arguments, help descriptions
+ * etc.
+ *
+ * # Example structure
+ * ```json
+ * {
+ *   "options": [
+ *     {
+ *       "long": "scheme",
+ *       "help": "Provider URI scheme (defaults to http)",
+ *       "possible_values": [
+ *         "http",
+ *         "https"
+ *       ],
+ *       "default_value": "http"
+ *       "multiple": false,
+ *     },
+ *     {
+ *       "long": "file",
+ *       "short": "f",
+ *       "help": "Pact file to verify (can be repeated)",
+ *       "multiple": true
+ *     },
+ *     {
+ *       "long": "user",
+ *       "help": "Username to use when fetching pacts from URLS",
+ *       "multiple": false,
+ *       "env": "PACT_BROKER_USERNAME"
+ *     }
+ *   ],
+ *   "flags": [
+ *     {
+ *       "long": "disable-ssl-verification",
+ *       "help": "Disables validation of SSL certificates",
+ *       "multiple": false
+ *     }
+ *   ]
+ * }
+ * ```
+ *
+ * # Safety
+ *
+ * Exported functions are inherently unsafe.
+ */
+const char *pactffi_verifier_cli_args(void);
 
 /**
  * External interface to verifier a provider

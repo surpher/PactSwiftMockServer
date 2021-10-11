@@ -1,10 +1,9 @@
 // swift-interface-format-version: 1.0
-// swift-compiler-version: Apple Swift version 5.5 (swiftlang-1300.0.31.1 clang-1300.0.29.1)
+// swift-compiler-version: Apple Swift version 5.4.2 (swiftlang-1205.0.28.2 clang-1205.0.19.57)
 // swift-module-flags: -target arm64-apple-ios12.0 -enable-objc-interop -enable-library-evolution -swift-version 5 -enforce-exclusivity=checked -O -module-name PactSwiftMockServer
 import Foundation
 @_exported import PactSwiftMockServer
 import Swift
-import _Concurrency
 public enum ProviderVerificationError : Swift.Error, Swift.Equatable {
   case verificationFailed
   case nullPointer
@@ -53,7 +52,7 @@ public class MockServer {
   public func verify(completion: (Swift.Result<Swift.Bool, PactSwiftMockServer.VerificationError>) -> Swift.Void)
   public func finalize(pact: Foundation.Data, completion: ((Swift.Result<Swift.String, PactSwiftMockServer.MockServerError>) -> Swift.Void)?)
 }
-extension PactSwiftMockServer.MockServer {
+extension MockServer {
   public static func generate_value(regex: Swift.String) -> Swift.String?
   public static func generate_date(format: Swift.String) -> Swift.String?
 }

@@ -26,6 +26,29 @@ set -euo pipefail
 TMP_DIR="./.tmp/build-xcframework"
 PRODUCT_NAME="PactSwiftMockServer"
 
+# Helpers
+
+function handleInput {
+  if [[ ! $1 =~ ^[Yy]$ ]]; then
+    echo "⚠️  Release aborted!"
+    exit 1
+  fi
+}
+
+########################
+# Pre-build checks     #
+########################
+
+# Check whether the Xcode 12.x is being used to generate the XCFramework
+# Otherwise a _concurrency fatal issue will be raised if PactSwiftMockSerer is
+# used in a project built with Xcode 12.x
+
+echo "⚠️ Checking for the right Xcode tools..."
+xcode-select -p && xcode-select -v
+echo "🚨 Are you running this using Xcode 12.x tools!? It should be 12.x!" -n 1 USER_INPUT
+handleInput $USER_INPUT
+echo
+
 # Setup
 
 echo "ℹ️  Looking for ${PRODUCT_NAME}.xcodeproj"

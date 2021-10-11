@@ -1,3 +1,5 @@
+# 0.3.4 - v0.3.4
+* fa4e952 - chore: Recompiles pact_ffi for v0.0.3 with swiftlang-1205.0.28.2 clang-1205.0.19.57 (Marko Justinek)
 # 0.3.3 - v0.3.3
 * a0c50de - chore: Recompiles pact_ffi for v0.0.3 (Marko Justinek)
 * 27fc482 - doco: Add description for tag in build_rust_dependencies script (Marko Justinek)

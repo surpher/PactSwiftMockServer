@@ -1,4 +1,11 @@
 # 0.3.5 - v0.3.5
+* e0dac45 - chore: Refactor release script (Marko Justinek)
+* 5f007f5 - chore: Recompiles pact_ffi-0.2.3 into XCFramework binaries (Marko Justinek)
+* 523584a - chore: Refactor the build_xcframwork script (Marko Justinek)
+* 84cb880 - chore: Refactor the release script (Marko Justinek)
+* 75b6d8f - v0.3.5 (Marko Justinek)
+* 464406a - tech: Add a check for Xcode version when building XCFramework (Marko Justinek)
+# 0.3.5 - v0.3.5
 * 464406a - tech: Add a check for Xcode version when building XCFramework (Marko Justinek)
 # 0.3.4 - v0.3.4
 * fa4e952 - chore: Recompiles pact_ffi for v0.0.3 with swiftlang-1205.0.28.2 clang-1205.0.19.57 (Marko Justinek)

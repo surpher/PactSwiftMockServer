@@ -1,3 +1,5 @@
+# 0.3.5 - v0.3.5
+* 464406a - tech: Add a check for Xcode version when building XCFramework (Marko Justinek)
 # 0.3.4 - v0.3.4
 * fa4e952 - chore: Recompiles pact_ffi for v0.0.3 with swiftlang-1205.0.28.2 clang-1205.0.19.57 (Marko Justinek)
 # 0.3.3 - v0.3.3

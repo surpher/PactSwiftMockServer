@@ -17,7 +17,7 @@
 #  IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #
 
-set -euo pipefail
+set -o pipefail
 
 # Scirpt that prepares PactSwift.xcframework
 
@@ -29,8 +29,9 @@ PRODUCT_NAME="PactSwiftMockServer"
 # Helpers
 
 function handleInput {
-  if [[ ! $1 =~ ^[Yy]$ ]]; then
-    echo "⚠️  Release aborted!"
+  if [[ ! $1 =~ ^[Yy]$ ]]
+	then
+    echo "⚠️  Aborting the process of building XCFrameworks!"
     exit 1
   fi
 }
@@ -45,7 +46,8 @@ function handleInput {
 
 echo "⚠️ Checking for the right Xcode tools..."
 xcode-select -p && xcode-select -v
-echo "🚨 Are you running this using Xcode 12.x tools!? It should be 12.x!" -n 1 USER_INPUT
+
+read -r -p "🚨 Are you running this using Xcode 12.x tools!? It should be 12.x!" -n 1 USER_INPUT
 handleInput $USER_INPUT
 echo
 

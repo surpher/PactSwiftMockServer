@@ -21,6 +21,10 @@
 # Runs the required steps to prepare and tag new version of PactSwift.
 # Usage: `./Scripts/release 1.0.0 'Bugfix Release' [-d]`
 #
+# Before you run this project make sure you commit the changes of the following scripts:
+# 1. build_rust_dependencies
+# 2. build_xcframework
+#
 # Notes:
 # Updates PactSwiftMockServer version number in PactSwiftVersion.swift file
 # Updates Marketing version number in Project-Shared.xcconfig file
@@ -62,11 +66,11 @@ function die {
 }
 
 function handleInput {
-if [[ ! $1 =~ ^[Yy]$ ]]
-then
-	echo "⚠️  Release aborted!"
-  exit 1
-fi
+	if [[ ! $1 =~ ^[Yy]$ ]]
+	then
+		echo "⚠️  Release aborted!"
+		exit 1
+	fi
 }
 
 ##############################
@@ -86,6 +90,18 @@ fi
 
 # Get the latest release tag
 LATEST_TAG=`git describe --match "v[0-9].*" --abbrev=0 HEAD --tags`
+
+read -r -p "Have you run `build_rust_dependencies libpact_ffi-vX.Y.Z`? [Y/n] " -n 1 USER_INPUT
+handleInput $USER_INPUT
+echo
+
+read -r -p "Have you built and commit the newly built XCFrameworks? [Y/n] " -n 1 USER_INPUT
+handleInput $USER_INPUT
+echo
+
+read -r -p "Have you run build_rust_dependencies and build_xcframework scripts? And did you commit the newly built XCFrameworks? [Y/n] " -n 1 USER_INPUT
+handleInput $USER_INPUT
+echo
 
 echo "ℹ️  The last release tag number is: ${LATEST_TAG}"
 

@@ -18,21 +18,21 @@ on:
 jobs:
   test:
     name: Run tests
-    runs-on: macos-11
+    runs-on: macos-12
 
     strategy:
       fail-fast: true
       matrix:
         include:
           - scheme: "PactSwiftMockServer-iOS"
-            destination: "platform=iOS Simulator,name=iPhone 12 Pro"
+            destination: "platform=iOS Simulator,name=iPhone 13 Pro"
           - scheme: "PactSwiftMockServer-macOS"
             destination: "arch=x86_64"
 
     env:
       SCHEME: ${{ matrix.scheme }}
       DESTINATION: ${{ matrix.destination }}
-      LIBPACT_FFI_TAG: "libpact_ffi-v0.0.2"
+      LIBPACT_FFI_TAG: "libpact_ffi-v0.3.1"
 
     steps:
       - name: Checkout repository
@@ -40,13 +40,14 @@ jobs:
         with:
           submodules: recursive
 
-      - name: Use Xcode 12.4
-        run: sudo xcode-select -switch /Applications/Xcode_12.4.app
+      - name: Use Xcode 13.4
+        run: sudo xcode-select -switch /Applications/Xcode_13.4.app
 
       - name: Prepare Tools
         run: |
           Support/prepare_build_tools
-          Support/build_rust_dependencies $LIBPACT_FFI_TAG
+          rustup component add rustfmt
+          Support/build_rust_universal_dependencies $LIBPACT_FFI_TAG 
 
       - name: Run tests (Xcode)
         run: |

@@ -222,7 +222,7 @@ if [ -z "$DRY_RUN" ]; then
 	echo "--------  🏷   Version:	$VERSION_TAG"
 	echo "--------  ✏️   Name: 	$RELEASE_NAME"
 	echo "--------"
-	echo "--------  🚀  Go and link you draft release for '$VERSION_TAG' with this tagged commit."
+	echo "--------  🚀  Go and link your draft release for '$VERSION_TAG' with this tagged commit."
 	echo "--------  🔗  https://github.com/surpher/PactSwiftMockServer/releases"
 	echo
 

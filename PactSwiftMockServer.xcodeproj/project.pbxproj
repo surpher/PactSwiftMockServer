@@ -386,6 +386,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = AD1598072648DE0E007CFAA5 /* Build configuration list for PBXNativeTarget "PactSwiftMockServer_iOS" */;
 			buildPhases = (
+				ADCC383F284051AC0062A11C /* Compile Rust Binaries */,
 				AD1597EE2648DE0E007CFAA5 /* Headers */,
 				AD1597EF2648DE0E007CFAA5 /* Sources */,
 				ADE254FC26CDE3A100FA21A9 /* SwiftLint */,
@@ -426,6 +427,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = AD1598292648DF73007CFAA5 /* Build configuration list for PBXNativeTarget "PactSwiftMockServer_macOS" */;
 			buildPhases = (
+				AD048F3828409A1D007DC494 /* Compile Rust Binaries */,
 				AD1598132648DF73007CFAA5 /* Headers */,
 				AD1598142648DF73007CFAA5 /* Sources */,
 				ADE254FD26CDE3C700FA21A9 /* SwiftLint */,
@@ -466,6 +468,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = AD38D308264A33E800124396 /* Build configuration list for PBXNativeTarget "PactSwiftMockServer_iphoneos" */;
 			buildPhases = (
+				AD048F3928409B03007DC494 /* Build Rust Binaries */,
 				AD38D2F2264A33E800124396 /* Headers */,
 				AD38D2F3264A33E800124396 /* Sources */,
 				AD38D2F4264A33E800124396 /* Frameworks */,
@@ -606,6 +609,60 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		AD048F3828409A1D007DC494 /* Compile Rust Binaries */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Compile Rust Binaries";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PROJECT_DIR}\"/Support/build_rust_macos_dependencies libpact_ffi-v0.3.1\n";
+		};
+		AD048F3928409B03007DC494 /* Build Rust Binaries */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Build Rust Binaries";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PROJECT_DIR}\"/Support/build_rust_ios_dependencies libpact_ffi-v0.3.1\n";
+		};
+		ADCC383F284051AC0062A11C /* Compile Rust Binaries */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Compile Rust Binaries";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PROJECT_DIR}\"/Support/build_rust_ios_dependencies libpact_ffi-v0.3.1\n";
+		};
 		ADE254FC26CDE3A100FA21A9 /* SwiftLint */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -773,10 +830,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = ADBEF2F42648FB0600486C4A /* Target-iOS-Debug.xcconfig */;
 			buildSettings = {
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/Resources/iOS-simulator",
-				);
 			};
 			name = Debug;
 		};
@@ -784,10 +837,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = ADBEF2F82648FB0600486C4A /* Target-iOS-Release.xcconfig */;
 			buildSettings = {
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/Resources/iOS-simulator",
-				);
 			};
 			name = Release;
 		};

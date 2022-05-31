@@ -31,15 +31,17 @@ public class MockServer {
 		"\(transferProtocol.protocol)://\(socketAddress):\(port)"
 	}
 
-	let socketAddress = "127.0.0.1"
+	private let socketAddress = "127.0.0.1"
 
 	// `port` is a var to support Linux platforms
-	var port: Int32 = 0
-	var transferProtocol: TransferProtocol = .standard
-	var tls: Bool {
+	private var port: Int32 = 0
+	private var transferProtocol: TransferProtocol = .standard
+	private var tls: Bool {
 		transferProtocol == .secure ? true : false
 	}
-	let directoryURL: URL?
+
+	private let directoryURL: URL?
+	private let merge: Bool
 
 	// MARK: - Lifecycle
 
@@ -47,9 +49,14 @@ public class MockServer {
 	///
 	/// - Parameters:
 	///   - directory: The directory URL to write the Pact contract into
+	///   - merge: Whether to merge interactions with an existing Pact contract.
 	///
-	public init(directory: URL? = nil) {
+	public init(
+		directory: URL? = nil,
+		merge: Bool = true
+	) {
 		self.port = Self.randomPort
+		self.merge = merge
 		self.directoryURL = directory
 	}
 
@@ -221,7 +228,7 @@ private extension MockServer {
 		}
 
 		Logger.log(message: "Writing pact contract in \(pactDir) using mock server on port: \(port ?? self.port)")
-		let writeResult = pactffi_write_pact_file(port ?? self.port, pactDir, true)
+		let writeResult = pactffi_write_pact_file(port ?? self.port, pactDir, self.merge)
 
 		guard writeResult == 0 else {
 			completion(.failure(MockServerError(code: Int(writeResult))))

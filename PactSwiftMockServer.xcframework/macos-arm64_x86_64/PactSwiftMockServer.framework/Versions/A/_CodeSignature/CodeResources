@@ -6,7 +6,7 @@
 	<dict>
 		<key>Resources/Info.plist</key>
 		<data>
-		gDvvpRXx5t3SKBixfEWVXqV61HQ=
+		4aq/Qy7B5Q7AyBPuIs09rYoVJYU=
 		</data>
 	</dict>
 	<key>files2</key>
@@ -15,7 +15,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			LfYLIAGLnCQaRVbfTsKuc0LBfCOg0yOaSccucKDxhc0=
+			iTG6VKMbNOZHqt7i7yTW7CzSXTx9Bt8+F0lG/binQeU=
 			</data>
 		</dict>
 		<key>Headers/PactSwiftMockServer.h</key>
@@ -36,84 +36,84 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			uWKBTsChu+kpuplEQPLuOBffP2kC9bh6penzicXega4=
+			wSmC+cPrgbxtXzqoG02eI2UUjKTYnla+20Y0TmECKnA=
 			</data>
 		</dict>
 		<key>Modules/PactSwiftMockServer.swiftmodule/arm64-apple-macos.swiftinterface</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			X6YPlH+qgSk7EexM09V7pTwLAbT/FoD2KhhGEID/vs8=
+			rNDF9oSO7zFPgzQAxOB1VCTQtMmsD7fxlk4/caQ8UGU=
 			</data>
 		</dict>
 		<key>Modules/PactSwiftMockServer.swiftmodule/arm64-apple-macos.swiftmodule</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			NVMZTua7C3Qj+zLA9uw+TGxcPgWUHexS12aJ0FxuUm8=
+			qewsCDjRyfEXlh+a5rrVMFTSMwWdVdATXfWAyaLgG6U=
 			</data>
 		</dict>
 		<key>Modules/PactSwiftMockServer.swiftmodule/arm64.swiftdoc</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			uWKBTsChu+kpuplEQPLuOBffP2kC9bh6penzicXega4=
+			wSmC+cPrgbxtXzqoG02eI2UUjKTYnla+20Y0TmECKnA=
 			</data>
 		</dict>
 		<key>Modules/PactSwiftMockServer.swiftmodule/arm64.swiftinterface</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			X6YPlH+qgSk7EexM09V7pTwLAbT/FoD2KhhGEID/vs8=
+			rNDF9oSO7zFPgzQAxOB1VCTQtMmsD7fxlk4/caQ8UGU=
 			</data>
 		</dict>
 		<key>Modules/PactSwiftMockServer.swiftmodule/arm64.swiftmodule</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			NVMZTua7C3Qj+zLA9uw+TGxcPgWUHexS12aJ0FxuUm8=
+			qewsCDjRyfEXlh+a5rrVMFTSMwWdVdATXfWAyaLgG6U=
 			</data>
 		</dict>
 		<key>Modules/PactSwiftMockServer.swiftmodule/x86_64-apple-macos.swiftdoc</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			y34wXoWzc13a8AJlCQM8DrqEQgU2mFQ+ZOKk9FO/eJQ=
+			3Hbe4+STYYvp4mpO7VlH34qbYvAk58j4Huk1SNoGZwk=
 			</data>
 		</dict>
 		<key>Modules/PactSwiftMockServer.swiftmodule/x86_64-apple-macos.swiftinterface</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			udoukpw8Q1eJLL9eO1IWkczJsnEPDVX37PcAT5SvFUk=
+			Tcw53MdMLR0fqE+l3klUfsjVdEkJF3aJ/TYyCtOxIxQ=
 			</data>
 		</dict>
 		<key>Modules/PactSwiftMockServer.swiftmodule/x86_64-apple-macos.swiftmodule</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			GGVSkAY5/gbe5JpSFybxNy2Curhov3smvfU8gNygDXk=
+			iRtzturBsB4WGTcHzV4Nh5YRLP30OQekAjn5ZSjkQIY=
 			</data>
 		</dict>
 		<key>Modules/PactSwiftMockServer.swiftmodule/x86_64.swiftdoc</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			y34wXoWzc13a8AJlCQM8DrqEQgU2mFQ+ZOKk9FO/eJQ=
+			3Hbe4+STYYvp4mpO7VlH34qbYvAk58j4Huk1SNoGZwk=
 			</data>
 		</dict>
 		<key>Modules/PactSwiftMockServer.swiftmodule/x86_64.swiftinterface</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			udoukpw8Q1eJLL9eO1IWkczJsnEPDVX37PcAT5SvFUk=
+			Tcw53MdMLR0fqE+l3klUfsjVdEkJF3aJ/TYyCtOxIxQ=
 			</data>
 		</dict>
 		<key>Modules/PactSwiftMockServer.swiftmodule/x86_64.swiftmodule</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			GGVSkAY5/gbe5JpSFybxNy2Curhov3smvfU8gNygDXk=
+			iRtzturBsB4WGTcHzV4Nh5YRLP30OQekAjn5ZSjkQIY=
 			</data>
 		</dict>
 		<key>Modules/module.modulemap</key>
@@ -127,7 +127,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			5cXrk1+ZzV5wzoDuxPLJF+bbVNgfsy6ndcKhqSXpbxI=
+			Xw8HTpdydPSBx4YWiMPXih2OdFfboSCVKpaxLDgyaUs=
 			</data>
 		</dict>
 	</dict>

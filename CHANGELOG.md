@@ -1,3 +1,6 @@
+# 0.3.6 - v0.3.6
+* df4932d - upgrade: libpact_ffi-v0.3.2 (Marko Justinek)
+* 8bb44b5 - feat: Merge interactions with existing Pact contract (Marko Justinek)
 # 0.3.5 - v0.3.5
 * d03409c - Upgrade to pact-rust v0.2.3 (Marko Justinek)
 * d932b02 - v0.3.5 (Marko Justinek)

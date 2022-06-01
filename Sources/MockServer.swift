@@ -228,7 +228,7 @@ private extension MockServer {
 		}
 
 		Logger.log(message: "Writing pact contract in \(self.pactDir) using mock server on port: \(port ?? self.port). Overwrite flag set to \(self.merge).")
-		let writeResult = pactffi_write_pact_file(port ?? self.port, self.pactDir, self.merge)
+		let writeResult = pactffi_write_pact_file(port ?? self.port, self.pactDir, !self.merge)
 
 		guard writeResult == 0 else {
 			completion(.failure(MockServerError(code: Int(writeResult))))

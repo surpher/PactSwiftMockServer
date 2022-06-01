@@ -1,3 +1,5 @@
+# 0.3.7 - v0.3.7
+* bcfc657 - tech: Adds more logging information when writing contract (Marko Justinek)
 # 0.3.6 - v0.3.6
 * df4932d - upgrade: libpact_ffi-v0.3.2 (Marko Justinek)
 * 8bb44b5 - feat: Merge interactions with existing Pact contract (Marko Justinek)

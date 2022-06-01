@@ -227,15 +227,15 @@ private extension MockServer {
 			return
 		}
 
-		Logger.log(message: "Writing pact contract in \(pactDir) using mock server on port: \(port ?? self.port)")
-		let writeResult = pactffi_write_pact_file(port ?? self.port, pactDir, self.merge)
+		Logger.log(message: "Writing pact contract in \(self.pactDir) using mock server on port: \(port ?? self.port). Overwrite flag set to \(self.merge).")
+		let writeResult = pactffi_write_pact_file(port ?? self.port, self.pactDir, self.merge)
 
 		guard writeResult == 0 else {
 			completion(.failure(MockServerError(code: Int(writeResult))))
 			return
 		}
 
-		completion(.success("Pact written to \(pactDir)"))
+		completion(.success("Pact written to \(self.pactDir)"))
 	}
 
 	/// Shuts down the mock server and releases the socket address

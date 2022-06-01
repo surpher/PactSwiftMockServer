@@ -1,3 +1,5 @@
+# 0.3.8 - v0.3.8
+* 1012993 - bugfix: Invert merge flag (Marko Justinek)
 # 0.3.7 - v0.3.7
 * bcfc657 - tech: Adds more logging information when writing contract (Marko Justinek)
 # 0.3.6 - v0.3.6

@@ -18,7 +18,7 @@
 		</data>
 		<key>Info.plist</key>
 		<data>
-		rCffOQDqJFWdsctwZgIMrcDI3v8=
+		JCNnI+qHZly7t6u48e5DjfEKtEw=
 		</data>
 		<key>Modules/PactSwiftMockServer.swiftmodule/arm64-apple-ios-simulator.swiftdoc</key>
 		<data>
@@ -30,7 +30,7 @@
 		</data>
 		<key>Modules/PactSwiftMockServer.swiftmodule/arm64-apple-ios-simulator.swiftmodule</key>
 		<data>
-		pl9zMykWkAK8/AaYgKbvAhpGwl0=
+		0upNLS+t07KVdaA5Vq24FrWrgyk=
 		</data>
 		<key>Modules/PactSwiftMockServer.swiftmodule/arm64.swiftdoc</key>
 		<data>
@@ -42,7 +42,7 @@
 		</data>
 		<key>Modules/PactSwiftMockServer.swiftmodule/arm64.swiftmodule</key>
 		<data>
-		pl9zMykWkAK8/AaYgKbvAhpGwl0=
+		0upNLS+t07KVdaA5Vq24FrWrgyk=
 		</data>
 		<key>Modules/PactSwiftMockServer.swiftmodule/x86_64-apple-ios-simulator.swiftdoc</key>
 		<data>
@@ -54,7 +54,7 @@
 		</data>
 		<key>Modules/PactSwiftMockServer.swiftmodule/x86_64-apple-ios-simulator.swiftmodule</key>
 		<data>
-		X+3NAkx3HwGDU4Xdyj+qI8rEH58=
+		kHiHsTKbnFSP9jMbdfmLEYxpxMc=
 		</data>
 		<key>Modules/PactSwiftMockServer.swiftmodule/x86_64.swiftdoc</key>
 		<data>
@@ -66,7 +66,7 @@
 		</data>
 		<key>Modules/PactSwiftMockServer.swiftmodule/x86_64.swiftmodule</key>
 		<data>
-		X+3NAkx3HwGDU4Xdyj+qI8rEH58=
+		kHiHsTKbnFSP9jMbdfmLEYxpxMc=
 		</data>
 		<key>Modules/module.modulemap</key>
 		<data>
@@ -114,7 +114,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			26OMXsrnSSamQjTNka2Vk8i767T40hwWAFi34jFiTNM=
+			sX6k/rWa7NhrSjKOqy8I9wXJFOgoQUR4PB1aNVfXghI=
 			</data>
 		</dict>
 		<key>Modules/PactSwiftMockServer.swiftmodule/arm64.swiftdoc</key>
@@ -135,7 +135,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			26OMXsrnSSamQjTNka2Vk8i767T40hwWAFi34jFiTNM=
+			sX6k/rWa7NhrSjKOqy8I9wXJFOgoQUR4PB1aNVfXghI=
 			</data>
 		</dict>
 		<key>Modules/PactSwiftMockServer.swiftmodule/x86_64-apple-ios-simulator.swiftdoc</key>
@@ -156,7 +156,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			VmR+nyRYpzX6NaMZhPmNcgWVYPoTnnpcFhNa/e3bnzw=
+			bjmsHBvNxxFE01mrTgZWwenjOpun1lIAT3XivCkK/3Y=
 			</data>
 		</dict>
 		<key>Modules/PactSwiftMockServer.swiftmodule/x86_64.swiftdoc</key>
@@ -177,7 +177,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			VmR+nyRYpzX6NaMZhPmNcgWVYPoTnnpcFhNa/e3bnzw=
+			bjmsHBvNxxFE01mrTgZWwenjOpun1lIAT3XivCkK/3Y=
 			</data>
 		</dict>
 		<key>Modules/module.modulemap</key>

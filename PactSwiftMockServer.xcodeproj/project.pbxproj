@@ -305,7 +305,6 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = AD1598072648DE0E007CFAA5 /* Build configuration list for PBXNativeTarget "PactSwiftMockServer_iOS" */;
 			buildPhases = (
-				ADCC383F284051AC0062A11C /* Build XCFramework containing libpact_ffi.a for supported architectures */,
 				AD1597EE2648DE0E007CFAA5 /* Headers */,
 				AD1597EF2648DE0E007CFAA5 /* Sources */,
 				ADE254FC26CDE3A100FA21A9 /* SwiftLint */,
@@ -346,7 +345,6 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = AD1598292648DF73007CFAA5 /* Build configuration list for PBXNativeTarget "PactSwiftMockServer_macOS" */;
 			buildPhases = (
-				AD048F3828409A1D007DC494 /* Build XCFramework containing libpact_ffi.a for supported architectures */,
 				AD1598132648DF73007CFAA5 /* Headers */,
 				AD1598142648DF73007CFAA5 /* Sources */,
 				ADE254FD26CDE3C700FA21A9 /* SwiftLint */,
@@ -466,42 +464,6 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		AD048F3828409A1D007DC494 /* Build XCFramework containing libpact_ffi.a for supported architectures */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-			);
-			name = "Build XCFramework containing libpact_ffi.a for supported architectures";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "# Update libpact_ffi version in the script!\n\"${PROJECT_DIR}\"/Support/build_rust_xcframework\n";
-		};
-		ADCC383F284051AC0062A11C /* Build XCFramework containing libpact_ffi.a for supported architectures */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-			);
-			name = "Build XCFramework containing libpact_ffi.a for supported architectures";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "# Update libpact_ffi version in the script!\n\"${PROJECT_DIR}\"/Support/build_rust_xcframework\n";
-		};
 		ADE254FC26CDE3A100FA21A9 /* SwiftLint */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;

@@ -85,9 +85,9 @@ function clonePactFFI {
 	git clone --depth 1 -b $1 $PACT_FOUNDATION_REPO
 }
 
-#######################
-# If CI               #
-#######################
+####################################
+# Check where we're running this   #
+####################################
 
 echo "👮‍♀️  Verifying project and dependencies' folder setup..."
 
@@ -197,7 +197,7 @@ echo "👍  Copied arm64-ios binary"
 
 echo "🚚  Copying the libpact_ffi binary for simulator"
 if [[ $ACTIVE_ARCH == "x86_64" ]]; then
-	ipo -create \
+	lipo -create \
 	../target/x86_64-apple-ios/release/libpact_ffi.a \
 	../target/aarch64-apple-ios/release/libpact_ffi.a \
 	-output $WORKSPACE/Resources/iOS-simulator/libpact_ffi.a

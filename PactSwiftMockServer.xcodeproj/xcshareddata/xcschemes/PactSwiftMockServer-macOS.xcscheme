@@ -5,6 +5,15 @@
    <BuildAction
       parallelizeBuildables = "YES"
       buildImplicitDependencies = "YES">
+      <PreActions>
+         <ExecutionAction
+            ActionType = "Xcode.IDEStandardExecutionActionsCore.ExecutionActionType.ShellScriptAction">
+            <ActionContent
+               title = "Build libpact_ffi.xcframework"
+               scriptText = "# exec &gt; ${PROJECT_DIR}/prebuild.log 2&gt;&amp;1&#10;# &quot;${PROJECT_DIR}&quot;/Support/build_rust_xcframework&#10;">
+            </ActionContent>
+         </ExecutionAction>
+      </PreActions>
       <BuildActionEntries>
          <BuildActionEntry
             buildForTesting = "YES"

@@ -1,0 +1,208 @@
+#!/usr/bin/env bash
+
+#  Created by Marko Justinek on 2/6/22.
+#  Copyright © 2022 Marko Justinek. All rights reserved.
+#  Permission to use, copy, modify, and/or distribute this software for any
+#  purpose with or without fee is hereby granted, provided that the above
+#  copyright notice and this permission notice appear in all copies.
+#
+#  THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+#  WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+#  MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY
+#  SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+#  WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+#  ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR
+#  IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+#
+
+set -euo pipefail
+
+# ### Pre-requisites:
+#
+# Remove `pact-reference` folder if it has no contents.
+# `pact-reference` and `PactSwiftMockServer` repos should be at the same folder level.
+#
+# Optionally use the release tag for libpact_ffi-vX.X.X found at https://github.com/pact-foundation/pact-reference/releases
+#
+# ### Usage (the libpact_ffi version is set in an environment variable in the script):
+#
+# ./Support/build_rust_xcframework
+#
+# or if you want to use a specific versino of libpact_ffi:
+#
+# ./Support/build_rust_xcframework libpact_ffi-v0.3.0
+#
+# ### Optional:
+# To minimise the built binary size update $LIBPACT_FFI_DI/Cargo.toml and append the following:
+#
+# [lib]
+# crate-type = ["staticlib"]
+#
+# [profile.release]
+# opt-level = 'z'
+# lto = true
+# panic = 'abort'
+#
+#######################
+
+if [[ -n "${DEVELOPER_SDK_DIR:-}" ]]; then
+    # Assume we're in Xcode, which means we're probably cross-compiling.
+    # In this case, we need to add an extra library search path for build scripts and proc-macros,
+    # which run on the host instead of the target.
+    # (macOS Big Sur does not have linkable libraries in /usr/lib/.)
+    export LIBRARY_PATH="${DEVELOPER_SDK_DIR}/MacOSX.sdk/usr/lib:${LIBRARY_PATH:-}"
+
+    # source: https://github.com/TimNN/cargo-lipo/issues/41#issuecomment-774793892
+fi
+
+# The default libpact_ffi version:
+DEFAULT_FFI_VERSION="libpact_ffi-v0.3.2"
+
+WORKSPACE=${GITHUB_WORKSPACE:-$PWD}
+LIBPACT_FFI_DIR="${WORKSPACE}/../pact-reference/rust/pact_ffi"
+LIBPACT_FFI_VERSION=${1:-$DEFAULT_FFI_VERSION}
+CI=${CI:-"false"}
+PACT_FOUNDATION_REPO="https://github.com/pact-foundation/pact-reference.git"
+ACTIVE_ARCH=$(uname -m)
+XCFRAMEWORKS_DIR="${WORKSPACE}/Resources/XCFrameworks/"
+
+#######################
+# Pre-requisite       #
+#######################
+
+# Check whether this script is being run in the right folder
+if [ ! -d "$PWD/PactSwiftMockServer.xcodeproj" ]; then
+    echo "🚨 Run this from the same folder where your 'PactSwiftMockServer.xcodeproj' is!"
+    echo "ℹ You are currently running this script from: \"$PWD\""
+    # exit 1
+fi
+
+#######################
+# Functions           #
+#######################
+
+function clonePactFFI {
+    # Move a level up
+    cd ..
+
+    # Clone the pact-foundation/pact-reference repo
+    echo "ℹ Cloning ${PACT_FOUNDATION_REPO} at release tag: ${LIBPACT_FFI_VERSION}"
+    git clone --depth 1 -b $LIBPACT_FFI_VERSION $PACT_FOUNDATION_REPO
+}
+
+echo "👮‍♀️  Verifying project and dependencies' folder setup..."
+
+if [[ "$CI" == true ]]; then
+    clonePactFFI $LIBPACT_FFI_VERSION
+
+elif [ ! -d "$PWD/../pact-reference" ]; then
+    echo "⚠️  Missing pact-foundation/pact-reference repo"
+    echo "ℹ Creating \"../pact-reference\" folder and cloning \"pact-reference\" repo"
+    clonePactFFI $LIBPACT_FFI_VERSION
+
+else
+    echo "ℹ Project setup seems to be in order."
+fi
+
+echo "ℹ Changing location to ${LIBPACT_FFI_DIR}"
+cd $LIBPACT_FFI_DIR
+
+#######################
+# Setup               #
+#######################
+
+# Validate dependencies
+
+echo "👮‍♀️  Checking if Rust is installed..."
+if which cargo >/dev/null; then
+    echo "cargo installed"
+    CARGO_DIR=$(dirname "$( which cargo )")
+    PATH=$PATH:$CARGO_DIR
+elif command -v ~/.cargo/bin/cargo &> /dev/null; then
+    echo "cargo installed in ~/.cargo/bin/"
+    CARGO_DIR=$(dirname "$( command -v ~/.cargo/bin/cargo )")
+    PATH=$PATH:$CARGO_DIR
+else
+    echo "🚨 Rust/Cargo not installed"
+    echo "ERROR: cargo is required and is was found on this machine.\nInstall Rust using either homebrew:"
+    echo "	curl https://sh.rustup.rs -sSf | sh"
+    echo "or follow instructions at https://www.rust-lang.org/tools/install"
+     exit 1
+fi
+
+# Set the nightly toolchain
+echo "ℹ Installing a nightly toolchain..."
+rustup install nightly
+rustup toolchain install nightly
+
+echo "ℹ Setting nightly toolchain as default..."
+rustup default nightly-x86_64-apple-darwin
+
+# Add all the required triples
+rustup target add \
+    x86_64-apple-ios \
+    aarch64-apple-ios
+
+# Add the nightly toolchain that includes aarch64-apple-ios-sim
+if [[ $ACTIVE_ARCH == "x86_64" ]]; then
+    rustup component add rust-src --toolchain nightly-x86_64-apple-darwin
+else
+    rustup component add rust-src --toolchain nightly-aarch64-apple-darwin
+fi
+
+##############################################
+# Build libpact_ffi binaries                 #
+##############################################
+
+echo "🏗  Building libpact_ffi.a for x86_64 iOS Simulator"
+echo "cargo build --target=x86_64-apple-ios --release"
+cargo build --target=x86_64-apple-ios --release
+
+echo "🏗  Building libpact_ffi.a for arm64 iOS Simulator"
+echo "cargo +nightly build -Z build-std --target aarch64-apple-ios-sim --release"
+cargo +nightly build -Z build-std --target aarch64-apple-ios-sim --release
+
+echo "🏗  Building libpact_ffi.a for arm64 iOS device"
+echo "cargo build --target=aarch64-apple-ios --release"
+cargo build --target=aarch64-apple-ios --release
+
+echo "🏗  Building libpact_ffi.a for x86_64 Darwin"
+echo "cargo build --target=x86_64-apple-darwin --release"
+cargo build --target=x86_64-apple-darwin --release
+
+echo "🏗  Building libpact_ffi.a for arm64 Darwin"
+echo "cargo build --target=aarch64-apple-darwin --release"
+cargo build --target=aarch64-apple-darwin --release
+
+echo "✅  libpact_ffi.a binaries built"
+
+#######################
+# Pact Mock Server    #
+#######################
+
+# Remove the existing XCFramework (if it exists) then build a fresh one
+if [ -d $XCFRAMEWORKS_DIR/libpact_ffi.xcframework ]; then
+    rm -Rf $XCFRAMEWORKS_DIR/libpact_ffi.xcframework;
+fi
+
+# Copy the compiled binaries into PactSwiftMockServer project
+echo "🏗  Preparing the XCFramework containing libpact_ffi"
+if [[ $ACTIVE_ARCH == "x86_64" ]]; then
+    # Apple Intel machines + iOS devices
+    xcodebuild -create-xcframework \
+        -library ../target/x86_64-apple-ios/release/libpact_ffi.a \
+        -library ../target/aarch64-apple-ios/release/libpact_ffi.a \
+        -library ../target/x86_64-apple-darwin/release/libpact_ffi.a \
+        -output $XCFRAMEWORKS_DIR/Resources/XCFrameworks/libpact_ffi.xcframework
+else
+    # Apple Silicon machines + iOS devices
+    xcodebuild -create-xcframework \
+        -library ../target/aarch64-apple-ios-sim/release/libpact_ffi.a \
+        -library ../target/aarch64-apple-ios/release/libpact_ffi.a \
+        -library ../target/aarch64-apple-darwin/release/libpact_ffi.a \
+        -output $XCFRAMEWORKS_DIR/libpact_ffi.xcframework
+fi
+
+# Done
+echo "✅  libpact_ffi.xcframework ready!"
+exit 0

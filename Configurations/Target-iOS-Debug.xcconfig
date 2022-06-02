@@ -2,5 +2,5 @@
 
 SWIFT_OPTIMIZATION_LEVEL = -Onone
 
-LIBRARY_SEARCH_PATHS = $(inherited) $(PROJECT_DIR)/Resources/iOS-simulator $(PLATFORM_DIR)/Developer/usr/lib
-FRAMEWORK_SEARCH_PATHS = $(inherited) $(PROJECT_DIR)/Resources/iOS-simulator
+LIBRARY_SEARCH_PATHS = $(inherited) $(PLATFORM_DIR)/Developer/usr/lib
+FRAMEWORK_SEARCH_PATHS = $(inherited)

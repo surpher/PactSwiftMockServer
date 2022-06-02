@@ -74,7 +74,7 @@ XCFRAMEWORKS_DIR="${WORKSPACE}/Resources/XCFrameworks/"
 if [ ! -d "$PWD/PactSwiftMockServer.xcodeproj" ]; then
     echo "🚨 Run this from the same folder where your 'PactSwiftMockServer.xcodeproj' is!"
     echo "ℹ You are currently running this script from: \"$PWD\""
-    # exit 1
+    exit 1
 fi
 
 #######################
@@ -193,6 +193,7 @@ if [[ $ACTIVE_ARCH == "x86_64" ]]; then
         -library ../target/x86_64-apple-ios/release/libpact_ffi.a \
         -library ../target/aarch64-apple-ios/release/libpact_ffi.a \
         -library ../target/x86_64-apple-darwin/release/libpact_ffi.a \
+
         -output $XCFRAMEWORKS_DIR/Resources/XCFrameworks/libpact_ffi.xcframework
 else
     # Apple Silicon machines + iOS devices

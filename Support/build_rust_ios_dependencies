@@ -107,7 +107,7 @@ elif [ ! -d "$PWD/../pact-reference" ]; then
 		echo "Please run something like ./build_rust_dependencies libpact_ffi-vX.X.X"
 		exit 1
 	fi
-	
+
 	echo "⚠️ Missing pact-foundation/pact-reference repo"
 	echo "ℹ Creating \"../pact-reference\" folder and cloning \"pact-reference\" repo"
 	mkdir -p "$PWD/../pact-reference"
@@ -155,24 +155,27 @@ rustup default nightly-x86_64-apple-darwin
 rustup target add \
 	x86_64-apple-ios \
 	aarch64-apple-ios
-	
+
 # Add the nightly toolchain that includes aarch64-apple-ios-sim
 if [[ $ACTIVE_ARCH == "x86_64" ]]; then
 	rustup component add rust-src --toolchain nightly-x86_64-apple-darwin
-else 
+else
 	rustup component add rust-src --toolchain nightly-aarch64-apple-darwin
-fi 
+fi
 
 ##############################################
 # Build libpact_ffi binaries                 #
 ##############################################
 
-echo "🏗  Building libpact_ffi.a for x86_64 iOS Simulator"
-echo "cargo build --target=x86_64-apple-ios --release"
-cargo build --target=x86_64-apple-ios --release
-
-echo "🏗  Building libpact_ffi.a for arm64 iOS Simulator"
-cargo +nightly build -Z build-std --target aarch64-apple-ios-sim --release
+if [[ $ACTIVE_ARCH == "x86_64" ]]; then
+	echo "🏗  Building libpact_ffi.a for x86_64 iOS Simulator"
+	echo "cargo build --target=x86_64-apple-ios --release"
+	cargo build --target=x86_64-apple-ios --release
+else
+	echo "🏗  Building libpact_ffi.a for arm64 iOS Simulator"
+	echo "cargo +nightly build -Z build-std --target aarch64-apple-ios-sim --release"
+	cargo +nightly build -Z build-std --target aarch64-apple-ios-sim --release
+fi
 
 echo "🏗  Building libpact_ffi.a for arm64 iOS device"
 echo "cargo build --target=aarch64-apple-ios --release"
@@ -185,19 +188,24 @@ echo "✅  libpact_ffi.a binaries built"
 #######################
 
 # Copy the compiled binaries into PactSwiftMockServer project
-echo "🏗  Copying binaries to ${WORKSPACE}"
+echo "🏗  Preparing the binaries for current architecture: ${ACTIVE_ARCH}"
 
 # Copy binary for an iOS device
-echo "🚚  Copying arm64-ios (iOS device) binary..."
+echo "🚚  Copying arm64-ios (iOS device) binary"
 cp ../target/aarch64-apple-ios/release/libpact_ffi.a $WORKSPACE/Resources/iOS-device/libpact_ffi.a
-echo "👍  Copied arm64-ios binary."
+echo "👍  Copied arm64-ios binary"
 
-echo "🚚  Creating a fat binary for iOS Simulator (x86_64 and arm64)..."
-lipo -create \
+echo "🚚  Copying the libpact_ffi binary for simulator"
+if [[ $ACTIVE_ARCH == "x86_64" ]]; then
+	ipo -create \
 	../target/x86_64-apple-ios/release/libpact_ffi.a \
-	../target/aarch64-apple-ios-sim/release/libpact_ffi.a \
+	../target/aarch64-apple-ios/release/libpact_ffi.a \
 	-output $WORKSPACE/Resources/iOS-simulator/libpact_ffi.a
-echo "👍  Copied x86_64-ios and arm64-ios-sim fattie."
+	echo "👍  Copied x86_64-ios and arm64-ios-sim fattie"
+else
+	cp ../target/aarch64-apple-ios-sim/release/libpact_ffi.a $WORKSPACE/Resources/iOS-simulator/libpact_ffi.a
+	echo "warning: Copied libpact_ffi for simulator running on arm64 (Apple Silicon machines) only!"
+fi
 
 #######################
 # Cleanup             #

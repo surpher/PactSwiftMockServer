@@ -625,7 +625,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PROJECT_DIR}\"/Support/build_rust_macos_dependencies libpact_ffi-v0.3.1\n";
+			shellScript = "\"${PROJECT_DIR}\"/Support/build_rust_macos_dependencies libpact_ffi-v0.3.2\n";
 		};
 		AD048F3928409B03007DC494 /* Build Rust Binaries */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -643,7 +643,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PROJECT_DIR}\"/Support/build_rust_ios_dependencies libpact_ffi-v0.3.1\n";
+			shellScript = "\"${PROJECT_DIR}\"/Support/build_rust_ios_dependencies libpact_ffi-v0.3.2\n";
 		};
 		ADCC383F284051AC0062A11C /* Compile Rust Binaries */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -661,7 +661,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PROJECT_DIR}\"/Support/build_rust_ios_dependencies libpact_ffi-v0.3.1\n";
+			shellScript = "\"${PROJECT_DIR}\"/Support/build_rust_ios_dependencies libpact_ffi-v0.3.2\n";
 		};
 		ADE254FC26CDE3A100FA21A9 /* SwiftLint */ = {
 			isa = PBXShellScriptBuildPhase;

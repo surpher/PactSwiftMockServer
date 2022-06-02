@@ -1,3 +1,6 @@
 #include "Configurations/Target-iOS-Shared.xcconfig"
 
 SWIFT_OPTIMIZATION_LEVEL = -Onone
+
+LIBRARY_SEARCH_PATHS = $(inherited) $(PROJECT_DIR)/Resources/iOS-simulator $(PLATFORM_DIR)/Developer/usr/lib
+FRAMEWORK_SEARCH_PATHS = $(inherited) $(PROJECT_DIR)/Resources/iOS-simulator

@@ -1,1 +1,4 @@
 #include "Configurations/Target-iOS-Shared.xcconfig"
+
+LIBRARY_SEARCH_PATHS = $(inherited) $(PROJECT_DIR)/Resources/iOS-device $(PLATFORM_DIR)/Developer/usr/lib
+FRAMEWORK_SEARCH_PATHS = $(inherited) $(PROJECT_DIR)/Resources/iOS-device

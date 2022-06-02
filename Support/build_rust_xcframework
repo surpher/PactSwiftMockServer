@@ -64,7 +64,7 @@ LIBPACT_FFI_VERSION=${1:-$DEFAULT_FFI_VERSION}
 CI=${CI:-"false"}
 PACT_FOUNDATION_REPO="https://github.com/pact-foundation/pact-reference.git"
 ACTIVE_ARCH=$(uname -m)
-XCFRAMEWORKS_DIR="${WORKSPACE}/Resources/XCFrameworks/"
+XCFRAMEWORKS_DIR="${WORKSPACE}/Resources/XCFrameworks"
 
 #######################
 # Pre-requisite       #
@@ -185,24 +185,35 @@ if [ -d $XCFRAMEWORKS_DIR/libpact_ffi.xcframework ]; then
     rm -Rf $XCFRAMEWORKS_DIR/libpact_ffi.xcframework;
 fi
 
+# Create a fat lib for simulators
+echo "🏗  Preparing a fat binary for simulators"
+lipo -create \
+    ../target/aarch64-apple-ios-sim/release/libpact_ffi.a \
+    ../target/x86_64-apple-ios/release/libpact_ffi.a \
+    -output $XCFRAMEWORKS_DIR/sim_fat/libpact_ffi.a
+
+lipo -create \
+    ../target/aarch64-apple-darwin/release/libpact_ffi.a \
+    ../target/x86_64-apple-darwin/release/libpact_ffi.a \
+    -output $XCFRAMEWORKS_DIR/darwin_fat/libpact_ffi.a
+
 # Copy the compiled binaries into PactSwiftMockServer project
 echo "🏗  Preparing the XCFramework containing libpact_ffi"
-if [[ $ACTIVE_ARCH == "x86_64" ]]; then
-    # Apple Intel machines + iOS devices
-    xcodebuild -create-xcframework \
-        -library ../target/x86_64-apple-ios/release/libpact_ffi.a \
-        -library ../target/aarch64-apple-ios/release/libpact_ffi.a \
-        -library ../target/x86_64-apple-darwin/release/libpact_ffi.a \
-
-        -output $XCFRAMEWORKS_DIR/Resources/XCFrameworks/libpact_ffi.xcframework
-else
-    # Apple Silicon machines + iOS devices
-    xcodebuild -create-xcframework \
-        -library ../target/aarch64-apple-ios-sim/release/libpact_ffi.a \
-        -library ../target/aarch64-apple-ios/release/libpact_ffi.a \
-        -library ../target/aarch64-apple-darwin/release/libpact_ffi.a \
-        -output $XCFRAMEWORKS_DIR/libpact_ffi.xcframework
-fi
+# if [[ $ACTIVE_ARCH == "x86_64" ]]; then
+    # Apple Intel machines
+xcodebuild -create-xcframework \
+    -library $XCFRAMEWORKS_DIR/sim_fat/libpact_ffi.a \
+    -library $XCFRAMEWORKS_DIR/darwin_fat/libpact_ffi.a \
+    -library ../target/aarch64-apple-ios/release/libpact_ffi.a \
+    -output $XCFRAMEWORKS_DIR/libpact_ffi.xcframework
+# else
+#     # Apple Silicon machines
+#     xcodebuild -create-xcframework \
+#         -library $XCFRAMEWORKS_DIR/sim_fat/libpact_ffi.a \
+#         -library ../target/aarch64-apple-ios/release/libpact_ffi.a \
+#         -library ../target/aarch64-apple-darwin/release/libpact_ffi.a \
+#         -output $XCFRAMEWORKS_DIR/libpact_ffi.xcframework
+# fi
 
 # Done
 echo "✅  libpact_ffi.xcframework ready!"

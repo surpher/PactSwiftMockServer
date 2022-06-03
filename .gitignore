@@ -122,3 +122,7 @@ Resources/**/*.a
 /CHANGELOG.md.next
 /CHANGELOG.md.backup
 /Resources/**/*.plist
+/Resources/XCFrameworks/libpact_ffi.xcframework/Info.plist
+/Resources/XCFrameworks/libpact_ffi.xcframework/ios-arm64_x86_64-simulator/libpact_ffi.a
+/Resources/XCFrameworks/libpact_ffi.xcframework/ios-arm64/libpact_ffi.a
+/Resources/XCFrameworks/libpact_ffi.xcframework/macos-arm64_x86_64/libpact_ffi.a

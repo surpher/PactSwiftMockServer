@@ -45,11 +45,12 @@ jobs:
       - name: Prepare Tools
         run: |
           Support/prepare_build_tools
+          rustup component add rustfmt
           Support/build_rust_xcframework
 
       - name: Validate Carthage
-          run: |
-            carthage build --no-skip-current --use-xcframeworks
+        run: |
+          carthage build --no-skip-current --use-xcframeworks
 
       - name: Run tests (Xcode)
         run: |

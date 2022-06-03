@@ -196,7 +196,7 @@ lipo -create \
 # Copy the compiled binaries into PactSwiftMockServer project
 echo "🏗  Preparing the XCFramework containing libpact_ffi"
 xcodebuild -create-xcframework \
-    -library $XCFRAMEWORKS_DIR/sim_fat/libpact_ffi.a \
+    -library $XCFRAMEWORKS_DIR/simulator_fat/libpact_ffi.a \
     -library $XCFRAMEWORKS_DIR/darwin_fat/libpact_ffi.a \
     -library ../target/aarch64-apple-ios/release/libpact_ffi.a \
     -output $XCFRAMEWORKS_DIR/libpact_ffi.xcframework

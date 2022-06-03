@@ -45,6 +45,7 @@ jobs:
       - name: Prepare Tools
         run: |
           Support/prepare_build_tools
+          rustup component add rustfmt
           Support/build_rust_xcframework
 
       - name: Validate Carthage

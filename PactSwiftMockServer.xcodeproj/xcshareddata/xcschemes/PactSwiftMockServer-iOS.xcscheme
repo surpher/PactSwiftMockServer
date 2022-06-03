@@ -9,8 +9,8 @@
          <ExecutionAction
             ActionType = "Xcode.IDEStandardExecutionActionsCore.ExecutionActionType.ShellScriptAction">
             <ActionContent
-               title = "Build libpact_ffi.xcframework"
-               scriptText = "mkdir -p &quot;${PROJECT_DIR}/tmp&quot;&#10;exec &gt; &quot;${PROJECT_DIR}/tmp/pre-build.log&quot; 2&gt;&amp;1&#10;&#10;&quot;${PROJECT_DIR}&quot;/Support/build_rust_xcframework&#10;">
+               title = "Build libpact_ffi.xcframework pre-action script"
+               scriptText = "mkdir -p &quot;${PROJECT_DIR}/tmp&quot;&#10;exec &gt; &quot;${PROJECT_DIR}/tmp/ios-pre-build.log&quot; 2&gt;&amp;1&#10;&#10;&quot;${PROJECT_DIR}&quot;/Support/build_rust_xcframework&#10;">
                <EnvironmentBuildable>
                   <BuildableReference
                      BuildableIdentifier = "primary"

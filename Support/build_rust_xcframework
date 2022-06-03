@@ -17,23 +17,22 @@
 
 set -euo pipefail
 
-# ### Pre-requisites:
-#
-# Remove `pact-reference` folder if it has no contents.
-# `pact-reference` and `PactSwiftMockServer` repos should be at the same folder level.
+# Builds the libpact_ffi.a for each supported architecture (x86_64 and aarch64 for iOS and macOS) and
+# wraps them in a libpact_ffi.xcframework for portability.
 #
 # Optionally use the release tag for libpact_ffi-vX.X.X found at https://github.com/pact-foundation/pact-reference/releases
+# The default libpact_ffi version for running this script is set below in $DEFAULT_FFI_VERSION.
 #
-# ### Usage (the libpact_ffi version is set in an environment variable in the script):
+# ### Usage:
 #
 # ./Support/build_rust_xcframework
 #
-# or if you want to use a specific versino of libpact_ffi:
+# using a specific version of libpact_ffi:
 #
 # ./Support/build_rust_xcframework libpact_ffi-v0.3.0
 #
-# ### Optional:
-# To minimise the built binary size update $LIBPACT_FFI_DI/Cargo.toml and append the following:
+# ### Optional if running this script on its own outside xcodebuild command you can minimise the built binary sizes
+# by updating $LIBPACT_FFI_DIR/Cargo.toml and append the following:
 #
 # [lib]
 # crate-type = ["staticlib"]
@@ -58,24 +57,15 @@ fi
 # The default libpact_ffi version:
 DEFAULT_FFI_VERSION="libpact_ffi-v0.3.2"
 
-WORKSPACE=${GITHUB_WORKSPACE:-$PWD}
+# WORKSPACE=${GITHUB_WORKSPACE:-$PWD}
+XCODE_WORKSPACE=${GITHUB_WORKSPACE:-$PROJECT_DIR}
+WORKSPACE=${XCODE_WORKSPACE:-$PWD}
 LIBPACT_FFI_DIR="${WORKSPACE}/../pact-reference/rust/pact_ffi"
 LIBPACT_FFI_VERSION=${1:-$DEFAULT_FFI_VERSION}
 CI=${CI:-"false"}
 PACT_FOUNDATION_REPO="https://github.com/pact-foundation/pact-reference.git"
 ACTIVE_ARCH=$(uname -m)
 XCFRAMEWORKS_DIR="${WORKSPACE}/Resources/XCFrameworks"
-
-#######################
-# Pre-requisite       #
-#######################
-
-# Check whether this script is being run in the right folder
-if [ ! -d "$PWD/PactSwiftMockServer.xcodeproj" ]; then
-    echo "🚨 Run this from the same folder where your 'PactSwiftMockServer.xcodeproj' is!"
-    echo "ℹ You are currently running this script from: \"$PWD\""
-    exit 1
-fi
 
 #######################
 # Functions           #
@@ -97,14 +87,14 @@ if [[ "$CI" == true ]]; then
 
 elif [ ! -d "$PWD/../pact-reference" ]; then
     echo "⚠️  Missing pact-foundation/pact-reference repo"
-    echo "ℹ Creating \"../pact-reference\" folder and cloning \"pact-reference\" repo"
+    echo "ℹ  Creating \"../pact-reference\" folder and cloning \"pact-reference\" repo"
     clonePactFFI $LIBPACT_FFI_VERSION
 
 else
-    echo "ℹ Project setup seems to be in order."
+    echo "ℹ  Project setup seems to be in order."
 fi
 
-echo "ℹ Changing location to ${LIBPACT_FFI_DIR}"
+echo "ℹ  Changing location to ${LIBPACT_FFI_DIR}"
 cd $LIBPACT_FFI_DIR
 
 #######################
@@ -123,7 +113,7 @@ elif command -v ~/.cargo/bin/cargo &> /dev/null; then
     CARGO_DIR=$(dirname "$( command -v ~/.cargo/bin/cargo )")
     PATH=$PATH:$CARGO_DIR
 else
-    echo "🚨 Rust/Cargo not installed"
+    echo "🚨  Rust/Cargo not installed"
     echo "ERROR: cargo is required and is was found on this machine.\nInstall Rust using either homebrew:"
     echo "	curl https://sh.rustup.rs -sSf | sh"
     echo "or follow instructions at https://www.rust-lang.org/tools/install"
@@ -180,18 +170,24 @@ echo "✅  libpact_ffi.a binaries built"
 # Pact Mock Server    #
 #######################
 
-# Remove the existing XCFramework (if it exists) then build a fresh one
+# Remove the existing XCFramework (if it exists)
 if [ -d $XCFRAMEWORKS_DIR/libpact_ffi.xcframework ]; then
     rm -Rf $XCFRAMEWORKS_DIR/libpact_ffi.xcframework;
 fi
 
+# Prepare transient folders for fat libs
+mkdir -p $XCFRAMEWORKS_DIR/darwin_fat
+mkdir -p $XCFRAMEWORKS_DIR/simulator_fat
+
 # Create a fat lib for simulators
 echo "🏗  Preparing a fat binary for simulators"
+# lipo together architecture slices for simulator
 lipo -create \
     ../target/aarch64-apple-ios-sim/release/libpact_ffi.a \
     ../target/x86_64-apple-ios/release/libpact_ffi.a \
-    -output $XCFRAMEWORKS_DIR/sim_fat/libpact_ffi.a
+    -output $XCFRAMEWORKS_DIR/simulator_fat/libpact_ffi.a
 
+# lipo together architecture slices for darwin
 lipo -create \
     ../target/aarch64-apple-darwin/release/libpact_ffi.a \
     ../target/x86_64-apple-darwin/release/libpact_ffi.a \
@@ -199,21 +195,11 @@ lipo -create \
 
 # Copy the compiled binaries into PactSwiftMockServer project
 echo "🏗  Preparing the XCFramework containing libpact_ffi"
-# if [[ $ACTIVE_ARCH == "x86_64" ]]; then
-    # Apple Intel machines
 xcodebuild -create-xcframework \
     -library $XCFRAMEWORKS_DIR/sim_fat/libpact_ffi.a \
     -library $XCFRAMEWORKS_DIR/darwin_fat/libpact_ffi.a \
     -library ../target/aarch64-apple-ios/release/libpact_ffi.a \
     -output $XCFRAMEWORKS_DIR/libpact_ffi.xcframework
-# else
-#     # Apple Silicon machines
-#     xcodebuild -create-xcframework \
-#         -library $XCFRAMEWORKS_DIR/sim_fat/libpact_ffi.a \
-#         -library ../target/aarch64-apple-ios/release/libpact_ffi.a \
-#         -library ../target/aarch64-apple-darwin/release/libpact_ffi.a \
-#         -output $XCFRAMEWORKS_DIR/libpact_ffi.xcframework
-# fi
 
 # Done
 echo "✅  libpact_ffi.xcframework ready!"

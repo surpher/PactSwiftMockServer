@@ -82,7 +82,6 @@ MACOS_DIR="$WORKSPACE/Resources/XCFrameworks/libpact_ffi.xcframework/macos-arm64
 
 echo "🧹  Cleaning up the libpact_ffi.a files"
 devicelib_size=$( wc -c "$WORKSPACE/Resources/XCFrameworks/libpact_ffi.xcframework/ios-arm64/libpact_ffi.a" | awk '{print $1}' )
-echo "devicelib_size: $devicelib_size"
 if ((devicelib_size>90000)); then
     echo "⚠️  resetting libpact_ffi.xcframework"
 
@@ -95,33 +94,30 @@ if ((devicelib_size>90000)); then
     echo ".keep" > $MACOS_DIR/libpact_ffi.a
 fi
 
-# simlib_size=$( wc -c "$WORKSPACE/Resources/XCFrameworks/libpact_ffi.xcframework/ios-arm64_x86_64-simulator/libpact_ffi.a" | awk '{print $1}' )
-# echo "simlib_size: $simlib_size"
-#
-# darwinlib_size=$( wc -c "$WORKSPACE/Resources/XCFrameworks/libpact_ffi.xcframework/macos-arm64_x86_64/libpact_ffi.a" | awk '{print $1}' )
-# echo "darwinlib_size: $darwinlib_size"
-
 #######################
 # Functions           #
 #######################
 
 function clonePactFFI {
     # Move a level up
-    cd ..
+    cd $WORKSPACE/../
+
+    echo "ℹ  Currently in $PWD"
 
     # Clone the pact-foundation/pact-reference repo
-    echo "ℹ Cloning ${PACT_FOUNDATION_REPO} at release tag: ${LIBPACT_FFI_VERSION}"
+    echo "ℹ  Cloning ${PACT_FOUNDATION_REPO} at release tag: ${LIBPACT_FFI_VERSION}"
     git clone --depth 1 -b $LIBPACT_FFI_VERSION $PACT_FOUNDATION_REPO
 }
 
-echo "👮‍♀️  Verifying project and dependencies' folder setup..."
+echo "👮‍♀️  Verifying project and dependencies' folder setup:"
+echo "🕵️  Looking for $WORKSPACE/../pact-reference"
 
 if [[ "$CI" == true ]]; then
     clonePactFFI $LIBPACT_FFI_VERSION
 
-elif [ ! -d "$PWD/../pact-reference" ]; then
-    echo "⚠️  Missing pact-foundation/pact-reference repo"
-    echo "ℹ  Creating \"../pact-reference\" folder and cloning \"pact-reference\" repo"
+elif [ ! -d "$WORKSPACE/../pact-reference" ]; then
+    echo "⚠️  Missing 'pact-reference' repo"
+    echo "ℹ  Creating \"../pact-reference\" folder and cloning \"pact-foundation/pact-reference\" repo"
     clonePactFFI $LIBPACT_FFI_VERSION
 
 else
@@ -239,7 +235,7 @@ xcodebuild -create-xcframework \
     -output $XCFRAMEWORKS_DIR/libpact_ffi.xcframework
 
 # Clean up the fatties so they don't waste space
-echo "🧹  Removing the transient fat libraries"
+echo "🧹  Removing transient fat libraries (to save some space)"
 rm $XCFRAMEWORKS_DIR/simulator_fat/libpact_ffi.a
 rm $XCFRAMEWORKS_DIR/darwin_fat/libpact_ffi.a
 

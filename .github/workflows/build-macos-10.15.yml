@@ -1,4 +1,4 @@
-name: Build (macOS 12)
+name: Build (macOS 10.15)
 
 on:
   push:
@@ -18,7 +18,7 @@ on:
 jobs:
   test:
     name: Run tests
-    runs-on: macos-12
+    runs-on: macos-10.15
 
     strategy:
       fail-fast: true
@@ -39,8 +39,8 @@ jobs:
         with:
           submodules: recursive
 
-      - name: Use Xcode 13.4
-        run: sudo xcode-select -switch /Applications/Xcode_13.4.app
+      - name: Use Xcode 12.4
+        run: sudo xcode-select -switch /Applications/Xcode_12.4.app
 
       - name: Prepare Tools
         run: |
@@ -48,23 +48,9 @@ jobs:
           Support/build_rust_xcframework
 
       - name: Validate Carthage
-        run: |
-          carthage build --no-skip-current --use-xcframeworks
+          run: |
+            carthage build --no-skip-current --use-xcframeworks
 
       - name: Run tests (Xcode)
         run: |
           ./Support/build_test
-
-      - name: Upload code coverage
-        run: |
-          bash <(curl -s https://codecov.io/bash) -J 'PactSwiftMockServer'
-
-  # after_success:
-  #   name: Build PactSwift
-  #   needs: [test]
-  #   runs-on: ubuntu-latest
-
-  #   steps:
-  #     - name: Build demo projects
-  #       run: |
-  #         curl -X POST https://api.github.com/repos/surpher/PactSwift/dispatches -H 'Accept: application/vnd.github.everest-preview+json' -u ${{ secrets.PACT_SWIFT_TOKEN }} --data '{"event_type":"PactSwiftMockServer - ${{ github.event.head_commit.message }}"}'

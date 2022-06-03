@@ -627,7 +627,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = ADBEF2F72648FB0600486C4A /* Target-macOS-Debug.xcconfig */;
 			buildSettings = {
-				MACOSX_DEPLOYMENT_TARGET = 10.15;
 			};
 			name = Debug;
 		};
@@ -635,7 +634,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = ADBEF2F32648FB0600486C4A /* Target-macOS-Release.xcconfig */;
 			buildSettings = {
-				MACOSX_DEPLOYMENT_TARGET = 10.15;
 			};
 			name = Release;
 		};

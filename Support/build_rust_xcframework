@@ -56,15 +56,50 @@ fi
 
 # The default libpact_ffi version:
 DEFAULT_FFI_VERSION="libpact_ffi-v0.3.2"
-
-# XCODE_WORKSPACE=${GITHUB_WORKSPACE:-$PROJECT_DIR}
-WORKSPACE=${GITHUB_WORKSPACE:-$PWD}
+CI_FALSE=false
+CI=${CI:-$CI_FALSE}
+if [[ "$CI" == true ]]; then
+    WORKSPACE=${GITHUB_WORKSPACE:-$PWD}
+else
+    WORKSPACE=${PROJECT_DIR:-$PWD}
+fi
 LIBPACT_FFI_DIR="${WORKSPACE}/../pact-reference/rust/pact_ffi"
 LIBPACT_FFI_VERSION=${1:-$DEFAULT_FFI_VERSION}
 CI=${CI:-"false"}
 PACT_FOUNDATION_REPO="https://github.com/pact-foundation/pact-reference.git"
 ACTIVE_ARCH=$(uname -m)
 XCFRAMEWORKS_DIR="${WORKSPACE}/Resources/XCFrameworks"
+
+#######################
+# Pre-conditions      #
+#######################
+echo "PWD:         $PWD"
+echo "WORKSPACE:   $WORKSPACE"
+
+IOS_DEVICE_DIR="$WORKSPACE/Resources/XCFrameworks/libpact_ffi.xcframework/ios-arm64"
+IOS_SIM_DIR="$WORKSPACE/Resources/XCFrameworks/libpact_ffi.xcframework/ios-arm64_x86_64-simulator"
+MACOS_DIR="$WORKSPACE/Resources/XCFrameworks/libpact_ffi.xcframework/macos-arm64_x86_64"
+
+echo "🧹  Cleaning up the libpact_ffi.a files"
+devicelib_size=$( wc -c "$WORKSPACE/Resources/XCFrameworks/libpact_ffi.xcframework/ios-arm64/libpact_ffi.a" | awk '{print $1}' )
+echo "devicelib_size: $devicelib_size"
+if ((devicelib_size>90000)); then
+    echo "⚠️  resetting libpact_ffi.xcframework"
+
+    rm $IOS_DEVICE_DIR/libpact_ffi.a
+    rm $IOS_SIM_DIR/libpact_ffi.a
+    rm $MACOS_DIR/libpact_ffi.a
+
+    echo ".keep" > $IOS_DEVICE_DIR/libpact_ffi.a
+    echo ".keep" > $IOS_SIM_DIR/libpact_ffi.a
+    echo ".keep" > $MACOS_DIR/libpact_ffi.a
+fi
+
+# simlib_size=$( wc -c "$WORKSPACE/Resources/XCFrameworks/libpact_ffi.xcframework/ios-arm64_x86_64-simulator/libpact_ffi.a" | awk '{print $1}' )
+# echo "simlib_size: $simlib_size"
+#
+# darwinlib_size=$( wc -c "$WORKSPACE/Resources/XCFrameworks/libpact_ffi.xcframework/macos-arm64_x86_64/libpact_ffi.a" | awk '{print $1}' )
+# echo "darwinlib_size: $darwinlib_size"
 
 #######################
 # Functions           #
@@ -130,7 +165,10 @@ rustup default nightly-x86_64-apple-darwin
 # Add all the required triples
 rustup target add \
     x86_64-apple-ios \
-    aarch64-apple-ios
+    aarch64-apple-ios \
+    aarch64-apple-ios-sim \
+    x86_64-apple-darwin \
+    aarch64-apple-darwin
 
 # Add the nightly toolchain that includes aarch64-apple-ios-sim
 if [[ $ACTIVE_ARCH == "x86_64" ]]; then
@@ -199,6 +237,11 @@ xcodebuild -create-xcframework \
     -library $XCFRAMEWORKS_DIR/darwin_fat/libpact_ffi.a \
     -library ../target/aarch64-apple-ios/release/libpact_ffi.a \
     -output $XCFRAMEWORKS_DIR/libpact_ffi.xcframework
+
+# Clean up the fatties so they don't waste space
+echo "🧹  Removing the transient fat libraries"
+rm $XCFRAMEWORKS_DIR/simulator_fat/libpact_ffi.a
+rm $XCFRAMEWORKS_DIR/darwin_fat/libpact_ffi.a
 
 # Done
 echo "✅  libpact_ffi.xcframework ready!"

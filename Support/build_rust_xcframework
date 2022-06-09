@@ -56,16 +56,17 @@ fi
 
 # The default libpact_ffi version:
 DEFAULT_FFI_VERSION="libpact_ffi-v0.3.2"
-CI_FALSE=false
-CI=${CI:-$CI_FALSE}
+
+CI=${CI:-"false"}
 if [[ "$CI" == true ]]; then
     WORKSPACE=${GITHUB_WORKSPACE:-$PWD}
 else
     WORKSPACE=${PROJECT_DIR:-$PWD}
 fi
+
 LIBPACT_FFI_DIR="${WORKSPACE}/../pact-reference/rust/pact_ffi"
 LIBPACT_FFI_VERSION=${1:-$DEFAULT_FFI_VERSION}
-CI=${CI:-"false"}
+
 PACT_FOUNDATION_REPO="https://github.com/pact-foundation/pact-reference.git"
 ACTIVE_ARCH=$(uname -m)
 XCFRAMEWORKS_DIR="${WORKSPACE}/Resources/XCFrameworks"
@@ -131,8 +132,6 @@ cd $LIBPACT_FFI_DIR
 # Setup               #
 #######################
 
-# Validate dependencies
-
 echo "👮‍♀️  Checking if Rust is installed..."
 if which cargo >/dev/null; then
     echo "cargo installed"
@@ -156,7 +155,11 @@ rustup install nightly
 rustup toolchain install nightly
 
 echo "ℹ Setting nightly toolchain as default..."
-rustup default nightly-x86_64-apple-darwin
+if [[ $ACTIVE_ARCH == "x86_64" ]]; then
+    rustup default nightly-x86_64-apple-darwin
+else
+    rustup default nightly-aarch64-apple-darwin
+fi
 
 # Add all the required triples
 rustup target add \

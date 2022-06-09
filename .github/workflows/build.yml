@@ -47,9 +47,10 @@ jobs:
           ./Support/prepare_build_tools
           ./Support/build_rust_xcframework
 
-      - name: Validate Carthage
+      - name: Validate Carthage (skipping)
         run: |
-          carthage build --no-skip-current --use-xcframeworks
+          echo "ℹ️ Skipping 'carthage build --no-skip-current --use-xcframeworks'"
+          echo "⚠️ Since Xcode 13.3 Carthage is not supported anymore due to issues with linking transient binary dependencies into XCFrameworks!"
 
       - name: Run tests (Xcode)
         run: |

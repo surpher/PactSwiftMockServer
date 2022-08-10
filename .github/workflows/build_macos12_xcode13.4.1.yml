@@ -1,4 +1,4 @@
-name: Build
+name: Build (macOS 12, Xcode 13.4.1)
 
 on:
   push:
@@ -15,24 +15,61 @@ on:
       - 'test/**'
       - 'tech/**'
 
+env:
+  BINARIES_PATH: .Resources
+
 jobs:
+  build:
+    name: Prepare libpact_ffi binaries
+    runs-on: macos-12
+    timeout-minutes: 60
+
+    concurrency:
+      group: build-${{ github.ref }}
+      cancel-in-progress: true
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+        with:
+          submodules: recursive
+
+      - name: "📦 Cache binaries"
+        uses: actions/cache@v3
+        with:
+          path: ${{ env.BINARIES_PATH }}
+          key: ${{ runner.os }}-spm-${{ hashFiles('**/Package.resolved') }}
+          restore-keys: |
+            ${{ runner.os }}-spm-
+
+      - name: Use Xcode 13.4.1
+        run: sudo xcode-select -switch /Applications/Xcode_13.4.1.app
+
+      - name: Prepare binaries
+        run: |
+          Support/build_rust_dependencies
+
   test:
     name: Run tests
-    runs-on: macos-11
+    runs-on: macos11
+    needs: [build]
 
     strategy:
       fail-fast: true
       matrix:
         include:
           - scheme: "PactSwiftMockServer-iOS"
-            destination: "platform=iOS Simulator,name=iPhone 12 Pro"
+            destination: "platform=iOS Simulator,name=iPhone 13 Pro"
           - scheme: "PactSwiftMockServer-macOS"
             destination: "arch=x86_64"
 
     env:
       SCHEME: ${{ matrix.scheme }}
       DESTINATION: ${{ matrix.destination }}
-      LIBPACT_FFI_TAG: "libpact_ffi-v0.0.2"
+
+    concurrency:
+      group: test-${{ github.ref }}-${{ matrix.scheme }}
+      cancel-in-progress: true
 
     steps:
       - name: Checkout repository
@@ -46,7 +83,6 @@ jobs:
       - name: Prepare Tools
         run: |
           Support/prepare_build_tools
-          Support/build_rust_dependencies $LIBPACT_FFI_TAG
 
       - name: Run tests (Xcode)
         run: |

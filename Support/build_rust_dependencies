@@ -41,6 +41,7 @@ set -euo pipefail
 
 WORKSPACE=${GITHUB_WORKSPACE:-$PWD}
 LIBPACT_FFI_DIR="${WORKSPACE}/../pact-reference/rust/pact_ffi"
+LIBPACT_FFI_VERSION=$(awk 'NR==1 {print; exit}' libpact_ffi.version)
 CI=${CI:-"false"}
 PACT_FOUNDATION_REPO="https://github.com/pact-foundation/pact-reference.git"
 
@@ -63,19 +64,12 @@ fi
 echo "👮‍♀️  Verifying project and dependencies' folder setup..."
 
 if [[ "$CI" == true ]]; then
-	# Check whether tag has been provided
-	if [ $# -lt 1 ]; then
-		echo "🚨  Missing libpact_ffi version tag!"
-		echo "Please run something like ./build_rust_dependencies libpact_ffi-vX.X.X"
-		exit 1
-	fi
-
 	# Move a level up
 	cd ..
 
 	# Clone the pact-foundation/pact-reference repo
-	echo "ℹ️ Cloning ${PACT_FOUNDATION_REPO} at tag: $1"
-	git clone --depth 1 -b $1 $PACT_FOUNDATION_REPO
+	echo "ℹ️ Cloning ${PACT_FOUNDATION_REPO} at tag: ${LIBPACT_FFI_VERSION}"
+	git clone --depth 1 -b $LIBPACT_FFI_VERSION $PACT_FOUNDATION_REPO
 
 elif [ ! -d "$PWD/../pact-reference" ]; then
 	echo "🚨  Missing pact-foundation/pact-reference repo."
@@ -87,6 +81,13 @@ fi
 
 echo "ℹ️  Changing location to ${LIBPACT_FFI_DIR}"
 cd $LIBPACT_FFI_DIR
+
+if [[ "$CI" == false ]]; then
+	git fetch
+	git pull
+fi
+
+echo "ℹ️  Preparing to build ${LIBPACT_FFI_VERSION}"
 
 #######################
 # Setup               #
@@ -109,6 +110,8 @@ fi
 echo "⚠️  Installing a nightly toolchain..."
 rustup install nightly
 rustup toolchain install nightly
+
+rustup component add rustfmt --toolchain nightly
 
 echo "⚠️  Setting nightly toolchain as default..."
 rustup default nightly-x86_64-apple-darwin

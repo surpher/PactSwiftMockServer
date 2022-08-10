@@ -3,17 +3,15 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 52;
+	objectVersion = 54;
 	objects = {
 
 /* Begin PBXBuildFile section */
 		AD1597FD2648DE0E007CFAA5 /* PactSwiftMockServer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AD1597F32648DE0E007CFAA5 /* PactSwiftMockServer.framework */; };
 		AD1598042648DE0E007CFAA5 /* PactSwiftMockServer.h in Headers */ = {isa = PBXBuildFile; fileRef = AD1597F62648DE0E007CFAA5 /* PactSwiftMockServer.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		AD1598122648DF36007CFAA5 /* PactSwiftToolbox in Frameworks */ = {isa = PBXBuildFile; productRef = AD1598112648DF36007CFAA5 /* PactSwiftToolbox */; };
 		AD1598212648DF73007CFAA5 /* PactSwiftMockServer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AD1598182648DF73007CFAA5 /* PactSwiftMockServer.framework */; };
 		AD1598312648E32F007CFAA5 /* MockServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD1598302648E32F007CFAA5 /* MockServer.swift */; };
 		AD1598322648E32F007CFAA5 /* MockServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD1598302648E32F007CFAA5 /* MockServer.swift */; };
-		AD1598372648E59E007CFAA5 /* PactSwiftToolbox in Frameworks */ = {isa = PBXBuildFile; productRef = AD1598362648E59E007CFAA5 /* PactSwiftToolbox */; };
 		AD15983B2648E72A007CFAA5 /* TransferProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD15983A2648E72A007CFAA5 /* TransferProtocol.swift */; };
 		AD15983C2648E72A007CFAA5 /* TransferProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD15983A2648E72A007CFAA5 /* TransferProtocol.swift */; };
 		AD15983E2648EA2C007CFAA5 /* MockServerError.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD15983D2648EA2C007CFAA5 /* MockServerError.swift */; };
@@ -24,13 +22,21 @@
 		AD1598522648F2E1007CFAA5 /* MockServerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD1598512648F2E1007CFAA5 /* MockServerTests.swift */; };
 		AD1598532648F2E1007CFAA5 /* MockServerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD1598512648F2E1007CFAA5 /* MockServerTests.swift */; };
 		AD38D300264A33E800124396 /* PactSwiftMockServer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AD38D2F7264A33E800124396 /* PactSwiftMockServer.framework */; };
-		AD38D30F264A33F200124396 /* PactSwiftToolbox in Frameworks */ = {isa = PBXBuildFile; productRef = AD38D30E264A33F200124396 /* PactSwiftToolbox */; };
 		AD63D08226A02C28002682EB /* libpact_ffi.a in Frameworks */ = {isa = PBXBuildFile; fileRef = AD63D08126A02C28002682EB /* libpact_ffi.a */; };
 		AD63D08F26A02C64002682EB /* libpact_ffi.a in Frameworks */ = {isa = PBXBuildFile; fileRef = AD9336A5269C33EB0004EBD8 /* libpact_ffi.a */; };
 		AD933643269C2DD80004EBD8 /* libpact_ffi.a in Frameworks */ = {isa = PBXBuildFile; fileRef = AD933642269C2DD80004EBD8 /* libpact_ffi.a */; };
 		AD93364D269C2EC30004EBD8 /* pact_ffi.h in Headers */ = {isa = PBXBuildFile; fileRef = AD93364C269C2EC30004EBD8 /* pact_ffi.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		AD93364E269C2EC30004EBD8 /* pact_ffi.h in Headers */ = {isa = PBXBuildFile; fileRef = AD93364C269C2EC30004EBD8 /* pact_ffi.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		AD93364F269C2EC30004EBD8 /* pact_ffi.h in Headers */ = {isa = PBXBuildFile; fileRef = AD93364C269C2EC30004EBD8 /* pact_ffi.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		AD957F3628A23B0B00860AD1 /* PactFileManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD957F3528A23B0B00860AD1 /* PactFileManager.swift */; };
+		AD957F3728A23B0B00860AD1 /* PactFileManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD957F3528A23B0B00860AD1 /* PactFileManager.swift */; };
+		AD957F3828A23B0B00860AD1 /* PactFileManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD957F3528A23B0B00860AD1 /* PactFileManager.swift */; };
+		AD957F3A28A23B8400860AD1 /* SocketBinder.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD957F3928A23B8400860AD1 /* SocketBinder.swift */; };
+		AD957F3B28A23B8400860AD1 /* SocketBinder.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD957F3928A23B8400860AD1 /* SocketBinder.swift */; };
+		AD957F3C28A23B8400860AD1 /* SocketBinder.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD957F3928A23B8400860AD1 /* SocketBinder.swift */; };
+		AD957F3E28A23BD600860AD1 /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD957F3D28A23BD600860AD1 /* Logger.swift */; };
+		AD957F3F28A23BD600860AD1 /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD957F3D28A23BD600860AD1 /* Logger.swift */; };
+		AD957F4028A23BD600860AD1 /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD957F3D28A23BD600860AD1 /* Logger.swift */; };
 		ADB97FD726493D1800C54CA9 /* VerificationErrorTypeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADB97FD626493D1800C54CA9 /* VerificationErrorTypeTests.swift */; };
 		ADB97FD826493D1800C54CA9 /* VerificationErrorTypeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADB97FD626493D1800C54CA9 /* VerificationErrorTypeTests.swift */; };
 		ADB97FDA26493D5900C54CA9 /* MockServerErrorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADB97FD926493D5900C54CA9 /* MockServerErrorTests.swift */; };
@@ -119,6 +125,9 @@
 		AD933642269C2DD80004EBD8 /* libpact_ffi.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libpact_ffi.a; sourceTree = "<group>"; };
 		AD93364C269C2EC30004EBD8 /* pact_ffi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pact_ffi.h; sourceTree = "<group>"; };
 		AD9336A5269C33EB0004EBD8 /* libpact_ffi.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libpact_ffi.a; sourceTree = "<group>"; };
+		AD957F3528A23B0B00860AD1 /* PactFileManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PactFileManager.swift; sourceTree = "<group>"; };
+		AD957F3928A23B8400860AD1 /* SocketBinder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SocketBinder.swift; sourceTree = "<group>"; };
+		AD957F3D28A23BD600860AD1 /* Logger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
 		ADB97FD626493D1800C54CA9 /* VerificationErrorTypeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerificationErrorTypeTests.swift; sourceTree = "<group>"; };
 		ADB97FD926493D5900C54CA9 /* MockServerErrorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockServerErrorTests.swift; sourceTree = "<group>"; };
 		ADBEF2EA2648FB0600486C4A /* Target-macOS-Tests-Shared.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "Target-macOS-Tests-Shared.xcconfig"; sourceTree = "<group>"; };
@@ -154,7 +163,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				AD1598122648DF36007CFAA5 /* PactSwiftToolbox in Frameworks */,
 				AD63D08F26A02C64002682EB /* libpact_ffi.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -172,7 +180,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				AD933643269C2DD80004EBD8 /* libpact_ffi.a in Frameworks */,
-				AD1598372648E59E007CFAA5 /* PactSwiftToolbox in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -188,7 +195,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				AD38D30F264A33F200124396 /* PactSwiftToolbox in Frameworks */,
 				AD63D08226A02C28002682EB /* libpact_ffi.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -262,6 +268,7 @@
 				AD1598382648E690007CFAA5 /* Headers */,
 				AD1598302648E32F007CFAA5 /* MockServer.swift */,
 				AD1598392648E6DB007CFAA5 /* Model */,
+				AD957F3428A23AF300860AD1 /* Toolbox */,
 				ADE2550F26CE335400FA21A9 /* Verifier.swift */,
 			);
 			path = Sources;
@@ -349,6 +356,16 @@
 			path = "iOS-device";
 			sourceTree = "<group>";
 		};
+		AD957F3428A23AF300860AD1 /* Toolbox */ = {
+			isa = PBXGroup;
+			children = (
+				AD957F3D28A23BD600860AD1 /* Logger.swift */,
+				AD957F3528A23B0B00860AD1 /* PactFileManager.swift */,
+				AD957F3928A23B8400860AD1 /* SocketBinder.swift */,
+			);
+			path = Toolbox;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -398,7 +415,6 @@
 			);
 			name = PactSwiftMockServer_iOS;
 			packageProductDependencies = (
-				AD1598112648DF36007CFAA5 /* PactSwiftToolbox */,
 			);
 			productName = PactSwiftMockServer;
 			productReference = AD1597F32648DE0E007CFAA5 /* PactSwiftMockServer.framework */;
@@ -438,7 +454,6 @@
 			);
 			name = PactSwiftMockServer_macOS;
 			packageProductDependencies = (
-				AD1598362648E59E007CFAA5 /* PactSwiftToolbox */,
 			);
 			productName = PactSwiftMockServer_macOS;
 			productReference = AD1598182648DF73007CFAA5 /* PactSwiftMockServer.framework */;
@@ -477,7 +492,6 @@
 			);
 			name = PactSwiftMockServer_iphoneos;
 			packageProductDependencies = (
-				AD38D30E264A33F200124396 /* PactSwiftToolbox */,
 			);
 			productName = PactSwiftMockServer_iphoneos;
 			productReference = AD38D2F7264A33E800124396 /* PactSwiftMockServer.framework */;
@@ -544,7 +558,6 @@
 			);
 			mainGroup = AD1597E92648DE0E007CFAA5;
 			packageReferences = (
-				AD1598102648DF36007CFAA5 /* XCRemoteSwiftPackageReference "PactSwiftToolbox" */,
 			);
 			productRefGroup = AD1597F42648DE0E007CFAA5 /* Products */;
 			projectDirPath = "";
@@ -608,6 +621,7 @@
 /* Begin PBXShellScriptBuildPhase section */
 		ADE254FC26CDE3A100FA21A9 /* SwiftLint */ = {
 			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
 			buildActionMask = 2147483647;
 			files = (
 			);
@@ -626,6 +640,7 @@
 		};
 		ADE254FD26CDE3C700FA21A9 /* SwiftLint */ = {
 			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
 			buildActionMask = 2147483647;
 			files = (
 			);
@@ -656,8 +671,11 @@
 				AD15983E2648EA2C007CFAA5 /* MockServerError.swift in Sources */,
 				AD15983B2648E72A007CFAA5 /* TransferProtocol.swift in Sources */,
 				ADBEF3032648FCF200486C4A /* MismatchErrorType.swift in Sources */,
+				AD957F3E28A23BD600860AD1 /* Logger.swift in Sources */,
+				AD957F3A28A23B8400860AD1 /* SocketBinder.swift in Sources */,
 				ADBEF3072648FCF200486C4A /* RequestError.swift in Sources */,
 				ADE2551026CE335400FA21A9 /* Verifier.swift in Sources */,
+				AD957F3628A23B0B00860AD1 /* PactFileManager.swift in Sources */,
 				AD1598312648E32F007CFAA5 /* MockServer.swift in Sources */,
 				ADBEF2FA2648FCBC00486C4A /* VerificationErrorHandler.swift in Sources */,
 				ADE2550326CE334B00FA21A9 /* StateHandler.swift in Sources */,
@@ -687,8 +705,11 @@
 				AD15983F2648EA2C007CFAA5 /* MockServerError.swift in Sources */,
 				AD15983C2648E72A007CFAA5 /* TransferProtocol.swift in Sources */,
 				ADBEF3042648FCF200486C4A /* MismatchErrorType.swift in Sources */,
+				AD957F3F28A23BD600860AD1 /* Logger.swift in Sources */,
+				AD957F3B28A23B8400860AD1 /* SocketBinder.swift in Sources */,
 				ADBEF3082648FCF200486C4A /* RequestError.swift in Sources */,
 				ADE2551126CE335400FA21A9 /* Verifier.swift in Sources */,
+				AD957F3728A23B0B00860AD1 /* PactFileManager.swift in Sources */,
 				AD1598322648E32F007CFAA5 /* MockServer.swift in Sources */,
 				ADBEF2FB2648FCBC00486C4A /* VerificationErrorHandler.swift in Sources */,
 				ADE2550426CE334B00FA21A9 /* StateHandler.swift in Sources */,
@@ -718,8 +739,11 @@
 				ADD7CB0B264B4A080091A286 /* VerificationErrorHandler.swift in Sources */,
 				ADD7CB13264B4A080091A286 /* VerificationErrorType.swift in Sources */,
 				ADD7CB11264B4A080091A286 /* VerificationError.swift in Sources */,
+				AD957F4028A23BD600860AD1 /* Logger.swift in Sources */,
+				AD957F3C28A23B8400860AD1 /* SocketBinder.swift in Sources */,
 				ADD7CB12264B4A080091A286 /* MockServer.swift in Sources */,
 				ADE2551226CE335400FA21A9 /* Verifier.swift in Sources */,
+				AD957F3828A23B0B00860AD1 /* PactFileManager.swift in Sources */,
 				ADD7CB14264B4A080091A286 /* MismatchErrorType.swift in Sources */,
 				ADD7CB10264B4A080091A286 /* TransferProtocol.swift in Sources */,
 				ADE2550526CE334B00FA21A9 /* StateHandler.swift in Sources */,
@@ -930,35 +954,6 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
-
-/* Begin XCRemoteSwiftPackageReference section */
-		AD1598102648DF36007CFAA5 /* XCRemoteSwiftPackageReference "PactSwiftToolbox" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/surpher/PactSwiftToolbox";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 0.1.0;
-			};
-		};
-/* End XCRemoteSwiftPackageReference section */
-
-/* Begin XCSwiftPackageProductDependency section */
-		AD1598112648DF36007CFAA5 /* PactSwiftToolbox */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = AD1598102648DF36007CFAA5 /* XCRemoteSwiftPackageReference "PactSwiftToolbox" */;
-			productName = PactSwiftToolbox;
-		};
-		AD1598362648E59E007CFAA5 /* PactSwiftToolbox */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = AD1598102648DF36007CFAA5 /* XCRemoteSwiftPackageReference "PactSwiftToolbox" */;
-			productName = PactSwiftToolbox;
-		};
-		AD38D30E264A33F200124396 /* PactSwiftToolbox */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = AD1598102648DF36007CFAA5 /* XCRemoteSwiftPackageReference "PactSwiftToolbox" */;
-			productName = PactSwiftToolbox;
-		};
-/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = AD1597EA2648DE0E007CFAA5 /* Project object */;
 }

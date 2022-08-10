@@ -16,11 +16,11 @@ on:
       - 'tech/**'
 
 env:
-  BINARIES_PATH: .Resources
+  BINARIES_PATH: Resources
 
 jobs:
   build:
-    name: Prepare libpact_ffi binaries
+    name: "Prepare libpact_ffi binaries"
     runs-on: macos-12
     timeout-minutes: 60
 
@@ -29,7 +29,7 @@ jobs:
       cancel-in-progress: true
 
     steps:
-      - name: Checkout repository
+      - name: "⚙️ Checkout repository"
         uses: actions/checkout@v2
         with:
           submodules: recursive
@@ -38,20 +38,20 @@ jobs:
         uses: actions/cache@v3
         with:
           path: ${{ env.BINARIES_PATH }}
-          key: ${{ runner.os }}-spm-${{ hashFiles('**/Package.resolved') }}
+          key: build-${{ runner.os }}-spm-${{ hashFiles('**/Package.resolved') }}
           restore-keys: |
-            ${{ runner.os }}-spm-
+            build-${{ runner.os }}-spm-
 
-      - name: Use Xcode 13.4.1
+      - name: "🚚  Use Xcode 13.4.1"
         run: sudo xcode-select -switch /Applications/Xcode_13.4.1.app
 
-      - name: Prepare binaries
+      - name: "🧰  Prepare binaries"
         run: |
           Support/build_rust_dependencies
 
   test:
-    name: Run tests
-    runs-on: macos11
+    name: "Run tests"
+    runs-on: macos-12
     needs: [build]
 
     strategy:
@@ -77,18 +77,26 @@ jobs:
         with:
           submodules: recursive
 
-      - name: Use Xcode 12.4
-        run: sudo xcode-select -switch /Applications/Xcode_12.4.app
+      - name: "📦 Cache binaries"
+        uses: actions/cache@v3
+        with:
+          path: ${{ env.BINARIES_PATH }}
+          key: build-${{ runner.os }}-spm-${{ hashFiles('**/Package.resolved') }}
+          restore-keys: |
+            build-${{ runner.os }}-spm-
 
-      - name: Prepare Tools
+      - name: Use Xcode 13.4.1
+        run: sudo xcode-select -switch /Applications/Xcode_13.4.1.app
+
+      - name: "🛠  Prepare Tools"
         run: |
           Support/prepare_build_tools
 
-      - name: Run tests (Xcode)
+      - name: "⚗️ Run tests (Xcode)"
         run: |
           ./Support/build_test
 
-      - name: Upload code coverage
+      - name: "⬆️  Upload code coverage"
         run: |
           bash <(curl -s https://codecov.io/bash) -J 'PactSwiftMockServer'
 

@@ -1,0 +1,153 @@
+name: Build (macOS 11, Xcode 12.4)
+
+on:
+  push:
+    branches:
+      - 'main'
+      - 'chore/**'
+      - 'docs/**'
+      - 'feat/**'
+      - 'feature/**'
+      - 'fix/**'
+      - 'refactor/**'
+      - 'releases/**'
+      - 'style/**'
+      - 'test/**'
+      - 'tech/**'
+
+env:
+  BINARIES_PATH: ~/../target
+
+jobs:
+  build:
+    name: "Prepare libpact_ffi binaries"
+    runs-on: macos-11
+    timeout-minutes: 60
+
+    concurrency:
+      group: build-macos11-${{ github.ref }}
+
+    steps:
+      - name: "⚙️ Checkout repository"
+        uses: actions/checkout@v2
+        with:
+          submodules: recursive
+
+      - name: "⚙️ Select rust toolchain"
+        run: |
+          sh Support/prepare_rust_tools
+
+      - name: "📦 Cache rust binaries"
+        uses: actions/cache@v3
+        id: pactswift-rust-cache
+        with:
+          path: ${{ env.BINARIES_PATH }}
+          key: build-${{ runner.os }}-rust-${{ hashFiles('**/Package.resolved') }}
+          restore-keys: |
+            build-${{ runner.os }}-rust-
+
+      - name: "🚚  Use Xcode 12.4"
+        run: sudo xcode-select -switch /Applications/Xcode_12.4.app
+
+      - name: "🧰  Prepare binaries"
+        run: |
+          Support/build_rust_dependencies
+
+  testMacOS11:
+    name: "Test macOS 11"
+    runs-on: macos-11
+    needs: [build]
+
+    concurrency:
+      group: test-${{ github.ref }}-${{ matrix.scheme }}
+      cancel-in-progress: true
+
+    strategy:
+      fail-fast: true
+      matrix:
+        include:
+          - scheme: "PactSwiftMockServer-iOS"
+            destination: "platform=iOS Simulator,name=iPhone 12 Pro"
+          - scheme: "PactSwiftMockServer-macOS"
+            destination: "arch=x86_64"
+
+    env:
+      SCHEME: ${{ matrix.scheme }}
+      DESTINATION: ${{ matrix.destination }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+        with:
+          submodules: recursive
+
+      - name: "📦 Cache rust binaries"
+        uses: actions/cache@v3
+        with:
+          path: ${{ env.BINARIES_PATH }}
+          key: build-${{ runner.os }}-rust-${{ hashFiles('**/Package.resolved') }}
+          restore-keys: |
+            build-${{ runner.os }}-rust-
+
+      - name: Use Xcode 12.4
+        run: sudo xcode-select -switch /Applications/Xcode_12.4.app
+
+      - name: "🛠  Prepare Tools"
+        run: |
+          Support/prepare_build_tools
+          Support/build_rust_dependencies
+
+      - name: "⚗️ Run tests (Xcode)"
+        run: |
+          ./Support/build_test
+
+  testMacOS12:
+    name: "Test macOS 12"
+    runs-on: macos-12
+    needs: [build]
+
+    strategy:
+      fail-fast: true
+      matrix:
+        include:
+          - scheme: "PactSwiftMockServer-iOS"
+            destination: "platform=iOS Simulator,name=iPhone 13 Pro"
+          - scheme: "PactSwiftMockServer-macOS"
+            destination: "arch=x86_64"
+
+    env:
+      SCHEME: ${{ matrix.scheme }}
+      DESTINATION: ${{ matrix.destination }}
+
+    concurrency:
+      group: test-${{ github.ref }}-${{ matrix.scheme }}
+      cancel-in-progress: true
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+        with:
+          submodules: recursive
+
+      - name: "📦 Cache rust binaries"
+        uses: actions/cache@v3
+        with:
+          path: ${{ env.BINARIES_PATH }}
+          key: build-${{ runner.os }}-rust-${{ hashFiles('**/Package.resolved') }}
+          restore-keys: |
+            build-${{ runner.os }}-rust-
+
+      - name: Use Xcode 13.4.1
+        run: sudo xcode-select -switch /Applications/Xcode_13.4.1.app
+
+      - name: "🛠  Prepare Tools"
+        run: |
+          Support/prepare_build_tools
+
+      - name: "⚗️ Run tests (Xcode)"
+        run: |
+          ./Support/build_test
+
+      - name: "⬆️  Upload code coverage"
+        run: |
+          bash <(curl -s https://codecov.io/bash) -J 'PactSwiftMockServer'

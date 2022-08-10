@@ -106,15 +106,10 @@ else
  	exit 1
 fi
 
-# Set the nightly toolchain
-echo "⚠️  Installing a nightly toolchain..."
-rustup install nightly
-rustup toolchain install nightly
-
-rustup component add rustfmt --toolchain nightly
-
-echo "⚠️  Setting nightly toolchain as default..."
-rustup default nightly-x86_64-apple-darwin
+if [[ "$CI" == false ]]; then
+	# Set the nightly toolchain
+	sh Support/prepare_rust_tools
+fi
 
 # Add all the required triples
 rustup target add \

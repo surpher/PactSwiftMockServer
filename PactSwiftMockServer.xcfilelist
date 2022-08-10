@@ -1,5 +1,8 @@
 $(SRCROOT)/Sources/Verifier.swift
 $(SRCROOT)/Sources/MockServer.swift
+$(SRCROOT)/Sources/Toolbox/SocketBinder.swift
+$(SRCROOT)/Sources/Toolbox/Logger.swift
+$(SRCROOT)/Sources/Toolbox/PactFileManager.swift
 $(SRCROOT)/Sources/Model/TransferProtocol.swift
 $(SRCROOT)/Sources/Model/VerificationErrorHandler.swift
 $(SRCROOT)/Sources/Model/ProviderVerificationError.swift

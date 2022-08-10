@@ -16,7 +16,6 @@
 //
 
 import Foundation
-@_implementationOnly import PactSwiftToolbox
 
 #if SWIFT_PACKAGE
 import PactMockServer

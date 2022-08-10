@@ -25,7 +25,6 @@ let package = Package(
 	],
 
 	dependencies: [
-		.package(name: "PactSwiftToolbox", url: "https://github.com/surpher/PactSwiftToolbox.git", from: "0.2.0"),
 		.package(name: "PactMockServer", url: "https://github.com/surpher/PactMockServer.git", from: "0.1.0"),
 	],
 
@@ -44,7 +43,6 @@ let package = Package(
 			name: "PactSwiftMockServerLinux",
 			dependencies: [
 				"PactMockServer",
-				"PactSwiftToolbox",
 			],
 			path: "./Sources"
 		),

@@ -36,10 +36,6 @@ jobs:
         with:
           submodules: recursive
 
-      - name: "⛓ Select rust toolchain"
-        run: |
-          sh Support/prepare_rust_tools
-
       - name: "♼ Cache rust binaries"
         uses: actions/cache@v3
         with:
@@ -50,10 +46,14 @@ jobs:
           restore-keys: |
             build-${{ runner.os }}-rust-
 
-      - name: "🏗  Use Xcode 12.4"
-        run: sudo xcode-select -switch /Applications/Xcode_12.4.app
+      - name: "🔍  Check if binaries exist in ${{ env.BINARIES_PATH }}"
+        id: check_files
+        uses: andstor/file-existence-action@v1
+        with:
+          files: "Resources/iOS-simulator/libpact_ffi.a, Resources/x86_64-darwin/libpact_ffi.a"
 
-      - name: "🎁  Prepare binaries"
+      - name: "🎁  Prepare binaries (if not cached)"
+        if: steps.check_files.outputs.files_exist == 'true'
         run: |
           Support/build_rust_dependencies
 

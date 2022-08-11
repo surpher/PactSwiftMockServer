@@ -29,6 +29,7 @@ jobs:
 
     concurrency:
       group: build-macos11-${{ github.ref }}
+      cancel-in-progress: true
 
     steps:
       - name: "♻️ Checkout repository"
@@ -50,10 +51,10 @@ jobs:
         id: check_files
         uses: andstor/file-existence-action@v1
         with:
-          files: "Resources/iOS-simulator/libpact_ffi.a, Resources/x86_64-darwin/libpact_ffi.a"
+          files: "Resources/**/libpact_ffi.a"
 
       - name: "🎁  Prepare binaries (if not cached)"
-        if: steps.check_files.outputs.files_exist == 'true'
+        if: steps.check_files.outputs.files_exist == 'false'
         run: |
           Support/build_rust_dependencies
 

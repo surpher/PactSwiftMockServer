@@ -1,6 +1,6 @@
 # PactSwiftMockServer 
 
-[![Build](https://github.com/surpher/PactSwiftMockServer/actions/workflows/build.yml/badge.svg)](https://github.com/surpher/PactSwiftMockServer/actions/workflows/build.yml) 
+[![Build and Test](https://github.com/surpher/PactSwiftMockServer/actions/workflows/build_test.yml/badge.svg?branch=main)](https://github.com/surpher/PactSwiftMockServer/actions/workflows/build_test.yml)
 [![MIT License](https://img.shields.io/badge/license-MIT-green.svg?style=flat)](LICENSE.md)
 [![codecov](https://codecov.io/gh/surpher/PactSwiftMockServer/branch/main/graph/badge.svg?token=0LYZVF36I9)](https://codecov.io/gh/surpher/PactSwiftMockServer)
 

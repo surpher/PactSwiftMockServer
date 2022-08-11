@@ -19,31 +19,17 @@
 
 set -euo pipefail
 
-# ### Pre-requisites:
+########################
 #
-# `pact-reference` repo and `PactSwiftMockServer` repo are on the same folder level.
-# Use the release tag for libpact_ffi-vX.X.X found at https://github.com/pact-foundation/pact-reference/releases
-#
-# ### Usage:
-# ./Support/build_rust_dependencies libpact_ffi-v0.0.3
-#
-# In order to minimise the built binary size update $LIBPACT_FFI_DI/Cargo.toml and append the following:
-#
-# [lib]
-# crate-type = ["staticlib"]
-#
-# [profile.release]
-# opt-level = 'z'
-# lto = true
-# panic = 'abort'
+# Pre-requisites:
+# 	1. ``libpact_ffi.version`` file exists in the ${WORKSPACE} folder.
 #
 #######################
 
 WORKSPACE=${GITHUB_WORKSPACE:-$PWD}
-LIBPACT_FFI_DIR="${WORKSPACE}/../pact-reference/rust/pact_ffi"
+LIBPACT_FFI_DIR="${WORKSPACE}/pact-reference/rust/pact_ffi"
 LIBPACT_FFI_VERSION=$(awk 'NR==1 {print; exit}' libpact_ffi.version)
 CI=${CI:-"false"}
-PACT_FOUNDATION_REPO="https://github.com/pact-foundation/pact-reference.git"
 
 #######################
 # Pre-requisite       #
@@ -57,44 +43,7 @@ then
 	exit 1
 fi
 
-#######################
-# If CI               #
-#######################
-
-echo "👮‍♀️  Verifying project and dependencies' folder setup..."
-
-if [[ "$CI" == true ]]; then
-	# Move a level up
-	cd ..
-
-	# Clone the pact-foundation/pact-reference repo
-	echo "ℹ️ Cloning ${PACT_FOUNDATION_REPO} at tag: ${LIBPACT_FFI_VERSION}"
-	git clone --depth 1 -b $LIBPACT_FFI_VERSION $PACT_FOUNDATION_REPO
-
-elif [ ! -d "$PWD/../pact-reference" ]; then
-	echo "🚨  Missing pact-foundation/pact-reference repo."
-	echo "⚠️  Make sure you 'git clone ${PACT_FOUNDATION_REPO}' at the same folder level as your PactSwiftMockServer."
-	exit 1
-else
-	echo "👍  Project setup seems to be in order."
-fi
-
-echo "ℹ️  Changing location to ${LIBPACT_FFI_DIR}"
-cd $LIBPACT_FFI_DIR
-
-if [[ "$CI" == false ]]; then
-	git fetch
-	git pull
-fi
-
-echo "ℹ️  Preparing to build ${LIBPACT_FFI_VERSION}"
-
-#######################
-# Setup               #
-#######################
-
-# Validate dependencies
-
+# Check Tooling is available
 echo "👮‍♀️  Checking if Rust is installed..."
 if which cargo >/dev/null; then
 	echo "👍  cargo installed"
@@ -106,10 +55,29 @@ else
  	exit 1
 fi
 
-if [[ "$CI" == false ]]; then
-	# Set the nightly toolchain
-	sh Support/prepare_rust_tools
-fi
+####################################
+# Rust codebase prep               #
+####################################
+
+echo "👮‍♀️  Verifying project and dependencies' folder setup..."
+
+# Update pact-reference submodule
+echo "🔃 Updating pact-reference submodule"
+git submodule update --init
+
+echo "ℹ️  Changing location to ${LIBPACT_FFI_DIR}"
+cd $LIBPACT_FFI_DIR
+
+echo "ℹ️  Checking out ${LIBPACT_FFI_VERSION}"
+git fetch --all --tags
+git checkout tags/$LIBPACT_FFI_VERSION
+
+#######################
+# Setup               #
+#######################
+
+# Set the nightly toolchain
+sh $WORKSPACE/Support/prepare_rust_tools
 
 # Add all the required triples
 rustup target add \

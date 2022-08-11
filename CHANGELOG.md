@@ -1,3 +1,14 @@
+# 0.4.0 - v0.4.0
+* 19c2c5e - ci: Skip building rust binaries if in cache (Marko Justinek)
+* 2b3ce0e - docs: Update README [skip ci] (Marko Justinek)
+* 54c6077 - ci: Updates to rust script for pact-reference submodule (Marko Justinek)
+* 53fa385 - tech: Updates build rust dependencies for submodule (Marko Justinek)
+* 644c9bb - tech: Adds pact-reference as submodule (Marko Justinek)
+* 89e6501 - ci: Join workflows into one (Marko Justinek)
+* dec6c33 - ci: Add Package.resolved to repo (Marko Justinek)
+* 6449c75 - ci: Improvements to pipelines (Marko Justinek)
+* dea0f7c - tech: Removes the PactSwiftToolbox dependency (#4) (Marko Justinek)
+* cdc61c4 - chore: Adds project-level copyright template (Marko Justinek)
 # 0.3.8 - v0.3.8
 * 1012993 - bugfix: Invert merge flag (Marko Justinek)
 # 0.3.7 - v0.3.7

@@ -1,3 +1,6 @@
+# 0.4.1 - v0.4.1
+* a580bdd - ci: Cancel build with new push (Marko Justinek)
+* dc550f9 - fix: Conditional for unsupported import (Marko Justinek)
 # 0.4.0 - v0.4.0
 * 19c2c5e - ci: Skip building rust binaries if in cache (Marko Justinek)
 * 2b3ce0e - docs: Update README [skip ci] (Marko Justinek)

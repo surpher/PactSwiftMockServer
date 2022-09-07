@@ -1,3 +1,5 @@
+# 0.4.2 - v0.4.2
+* caaccda - Upgrade libpact_ffi to v0.3.11 (Marko Justinek)
 # 0.4.1 - v0.4.1
 * a580bdd - ci: Cancel build with new push (Marko Justinek)
 * dc550f9 - fix: Conditional for unsupported import (Marko Justinek)

@@ -22,7 +22,7 @@ import PactMockServer
 #endif
 
 /// Used to verify the provider side of a pact contract
-public final class Verifier: ProviderVerifier {
+public final class Verifier: VerifierInterface {
 
 	public struct Options {
 		let sslVerificationEnabled: Bool
@@ -97,35 +97,35 @@ public final class Verifier: ProviderVerifier {
 
 	/// Sets the provider details for the Pact verifier
 	@discardableResult
-	public func setInfo(_ info: Provider.Info) -> Verifier {
+	public func setInfo(_ info: Provider.Info) -> VerifierInterface {
 		pactffi_verifier_set_provider_info(verifierHandle, info.name, info.scheme.protocol, info.host, info.port, info.path)
 		return self
 	}
 
 	/// Sets the filter defining which pacts to verify
 	@discardableResult
-	public func setFilter(_ filter: Provider.Filter) -> Verifier {
+	public func setFilter(_ filter: Provider.Filter) -> VerifierInterface {
 		pactffi_verifier_set_filter_info(verifierHandle, filter.description, filter.state, filter.noState ? 1 : 0)
 		return self
 	}
 
 	/// Sets the provider state
 	@discardableResult
-	public func setProviderState(_ state: Provider.State) -> Verifier {
+	public func setProviderState(_ state: Provider.State) -> VerifierInterface {
 		pactffi_verifier_set_provider_state(verifierHandle, state.urlString, state.teardown ? 1 : 0, state.body ? 1 : 0)
 		return self
 	}
 
 	/// Sets verification options
 	@discardableResult
-	public func setVerificationOptions(_ options: Verifier.Options) -> Verifier {
+	public func setVerificationOptions(_ options: Verifier.Options) -> VerifierInterface {
 		pactffi_verifier_set_verification_options(verifierHandle, options.sslVerificationEnabled ? 1 : 0, options.timeout)
 		return self
 	}
 
-	/// Verifies pact(s) at defined source
+	/// Verifies pact(s) at given source
 	@discardableResult
-	public func verifyPactsAt(source: Source) -> Verifier {
+	public func verifyPactsAt(source: Source) -> VerifierInterface {
 		switch source {
 		case let .broker(broker):
 			setPactBrokerSource(broker: broker)
@@ -147,7 +147,7 @@ public final class Verifier: ProviderVerifier {
 		consumer: Consumer,
 		enablePending: Bool = false,
 		includeWIPPactsSince: Date? = nil
-	) -> Verifier {
+	) -> VerifierInterface {
 		let authentication = extractBrokerAuthentication(from: broker.authentication)
 		var cargsProviderTags = mapToArrayOfPointers(array: provider.tags)
 		var cargsConsumerVersionSelectors = mapToArrayOfPointers(array: consumer.versionSelectorsAsJSONStrings)
@@ -179,7 +179,7 @@ public final class Verifier: ProviderVerifier {
 	///
 	/// - parameter headers: Header values where KEY and VALUE contain ASCII characters (32-127) only
 	@discardableResult
-	public func setCustomHeaders(_ headers: [String: String]) -> Verifier {
+	public func setCustomHeaders(_ headers: [String: String]) -> VerifierInterface {
 		headers.forEach {
 			pactffi_verifier_add_custom_header(verifierHandle, $0, $1)
 		}

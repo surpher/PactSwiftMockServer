@@ -24,9 +24,9 @@
 		AD38D300264A33E800124396 /* PactSwiftMockServer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AD38D2F7264A33E800124396 /* PactSwiftMockServer.framework */; };
 		AD63D08226A02C28002682EB /* libpact_ffi.a in Frameworks */ = {isa = PBXBuildFile; fileRef = AD63D08126A02C28002682EB /* libpact_ffi.a */; };
 		AD63D08F26A02C64002682EB /* libpact_ffi.a in Frameworks */ = {isa = PBXBuildFile; fileRef = AD9336A5269C33EB0004EBD8 /* libpact_ffi.a */; };
-		AD708763290B9DF200F59E58 /* ProviderVerifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD708762290B9DF200F59E58 /* ProviderVerifier.swift */; };
-		AD708764290B9DF200F59E58 /* ProviderVerifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD708762290B9DF200F59E58 /* ProviderVerifier.swift */; };
-		AD708765290B9DF200F59E58 /* ProviderVerifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD708762290B9DF200F59E58 /* ProviderVerifier.swift */; };
+		AD708763290B9DF200F59E58 /* VerifierInterface.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD708762290B9DF200F59E58 /* VerifierInterface.swift */; };
+		AD708764290B9DF200F59E58 /* VerifierInterface.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD708762290B9DF200F59E58 /* VerifierInterface.swift */; };
+		AD708765290B9DF200F59E58 /* VerifierInterface.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD708762290B9DF200F59E58 /* VerifierInterface.swift */; };
 		AD708767290BD27300F59E58 /* Either.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD708766290BD27300F59E58 /* Either.swift */; };
 		AD708768290BD27300F59E58 /* Either.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD708766290BD27300F59E58 /* Either.swift */; };
 		AD708769290BD27300F59E58 /* Either.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD708766290BD27300F59E58 /* Either.swift */; };
@@ -149,7 +149,7 @@
 		AD38D314264A347A00124396 /* Target-iPhone-iOS-Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "Target-iPhone-iOS-Debug.xcconfig"; sourceTree = "<group>"; };
 		AD38D315264A34CD00124396 /* Target-iPhone-iOS-Shared.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "Target-iPhone-iOS-Shared.xcconfig"; sourceTree = "<group>"; };
 		AD63D08126A02C28002682EB /* libpact_ffi.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libpact_ffi.a; sourceTree = "<group>"; };
-		AD708762290B9DF200F59E58 /* ProviderVerifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProviderVerifier.swift; sourceTree = "<group>"; };
+		AD708762290B9DF200F59E58 /* VerifierInterface.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerifierInterface.swift; sourceTree = "<group>"; };
 		AD708766290BD27300F59E58 /* Either.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Either.swift; sourceTree = "<group>"; };
 		AD70876A290BD81600F59E58 /* Broker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Broker.swift; sourceTree = "<group>"; };
 		AD70876E290BD90400F59E58 /* SimpleAuth.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimpleAuth.swift; sourceTree = "<group>"; };
@@ -304,9 +304,9 @@
 				AD1598382648E690007CFAA5 /* Headers */,
 				AD1598302648E32F007CFAA5 /* MockServer.swift */,
 				AD1598392648E6DB007CFAA5 /* Model */,
-				AD708762290B9DF200F59E58 /* ProviderVerifier.swift */,
 				AD957F3428A23AF300860AD1 /* Toolbox */,
 				ADE2550F26CE335400FA21A9 /* Verifier.swift */,
+				AD708762290B9DF200F59E58 /* VerifierInterface.swift */,
 			);
 			path = Sources;
 			sourceTree = "<group>";
@@ -720,7 +720,7 @@
 				ADBEF3032648FCF200486C4A /* MismatchErrorType.swift in Sources */,
 				AD957F3E28A23BD600860AD1 /* Logger.swift in Sources */,
 				AD957F3A28A23B8400860AD1 /* SocketBinder.swift in Sources */,
-				AD708763290B9DF200F59E58 /* ProviderVerifier.swift in Sources */,
+				AD708763290B9DF200F59E58 /* VerifierInterface.swift in Sources */,
 				ADBEF3072648FCF200486C4A /* RequestError.swift in Sources */,
 				ADE2551026CE335400FA21A9 /* Verifier.swift in Sources */,
 				AD957F3628A23B0B00860AD1 /* PactFileManager.swift in Sources */,
@@ -763,7 +763,7 @@
 				ADBEF3042648FCF200486C4A /* MismatchErrorType.swift in Sources */,
 				AD957F3F28A23BD600860AD1 /* Logger.swift in Sources */,
 				AD957F3B28A23B8400860AD1 /* SocketBinder.swift in Sources */,
-				AD708764290B9DF200F59E58 /* ProviderVerifier.swift in Sources */,
+				AD708764290B9DF200F59E58 /* VerifierInterface.swift in Sources */,
 				ADBEF3082648FCF200486C4A /* RequestError.swift in Sources */,
 				ADE2551126CE335400FA21A9 /* Verifier.swift in Sources */,
 				AD957F3728A23B0B00860AD1 /* PactFileManager.swift in Sources */,
@@ -806,7 +806,7 @@
 				ADD7CB11264B4A080091A286 /* VerificationError.swift in Sources */,
 				AD957F4028A23BD600860AD1 /* Logger.swift in Sources */,
 				AD957F3C28A23B8400860AD1 /* SocketBinder.swift in Sources */,
-				AD708765290B9DF200F59E58 /* ProviderVerifier.swift in Sources */,
+				AD708765290B9DF200F59E58 /* VerifierInterface.swift in Sources */,
 				ADD7CB12264B4A080091A286 /* MockServer.swift in Sources */,
 				ADE2551226CE335400FA21A9 /* Verifier.swift in Sources */,
 				AD957F3828A23B0B00860AD1 /* PactFileManager.swift in Sources */,

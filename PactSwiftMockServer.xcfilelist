@@ -1,4 +1,5 @@
 $(SRCROOT)/Sources/Verifier.swift
+$(SRCROOT)/Sources/VerifierInterface.swift
 $(SRCROOT)/Sources/MockServer.swift
 $(SRCROOT)/Sources/Toolbox/SocketBinder.swift
 $(SRCROOT)/Sources/Toolbox/Logger.swift
@@ -22,4 +23,3 @@ $(SRCROOT)/Sources/Model/VerificationError.swift
 $(SRCROOT)/Sources/Model/Token.swift
 $(SRCROOT)/Sources/Model/RequestError.swift
 $(SRCROOT)/Sources/Model/VersionSelector.swift
-$(SRCROOT)/Sources/ProviderVerifier.swift

@@ -1,0 +1,158 @@
+// swift-interface-format-version: 1.0
+// swift-compiler-version: Apple Swift version 5.7 (swiftlang-5.7.0.127.4 clang-1400.0.29.50)
+// swift-module-flags: -target arm64-apple-ios12.0-simulator -enable-objc-interop -enable-library-evolution -swift-version 5 -enforce-exclusivity=checked -O -module-name PactSwiftMockServer
+// swift-module-flags-ignorable: -enable-bare-slash-regex
+import Foundation
+@_exported import PactSwiftMockServer
+import Swift
+import _Concurrency
+import _StringProcessing
+import os.log
+import os
+public enum ProviderVerificationError : Swift.Error, Swift.Equatable {
+  case verificationFailed
+  case nullPointer
+  case methodPanicked
+  case invalidArguments
+  case usageError(Swift.String)
+  case unknown
+  public var description: Swift.String {
+    get
+  }
+  public static func == (a: PactSwiftMockServer.ProviderVerificationError, b: PactSwiftMockServer.ProviderVerificationError) -> Swift.Bool
+}
+public struct SimpleAuth {
+  public init(username: Swift.String, password: Swift.String)
+}
+@_hasMissingDesignatedInitializers public class Broker {
+  @objc deinit
+}
+public enum MockServerError : Swift.Error {
+  case invalidPactJSON
+  case invalidSocketAddress
+  case failedToStart
+  case failedToWriteFile
+  case methodPanicked
+  case nullPointer
+  case portNotFound
+  case tlsConfigurationFailed
+  case validationFaliure
+  case unknown
+  public var description: Swift.String {
+    get
+  }
+  public static func == (a: PactSwiftMockServer.MockServerError, b: PactSwiftMockServer.MockServerError) -> Swift.Bool
+  public func hash(into hasher: inout Swift.Hasher)
+  public var hashValue: Swift.Int {
+    get
+  }
+}
+@objc public enum TransferProtocol : Swift.Int {
+  case standard
+  case secure
+  public init?(rawValue: Swift.Int)
+  public typealias RawValue = Swift.Int
+  public var rawValue: Swift.Int {
+    get
+  }
+}
+public protocol VerifierInterface {
+  @available(*, deprecated, message: "Use the handle to instance approach")
+  func verifyProvider(options args: Swift.String) -> Swift.Result<Swift.Bool, PactSwiftMockServer.ProviderVerificationError>
+  func verify() -> Swift.Result<Swift.Bool, PactSwiftMockServer.ProviderVerificationError>
+  func setInfo(_ info: PactSwiftMockServer.Provider.Info) -> PactSwiftMockServer.VerifierInterface
+  func setFilter(_ filter: PactSwiftMockServer.Provider.Filter) -> PactSwiftMockServer.VerifierInterface
+  func setProviderState(_ state: PactSwiftMockServer.Provider.State) -> PactSwiftMockServer.VerifierInterface
+  func setVerificationOptions(_ options: PactSwiftMockServer.Verifier.Options) -> PactSwiftMockServer.VerifierInterface
+  func verifyPactsAt(source: PactSwiftMockServer.Source) -> PactSwiftMockServer.VerifierInterface
+  func verifyPactsAt(broker: PactSwiftMockServer.Broker, provider: PactSwiftMockServer.Provider, consumer: PactSwiftMockServer.Consumer, enablePending: Swift.Bool, includeWIPPactsSince: Foundation.Date?) -> PactSwiftMockServer.VerifierInterface
+  func setCustomHeaders(_ headers: [Swift.String : Swift.String]) -> PactSwiftMockServer.VerifierInterface
+}
+final public class Verifier : PactSwiftMockServer.VerifierInterface {
+  public struct Options {
+    public init(sslVerificationEnabled: Swift.Bool, timeout: Swift.UInt = 10)
+  }
+  public struct PublishOptions {
+    public init(providerVersion: Swift.String, buildURL: Foundation.URL, tags: [Swift.String], providerBranch: Swift.String)
+  }
+  @available(*, deprecated, message: "Use init(name:version:) instead")
+  public init()
+  public init?(name: Swift.String, version: Swift.String)
+  @objc deinit
+  @available(*, deprecated, message: "Use .verify() with combination of other options setters instead.")
+  final public func verifyProvider(options args: Swift.String) -> Swift.Result<Swift.Bool, PactSwiftMockServer.ProviderVerificationError>
+  @discardableResult
+  final public func setInfo(_ info: PactSwiftMockServer.Provider.Info) -> PactSwiftMockServer.VerifierInterface
+  @discardableResult
+  final public func setFilter(_ filter: PactSwiftMockServer.Provider.Filter) -> PactSwiftMockServer.VerifierInterface
+  @discardableResult
+  final public func setProviderState(_ state: PactSwiftMockServer.Provider.State) -> PactSwiftMockServer.VerifierInterface
+  @discardableResult
+  final public func setVerificationOptions(_ options: PactSwiftMockServer.Verifier.Options) -> PactSwiftMockServer.VerifierInterface
+  @discardableResult
+  final public func verifyPactsAt(source: PactSwiftMockServer.Source) -> PactSwiftMockServer.VerifierInterface
+  @discardableResult
+  final public func verifyPactsAt(broker: PactSwiftMockServer.Broker, provider: PactSwiftMockServer.Provider, consumer: PactSwiftMockServer.Consumer, enablePending: Swift.Bool = false, includeWIPPactsSince: Foundation.Date? = nil) -> PactSwiftMockServer.VerifierInterface
+  @discardableResult
+  final public func setCustomHeaders(_ headers: [Swift.String : Swift.String]) -> PactSwiftMockServer.VerifierInterface
+  final public func verify() -> Swift.Result<Swift.Bool, PactSwiftMockServer.ProviderVerificationError>
+}
+public class MockServer {
+  public var baseUrl: Swift.String {
+    get
+  }
+  public init(directory: Foundation.URL? = nil, merge: Swift.Bool = true)
+  @objc deinit
+  public func setup(pact: Foundation.Data, protocol: PactSwiftMockServer.TransferProtocol = .standard, completion: (Swift.Result<Swift.Int, PactSwiftMockServer.MockServerError>) -> Swift.Void)
+  public func verify(completion: (Swift.Result<Swift.Bool, PactSwiftMockServer.VerificationError>) -> Swift.Void)
+  public func finalize(pact: Foundation.Data, completion: ((Swift.Result<Swift.String, PactSwiftMockServer.MockServerError>) -> Swift.Void)?)
+}
+extension PactSwiftMockServer.MockServer {
+  public static func generate_value(regex: Swift.String) -> Swift.String?
+  public static func generate_date(format: Swift.String) -> Swift.String?
+}
+public struct Token {
+  public init(_ value: Swift.String)
+}
+public enum Source {
+  case broker(PactSwiftMockServer.Broker)
+  case directory(Swift.String)
+  case file(Swift.String)
+  case url(Foundation.URL, PactSwiftMockServer.Either<PactSwiftMockServer.SimpleAuth, PactSwiftMockServer.Token>)
+}
+public struct VersionSelector : Swift.Encodable {
+  public init?(mainBranch: Swift.Bool? = nil, tag: Swift.String? = nil, fallbackTag: Swift.String? = nil, latest: Swift.Bool? = nil, consumer: Swift.String? = nil, deployed: Swift.Bool? = nil, released: Swift.Bool? = nil, deployedOrReleased: Swift.Bool? = nil, branch: Swift.String? = nil, fallbackBranch: Swift.String? = nil, matchingBranch: Swift.Bool? = nil, environment: Swift.String? = nil)
+  public func encode(to encoder: Swift.Encoder) throws
+}
+public struct Provider {
+  public struct Info {
+    public init(name: Swift.String? = nil, scheme: PactSwiftMockServer.TransferProtocol = .secure, host: Swift.String? = nil, port: Swift.UInt16, path: Swift.String? = nil)
+  }
+  public struct Filter {
+    public init(description: Swift.String = "", state: Swift.String = "", noState: Swift.Bool = false)
+  }
+  public struct State {
+    public init(urlString: Swift.String, teardown: Swift.Bool = false, body: Swift.Bool = false)
+  }
+}
+public struct StateHandler {
+}
+public struct Consumer {
+  public init(versionSelectors: [PactSwiftMockServer.VersionSelector])
+  public init(tags: [Swift.String])
+}
+public enum Either<A, T> {
+  case auth(A)
+  case token(T)
+}
+public enum VerificationError : Swift.Error {
+  case reason(Swift.String)
+  public var description: Swift.String {
+    get
+  }
+}
+extension PactSwiftMockServer.MockServerError : Swift.Equatable {}
+extension PactSwiftMockServer.MockServerError : Swift.Hashable {}
+extension PactSwiftMockServer.TransferProtocol : Swift.Equatable {}
+extension PactSwiftMockServer.TransferProtocol : Swift.Hashable {}
+extension PactSwiftMockServer.TransferProtocol : Swift.RawRepresentable {}

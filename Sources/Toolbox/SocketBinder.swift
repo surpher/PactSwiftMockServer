@@ -19,7 +19,7 @@ import Foundation
 
 enum SocketBinder {
 
-	public static func unusedPort() -> Int32 {
+	static func unusedPort() -> Int32 {
 		#if os(Linux)
 		return getAvailablePort()
 		#else
@@ -73,7 +73,7 @@ private extension SocketBinder {
 	// MARK: - Darwin
 
 	static var randomPort: in_port_t {
-		in_port_t(arc4random_uniform(2_000) + 4_000) // swiftlint:disable:this legacy_random
+		in_port_t(arc4random_uniform(2_000) + 4_000)
 	}
 
 	// The following code block referenced from: https://stackoverflow.com/a/49728137

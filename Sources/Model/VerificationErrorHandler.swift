@@ -61,7 +61,7 @@ struct VerificationErrorHandler {
 				let mismatches = error.mismatches?.compactMap {
 						"\($0.parameter != nil ? "query param '" + $0.parameter! + "': " : "")"
 					+ "\($0.mismatch != nil ? $0.mismatch! : "")"
-					+ "\( MismatchErrorType(rawValue: $0.type)  == .body ? " - Body does not match the expected body definition" : "")"
+					+ "\( MismatchErrorType(rawValue: $0.type) == .body ? " - Body does not match the expected body definition" : "")"
 				}
 				.joined(separator: "\n\t")
 

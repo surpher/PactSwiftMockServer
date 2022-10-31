@@ -24,16 +24,6 @@ import PactMockServer
 /// Used to verify the provider side of a pact contract
 public final class Verifier: VerifierInterface {
 
-	public struct Options {
-		let sslVerificationEnabled: Bool
-		let timeout: UInt
-
-		public init(sslVerificationEnabled: Bool, timeout: UInt = 10) {
-			self.sslVerificationEnabled = sslVerificationEnabled
-			self.timeout = timeout
-		}
-	}
-
 	public struct PublishOptions {
 		let providerVersion: String
 		let buildURL: URL
@@ -96,78 +86,102 @@ public final class Verifier: VerifierInterface {
 	}
 
 	/// Sets the provider details for the Pact verifier
-	@discardableResult
-	public func setInfo(_ info: Provider.Info) -> VerifierInterface {
-		pactffi_verifier_set_provider_info(verifierHandle, info.name, info.scheme.protocol, info.host, info.port, info.path)
+	public func setProviderInfo(name: String, url: URL) -> VerifierInterface {
+		pactffi_verifier_set_provider_info(verifierHandle, name, url.scheme, url.host, UInt16(url.port ?? 8_080), url.path)
 		return self
 	}
 
-	/// Sets the filter defining which pacts to verify
-	@discardableResult
-	public func setFilter(_ filter: Provider.Filter) -> VerifierInterface {
-		pactffi_verifier_set_filter_info(verifierHandle, filter.description, filter.state, filter.noState ? 1 : 0)
+	/// Sets the filters for the Pact verifier
+	public func setFilter(description: String? = nil, state: String? = nil, noState: Bool = false) -> VerifierInterface {
+		pactffi_verifier_set_filter_info(verifierHandle, description, state, noState ? 1 : 0)
 		return self
 	}
 
-	/// Sets the provider state
-	@discardableResult
-	public func setProviderState(_ state: Provider.State) -> VerifierInterface {
-		pactffi_verifier_set_provider_state(verifierHandle, state.urlString, state.teardown ? 1 : 0, state.body ? 1 : 0)
+	/// Sets the provider state for the Pact verifier
+	public func setProviderState(url: URL, teardown: Bool = false, body: Bool = false) -> VerifierInterface {
+		pactffi_verifier_set_provider_state(verifierHandle, url.absoluteString, teardown ? 1 : 0, body ? 1 : 0)
 		return self
 	}
 
-	/// Sets verification options
-	@discardableResult
-	public func setVerificationOptions(_ options: Verifier.Options) -> VerifierInterface {
-		pactffi_verifier_set_verification_options(verifierHandle, options.sslVerificationEnabled ? 1 : 0, options.timeout)
+	/// Sets the options used by the verifier when calling the provider
+	public func setVerificationOptions(disableSSL: Bool, timeout: UInt) -> VerifierInterface {
+		pactffi_verifier_set_verification_options(verifierHandle, disableSSL ? 1 : 0, timeout)
 		return self
 	}
 
-	/// Verifies pact(s) at given source
-	@discardableResult
-	public func verifyPactsAt(source: Source) -> VerifierInterface {
-		switch source {
-		case let .broker(broker):
-			setPactBrokerSource(broker: broker)
-		case let .file(file):
-			pactffi_verifier_add_file_source(verifierHandle, file)
-		case let .directory(directory):
-			pactffi_verifier_add_directory_source(verifierHandle, directory)
-		case let .url(url, auth):
-			setPactURLSource(url: url, auth: auth)
+	/// Adds a Pact directory as a source to verify.
+	public func verifyPactsInDirectory(_ directory: String) -> VerifierInterface {
+		pactffi_verifier_add_directory_source(verifierHandle, directory)
+		return self
+	}
+
+	/// Adds a Pact file as a source to verify
+	public func verifyPactFile(_ file: String) -> VerifierInterface {
+		pactffi_verifier_add_file_source(verifierHandle, file)
+		return self
+	}
+
+	/// Adds a URL as a source to verify
+	public func verifyPactAtURL(url: URL, authentication: Either<SimpleAuth, Token>?) -> VerifierInterface {
+		switch authentication {
+		case let .auth(auth):
+			pactffi_verifier_url_source(verifierHandle, url.absoluteString, auth.username, auth.password, nil)
+		case let .token(token):
+			pactffi_verifier_url_source(verifierHandle, url.absoluteString, nil, nil, token.value)
+		case .none:
+			pactffi_verifier_url_source(verifierHandle, url.absoluteString, nil, nil, nil)
 		}
+
 		return self
 	}
 
-	/// Verifies pact(s) at given broker with defined options
-	@discardableResult
-	public func verifyPactsAt(
-		broker: Broker,
-		provider: Provider,
-		consumer: Consumer,
+	/// Adds a Pact broker as a source to verify
+	public func verifyPactsAtPactBroker(urlString: String, authentication: Either<SimpleAuth, Token>? = nil) -> VerifierInterface {
+		switch authentication {
+		case let .auth(auth):
+			pactffi_verifier_broker_source(verifierHandle, urlString, auth.username, auth.password, nil)
+		case let .token(token):
+			pactffi_verifier_broker_source(verifierHandle, urlString, nil, nil, token.value)
+		case .none:
+			pactffi_verifier_broker_source(verifierHandle, urlString, nil, nil, nil)
+		}
+
+		return self
+	}
+
+	/// Verifies pact(s) at given broker with options
+	public func verifyPactsAtPactBroker(
+		url: URL,
+		authentication: Either<SimpleAuth, Token>,
+		providerTags: [String] = [],
+		providerBranch: String? = nil,
+		versionSelectors: [VersionSelector] = [],
+		consumerTags: [String] = [],
 		enablePending: Bool = false,
 		includeWIPPactsSince: Date? = nil
-	) -> VerifierInterface {
-		let authentication = extractBrokerAuthentication(from: broker.authentication)
-		var cargsProviderTags = mapToArrayOfPointers(array: provider.tags)
-		var cargsConsumerVersionSelectors = mapToArrayOfPointers(array: consumer.versionSelectorsAsJSONStrings)
-		var cargsConsumerVersionTags = mapToArrayOfPointers(array: consumer.tags)
+	) throws -> VerifierInterface {
+		let authentication = extractBrokerAuthentication(from: authentication)
+		let arrayOfVersionSelectorsAsJSON = try versionSelectorsAsJSONStrings(versionSelectors)
+
+		var cargsProviderTags = mapToArrayOfPointers(array: providerTags)
+		var cargsConsumerVersionSelectors = mapToArrayOfPointers(array: arrayOfVersionSelectorsAsJSON)
+		var cargsConsumerVersionTags = mapToArrayOfPointers(array: consumerTags)
 
 		pactffi_verifier_broker_source_with_selectors(
 			verifierHandle,
-			broker.url.absoluteString,
+			url.absoluteString,
 			authentication.username,
 			authentication.password,
 			authentication.token,
 			enablePending ? 1 : 0,
 			wipPactsSinceDate(includeWIPPactsSince),
 			&cargsProviderTags,
-			UInt16(provider.tags.count),
-			provider.branch,
+			UInt16(providerTags.count),
+			providerBranch,
 			&cargsConsumerVersionSelectors,
-			UInt16(consumer.versionSelectorsAsJSONStrings.count),
+			UInt16(arrayOfVersionSelectorsAsJSON.count),
 			&cargsConsumerVersionTags,
-			UInt16(consumer.tags.count)
+			UInt16(consumerTags.count)
 		)
 
 		freeMemFor(cargsProviderTags, cargsConsumerVersionSelectors, cargsConsumerVersionTags)
@@ -178,7 +192,7 @@ public final class Verifier: VerifierInterface {
 	/// Sets custom headers to be added to the requests made to the provider
 	///
 	/// - parameter headers: Header values where KEY and VALUE contain ASCII characters (32-127) only
-	@discardableResult
+	///
 	public func setCustomHeaders(_ headers: [String: String]) -> VerifierInterface {
 		headers.forEach {
 			pactffi_verifier_add_custom_header(verifierHandle, $0, $1)
@@ -187,9 +201,28 @@ public final class Verifier: VerifierInterface {
 		return self
 	}
 
+	/// Set the options used when publishing verification results to the Pact broker
+	public func setPublishOptions(providerVersion: String, providerBranch: String, buildURL: URL, providerTags: [String] = []) -> VerifierInterface {
+		let cargsProviderTags = mapToArrayOfPointers(array: providerTags)
+
+		pactffi_verifier_set_publish_options(
+			verifierHandle,
+			providerVersion,
+			buildURL.absoluteString,
+			cargsProviderTags,
+			UInt16(providerTags.count),
+			providerBranch
+		)
+
+		freeMemFor(cargsProviderTags)
+
+		return self
+	}
+
 	/// Executes the provider verification task
 	///
 	/// - returns: `true` when on verification success or `ProviderVerificationError` on failure
+	///
 	public func verify() -> Result<Bool, ProviderVerificationError> {
 		let verificationResult = pactffi_verifier_execute(verifierHandle)
 		pactffi_verifier_shutdown(verifierHandle)
@@ -202,24 +235,6 @@ public final class Verifier: VerifierInterface {
 // MARK: - Private
 
 private extension Verifier {
-
-	func setPactURLSource(url: URL, auth: Either<SimpleAuth, Token>) {
-		switch auth {
-		case let .auth(auth):
-			pactffi_verifier_url_source(verifierHandle, url.absoluteString, auth.username, auth.password, nil)
-		case let .token(token):
-			pactffi_verifier_url_source(verifierHandle, url.absoluteString, nil, nil, token.value)
-		}
-	}
-
-	func setPactBrokerSource(broker: Broker) {
-		switch broker.authentication {
-		case let .auth(auth):
-			pactffi_verifier_broker_source(verifierHandle, broker.url.absoluteString, auth.username, auth.password, nil)
-		case let .token(token):
-			pactffi_verifier_broker_source(verifierHandle, broker.url.absoluteString, nil, nil, token.value)
-		}
-	}
 
 	func extractBrokerAuthentication(from authentication: Either<SimpleAuth, Token>) -> (username: String?, password: String?, token: String?) {
 		switch authentication {
@@ -246,15 +261,23 @@ private extension Verifier {
 	///
 	/// - warning: Memory must be explicitly released.
 	///
-	private func mapToArrayOfPointers(array: [String?]) -> [UnsafePointer<Int8>?] {
+	func mapToArrayOfPointers(array: [String?]) -> [UnsafePointer<Int8>?] {
 		array.map { $0.flatMap { UnsafePointer<Int8>(strdup($0)) } }
 	}
 
 	/// Frees memory allocation for an array of `UnsafePointers`
-	private func freeMemFor<T>(_ pointers: [UnsafePointer<T>?]...) {
+	func freeMemFor<T>(_ pointers: [UnsafePointer<T>?]...) {
 		pointers.forEach { pointer in
 			for ptr in pointer { free(UnsafeMutablePointer(mutating: ptr)) }
 		}
+	}
+
+	func versionSelectorsAsJSONStrings(_ versionSelectors: [VersionSelector]) throws -> [String] {
+		let encodedVersionSelectors = try versionSelectors.compactMap {
+			let encodedSelector = try JSONEncoder().encode($0)
+			return String(data: encodedSelector, encoding: .utf8)
+		}
+		return encodedVersionSelectors
 	}
 
 }

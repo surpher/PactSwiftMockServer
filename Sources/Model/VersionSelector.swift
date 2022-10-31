@@ -21,6 +21,10 @@ import Foundation
 ///
 /// See [https://docs.pact.io/pact_broker/advanced_topics/consumer_version_selectors](https://docs.pact.io/pact_broker/advanced_topics/consumer_version_selectors) for more.
 ///
+/// - warning: Note that this is a very unsafe initializer available for this type.
+/// To avoid unexpected behaviour **do read** through [Consumer Version Selectors](https://docs.pact.io/pact_broker/advanced_topics/consumer_version_selectors)
+/// document to learn how to set the values of Consumer Version Selectors effectively.
+///
 public struct VersionSelector: Encodable {
 
 	let mainBranch: Bool?
@@ -42,9 +46,9 @@ public struct VersionSelector: Encodable {
 	///
 	/// - warning: Note that this is a very unsafe initializer available for this type.
 	/// To avoid unexpected behaviour **do read** through [Consumer Version Selectors](https://docs.pact.io/pact_broker/advanced_topics/consumer_version_selectors)
-	/// document to learn how to set the values to use Consumer Version Selectors effectively.
+	/// document to learn how to set the values of Consumer Version Selectors effectively.
 	///
-	public init?(
+	public init(
 		mainBranch: Bool? = nil,
 		tag: String? = nil,
 		fallbackTag: String? = nil,

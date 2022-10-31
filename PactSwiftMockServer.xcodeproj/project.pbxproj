@@ -30,24 +30,12 @@
 		AD708767290BD27300F59E58 /* Either.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD708766290BD27300F59E58 /* Either.swift */; };
 		AD708768290BD27300F59E58 /* Either.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD708766290BD27300F59E58 /* Either.swift */; };
 		AD708769290BD27300F59E58 /* Either.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD708766290BD27300F59E58 /* Either.swift */; };
-		AD70876B290BD81600F59E58 /* Broker.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD70876A290BD81600F59E58 /* Broker.swift */; };
-		AD70876C290BD81600F59E58 /* Broker.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD70876A290BD81600F59E58 /* Broker.swift */; };
-		AD70876D290BD81600F59E58 /* Broker.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD70876A290BD81600F59E58 /* Broker.swift */; };
 		AD70876F290BD90400F59E58 /* SimpleAuth.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD70876E290BD90400F59E58 /* SimpleAuth.swift */; };
 		AD708770290BD90400F59E58 /* SimpleAuth.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD70876E290BD90400F59E58 /* SimpleAuth.swift */; };
 		AD708771290BD90400F59E58 /* SimpleAuth.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD70876E290BD90400F59E58 /* SimpleAuth.swift */; };
 		AD708773290BD95000F59E58 /* Token.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD708772290BD95000F59E58 /* Token.swift */; };
 		AD708774290BD95000F59E58 /* Token.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD708772290BD95000F59E58 /* Token.swift */; };
 		AD708775290BD95000F59E58 /* Token.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD708772290BD95000F59E58 /* Token.swift */; };
-		AD708777290BDA3400F59E58 /* Provider.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD708776290BDA3400F59E58 /* Provider.swift */; };
-		AD708778290BDA3400F59E58 /* Provider.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD708776290BDA3400F59E58 /* Provider.swift */; };
-		AD708779290BDA3400F59E58 /* Provider.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD708776290BDA3400F59E58 /* Provider.swift */; };
-		AD70877B290BDDD400F59E58 /* Source.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD70877A290BDDD300F59E58 /* Source.swift */; };
-		AD70877C290BDDD400F59E58 /* Source.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD70877A290BDDD300F59E58 /* Source.swift */; };
-		AD70877D290BDDD400F59E58 /* Source.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD70877A290BDDD300F59E58 /* Source.swift */; };
-		AD70877F290BE16B00F59E58 /* Consumer.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD70877E290BE16B00F59E58 /* Consumer.swift */; };
-		AD708780290BE16B00F59E58 /* Consumer.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD70877E290BE16B00F59E58 /* Consumer.swift */; };
-		AD708781290BE16B00F59E58 /* Consumer.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD70877E290BE16B00F59E58 /* Consumer.swift */; };
 		AD933643269C2DD80004EBD8 /* libpact_ffi.a in Frameworks */ = {isa = PBXBuildFile; fileRef = AD933642269C2DD80004EBD8 /* libpact_ffi.a */; };
 		AD93364D269C2EC30004EBD8 /* pact_ffi.h in Headers */ = {isa = PBXBuildFile; fileRef = AD93364C269C2EC30004EBD8 /* pact_ffi.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		AD93364E269C2EC30004EBD8 /* pact_ffi.h in Headers */ = {isa = PBXBuildFile; fileRef = AD93364C269C2EC30004EBD8 /* pact_ffi.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -96,9 +84,6 @@
 		ADD7CB13264B4A080091A286 /* VerificationErrorType.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADBEF3002648FCF200486C4A /* VerificationErrorType.swift */; };
 		ADD7CB14264B4A080091A286 /* MismatchErrorType.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADBEF2FD2648FCF200486C4A /* MismatchErrorType.swift */; };
 		ADD7CB16264B4CCB0091A286 /* PactSwiftMockServer.h in Headers */ = {isa = PBXBuildFile; fileRef = AD1597F62648DE0E007CFAA5 /* PactSwiftMockServer.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		ADE2550326CE334B00FA21A9 /* StateHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADE254FF26CE334A00FA21A9 /* StateHandler.swift */; };
-		ADE2550426CE334B00FA21A9 /* StateHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADE254FF26CE334A00FA21A9 /* StateHandler.swift */; };
-		ADE2550526CE334B00FA21A9 /* StateHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADE254FF26CE334A00FA21A9 /* StateHandler.swift */; };
 		ADE2551026CE335400FA21A9 /* Verifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADE2550F26CE335400FA21A9 /* Verifier.swift */; };
 		ADE2551126CE335400FA21A9 /* Verifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADE2550F26CE335400FA21A9 /* Verifier.swift */; };
 		ADE2551226CE335400FA21A9 /* Verifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADE2550F26CE335400FA21A9 /* Verifier.swift */; };
@@ -151,12 +136,8 @@
 		AD63D08126A02C28002682EB /* libpact_ffi.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libpact_ffi.a; sourceTree = "<group>"; };
 		AD708762290B9DF200F59E58 /* VerifierInterface.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerifierInterface.swift; sourceTree = "<group>"; };
 		AD708766290BD27300F59E58 /* Either.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Either.swift; sourceTree = "<group>"; };
-		AD70876A290BD81600F59E58 /* Broker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Broker.swift; sourceTree = "<group>"; };
 		AD70876E290BD90400F59E58 /* SimpleAuth.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimpleAuth.swift; sourceTree = "<group>"; };
 		AD708772290BD95000F59E58 /* Token.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Token.swift; sourceTree = "<group>"; };
-		AD708776290BDA3400F59E58 /* Provider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Provider.swift; sourceTree = "<group>"; };
-		AD70877A290BDDD300F59E58 /* Source.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Source.swift; sourceTree = "<group>"; };
-		AD70877E290BE16B00F59E58 /* Consumer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Consumer.swift; sourceTree = "<group>"; };
 		AD933642269C2DD80004EBD8 /* libpact_ffi.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libpact_ffi.a; sourceTree = "<group>"; };
 		AD93364C269C2EC30004EBD8 /* pact_ffi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pact_ffi.h; sourceTree = "<group>"; };
 		AD9336A5269C33EB0004EBD8 /* libpact_ffi.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libpact_ffi.a; sourceTree = "<group>"; };
@@ -189,7 +170,6 @@
 		ADC15DAF26CE98140010D900 /* ProviderVerificationError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProviderVerificationError.swift; sourceTree = "<group>"; };
 		ADC6C61226D0AFBD00844000 /* VerifierTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerifierTests.swift; sourceTree = "<group>"; };
 		ADCE41E6290F980F00E45760 /* VersionSelector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VersionSelector.swift; sourceTree = "<group>"; };
-		ADE254FF26CE334A00FA21A9 /* StateHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StateHandler.swift; sourceTree = "<group>"; };
 		ADE2550F26CE335400FA21A9 /* Verifier.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Verifier.swift; sourceTree = "<group>"; };
 		ADF2E5832674623F0029507D /* Package.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Package.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -370,19 +350,14 @@
 		AD1598392648E6DB007CFAA5 /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				AD70876A290BD81600F59E58 /* Broker.swift */,
-				AD70877E290BE16B00F59E58 /* Consumer.swift */,
 				AD708766290BD27300F59E58 /* Either.swift */,
 				ADBEF2FE2648FCF200486C4A /* MismatchError.swift */,
 				ADBEF2FD2648FCF200486C4A /* MismatchErrorType.swift */,
 				AD15983D2648EA2C007CFAA5 /* MockServerError.swift */,
 				ADBEF2FC2648FCF200486C4A /* PactError.swift */,
-				AD708776290BDA3400F59E58 /* Provider.swift */,
 				ADC15DAF26CE98140010D900 /* ProviderVerificationError.swift */,
 				ADBEF2FF2648FCF200486C4A /* RequestError.swift */,
 				AD70876E290BD90400F59E58 /* SimpleAuth.swift */,
-				AD70877A290BDDD300F59E58 /* Source.swift */,
-				ADE254FF26CE334A00FA21A9 /* StateHandler.swift */,
 				AD708772290BD95000F59E58 /* Token.swift */,
 				AD15983A2648E72A007CFAA5 /* TransferProtocol.swift */,
 				AD15984C2648ED4D007CFAA5 /* VerificationError.swift */,
@@ -713,7 +688,6 @@
 				ADBEF3092648FCF200486C4A /* VerificationErrorType.swift in Sources */,
 				ADC15DB026CE98140010D900 /* ProviderVerificationError.swift in Sources */,
 				AD70876F290BD90400F59E58 /* SimpleAuth.swift in Sources */,
-				AD70876B290BD81600F59E58 /* Broker.swift in Sources */,
 				ADBEF3012648FCF200486C4A /* PactError.swift in Sources */,
 				AD15983E2648EA2C007CFAA5 /* MockServerError.swift in Sources */,
 				AD15983B2648E72A007CFAA5 /* TransferProtocol.swift in Sources */,
@@ -726,12 +700,8 @@
 				AD957F3628A23B0B00860AD1 /* PactFileManager.swift in Sources */,
 				AD1598312648E32F007CFAA5 /* MockServer.swift in Sources */,
 				AD708773290BD95000F59E58 /* Token.swift in Sources */,
-				AD70877B290BDDD400F59E58 /* Source.swift in Sources */,
 				ADCE41E7290F980F00E45760 /* VersionSelector.swift in Sources */,
 				ADBEF2FA2648FCBC00486C4A /* VerificationErrorHandler.swift in Sources */,
-				AD708777290BDA3400F59E58 /* Provider.swift in Sources */,
-				ADE2550326CE334B00FA21A9 /* StateHandler.swift in Sources */,
-				AD70877F290BE16B00F59E58 /* Consumer.swift in Sources */,
 				AD708767290BD27300F59E58 /* Either.swift in Sources */,
 				AD15984D2648ED4D007CFAA5 /* VerificationError.swift in Sources */,
 			);
@@ -756,7 +726,6 @@
 				ADBEF30A2648FCF200486C4A /* VerificationErrorType.swift in Sources */,
 				ADC15DB126CE98140010D900 /* ProviderVerificationError.swift in Sources */,
 				AD708770290BD90400F59E58 /* SimpleAuth.swift in Sources */,
-				AD70876C290BD81600F59E58 /* Broker.swift in Sources */,
 				ADBEF3022648FCF200486C4A /* PactError.swift in Sources */,
 				AD15983F2648EA2C007CFAA5 /* MockServerError.swift in Sources */,
 				AD15983C2648E72A007CFAA5 /* TransferProtocol.swift in Sources */,
@@ -769,12 +738,8 @@
 				AD957F3728A23B0B00860AD1 /* PactFileManager.swift in Sources */,
 				AD1598322648E32F007CFAA5 /* MockServer.swift in Sources */,
 				AD708774290BD95000F59E58 /* Token.swift in Sources */,
-				AD70877C290BDDD400F59E58 /* Source.swift in Sources */,
 				ADCE41E8290F980F00E45760 /* VersionSelector.swift in Sources */,
 				ADBEF2FB2648FCBC00486C4A /* VerificationErrorHandler.swift in Sources */,
-				AD708778290BDA3400F59E58 /* Provider.swift in Sources */,
-				ADE2550426CE334B00FA21A9 /* StateHandler.swift in Sources */,
-				AD708780290BE16B00F59E58 /* Consumer.swift in Sources */,
 				AD708768290BD27300F59E58 /* Either.swift in Sources */,
 				AD15984E2648ED4D007CFAA5 /* VerificationError.swift in Sources */,
 			);
@@ -799,7 +764,6 @@
 				ADD7CB0E264B4A080091A286 /* RequestError.swift in Sources */,
 				ADC15DB226CE98140010D900 /* ProviderVerificationError.swift in Sources */,
 				AD708771290BD90400F59E58 /* SimpleAuth.swift in Sources */,
-				AD70876D290BD81600F59E58 /* Broker.swift in Sources */,
 				ADD7CB0F264B4A080091A286 /* MockServerError.swift in Sources */,
 				ADD7CB0B264B4A080091A286 /* VerificationErrorHandler.swift in Sources */,
 				ADD7CB13264B4A080091A286 /* VerificationErrorType.swift in Sources */,
@@ -812,12 +776,8 @@
 				AD957F3828A23B0B00860AD1 /* PactFileManager.swift in Sources */,
 				ADD7CB14264B4A080091A286 /* MismatchErrorType.swift in Sources */,
 				AD708775290BD95000F59E58 /* Token.swift in Sources */,
-				AD70877D290BDDD400F59E58 /* Source.swift in Sources */,
 				ADCE41E9290F980F00E45760 /* VersionSelector.swift in Sources */,
 				ADD7CB10264B4A080091A286 /* TransferProtocol.swift in Sources */,
-				AD708779290BDA3400F59E58 /* Provider.swift in Sources */,
-				ADE2550526CE334B00FA21A9 /* StateHandler.swift in Sources */,
-				AD708781290BE16B00F59E58 /* Consumer.swift in Sources */,
 				AD708769290BD27300F59E58 /* Either.swift in Sources */,
 				ADD7CB0D264B4A080091A286 /* PactError.swift in Sources */,
 			);

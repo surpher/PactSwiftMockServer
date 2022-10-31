@@ -149,9 +149,10 @@ public extension MockServer {
 	///   - regex: The pattern to use
 	///
 	static func generate_value(regex: String) -> String? {
-		guard let stringPointer = pactffi_generate_regex_value(regex).ok._0 else {
+		guard let stringPointer = pactffi_generate_regex_value(regex).ok else {
 			return nil
 		}
+
 		let generatedString = String(cString: stringPointer)
 		pactffi_free_string(stringPointer)
 
@@ -166,7 +167,7 @@ public extension MockServer {
 	///   - format: The format of date to generate
 	///
 	static func generate_date(format: String) -> String? {
-		guard let stringPointer = pactffi_generate_datetime_string(format).ok._0 else {
+		guard let stringPointer = pactffi_generate_datetime_string(format).ok else {
 			return nil
 		}
 

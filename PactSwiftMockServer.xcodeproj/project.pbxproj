@@ -24,6 +24,30 @@
 		AD38D300264A33E800124396 /* PactSwiftMockServer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AD38D2F7264A33E800124396 /* PactSwiftMockServer.framework */; };
 		AD63D08226A02C28002682EB /* libpact_ffi.a in Frameworks */ = {isa = PBXBuildFile; fileRef = AD63D08126A02C28002682EB /* libpact_ffi.a */; };
 		AD63D08F26A02C64002682EB /* libpact_ffi.a in Frameworks */ = {isa = PBXBuildFile; fileRef = AD9336A5269C33EB0004EBD8 /* libpact_ffi.a */; };
+		AD708763290B9DF200F59E58 /* ProviderVerifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD708762290B9DF200F59E58 /* ProviderVerifier.swift */; };
+		AD708764290B9DF200F59E58 /* ProviderVerifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD708762290B9DF200F59E58 /* ProviderVerifier.swift */; };
+		AD708765290B9DF200F59E58 /* ProviderVerifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD708762290B9DF200F59E58 /* ProviderVerifier.swift */; };
+		AD708767290BD27300F59E58 /* Either.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD708766290BD27300F59E58 /* Either.swift */; };
+		AD708768290BD27300F59E58 /* Either.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD708766290BD27300F59E58 /* Either.swift */; };
+		AD708769290BD27300F59E58 /* Either.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD708766290BD27300F59E58 /* Either.swift */; };
+		AD70876B290BD81600F59E58 /* Broker.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD70876A290BD81600F59E58 /* Broker.swift */; };
+		AD70876C290BD81600F59E58 /* Broker.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD70876A290BD81600F59E58 /* Broker.swift */; };
+		AD70876D290BD81600F59E58 /* Broker.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD70876A290BD81600F59E58 /* Broker.swift */; };
+		AD70876F290BD90400F59E58 /* SimpleAuth.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD70876E290BD90400F59E58 /* SimpleAuth.swift */; };
+		AD708770290BD90400F59E58 /* SimpleAuth.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD70876E290BD90400F59E58 /* SimpleAuth.swift */; };
+		AD708771290BD90400F59E58 /* SimpleAuth.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD70876E290BD90400F59E58 /* SimpleAuth.swift */; };
+		AD708773290BD95000F59E58 /* Token.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD708772290BD95000F59E58 /* Token.swift */; };
+		AD708774290BD95000F59E58 /* Token.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD708772290BD95000F59E58 /* Token.swift */; };
+		AD708775290BD95000F59E58 /* Token.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD708772290BD95000F59E58 /* Token.swift */; };
+		AD708777290BDA3400F59E58 /* Provider.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD708776290BDA3400F59E58 /* Provider.swift */; };
+		AD708778290BDA3400F59E58 /* Provider.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD708776290BDA3400F59E58 /* Provider.swift */; };
+		AD708779290BDA3400F59E58 /* Provider.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD708776290BDA3400F59E58 /* Provider.swift */; };
+		AD70877B290BDDD400F59E58 /* Source.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD70877A290BDDD300F59E58 /* Source.swift */; };
+		AD70877C290BDDD400F59E58 /* Source.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD70877A290BDDD300F59E58 /* Source.swift */; };
+		AD70877D290BDDD400F59E58 /* Source.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD70877A290BDDD300F59E58 /* Source.swift */; };
+		AD70877F290BE16B00F59E58 /* Consumer.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD70877E290BE16B00F59E58 /* Consumer.swift */; };
+		AD708780290BE16B00F59E58 /* Consumer.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD70877E290BE16B00F59E58 /* Consumer.swift */; };
+		AD708781290BE16B00F59E58 /* Consumer.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD70877E290BE16B00F59E58 /* Consumer.swift */; };
 		AD933643269C2DD80004EBD8 /* libpact_ffi.a in Frameworks */ = {isa = PBXBuildFile; fileRef = AD933642269C2DD80004EBD8 /* libpact_ffi.a */; };
 		AD93364D269C2EC30004EBD8 /* pact_ffi.h in Headers */ = {isa = PBXBuildFile; fileRef = AD93364C269C2EC30004EBD8 /* pact_ffi.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		AD93364E269C2EC30004EBD8 /* pact_ffi.h in Headers */ = {isa = PBXBuildFile; fileRef = AD93364C269C2EC30004EBD8 /* pact_ffi.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -58,6 +82,9 @@
 		ADC15DB226CE98140010D900 /* ProviderVerificationError.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADC15DAF26CE98140010D900 /* ProviderVerificationError.swift */; };
 		ADC6C61326D0AFBD00844000 /* VerifierTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADC6C61226D0AFBD00844000 /* VerifierTests.swift */; };
 		ADC6C61426D0AFBD00844000 /* VerifierTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADC6C61226D0AFBD00844000 /* VerifierTests.swift */; };
+		ADCE41E7290F980F00E45760 /* VersionSelector.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADCE41E6290F980F00E45760 /* VersionSelector.swift */; };
+		ADCE41E8290F980F00E45760 /* VersionSelector.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADCE41E6290F980F00E45760 /* VersionSelector.swift */; };
+		ADCE41E9290F980F00E45760 /* VersionSelector.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADCE41E6290F980F00E45760 /* VersionSelector.swift */; };
 		ADD7CB0B264B4A080091A286 /* VerificationErrorHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADBEF2F92648FCBC00486C4A /* VerificationErrorHandler.swift */; };
 		ADD7CB0C264B4A080091A286 /* MismatchError.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADBEF2FE2648FCF200486C4A /* MismatchError.swift */; };
 		ADD7CB0D264B4A080091A286 /* PactError.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADBEF2FC2648FCF200486C4A /* PactError.swift */; };
@@ -122,6 +149,14 @@
 		AD38D314264A347A00124396 /* Target-iPhone-iOS-Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "Target-iPhone-iOS-Debug.xcconfig"; sourceTree = "<group>"; };
 		AD38D315264A34CD00124396 /* Target-iPhone-iOS-Shared.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "Target-iPhone-iOS-Shared.xcconfig"; sourceTree = "<group>"; };
 		AD63D08126A02C28002682EB /* libpact_ffi.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libpact_ffi.a; sourceTree = "<group>"; };
+		AD708762290B9DF200F59E58 /* ProviderVerifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProviderVerifier.swift; sourceTree = "<group>"; };
+		AD708766290BD27300F59E58 /* Either.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Either.swift; sourceTree = "<group>"; };
+		AD70876A290BD81600F59E58 /* Broker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Broker.swift; sourceTree = "<group>"; };
+		AD70876E290BD90400F59E58 /* SimpleAuth.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimpleAuth.swift; sourceTree = "<group>"; };
+		AD708772290BD95000F59E58 /* Token.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Token.swift; sourceTree = "<group>"; };
+		AD708776290BDA3400F59E58 /* Provider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Provider.swift; sourceTree = "<group>"; };
+		AD70877A290BDDD300F59E58 /* Source.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Source.swift; sourceTree = "<group>"; };
+		AD70877E290BE16B00F59E58 /* Consumer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Consumer.swift; sourceTree = "<group>"; };
 		AD933642269C2DD80004EBD8 /* libpact_ffi.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libpact_ffi.a; sourceTree = "<group>"; };
 		AD93364C269C2EC30004EBD8 /* pact_ffi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pact_ffi.h; sourceTree = "<group>"; };
 		AD9336A5269C33EB0004EBD8 /* libpact_ffi.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libpact_ffi.a; sourceTree = "<group>"; };
@@ -153,6 +188,7 @@
 		ADBEF3002648FCF200486C4A /* VerificationErrorType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VerificationErrorType.swift; sourceTree = "<group>"; };
 		ADC15DAF26CE98140010D900 /* ProviderVerificationError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProviderVerificationError.swift; sourceTree = "<group>"; };
 		ADC6C61226D0AFBD00844000 /* VerifierTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerifierTests.swift; sourceTree = "<group>"; };
+		ADCE41E6290F980F00E45760 /* VersionSelector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VersionSelector.swift; sourceTree = "<group>"; };
 		ADE254FF26CE334A00FA21A9 /* StateHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StateHandler.swift; sourceTree = "<group>"; };
 		ADE2550F26CE335400FA21A9 /* Verifier.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Verifier.swift; sourceTree = "<group>"; };
 		ADF2E5832674623F0029507D /* Package.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Package.swift; sourceTree = "<group>"; };
@@ -268,6 +304,7 @@
 				AD1598382648E690007CFAA5 /* Headers */,
 				AD1598302648E32F007CFAA5 /* MockServer.swift */,
 				AD1598392648E6DB007CFAA5 /* Model */,
+				AD708762290B9DF200F59E58 /* ProviderVerifier.swift */,
 				AD957F3428A23AF300860AD1 /* Toolbox */,
 				ADE2550F26CE335400FA21A9 /* Verifier.swift */,
 			);
@@ -333,17 +370,25 @@
 		AD1598392648E6DB007CFAA5 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				AD70876A290BD81600F59E58 /* Broker.swift */,
+				AD70877E290BE16B00F59E58 /* Consumer.swift */,
+				AD708766290BD27300F59E58 /* Either.swift */,
 				ADBEF2FE2648FCF200486C4A /* MismatchError.swift */,
 				ADBEF2FD2648FCF200486C4A /* MismatchErrorType.swift */,
 				AD15983D2648EA2C007CFAA5 /* MockServerError.swift */,
 				ADBEF2FC2648FCF200486C4A /* PactError.swift */,
+				AD708776290BDA3400F59E58 /* Provider.swift */,
 				ADC15DAF26CE98140010D900 /* ProviderVerificationError.swift */,
 				ADBEF2FF2648FCF200486C4A /* RequestError.swift */,
+				AD70876E290BD90400F59E58 /* SimpleAuth.swift */,
+				AD70877A290BDDD300F59E58 /* Source.swift */,
 				ADE254FF26CE334A00FA21A9 /* StateHandler.swift */,
+				AD708772290BD95000F59E58 /* Token.swift */,
 				AD15983A2648E72A007CFAA5 /* TransferProtocol.swift */,
 				AD15984C2648ED4D007CFAA5 /* VerificationError.swift */,
 				ADBEF2F92648FCBC00486C4A /* VerificationErrorHandler.swift */,
 				ADBEF3002648FCF200486C4A /* VerificationErrorType.swift */,
+				ADCE41E6290F980F00E45760 /* VersionSelector.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -667,18 +712,27 @@
 				ADBEF3052648FCF200486C4A /* MismatchError.swift in Sources */,
 				ADBEF3092648FCF200486C4A /* VerificationErrorType.swift in Sources */,
 				ADC15DB026CE98140010D900 /* ProviderVerificationError.swift in Sources */,
+				AD70876F290BD90400F59E58 /* SimpleAuth.swift in Sources */,
+				AD70876B290BD81600F59E58 /* Broker.swift in Sources */,
 				ADBEF3012648FCF200486C4A /* PactError.swift in Sources */,
 				AD15983E2648EA2C007CFAA5 /* MockServerError.swift in Sources */,
 				AD15983B2648E72A007CFAA5 /* TransferProtocol.swift in Sources */,
 				ADBEF3032648FCF200486C4A /* MismatchErrorType.swift in Sources */,
 				AD957F3E28A23BD600860AD1 /* Logger.swift in Sources */,
 				AD957F3A28A23B8400860AD1 /* SocketBinder.swift in Sources */,
+				AD708763290B9DF200F59E58 /* ProviderVerifier.swift in Sources */,
 				ADBEF3072648FCF200486C4A /* RequestError.swift in Sources */,
 				ADE2551026CE335400FA21A9 /* Verifier.swift in Sources */,
 				AD957F3628A23B0B00860AD1 /* PactFileManager.swift in Sources */,
 				AD1598312648E32F007CFAA5 /* MockServer.swift in Sources */,
+				AD708773290BD95000F59E58 /* Token.swift in Sources */,
+				AD70877B290BDDD400F59E58 /* Source.swift in Sources */,
+				ADCE41E7290F980F00E45760 /* VersionSelector.swift in Sources */,
 				ADBEF2FA2648FCBC00486C4A /* VerificationErrorHandler.swift in Sources */,
+				AD708777290BDA3400F59E58 /* Provider.swift in Sources */,
 				ADE2550326CE334B00FA21A9 /* StateHandler.swift in Sources */,
+				AD70877F290BE16B00F59E58 /* Consumer.swift in Sources */,
+				AD708767290BD27300F59E58 /* Either.swift in Sources */,
 				AD15984D2648ED4D007CFAA5 /* VerificationError.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -701,18 +755,27 @@
 				ADBEF3062648FCF200486C4A /* MismatchError.swift in Sources */,
 				ADBEF30A2648FCF200486C4A /* VerificationErrorType.swift in Sources */,
 				ADC15DB126CE98140010D900 /* ProviderVerificationError.swift in Sources */,
+				AD708770290BD90400F59E58 /* SimpleAuth.swift in Sources */,
+				AD70876C290BD81600F59E58 /* Broker.swift in Sources */,
 				ADBEF3022648FCF200486C4A /* PactError.swift in Sources */,
 				AD15983F2648EA2C007CFAA5 /* MockServerError.swift in Sources */,
 				AD15983C2648E72A007CFAA5 /* TransferProtocol.swift in Sources */,
 				ADBEF3042648FCF200486C4A /* MismatchErrorType.swift in Sources */,
 				AD957F3F28A23BD600860AD1 /* Logger.swift in Sources */,
 				AD957F3B28A23B8400860AD1 /* SocketBinder.swift in Sources */,
+				AD708764290B9DF200F59E58 /* ProviderVerifier.swift in Sources */,
 				ADBEF3082648FCF200486C4A /* RequestError.swift in Sources */,
 				ADE2551126CE335400FA21A9 /* Verifier.swift in Sources */,
 				AD957F3728A23B0B00860AD1 /* PactFileManager.swift in Sources */,
 				AD1598322648E32F007CFAA5 /* MockServer.swift in Sources */,
+				AD708774290BD95000F59E58 /* Token.swift in Sources */,
+				AD70877C290BDDD400F59E58 /* Source.swift in Sources */,
+				ADCE41E8290F980F00E45760 /* VersionSelector.swift in Sources */,
 				ADBEF2FB2648FCBC00486C4A /* VerificationErrorHandler.swift in Sources */,
+				AD708778290BDA3400F59E58 /* Provider.swift in Sources */,
 				ADE2550426CE334B00FA21A9 /* StateHandler.swift in Sources */,
+				AD708780290BE16B00F59E58 /* Consumer.swift in Sources */,
+				AD708768290BD27300F59E58 /* Either.swift in Sources */,
 				AD15984E2648ED4D007CFAA5 /* VerificationError.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -735,18 +798,27 @@
 				ADD7CB0C264B4A080091A286 /* MismatchError.swift in Sources */,
 				ADD7CB0E264B4A080091A286 /* RequestError.swift in Sources */,
 				ADC15DB226CE98140010D900 /* ProviderVerificationError.swift in Sources */,
+				AD708771290BD90400F59E58 /* SimpleAuth.swift in Sources */,
+				AD70876D290BD81600F59E58 /* Broker.swift in Sources */,
 				ADD7CB0F264B4A080091A286 /* MockServerError.swift in Sources */,
 				ADD7CB0B264B4A080091A286 /* VerificationErrorHandler.swift in Sources */,
 				ADD7CB13264B4A080091A286 /* VerificationErrorType.swift in Sources */,
 				ADD7CB11264B4A080091A286 /* VerificationError.swift in Sources */,
 				AD957F4028A23BD600860AD1 /* Logger.swift in Sources */,
 				AD957F3C28A23B8400860AD1 /* SocketBinder.swift in Sources */,
+				AD708765290B9DF200F59E58 /* ProviderVerifier.swift in Sources */,
 				ADD7CB12264B4A080091A286 /* MockServer.swift in Sources */,
 				ADE2551226CE335400FA21A9 /* Verifier.swift in Sources */,
 				AD957F3828A23B0B00860AD1 /* PactFileManager.swift in Sources */,
 				ADD7CB14264B4A080091A286 /* MismatchErrorType.swift in Sources */,
+				AD708775290BD95000F59E58 /* Token.swift in Sources */,
+				AD70877D290BDDD400F59E58 /* Source.swift in Sources */,
+				ADCE41E9290F980F00E45760 /* VersionSelector.swift in Sources */,
 				ADD7CB10264B4A080091A286 /* TransferProtocol.swift in Sources */,
+				AD708779290BDA3400F59E58 /* Provider.swift in Sources */,
 				ADE2550526CE334B00FA21A9 /* StateHandler.swift in Sources */,
+				AD708781290BE16B00F59E58 /* Consumer.swift in Sources */,
+				AD708769290BD27300F59E58 /* Either.swift in Sources */,
 				ADD7CB0D264B4A080091A286 /* PactError.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

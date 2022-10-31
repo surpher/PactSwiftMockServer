@@ -25,7 +25,7 @@ let package = Package(
 	],
 
 	dependencies: [
-		.package(name: "PactMockServer", url: "https://github.com/surpher/PactMockServer.git", from: "0.1.0"),
+		.package(name: "PactMockServer", url: "https://github.com/surpher/PactMockServer.git", .exact("0.1.2")),
 	],
 
 	// MARK: - Targets

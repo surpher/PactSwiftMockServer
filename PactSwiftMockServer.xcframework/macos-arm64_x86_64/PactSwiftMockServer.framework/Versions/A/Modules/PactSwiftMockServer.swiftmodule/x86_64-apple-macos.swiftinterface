@@ -100,6 +100,7 @@ final public class Verifier : PactSwiftMockServer.VerifierInterface {
   final public func verifyPactsAtPactBroker(url: Foundation.URL, authentication: PactSwiftMockServer.Either<PactSwiftMockServer.SimpleAuth, PactSwiftMockServer.Token>, providerTags: [Swift.String] = [], providerBranch: Swift.String? = nil, versionSelectors: [PactSwiftMockServer.VersionSelector] = [], consumerTags: [Swift.String] = [], enablePending: Swift.Bool = false, includeWIPPactsSince: Foundation.Date? = nil) throws -> PactSwiftMockServer.VerifierInterface
   final public func setCustomHeaders(_ headers: [Swift.String : Swift.String]) -> PactSwiftMockServer.VerifierInterface
   final public func setPublishOptions(providerVersion: Swift.String, providerBranch: Swift.String, buildURL: Foundation.URL, providerTags: [Swift.String] = []) -> PactSwiftMockServer.VerifierInterface
+  @discardableResult
   final public func verify() -> Swift.Result<Swift.Bool, PactSwiftMockServer.ProviderVerificationError>
 }
 public class MockServer {

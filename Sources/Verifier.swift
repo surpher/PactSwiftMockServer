@@ -223,9 +223,9 @@ public final class Verifier: VerifierInterface {
 	///
 	/// - returns: `true` when on verification success or `ProviderVerificationError` on failure
 	///
+	@discardableResult
 	public func verify() -> Result<Bool, ProviderVerificationError> {
 		let verificationResult = pactffi_verifier_execute(verifierHandle)
-		pactffi_verifier_shutdown(verifierHandle)
 
 		return verificationResult == 0 ? .success(true) : .failure(ProviderVerificationError(code: verificationResult))
 	}

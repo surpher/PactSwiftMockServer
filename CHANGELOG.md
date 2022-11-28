@@ -1,3 +1,6 @@
+# 0.4.4 - v0.4.4
+* 7728901 - chore: Upgrade Pact FFI Library to 0.3.15 (Marko Justinek)
+* 9ec0d7d - chore: Submodule sync (Marko Justinek)
 # 0.4.2 - v0.4.2
 * caaccda - Upgrade libpact_ffi to v0.3.11 (Marko Justinek)
 # 0.4.1 - v0.4.1

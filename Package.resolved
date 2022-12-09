@@ -1,25 +1,14 @@
 {
-  "object": {
-    "pins": [
-      {
-        "package": "PactMockServer",
-        "repositoryURL": "https://github.com/surpher/PactMockServer.git",
-        "state": {
-          "branch": null,
-          "revision": "b60987978e05df375ebe6b4f6866f4e07953d17b",
-          "version": "0.1.0"
-        }
-      },
-      {
-        "package": "PactSwiftToolbox",
-        "repositoryURL": "https://github.com/surpher/PactSwiftToolbox.git",
-        "state": {
-          "branch": null,
-          "revision": "b4c52bf4f86ab03215cb9e42ffd9387dd92ad25c",
-          "version": "0.2.0"
-        }
+  "pins" : [
+    {
+      "identity" : "pactmockserver",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/surpher/PactMockServer.git",
+      "state" : {
+        "revision" : "11fe519e6d1b0c513c717ba507e89ba401bdf8de",
+        "version" : "0.1.2"
       }
-    ]
-  },
-  "version": 1
+    }
+  ],
+  "version" : 2
 }

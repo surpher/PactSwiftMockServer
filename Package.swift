@@ -1,4 +1,4 @@
-// swift-tools-version:5.3
+// swift-tools-version:5.7
 
 import PackageDescription
 
@@ -7,9 +7,9 @@ let package = Package(
 	name: "PactSwiftMockServer",
 
 	platforms: [
-		.macOS(.v10_12),
-		.iOS(.v12),
-		.tvOS(.v12)
+		.macOS(.v11),
+		.iOS(.v14),
+		.tvOS(.v14)
 	],
 
 	products: [

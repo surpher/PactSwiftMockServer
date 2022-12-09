@@ -1,10 +1,12 @@
 // swift-interface-format-version: 1.0
-// swift-compiler-version: Apple Swift version 5.6.1 (swiftlang-5.6.0.323.66 clang-1316.0.20.12)
+// swift-compiler-version: Apple Swift version 5.7.1 (swiftlang-5.7.1.135.3 clang-1400.0.29.51)
 // swift-module-flags: -target arm64-apple-macos11.0 -enable-objc-interop -enable-library-evolution -swift-version 5 -enforce-exclusivity=checked -O -module-name PactSwiftMockServer
+// swift-module-flags-ignorable: -enable-bare-slash-regex
 import Foundation
 @_exported import PactSwiftMockServer
 import Swift
 import _Concurrency
+import _StringProcessing
 import os.log
 import os
 public enum ProviderVerificationError : Swift.Error, Swift.Equatable {
@@ -56,20 +58,41 @@ final public class Verifier : PactSwiftMockServer.ProviderVerifying {
   final public func verifyProvider(options args: Swift.String) -> Swift.Result<Swift.Bool, PactSwiftMockServer.ProviderVerificationError>
   @objc deinit
 }
-public class MockServer {
-  public var baseUrl: Swift.String {
+public enum PactFileManager {
+  public static var defaultPactDirectoryPath: Swift.String {
     get
   }
-  public init(directory: Foundation.URL? = nil, merge: Swift.Bool = true)
+}
+#if compiler(>=5.3) && $Actors
+public actor MockServer {
+  #if compiler(>=5.3) && $EffectfulProp
+  public var baseUrl: Swift.String {
+    get async
+  }
+  #endif
+  public init(directory: Swift.String? = nil, transferProtocol: PactSwiftMockServer.TransferProtocol = .standard, merge: Swift.Bool = true)
   @objc deinit
-  public func setup(pact: Foundation.Data, protocol: PactSwiftMockServer.TransferProtocol = .standard, completion: (Swift.Result<Swift.Int, PactSwiftMockServer.MockServerError>) -> Swift.Void)
-  public func verify(completion: (Swift.Result<Swift.Bool, PactSwiftMockServer.VerificationError>) -> Swift.Void)
-  public func finalize(pact: Foundation.Data, completion: ((Swift.Result<Swift.String, PactSwiftMockServer.MockServerError>) -> Swift.Void)?)
+  #if compiler(>=5.3) && $AsyncAwait
+  public func setup(pact: Foundation.Data) async throws -> Swift.Int
+  #endif
+  #if compiler(>=5.3) && $AsyncAwait
+  public func verify() async throws
+  #endif
+  #if compiler(>=5.3) && $AsyncAwait
+  public func finalize(pact: Foundation.Data) async throws -> Swift.String
+  #endif
+  @available(iOS 13.0, tvOS 13.0, watchOS 6.0, macOS 10.15, *)
+  @_semantics("defaultActor") nonisolated final public var unownedExecutor: _Concurrency.UnownedSerialExecutor {
+    get
+  }
 }
+#endif
+#if compiler(>=5.3) && $Actors
 extension PactSwiftMockServer.MockServer {
-  public static func generate_value(regex: Swift.String) -> Swift.String?
-  public static func generate_date(format: Swift.String) -> Swift.String?
+  nonisolated public static func generate_value(regex: Swift.String) -> Swift.String?
+  nonisolated public static func generate_date(format: Swift.String) -> Swift.String?
 }
+#endif
 public struct StateHandler {
 }
 public enum VerificationError : Swift.Error {

@@ -1,4 +1,5 @@
 # 1.0.0 - v1.0.0
+* d08c413 - chore: Change to use updated package API
 * 6995bb2 - tech: Update MockServer to be an actor
 * 2cf3ec4 - docs: Add doc file references to Xcode project
 * 883b8ee - tech: Set min iOS target to 14.0 & macOS to 11.0

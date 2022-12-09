@@ -21,144 +21,74 @@ import XCTest
 
 class MockServerTests: XCTestCase {
 
-	var mockServer: MockServer!
-	var secureProtocol: Bool = false
-
-	override func setUp() {
-		super.setUp()
-		mockServer = MockServer()
-	}
-
-	override func tearDown() {
-		mockServer = nil
-		super.tearDown()
-	}
+    private func makeMockServer(secure: Bool = false) -> MockServer {
+        return MockServer(transferProtocol: secure ? .secure : .standard)
+    }
 
 	// MARK: - Tests
 
-	func testMockServer_Initializes() {
-		mockServer.setup(pact: "{\"foo\":\"bar\"}".data(using: .utf8)!) {
-			switch $0 {
-			case .success(let port):
-				XCTAssertTrue(port > 1200)
-			default:
-				XCTFail("Expected Pact Mock Server to start on a port greater than 1200")
-			}
-		}
+	func testMockServer_Initializes() async throws {
+		let port = try await makeMockServer().setup(pact: "{\"foo\":\"bar\"}".data(using: .utf8)!)
+        XCTAssertGreaterThan(port, 1200)
 	}
 
-	func testMockServer_SetsBaseURL() {
-		mockServer.setup(pact: "{\"foo\":\"bar\", \"baz\":\"[\\\"key\\\":\\\"value\\\"]\"}".data(using: .utf8)!) {
-			switch $0 {
-			case .success(let port):
-				XCTAssertEqual(mockServer.baseUrl, "http://127.0.0.1:\(port)")
-			default:
-				XCTFail("Expected Pact Mock Server to start on a port greater than 1200")
-			}
-		}
+	func testMockServer_SetsBaseURL() async throws {
+        let mockServer = makeMockServer()
+        let port = try await mockServer.setup(pact: "{\"foo\":\"bar\", \"baz\":\"[\\\"key\\\":\\\"value\\\"]\"}".data(using: .utf8)!)
+        let baseUrl = await mockServer.baseUrl
+		XCTAssertEqual(baseUrl, "http://127.0.0.1:\(port)")
 	}
 
-	func testMockServer_SetsBaseSSLURL() {
-		secureProtocol = true
-		mockServer.setup(pact: "{\"foo\":\"bar\"}".data(using: .utf8)!, protocol: .secure) {
-			switch $0 {
-			case .success(let port):
-				XCTAssertEqual(mockServer.baseUrl, "https://127.0.0.1:\(port)")
-			default:
-				XCTFail("Expected Pact Mock Server to start on a port greater than 1200")
-			}
-		}
+	func testMockServer_SetsBaseSSLURL() async throws {
+        let mockServer = makeMockServer(secure: true)
+		let port = try await mockServer.setup(pact: "{\"foo\":\"bar\"}".data(using: .utf8)!)
+        let baseUrl = await mockServer.baseUrl
+        XCTAssertEqual(baseUrl, "https://127.0.0.1:\(port)")
 	}
 
-	func testMockServer_Fails_WithInvalidPactJSON() {
-		mockServer.setup(pact: "{\"foo\":bar\"}".data(using: .utf8)!) {
-			switch $0 {
-			case .failure(let error):
-				XCTAssertEqual(error, MockServerError.invalidPactJSON)
-			default:
-				XCTFail("Expected Pact Mock Server to fail")
-			}
-		}
+	func testMockServer_Fails_WithInvalidPactJSON() async throws {
+        let mockServer = makeMockServer()
+        do {
+            _ = try await mockServer.setup(pact: "{\"foo\":bar\"}".data(using: .utf8)!)
+            XCTFail("Expected Pact Mock Server to fail")
+        } catch let error as MockServerError {
+            XCTAssertEqual(error, MockServerError.invalidPactJSON)
+        } catch {
+            XCTFail("Unexpected error type \(type(of: error))")
+        }
 	}
 
-	func testMocServer_SanityTestTLS() {
-		let session = URLSession(configuration: .ephemeral, delegate: self, delegateQueue: .main)
-		let dataTaskExpectation = expectation(description: "dataTask")
-		secureProtocol = true
+	func testMocServer_SanityTestTLS() async throws {
+        let isSecure = true
+        let testUrlSessionDelegate = TestURLSessionDelegate(isHTTPS: isSecure)
+        let mockServer = makeMockServer(secure: isSecure)
 
-		mockServer.setup(pact: pactSpecV3.data(using: .utf8)!, protocol: .secure) {
-			switch $0 {
-			case .success:
-				let task = session.dataTask(with: URL(string: "\(mockServer.baseUrl)/users")!) { data, response, error in
-					if let data = data {
-						do {
-							let testUsers = try JSONDecoder().decode([MockServerTestUser].self, from: data)
-							XCTAssertEqual(testUsers.count, 3)
-							XCTAssertTrue(testUsers.contains(where: { $0.name == "ZSAICmTmiwgFFInuEuiK" }))
-						} catch {
-							XCTFail("DECODING ERROR: \(error.localizedDescription)")
-						}
-					}
-					if let error = error {
-						XCTFail(error.localizedDescription)
-					}
-					dataTaskExpectation.fulfill()
-				}
-				task.resume()
-			case .failure(let error):
-				XCTFail("MOCK SERVER ERROR STARTING: \(error.description)")
-			}
-		}
+        _ = try await mockServer.setup(pact: .pactSpecV3)
+        
+        let session = URLSession(configuration: .ephemeral, delegate: testUrlSessionDelegate, delegateQueue: .main)
+        let (data, _) = try await session.data(from: URL(string: "\(mockServer.baseUrl)/users")!)
+        
+        let testUsers = try JSONDecoder().decode([MockServerTestUser].self, from: data)
+        XCTAssertEqual(testUsers.count, 3)
+        XCTAssertTrue(testUsers.contains(where: { $0.name == "ZSAICmTmiwgFFInuEuiK" }))
 
-		// This waitForExpectations here is due to direct interaction with mockServer (mockService should wrap this in a package)
-		waitForExpectations(timeout: 1) { _ in
-			self.mockServer.finalize(pact: self.pactSpecV3.data(using: .utf8)!) {
-				switch $0 {
-				case .success(let message): debugPrint(message)
-				case .failure(let error): XCTFail(error.description)
-				}
-			}
-		}
+        _ = try await mockServer.finalize(pact: .pactSpecV3)
 	}
 
-	func testMockServer_SanityTestHTTP() {
-		let session = URLSession(configuration: .ephemeral, delegate: self, delegateQueue: .main)
-		let dataTaskExpectation = expectation(description: "dataTask")
-		secureProtocol = true
+	func testMockServer_SanityTestHTTP() async throws {
+        let testUrlSessionDelegate = TestURLSessionDelegate()
+        let mockServer = makeMockServer()
 
-		mockServer.setup(pact: pactSpecV3.data(using: .utf8)!, protocol: .standard) {
-			switch $0 {
-			case .success:
-				let task = session.dataTask(with: URL(string: "\(mockServer.baseUrl)/users")!) { data, response, error in
-					if let data = data {
-						do {
-							let testUsers = try JSONDecoder().decode([MockServerTestUser].self, from: data)
-							XCTAssertEqual(testUsers.count, 3)
-							XCTAssertTrue(testUsers.contains(where: { $0.name == "ZSAICmTmiwgFFInuEuiK" }))
-						} catch {
-							XCTFail("DECODING ERROR: \(error.localizedDescription)")
-						}
-					}
-					if let error = error {
-						XCTFail(error.localizedDescription)
-					}
-					dataTaskExpectation.fulfill()
-				}
-				task.resume()
-			case .failure(let error):
-				XCTFail("MOCK SERVER ERROR STARTING: \(error.description)")
-			}
-		}
+        _ = try await mockServer.setup(pact: .pactSpecV3)
 
-		// This waitForExpectations here is due to direct interaction with mockServer (mockService should wrap this in a package)
-		waitForExpectations(timeout: 1) { _ in
-			self.mockServer.finalize(pact: self.pactSpecV3.data(using: .utf8)!) {
-				switch $0 {
-				case .success(let message): debugPrint(message)
-				case .failure(let error): XCTFail(error.description)
-				}
-			}
-		}
+        let session = URLSession(configuration: .ephemeral, delegate: testUrlSessionDelegate, delegateQueue: .main)
+        let (data, _) = try await session.data(from: URL(string: "\(mockServer.baseUrl)/users")!)
+        
+        let testUsers = try JSONDecoder().decode([MockServerTestUser].self, from: data)
+        XCTAssertEqual(testUsers.count, 3)
+        XCTAssertTrue(testUsers.contains(where: { $0.name == "ZSAICmTmiwgFFInuEuiK" }))
+	
+        _ = try await mockServer.finalize(pact: .pactSpecV3)
 	}
 
 	func testGeneratesStringFromRegex() {
@@ -184,48 +114,53 @@ class MockServerTests: XCTestCase {
 	}
 
 }
-
-extension MockServerTests {
-
-	struct MockServerTestUser: Decodable {
-		let dob: String
-		let id: Int
-		let name: String
-	}
-
-	// Pact taken from: https://github.com/pact-foundation/pact-specification/tree/version-3
-	// JSON formatted using: https://jsonformatter.curiousconcept.com (settings: compact, RFC 8259)
-	var pactSpecV3: String {
-		"""
-		{"provider":{"name":"sanity_test_provider"},"consumer":{"name":"sanity_test_consumer"},"metadata":{"pactSpecification":{"version":"3.0.0"},"pact-swift":{"version":"0.0.1"}},"interactions":[{"description":"swift test interaction with a DSL array body","request":{"method":"GET","path":"/users"},"response":{"status":200,"headers":{"Content-Type":"application/json; charset=UTF-8"},"body":[{"dob":"2016-07-19","id":1943791933,"name":"ZSAICmTmiwgFFInuEuiK"},{"dob":"2016-07-19","id":1943791933,"name":"ZSAICmTmiwgFFInuEuiK"},{"dob":"2016-07-19","id":1943791933,"name":"ZSAICmTmiwgFFInuEuiK"}],"matchingRules":{"body": {"$[2].name":{"matchers":[{"match":"type"}]},"$[0].id":{"matchers":[{"match":"type"}]},"$[1].id":{"matchers":[{"match":"type"}]},"$[2].id":{"matchers":[{"match":"type"}]},"$[1].name":{"matchers":[{"match":"type"}]},"$[0].name":{"matchers":[{"match":"type"}]},"$[0].dob":{"matchers":[{"date":"yyyy-MM-dd"}]}}}}}]}
-		"""
-	}
-
+    
+private struct MockServerTestUser: Decodable {
+    let dob: String
+    let id: Int
+    let name: String
 }
 
-extension MockServerTests: URLSessionDelegate {
+private class TestURLSessionDelegate: NSObject, URLSessionDelegate {
+    
+    var isHTTPS: Bool
+    
+    init(isHTTPS: Bool = false) {
+        self.isHTTPS = isHTTPS
+    }
+    
+    func urlSession(_ session: URLSession, didReceive challenge: URLAuthenticationChallenge, completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void) {
+        guard
+            isHTTPS,
+            challenge.protectionSpace.authenticationMethod == NSURLAuthenticationMethodServerTrust,
+            (challenge.protectionSpace.host.contains("127.0.0.1") || challenge.protectionSpace.host.contains("0.0.0.0") || challenge.protectionSpace.host.contains("localhost")),
+            let serverTrust = challenge.protectionSpace.serverTrust
+        else {
+            completionHandler(.performDefaultHandling, nil)
+            return
+        }
 
-	func urlSession(_ session: URLSession, didReceive challenge: URLAuthenticationChallenge, completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void) {
-		guard
-			secureProtocol,
-			challenge.protectionSpace.authenticationMethod == NSURLAuthenticationMethodServerTrust,
-			(challenge.protectionSpace.host.contains("127.0.0.1") || challenge.protectionSpace.host.contains("0.0.0.0") || challenge.protectionSpace.host.contains("localhost")),
-			let serverTrust = challenge.protectionSpace.serverTrust
-		else {
-			completionHandler(.performDefaultHandling, nil)
-			return
-		}
+        let credential = URLCredential(trust: serverTrust)
+        completionHandler(.useCredential, credential)
+    }
+}
 
-		let credential = URLCredential(trust: serverTrust)
-		completionHandler(.useCredential, credential)
-	}
+private extension Data {
+    
+    // Pact taken from: https://github.com/pact-foundation/pact-specification/tree/version-3
+    // JSON formatted using: https://jsonformatter.curiousconcept.com (settings: compact, RFC 8259)
+    static var pactSpecV3: Self {
+        """
+        {"provider":{"name":"sanity_test_provider"},"consumer":{"name":"sanity_test_consumer"},"metadata":{"pactSpecification":{"version":"3.0.0"},"pact-swift":{"version":"0.0.1"}},"interactions":[{"description":"swift test interaction with a DSL array body","request":{"method":"GET","path":"/users"},"response":{"status":200,"headers":{"Content-Type":"application/json; charset=UTF-8"},"body":[{"dob":"2016-07-19","id":1943791933,"name":"ZSAICmTmiwgFFInuEuiK"},{"dob":"2016-07-19","id":1943791933,"name":"ZSAICmTmiwgFFInuEuiK"},{"dob":"2016-07-19","id":1943791933,"name":"ZSAICmTmiwgFFInuEuiK"}],"matchingRules":{"body": {"$[2].name":{"matchers":[{"match":"type"}]},"$[0].id":{"matchers":[{"match":"type"}]},"$[1].id":{"matchers":[{"match":"type"}]},"$[2].id":{"matchers":[{"match":"type"}]},"$[1].name":{"matchers":[{"match":"type"}]},"$[0].name":{"matchers":[{"match":"type"}]},"$[0].dob":{"matchers":[{"date":"yyyy-MM-dd"}]}}}}}]}
+        """.data(using: .utf8)!
+    }
 
 }
 
 private extension String {
-
+    
 	func indexOf(char: Character) -> Int? {
-		 return firstIndex(of: char)?.utf16Offset(in: self)
+		 firstIndex(of: char)?.utf16Offset(in: self)
 	}
 
 }

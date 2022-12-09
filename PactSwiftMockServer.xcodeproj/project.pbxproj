@@ -102,6 +102,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		A75EC3AC2942B2FB0054BADB /* LICENSE.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = LICENSE.md; sourceTree = "<group>"; };
+		A75EC3AD2942B2FB0054BADB /* CHANGELOG.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = CHANGELOG.md; sourceTree = "<group>"; };
+		A75EC3AE2942B2FB0054BADB /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		AD1597F32648DE0E007CFAA5 /* PactSwiftMockServer.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = PactSwiftMockServer.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		AD1597F62648DE0E007CFAA5 /* PactSwiftMockServer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PactSwiftMockServer.h; sourceTree = "<group>"; };
 		AD1597F72648DE0E007CFAA5 /* Info-iOS.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Info-iOS.plist"; sourceTree = "<group>"; };
@@ -213,6 +216,9 @@
 		AD1597E92648DE0E007CFAA5 = {
 			isa = PBXGroup;
 			children = (
+				A75EC3AD2942B2FB0054BADB /* CHANGELOG.md */,
+				A75EC3AC2942B2FB0054BADB /* LICENSE.md */,
+				A75EC3AE2942B2FB0054BADB /* README.md */,
 				AD1598332648E486007CFAA5 /* Configurations */,
 				AD1598352648E59E007CFAA5 /* Frameworks */,
 				ADF2E5832674623F0029507D /* Package.swift */,

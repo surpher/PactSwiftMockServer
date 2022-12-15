@@ -1,6 +1,6 @@
 //
-//  Created by Marko Justinek on 10/5/21.
-//  Copyright © 2020 Marko Justinek. All rights reserved.
+//  Created by Oliver Jones on 15/12/2022.
+//  Copyright © 2022 Oliver Jones. All rights reserved.
 //
 //  Permission to use, copy, modify, and/or distribute this software for any
 //  purpose with or without fee is hereby granted, provided that the above
@@ -17,21 +17,8 @@
 
 import Foundation
 
-/// Network transfer protocol
-public enum TransferProtocol: Int {
-	case standard
-	case secure
-}
-
-// MARK: - Extension
-
-extension TransferProtocol {
-
-	var `protocol`: String {
-		switch self {
-		case .standard: return "http"
-		case .secure: return "https"
-		}
-	}
-
+/// Matcher against an explicit null value
+public struct NullMatcher: Matcher {
+    public let type = "null"
+    public let value: String? = nil
 }

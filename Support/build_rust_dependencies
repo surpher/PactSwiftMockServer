@@ -86,6 +86,7 @@ rustup target add \
 
 # Add the nightly toolchain for aarch64-apple-ios-sim (while aarch64-apple-ios-sim is still Tier 3)
 rustup component add rust-src --toolchain nightly-x86_64-apple-darwin
+rustup component add rust-src --toolchain nightly-aarch64-apple-darwin
 
 ##############################################
 # Build libpact_ffi binaries                 #
@@ -114,6 +115,14 @@ if [[ "$CI" == false ]]; then
 fi
 
 echo "✅  libpact_ffi.a binaries built"
+
+echo "🏗  Building pact_ffi.h..."
+mkdir -p build && cd build
+
+cmake .. && cmake --build .
+cbindgen .. -o ../include/pact_ffi.h 
+
+cd ..
 
 #######################
 # Pact Mock Server    #
@@ -157,6 +166,9 @@ else
 	cp ../target/x86_64-apple-darwin/release/libpact_ffi.a $WORKSPACE/Resources/x86_64-darwin/libpact_ffi.a
 	echo "👍  Copied x86_64-darwin binary."
 fi
+
+echo "🏗  Copying pact_ffi.h from ${PWD}/include to ${WORKSPACE}/Sources"
+cp include/pact_ffi.h "${WORKSPACE}/Sources"
 
 #######################
 # Cleanup             #

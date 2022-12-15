@@ -33,6 +33,12 @@ public class MockServer {
         case tlsConfigFailure
     }
     
+    /// Network transfer protocol
+    public enum TransferProtocol: Int {
+        case standard
+        case secure
+    }
+    
 	// MARK: - Properties
 
 	/// The URL on which MockServer is running.
@@ -195,7 +201,7 @@ public extension MockServer {
 	/// - Parameters:
 	///   - regex: The pattern to use
 	///
-	static nonisolated func generate_value(regex: String) -> String? {
+	static func generate_value(regex: String) -> String? {
         let result = pactffi_generate_regex_value(regex)
         guard result.tag == StringResult_Ok, let stringPointer = result.ok else {
 			return nil
@@ -214,7 +220,7 @@ public extension MockServer {
 	/// - Parameters:
 	///   - format: The format of date to generate
 	///
-	static nonisolated func generate_date(format: String) -> String? {
+	static func generate_date(format: String) -> String? {
         let result = pactffi_generate_datetime_string(format)
         guard result.tag == StringResult_Ok, let stringPointer = result.ok else {
 			return nil
@@ -252,4 +258,15 @@ private extension MockServer {
 		return errorDescription
 	}
 
+}
+
+private extension MockServer.TransferProtocol {
+    
+    var `protocol`: String {
+        switch self {
+        case .standard: return "http"
+        case .secure: return "https"
+        }
+    }
+    
 }

@@ -56,10 +56,6 @@
 		AD1598212648DF73007CFAA5 /* PactSwiftMockServer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AD1598182648DF73007CFAA5 /* PactSwiftMockServer.framework */; };
 		AD1598312648E32F007CFAA5 /* MockServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD1598302648E32F007CFAA5 /* MockServer.swift */; };
 		AD1598322648E32F007CFAA5 /* MockServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD1598302648E32F007CFAA5 /* MockServer.swift */; };
-		AD15983B2648E72A007CFAA5 /* TransferProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD15983A2648E72A007CFAA5 /* TransferProtocol.swift */; };
-		AD15983C2648E72A007CFAA5 /* TransferProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD15983A2648E72A007CFAA5 /* TransferProtocol.swift */; };
-		AD15983E2648EA2C007CFAA5 /* MockServerError.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD15983D2648EA2C007CFAA5 /* MockServerError.swift */; };
-		AD15983F2648EA2C007CFAA5 /* MockServerError.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD15983D2648EA2C007CFAA5 /* MockServerError.swift */; };
 		AD1598442648EC16007CFAA5 /* PactSwiftMockServer.h in Headers */ = {isa = PBXBuildFile; fileRef = AD1597F62648DE0E007CFAA5 /* PactSwiftMockServer.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		AD15984D2648ED4D007CFAA5 /* VerificationError.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD15984C2648ED4D007CFAA5 /* VerificationError.swift */; };
 		AD15984E2648ED4D007CFAA5 /* VerificationError.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD15984C2648ED4D007CFAA5 /* VerificationError.swift */; };
@@ -106,8 +102,6 @@
 		ADD7CB0C264B4A080091A286 /* MismatchError.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADBEF2FE2648FCF200486C4A /* MismatchError.swift */; };
 		ADD7CB0D264B4A080091A286 /* PactError.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADBEF2FC2648FCF200486C4A /* PactError.swift */; };
 		ADD7CB0E264B4A080091A286 /* RequestError.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADBEF2FF2648FCF200486C4A /* RequestError.swift */; };
-		ADD7CB0F264B4A080091A286 /* MockServerError.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD15983D2648EA2C007CFAA5 /* MockServerError.swift */; };
-		ADD7CB10264B4A080091A286 /* TransferProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD15983A2648E72A007CFAA5 /* TransferProtocol.swift */; };
 		ADD7CB11264B4A080091A286 /* VerificationError.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD15984C2648ED4D007CFAA5 /* VerificationError.swift */; };
 		ADD7CB12264B4A080091A286 /* MockServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD1598302648E32F007CFAA5 /* MockServer.swift */; };
 		ADD7CB13264B4A080091A286 /* VerificationErrorType.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADBEF3002648FCF200486C4A /* VerificationErrorType.swift */; };
@@ -171,8 +165,6 @@
 		AD1598202648DF73007CFAA5 /* PactSwiftMockServer_macOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PactSwiftMockServer_macOSTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		AD1598272648DF73007CFAA5 /* Info-macOSTests.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Info-macOSTests.plist"; sourceTree = "<group>"; };
 		AD1598302648E32F007CFAA5 /* MockServer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockServer.swift; sourceTree = "<group>"; };
-		AD15983A2648E72A007CFAA5 /* TransferProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferProtocol.swift; sourceTree = "<group>"; };
-		AD15983D2648EA2C007CFAA5 /* MockServerError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockServerError.swift; sourceTree = "<group>"; };
 		AD15984C2648ED4D007CFAA5 /* VerificationError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerificationError.swift; sourceTree = "<group>"; };
 		AD1598512648F2E1007CFAA5 /* MockServerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockServerTests.swift; sourceTree = "<group>"; };
 		AD38D2F7264A33E800124396 /* PactSwiftMockServer.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = PactSwiftMockServer.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -284,6 +276,13 @@
 				A7840F6F294AD60500CF22EF /* BooleanMatcher.swift */,
 			);
 			path = Matchers;
+			sourceTree = "<group>";
+		};
+		A7840F73294AEE9800CF22EF /* Generators */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Generators;
 			sourceTree = "<group>";
 		};
 		AD1597E92648DE0E007CFAA5 = {
@@ -414,16 +413,15 @@
 		AD1598392648E6DB007CFAA5 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				A7840F73294AEE9800CF22EF /* Generators */,
 				A7840F4A294ABB3F00CF22EF /* Matchers */,
 				A743EC422946EF1D00EE315D /* Interaction.swift */,
 				ADBEF2FE2648FCF200486C4A /* MismatchError.swift */,
 				ADBEF2FD2648FCF200486C4A /* MismatchErrorType.swift */,
-				AD15983D2648EA2C007CFAA5 /* MockServerError.swift */,
 				A743EC3E2946E8C700EE315D /* Pact.swift */,
 				ADBEF2FC2648FCF200486C4A /* PactError.swift */,
 				ADC15DAF26CE98140010D900 /* ProviderVerificationError.swift */,
 				ADBEF2FF2648FCF200486C4A /* RequestError.swift */,
-				AD15983A2648E72A007CFAA5 /* TransferProtocol.swift */,
 				AD15984C2648ED4D007CFAA5 /* VerificationError.swift */,
 				ADBEF2F92648FCBC00486C4A /* VerificationErrorHandler.swift */,
 				ADBEF3002648FCF200486C4A /* VerificationErrorType.swift */,
@@ -752,8 +750,6 @@
 				ADBEF3092648FCF200486C4A /* VerificationErrorType.swift in Sources */,
 				ADC15DB026CE98140010D900 /* ProviderVerificationError.swift in Sources */,
 				ADBEF3012648FCF200486C4A /* PactError.swift in Sources */,
-				AD15983E2648EA2C007CFAA5 /* MockServerError.swift in Sources */,
-				AD15983B2648E72A007CFAA5 /* TransferProtocol.swift in Sources */,
 				A743EC432946EF1D00EE315D /* Interaction.swift in Sources */,
 				ADBEF3032648FCF200486C4A /* MismatchErrorType.swift in Sources */,
 				A7840F6C294AC8AC00CF22EF /* Match.swift in Sources */,
@@ -800,8 +796,6 @@
 				ADBEF30A2648FCF200486C4A /* VerificationErrorType.swift in Sources */,
 				ADC15DB126CE98140010D900 /* ProviderVerificationError.swift in Sources */,
 				ADBEF3022648FCF200486C4A /* PactError.swift in Sources */,
-				AD15983F2648EA2C007CFAA5 /* MockServerError.swift in Sources */,
-				AD15983C2648E72A007CFAA5 /* TransferProtocol.swift in Sources */,
 				A743EC442946EF1D00EE315D /* Interaction.swift in Sources */,
 				ADBEF3042648FCF200486C4A /* MismatchErrorType.swift in Sources */,
 				A7840F6D294AC8AC00CF22EF /* Match.swift in Sources */,
@@ -847,7 +841,6 @@
 				ADD7CB0C264B4A080091A286 /* MismatchError.swift in Sources */,
 				ADD7CB0E264B4A080091A286 /* RequestError.swift in Sources */,
 				ADC15DB226CE98140010D900 /* ProviderVerificationError.swift in Sources */,
-				ADD7CB0F264B4A080091A286 /* MockServerError.swift in Sources */,
 				ADD7CB0B264B4A080091A286 /* VerificationErrorHandler.swift in Sources */,
 				ADD7CB13264B4A080091A286 /* VerificationErrorType.swift in Sources */,
 				A743EC452946EF1D00EE315D /* Interaction.swift in Sources */,
@@ -865,7 +858,6 @@
 				AD957F3828A23B0B00860AD1 /* PactFileManager.swift in Sources */,
 				A7840F45294A923000CF22EF /* PactBuilder.swift in Sources */,
 				ADD7CB14264B4A080091A286 /* MismatchErrorType.swift in Sources */,
-				ADD7CB10264B4A080091A286 /* TransferProtocol.swift in Sources */,
 				A743EC412946E8C700EE315D /* Pact.swift in Sources */,
 				A7840F52294AC2BA00CF22EF /* EqualityMatcher.swift in Sources */,
 				A7840F4E294ABB5000CF22EF /* DecimalMatcher.swift in Sources */,

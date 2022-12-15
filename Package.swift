@@ -7,9 +7,9 @@ let package = Package(
 	name: "PactSwiftMockServer",
 
 	platforms: [
-		.macOS(.v11),
-		.iOS(.v14),
-		.tvOS(.v14)
+		.macOS(.v13),
+		.iOS(.v16),
+		.tvOS(.v16)
 	],
 
 	products: [

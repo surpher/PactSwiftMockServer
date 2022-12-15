@@ -20,7 +20,7 @@ import Foundation
 public final class PactBuilder {
     
     public enum Error {
-        case pactFailure(String?)
+        case pactFailure([PactVerificationFailure])
     }
     
     public struct ConsumerContext {
@@ -80,7 +80,9 @@ public final class PactBuilder {
     private func verifyInternal(mockServer: MockServer) throws {
         guard mockServer.requestsMatched else {
             // TODO: log the verification mismatches
-            throw Error.pactFailure(mockServer.mismatchesJSON)
+            
+            let failures = try JSONDecoder().decode([PactVerificationFailure].self, from: mockServer.mismatchesJSON?.data(using: .utf8) ?? Data())            
+            throw Error.pactFailure(failures)
         }
         
         try pact.writePactFile(directory: config.pactDirectory, overwrite: false)        
@@ -90,8 +92,8 @@ public final class PactBuilder {
 extension PactBuilder.Error: LocalizedError {
     public var failureReason: String? {
         switch self {
-        case .pactFailure(let text):
-            return String.localizedStringWithFormat(NSLocalizedString("Pact Failure:\n%@", comment: ""), text ?? "No mismatch JSON!")
+        case .pactFailure(let mismatches):
+            return String.localizedStringWithFormat(NSLocalizedString("Pact Failure (see below):\n%@", comment: ""), mismatches.map(\.description).joined(separator: "\n---\n"))
         }
     }
 }

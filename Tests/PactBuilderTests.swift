@@ -117,8 +117,6 @@ final class PactBuilderTests: XCTestCase {
             XCTAssertEqual(httpResponse.value(forHTTPHeaderField: "Content-Type"), "text/html")
             XCTAssertEqual(data, "OK".data(using: .utf8))
         }
-        
-        // TODO: load file and look for interaction
     }
     
     func testGetEvent() async throws {
@@ -127,6 +125,7 @@ final class PactBuilderTests: XCTestCase {
             .given("There are events")
             .withRequest(method: .GET, regex: Match.regex(#"/events/\d+"#, example: "/events/100")) { request in
                 try request
+                    .queryParam(name: "sorted", value: Match.bool(true))
                     .header("Accept", value: "application/json")
                     .header("X-Version", value: Match.integer(1))
             }
@@ -137,6 +136,7 @@ final class PactBuilderTests: XCTestCase {
         try await builder.verify { ctx in
             var components = try XCTUnwrap(URLComponents(url: ctx.mockServerURL, resolvingAgainstBaseURL: false))
             components.path = "/events/23"
+            components.queryItems = [URLQueryItem(name: "sorted", value: "true")]
             
             var request = URLRequest(url: try XCTUnwrap(components.url))
             request.setValue("application/json", forHTTPHeaderField: "Accept")
@@ -149,8 +149,6 @@ final class PactBuilderTests: XCTestCase {
             XCTAssertEqual(httpResponse.value(forHTTPHeaderField: "Content-Type"), "text/html")
             XCTAssertEqual(data, "OK".data(using: .utf8))
         }
-        
-        // TODO: load file and look for interaction
     }
     
 }

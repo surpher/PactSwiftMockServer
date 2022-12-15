@@ -116,7 +116,7 @@ public class MockServer {
         
         return String(cString: cString)
     }
-    
+        
     /// Get a string representing the mock server logs following interaction testing
     ///
     /// - Returns: Log string
@@ -203,16 +203,6 @@ private extension MockServer {
         return SocketBinder.unusedPort()
         #endif
     }
-
-	/// Descripton of mismatching requests
-	var mismatchDescription: String {
-		guard let mismatches = mismatchesJSON else {
-			return "No response! There might be something fishy going on with your Mock Server..."
-		}
-
-		let errorDescription = VerificationErrorHandler(mismatches: mismatches).description
-		return errorDescription
-	}
 
 }
 

@@ -37,35 +37,4 @@ class MockServerTests: XCTestCase {
         let server = try MockServer(pact: pact, transferProtocol: .secure)
         XCTAssertEqual(server.baseUrl, try XCTUnwrap(URL(string: "https://127.0.0.1:\(server.port)")))
 	}
-
-	func testGeneratesStringFromRegex() {
-		XCTAssertEqual(MockServer.generate_value(regex: #"\d{4}"#)?.count, 4)
-
-		let generatedString = MockServer.generate_value(regex: #"\d{4}-\d{2}:\d{2}abc"#)
-		XCTAssertEqual(generatedString?.count, 13)
-		XCTAssertEqual(generatedString?.suffix(3), "abc")
-		XCTAssertNil(generatedString?.prefix(4).rangeOfCharacter(from: CharacterSet.decimalDigits.inverted), "Expected first four characters to be digits")
-		XCTAssertEqual(generatedString?.indexOf(char: "-"), 4)
-		XCTAssertEqual(generatedString?.indexOf(char: ":"), 7)
-	}
-
-	func testGeneratesDateTimeStringInExpectedFormat() throws {
-		let dateFormat = "YYYY-MM-dd"
-		let generatedDatetime = try XCTUnwrap(MockServer.generate_date(format: dateFormat))
-
-		let dateFormatter = DateFormatter()
-		dateFormatter.dateFormat = dateFormat
-		let resultDate = dateFormatter.date(from: generatedDatetime)
-
-		XCTAssertNotNil(resultDate)
-	}
-
-}
-
-private extension String {
-    
-    func indexOf(char: Character) -> Int? {
-        firstIndex(of: char)?.utf16Offset(in: self)
-    }
-    
 }

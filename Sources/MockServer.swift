@@ -190,50 +190,6 @@ extension MockServer.Error: RawRepresentable {
     }
 }
 
-// MARK: - Static methods
-
-public extension MockServer {
-
-	/// Generates an example string based on provided regex pattern
-	///
-	/// Only supports basic regex patterns.
-	///
-	/// - Parameters:
-	///   - regex: The pattern to use
-	///
-	static func generate_value(regex: String) -> String? {
-        let result = pactffi_generate_regex_value(regex)
-        guard result.tag == StringResult_Ok, let stringPointer = result.ok else {
-			return nil
-		}
-        
-		let generatedString = String(cString: stringPointer)
-        pactffi_string_delete(stringPointer)
-
-		return generatedString
-	}
-
-	/// Generates an example datetime string based on provided format
-	///
-	/// Returns `nil` if the provided format is invalid
-	///
-	/// - Parameters:
-	///   - format: The format of date to generate
-	///
-	static func generate_date(format: String) -> String? {
-        let result = pactffi_generate_datetime_string(format)
-        guard result.tag == StringResult_Ok, let stringPointer = result.ok else {
-			return nil
-		}
-
-		let generatedDatetime = String(cString: stringPointer)
-        pactffi_string_delete(stringPointer)
-
-		return generatedDatetime
-	}
-
-}
-
 // MARK: - Private
 
 private extension MockServer {

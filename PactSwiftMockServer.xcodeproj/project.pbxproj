@@ -51,6 +51,10 @@
 		A7840F70294AD60500CF22EF /* BooleanMatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7840F6F294AD60500CF22EF /* BooleanMatcher.swift */; };
 		A7840F71294AD60500CF22EF /* BooleanMatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7840F6F294AD60500CF22EF /* BooleanMatcher.swift */; };
 		A7840F72294AD60500CF22EF /* BooleanMatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7840F6F294AD60500CF22EF /* BooleanMatcher.swift */; };
+		A7840F75294AF1D200CF22EF /* Generator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7840F74294AF1D200CF22EF /* Generator.swift */; };
+		A7840F76294AF1D200CF22EF /* Generator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7840F74294AF1D200CF22EF /* Generator.swift */; };
+		A7840F78294AF20500CF22EF /* GeneratorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7840F77294AF20500CF22EF /* GeneratorTests.swift */; };
+		A7840F79294AF20500CF22EF /* GeneratorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7840F77294AF20500CF22EF /* GeneratorTests.swift */; };
 		AD1597FD2648DE0E007CFAA5 /* PactSwiftMockServer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AD1597F32648DE0E007CFAA5 /* PactSwiftMockServer.framework */; };
 		AD1598042648DE0E007CFAA5 /* PactSwiftMockServer.h in Headers */ = {isa = PBXBuildFile; fileRef = AD1597F62648DE0E007CFAA5 /* PactSwiftMockServer.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		AD1598212648DF73007CFAA5 /* PactSwiftMockServer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AD1598182648DF73007CFAA5 /* PactSwiftMockServer.framework */; };
@@ -155,6 +159,8 @@
 		A7840F67294AC86B00CF22EF /* IncludeMatcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IncludeMatcher.swift; sourceTree = "<group>"; };
 		A7840F6B294AC8AC00CF22EF /* Match.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Match.swift; sourceTree = "<group>"; };
 		A7840F6F294AD60500CF22EF /* BooleanMatcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BooleanMatcher.swift; sourceTree = "<group>"; };
+		A7840F74294AF1D200CF22EF /* Generator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Generator.swift; sourceTree = "<group>"; };
+		A7840F77294AF20500CF22EF /* GeneratorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeneratorTests.swift; sourceTree = "<group>"; };
 		AD1597F32648DE0E007CFAA5 /* PactSwiftMockServer.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = PactSwiftMockServer.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		AD1597F62648DE0E007CFAA5 /* PactSwiftMockServer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PactSwiftMockServer.h; sourceTree = "<group>"; };
 		AD1597F72648DE0E007CFAA5 /* Info-iOS.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Info-iOS.plist"; sourceTree = "<group>"; };
@@ -281,6 +287,7 @@
 		A7840F73294AEE9800CF22EF /* Generators */ = {
 			isa = PBXGroup;
 			children = (
+				A7840F74294AF1D200CF22EF /* Generator.swift */,
 			);
 			path = Generators;
 			sourceTree = "<group>";
@@ -390,6 +397,7 @@
 				ADB97FD626493D1800C54CA9 /* VerificationErrorTypeTests.swift */,
 				ADC6C61226D0AFBD00844000 /* VerifierTests.swift */,
 				A7840F3F2949AA4200CF22EF /* PactBuilderTests.swift */,
+				A7840F77294AF20500CF22EF /* GeneratorTests.swift */,
 			);
 			path = Tests;
 			sourceTree = "<group>";
@@ -770,6 +778,7 @@
 				A7840F50294AC2BA00CF22EF /* EqualityMatcher.swift in Sources */,
 				A7840F4C294ABB5000CF22EF /* DecimalMatcher.swift in Sources */,
 				AD15984D2648ED4D007CFAA5 /* VerificationError.swift in Sources */,
+				A7840F75294AF1D200CF22EF /* Generator.swift in Sources */,
 				A7840F68294AC86B00CF22EF /* IncludeMatcher.swift in Sources */,
 				A7840F70294AD60500CF22EF /* BooleanMatcher.swift in Sources */,
 			);
@@ -784,6 +793,7 @@
 				ADB97FDA26493D5900C54CA9 /* MockServerErrorTests.swift in Sources */,
 				A7840F402949AA4200CF22EF /* PactBuilderTests.swift in Sources */,
 				AD1598522648F2E1007CFAA5 /* MockServerTests.swift in Sources */,
+				A7840F78294AF20500CF22EF /* GeneratorTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -816,6 +826,7 @@
 				A7840F51294AC2BA00CF22EF /* EqualityMatcher.swift in Sources */,
 				A7840F4D294ABB5000CF22EF /* DecimalMatcher.swift in Sources */,
 				AD15984E2648ED4D007CFAA5 /* VerificationError.swift in Sources */,
+				A7840F76294AF1D200CF22EF /* Generator.swift in Sources */,
 				A7840F69294AC86B00CF22EF /* IncludeMatcher.swift in Sources */,
 				A7840F71294AD60500CF22EF /* BooleanMatcher.swift in Sources */,
 			);
@@ -830,6 +841,7 @@
 				ADB97FDB26493D5900C54CA9 /* MockServerErrorTests.swift in Sources */,
 				A7840F412949AA4200CF22EF /* PactBuilderTests.swift in Sources */,
 				AD1598532648F2E1007CFAA5 /* MockServerTests.swift in Sources */,
+				A7840F79294AF20500CF22EF /* GeneratorTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -1,6 +1,6 @@
 //
-//  Created by Marko Justinek on 19/8/21.
-//  Copyright © 2021 Marko Justinek. All rights reserved.
+//  Created by Oliver Jones on 15/12/2022.
+//  Copyright © 2022 Oliver Jones. All rights reserved.
 //
 //  Permission to use, copy, modify, and/or distribute this software for any
 //  purpose with or without fee is hereby granted, provided that the above
@@ -17,7 +17,17 @@
 
 import Foundation
 
-/// Configures a mapped list of message states to functions that are used to setup a given provider state prior to the message verification step.
-public struct StateHandler {
-
+/// Matcher for decimal values (i.e. numbers with a fractional component)
+public struct DecimalMatcher: Matcher {
+    public let type = "decimal"
+    public let value: Decimal
+    
+    public init(_ value: Decimal) {
+        self.value = value
+    }
+    
+    public init(_ value: Double) {
+        self.init(Decimal(value))
+    }
+        
 }

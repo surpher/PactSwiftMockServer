@@ -1,6 +1,6 @@
 //
-//  Created by Marko Justinek on 10/5/21.
-//  Copyright © 2020 Marko Justinek. All rights reserved.
+//  Created by Oliver Jones on 15/12/2022.
+//  Copyright © 2022 Oliver Jones. All rights reserved.
 //
 //  Permission to use, copy, modify, and/or distribute this software for any
 //  purpose with or without fee is hereby granted, provided that the above
@@ -17,21 +17,25 @@
 
 import Foundation
 
-/// Network transfer protocol
-public enum TransferProtocol: Int {
-	case standard
-	case secure
+public protocol Matcher: Encodable {
+    associatedtype ValueType
+    
+    /// Type of the matcher
+    var type: String { get }
+
+    /// Matcher value
+    var value: ValueType { get }
 }
 
-// MARK: - Extension
+internal enum MatcherCodingKeys: String, CodingKey {
+    case type = "pact:matcher:type"
+    case value
+}
 
-extension TransferProtocol {
-
-	var `protocol`: String {
-		switch self {
-		case .standard: return "http"
-		case .secure: return "https"
-		}
-	}
-
+extension Matcher where Self: Encodable, ValueType: Encodable {
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: MatcherCodingKeys.self)
+        try container.encode(type, forKey: .type)
+        try container.encode(value, forKey: .value)
+    }
 }

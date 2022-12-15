@@ -16,57 +16,37 @@
 //
 
 import XCTest
-
-@testable import PactSwiftMockServer
+import PactSwiftMockServer
 
 class MockServerErrorTests: XCTestCase {
 
-	func testFailedWithInvalidPactJSON() {
-		let sut = MockServerError(code: -2)
-		XCTAssertEqual(sut.description, "Mock Server Error: Pact JSON could not be parsed.")
+    public enum Error: Equatable {
+        case unknown(Int32)
+        case invalidHandle
+        case invalidPactJSON
+        case unableToStart
+        case panic
+        case invalidAddress
+        case tlsConfigFailure
+    }
+    
+	func testErrorCodes() {
+        XCTAssertEqual(MockServer.Error.invalidHandle.rawValue, -1)
+        XCTAssertEqual(MockServer.Error.invalidPactJSON.rawValue, -2)
+        XCTAssertEqual(MockServer.Error.unableToStart.rawValue, -3)
+        XCTAssertEqual(MockServer.Error.panicked.rawValue, -4)
+        XCTAssertEqual(MockServer.Error.invalidAddress.rawValue, -5)
+        XCTAssertEqual(MockServer.Error.tlsConfigFailure.rawValue, -6)
+        XCTAssertEqual(MockServer.Error.unknown(-10).rawValue, -10)
 	}
-
-	func testFailedWithInvalidSocketAddress() {
-		let sut = MockServerError(code: -5)
-		XCTAssertEqual(sut.description, "Mock Server Error: Socket Address is invalid.")
-	}
-
-	func testFailedToStart() {
-		let sut = MockServerError(code: -3)
-		XCTAssertEqual(sut.description, "Mock Server Error: Could not start.")
-	}
-
-	func testFailedToWriteFile() {
-		let sut = MockServerError(code: 2)
-		XCTAssertEqual(sut.description, "Mock Server Error: Failed to write Pact contract to file.")
-	}
-
-	func testFailedWithMethodPanicked() {
-		var sut = MockServerError(code: 1)
-		XCTAssertEqual(sut.description, "Mock Server Error: PactMockServer's method panicked.")
-
-		sut = MockServerError(code: -4)
-		XCTAssertEqual(sut.description, "Mock Server Error: PactMockServer's method panicked.")
-	}
-
-	func testFailedWithNullPointer() {
-		let sut = MockServerError(code: -1)
-		XCTAssertEqual(sut.description, "Mock Server Error: Either Pact JSON or Socket Address passed as null pointer.")
-	}
-
-	func testFailedWithPortNotFound() {
-		let sut = MockServerError(code: 3)
-		XCTAssertEqual(sut.description, "Mock Server Error: Mock Server with specified port not running.")
-	}
-
-	func testFailedWithValidationFailure() {
-		let sut = MockServerError(code: 999)
-		XCTAssertEqual(sut.description, "Mock Server Error: Interactions failed to verify successfully. Check your tests.")
-	}
-
-	func testFailedWithUnknown() {
-		let sut = MockServerError(code: 0)
-		XCTAssertEqual(sut.description, "Mock Server Error: Reason unknown!")
-	}
-
+    
+    func testRawRepresentable() {
+        XCTAssertEqual(MockServer.Error(rawValue: -1), .invalidHandle)
+        XCTAssertEqual(MockServer.Error(rawValue: -2), .invalidPactJSON)
+        XCTAssertEqual(MockServer.Error(rawValue: -3), .unableToStart)
+        XCTAssertEqual(MockServer.Error(rawValue: -4), .panicked)
+        XCTAssertEqual(MockServer.Error(rawValue: -5), .invalidAddress)
+        XCTAssertEqual(MockServer.Error(rawValue: -6), .tlsConfigFailure)
+        XCTAssertEqual(MockServer.Error(rawValue: -10), .unknown(-10))
+    }
 }

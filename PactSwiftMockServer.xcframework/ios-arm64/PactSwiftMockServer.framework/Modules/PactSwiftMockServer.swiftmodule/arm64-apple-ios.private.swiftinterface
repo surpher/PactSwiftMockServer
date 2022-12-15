@@ -1,6 +1,6 @@
 // swift-interface-format-version: 1.0
-// swift-compiler-version: Apple Swift version 5.7.1 (swiftlang-5.7.1.135.3 clang-1400.0.29.51)
-// swift-module-flags: -target arm64-apple-ios14.0 -enable-objc-interop -enable-library-evolution -swift-version 5 -enforce-exclusivity=checked -O -module-name PactSwiftMockServer
+// swift-compiler-version: Apple Swift version 5.7.2 (swiftlang-5.7.2.135.5 clang-1400.0.29.51)
+// swift-module-flags: -target arm64-apple-ios16.0 -enable-objc-interop -enable-library-evolution -swift-version 5 -enforce-exclusivity=checked -O -module-name PactSwiftMockServer
 // swift-module-flags-ignorable: -enable-bare-slash-regex
 import Foundation
 @_exported import PactSwiftMockServer
@@ -9,6 +9,14 @@ import _Concurrency
 import _StringProcessing
 import os.log
 import os
+public struct RegexMatcher : PactSwiftMockServer.Matcher {
+  public let type: Swift.String
+  public let value: Swift.String
+  public let regex: Swift.String
+  public init(regex: Swift.String, example: Swift.String)
+  public func encode(to encoder: Swift.Encoder) throws
+  public typealias ValueType = Swift.String
+}
 public enum ProviderVerificationError : Swift.Error, Swift.Equatable {
   case verificationFailed
   case nullPointer
@@ -41,42 +49,204 @@ public enum MockServerError : Swift.Error {
     get
   }
 }
+public protocol HeaderBuilder {
+  @discardableResult
+  func header(_ name: Swift.String, values: [Swift.String]) throws -> Self
+}
+public protocol BodyBuilder {
+  @discardableResult
+  func body(_ body: Swift.String?, contentType: Swift.String?) throws -> Self
+}
+public protocol QueryBuilder {
+  @discardableResult
+  func queryParam(name: Swift.String, values: [Swift.String]) throws -> Self
+}
+@_hasMissingDesignatedInitializers final public class Interaction {
+  public enum Error {
+    case canNotBeModified
+    public static func == (a: PactSwiftMockServer.Interaction.Error, b: PactSwiftMockServer.Interaction.Error) -> Swift.Bool
+    public func hash(into hasher: inout Swift.Hasher)
+    public var hashValue: Swift.Int {
+      get
+    }
+  }
+  public struct ProviderState : Swift.Hashable {
+    public init(description: Swift.String)
+    public init(description: Swift.String, name: Swift.String, value: Swift.String)
+    public func hash(into hasher: inout Swift.Hasher)
+    public static func == (a: PactSwiftMockServer.Interaction.ProviderState, b: PactSwiftMockServer.Interaction.ProviderState) -> Swift.Bool
+    public var hashValue: Swift.Int {
+      get
+    }
+  }
+  public typealias RequestBuilder = (PactSwiftMockServer.Interaction.Request) throws -> Swift.Void
+  public typealias ResponseBuilder = (PactSwiftMockServer.Interaction.Response) throws -> Swift.Void
+  public struct Request : PactSwiftMockServer.HeaderBuilder, PactSwiftMockServer.BodyBuilder, PactSwiftMockServer.QueryBuilder {
+    @discardableResult
+    public func queryParam(name: Swift.String, values: [Swift.String]) throws -> PactSwiftMockServer.Interaction.Request
+    @discardableResult
+    public func header(_ name: Swift.String, values: [Swift.String]) throws -> PactSwiftMockServer.Interaction.Request
+    @discardableResult
+    public func body(_ body: Swift.String? = nil, contentType: Swift.String? = nil) throws -> PactSwiftMockServer.Interaction.Request
+  }
+  public struct Response : PactSwiftMockServer.HeaderBuilder, PactSwiftMockServer.BodyBuilder {
+    @discardableResult
+    public func status(_ status: Swift.Int) throws -> PactSwiftMockServer.Interaction.Response
+    @discardableResult
+    public func header(_ name: Swift.String, values: [Swift.String]) throws -> PactSwiftMockServer.Interaction.Response
+    @discardableResult
+    public func body(_ body: Swift.String? = nil, contentType: Swift.String? = nil) throws -> PactSwiftMockServer.Interaction.Response
+  }
+  public enum HTTPMethod : Swift.String {
+    case GET, POST, PUT, PATCH, DELETE
+    public init?(rawValue: Swift.String)
+    public typealias RawValue = Swift.String
+    public var rawValue: Swift.String {
+      get
+    }
+  }
+  @discardableResult
+  final public func given(_ providerStates: [PactSwiftMockServer.Interaction.ProviderState]) throws -> Self
+  @discardableResult
+  final public func given(_ providerStates: PactSwiftMockServer.Interaction.ProviderState...) throws -> Self
+  @discardableResult
+  final public func withRequest(method: PactSwiftMockServer.Interaction.HTTPMethod = .GET, path: Swift.String = "/", builder: (PactSwiftMockServer.Interaction.Request) throws -> Swift.Void = { _ in }) throws -> Self
+  @discardableResult
+  final public func willRespond(with status: Swift.Int, builder: (PactSwiftMockServer.Interaction.Response) throws -> Swift.Void = { _ in }) throws -> Self
+  @objc deinit
+}
+extension PactSwiftMockServer.QueryBuilder {
+  @discardableResult
+  public func queryParam(name: Swift.String, value: PactSwiftMockServer.Matcher) throws -> Self
+  @discardableResult
+  public func queryParam(name: Swift.String, value: Swift.String) throws -> Self
+  @discardableResult
+  public func queryParams(_ items: [Foundation.URLQueryItem]) throws -> Self
+}
+extension PactSwiftMockServer.BodyBuilder {
+  @discardableResult
+  public func body(contentType: Swift.String? = "text/plain") throws -> Self
+  @discardableResult
+  public func jsonBody(_ bodyString: Swift.String? = nil, contentType: Swift.String = "application/json") throws -> Self
+  @discardableResult
+  public func htmlBody(_ bodyString: Swift.String? = nil, contentType: Swift.String = "text/html") throws -> Self
+}
+extension PactSwiftMockServer.HeaderBuilder {
+  @discardableResult
+  public func contentType(_ contentType: Swift.String) throws -> Self
+  @discardableResult
+  public func header(_ name: Swift.String, value: Swift.String) throws -> Self
+  @discardableResult
+  public func header(_ name: Swift.String, value: some Matcher) throws -> Self
+}
+extension PactSwiftMockServer.Interaction {
+  final public func withRequest(method: PactSwiftMockServer.Interaction.HTTPMethod = .GET, regex: PactSwiftMockServer.RegexMatcher, builder: (PactSwiftMockServer.Interaction.Request) throws -> Swift.Void) throws -> Self
+}
+extension PactSwiftMockServer.Interaction.Error : Foundation.LocalizedError {
+  public var failureReason: Swift.String? {
+    get
+  }
+}
+extension PactSwiftMockServer.Interaction.ProviderState : Swift.ExpressibleByStringLiteral {
+  public init(stringLiteral value: Swift.String)
+  public typealias ExtendedGraphemeClusterLiteralType = Swift.String
+  public typealias StringLiteralType = Swift.String
+  public typealias UnicodeScalarLiteralType = Swift.String
+}
 public enum VerificationError : Swift.Error {
   case reason(Swift.String)
   public var description: Swift.String {
     get
   }
 }
-#if compiler(>=5.3) && $Actors
-public actor MockServer {
-  #if compiler(>=5.3) && $EffectfulProp
-  public var baseUrl: Swift.String {
-    get async
+public enum Match {
+  public static func regex(_ regex: Swift.String, example: Swift.String) -> PactSwiftMockServer.RegexMatcher
+  public static func integer(_ example: Swift.Int) -> PactSwiftMockServer.IntegerMatcher
+  public static func double(_ example: Swift.Double) -> PactSwiftMockServer.DecimalMatcher
+  public static func decimal(_ example: Foundation.Decimal) -> PactSwiftMockServer.DecimalMatcher
+  public static func numeric<T>(_ example: T) -> some PactSwiftMockServer.Matcher where T : Swift.Encodable, T : Swift.Numeric
+  
+  public static func equality<T>(_ value: T) -> some PactSwiftMockServer.Matcher where T : Swift.Encodable, T : Swift.Equatable
+  
+  public static func null() -> PactSwiftMockServer.NullMatcher
+  public static func include(_ example: Swift.String) -> PactSwiftMockServer.IncludeMatcher
+  public static func bool(_ example: Swift.Bool) -> PactSwiftMockServer.BooleanMatcher
+}
+public struct NumericMatcher<T> : PactSwiftMockServer.Matcher where T : Swift.Encodable, T : Swift.Numeric {
+  public let type: Swift.String
+  public let value: T
+  public init(_ value: T)
+  public typealias ValueType = T
+}
+public struct TypeMatcher<T> : PactSwiftMockServer.Matcher where T : Swift.Encodable {
+  public let type: Swift.String
+  public let value: T
+  public init(_ example: T)
+  public typealias ValueType = T
+}
+public protocol Matcher : Swift.Encodable {
+  associatedtype ValueType
+  var type: Swift.String { get }
+  var value: Self.ValueType { get }
+}
+extension PactSwiftMockServer.Matcher where Self.ValueType : Swift.Encodable {
+  public func encode(to encoder: Swift.Encoder) throws
+}
+public struct NullMatcher : PactSwiftMockServer.Matcher {
+  public let type: Swift.String
+  public let value: Swift.String?
+  public typealias ValueType = Swift.String?
+}
+public class MockServer {
+  public enum Error : Swift.Equatable {
+    case unknown(Swift.Int32)
+    case invalidHandle
+    case invalidPactJSON
+    case unableToStart
+    case panicked
+    case invalidAddress
+    case tlsConfigFailure
   }
-  #endif
-  public init(directory: Swift.String? = nil, transferProtocol: PactSwiftMockServer.TransferProtocol = .standard, merge: Swift.Bool = true)
+  public var baseUrl: Foundation.URL {
+    get
+  }
+  public var port: Swift.Int32 {
+    get
+  }
+  public init(pact: PactSwiftMockServer.Pact, transferProtocol: PactSwiftMockServer.TransferProtocol = .standard, port: Swift.Int32? = nil) throws
   @objc deinit
-  #if compiler(>=5.3) && $AsyncAwait
-  public func setup(pact: Foundation.Data) async throws -> Swift.Int
-  #endif
-  #if compiler(>=5.3) && $AsyncAwait
-  public func verify() async throws
-  #endif
-  #if compiler(>=5.3) && $AsyncAwait
-  public func finalize(pact: Foundation.Data) async throws -> Swift.String
-  #endif
-  @available(iOS 13.0, tvOS 13.0, watchOS 6.0, macOS 10.15, *)
-  @_semantics("defaultActor") nonisolated final public var unownedExecutor: _Concurrency.UnownedSerialExecutor {
+  public var requestsMatched: Swift.Bool {
+    get
+  }
+  public var mismatchesJSON: Swift.String? {
+    get
+  }
+  public var logs: Swift.String {
     get
   }
 }
-#endif
-#if compiler(>=5.3) && $Actors
+extension PactSwiftMockServer.MockServer.Error : Foundation.LocalizedError {
+  public var failureReason: Swift.String? {
+    get
+  }
+}
+extension PactSwiftMockServer.MockServer.Error : Swift.RawRepresentable {
+  public init(rawValue: Swift.Int32)
+  public var rawValue: Swift.Int32 {
+    get
+  }
+  public typealias RawValue = Swift.Int32
+}
 extension PactSwiftMockServer.MockServer {
   nonisolated public static func generate_value(regex: Swift.String) -> Swift.String?
   nonisolated public static func generate_date(format: Swift.String) -> Swift.String?
 }
-#endif
+public struct IntegerMatcher : PactSwiftMockServer.Matcher {
+  public let type: Swift.String
+  public let value: Swift.Int
+  public init(_ value: Swift.Int)
+  public typealias ValueType = Swift.Int
+}
 public protocol ProviderVerifying {
   func verifyProvider(options args: Swift.String) -> Swift.Result<Swift.Bool, PactSwiftMockServer.ProviderVerificationError>
 }
@@ -90,7 +260,31 @@ public enum PactFileManager {
     get
   }
 }
-@objc public enum TransferProtocol : Swift.Int {
+final public class PactBuilder {
+  public enum Error {
+    case pactFailure(Swift.String?)
+  }
+  public struct ConsumerContext {
+    public var mockServerURL: Foundation.URL
+  }
+  public struct Config {
+    public var pactDirectory: Swift.String
+    public init(pactDirectory: Swift.String)
+  }
+  public init(pact: PactSwiftMockServer.Pact, config: PactSwiftMockServer.PactBuilder.Config)
+  final public func uponReceiving(_ description: Swift.String) -> PactSwiftMockServer.Interaction
+  final public func verify(handler: (PactSwiftMockServer.PactBuilder.ConsumerContext) throws -> Swift.Void) throws
+  #if compiler(>=5.3) && $AsyncAwait
+  final public func verify(handler: (PactSwiftMockServer.PactBuilder.ConsumerContext) async throws -> Swift.Void) async throws
+  #endif
+  @objc deinit
+}
+extension PactSwiftMockServer.PactBuilder.Error : Foundation.LocalizedError {
+  public var failureReason: Swift.String? {
+    get
+  }
+}
+public enum TransferProtocol : Swift.Int {
   case standard
   case secure
   public init?(rawValue: Swift.Int)
@@ -99,10 +293,81 @@ public enum PactFileManager {
     get
   }
 }
-public struct StateHandler {
+final public class Pact {
+  public enum Specification {
+    case v1, v1_1, v2, v3, v4
+    public static func == (a: PactSwiftMockServer.Pact.Specification, b: PactSwiftMockServer.Pact.Specification) -> Swift.Bool
+    public func hash(into hasher: inout Swift.Hasher)
+    public var hashValue: Swift.Int {
+      get
+    }
+  }
+  public enum Error {
+    case canNotBeModified
+    case canNotWritePact(Swift.Int32)
+  }
+  public enum LogLevel : Swift.String {
+    case trace, debug, info, warn, error
+    public init?(rawValue: Swift.String)
+    public typealias RawValue = Swift.String
+    public var rawValue: Swift.String {
+      get
+    }
+  }
+  public static var version: Swift.String {
+    get
+  }
+  final public var filename: Swift.String {
+    get
+  }
+  public init(consumer: Swift.String, provider: Swift.String)
+  @objc deinit
+  final public func withSpecification(_ specification: PactSwiftMockServer.Pact.Specification) throws -> Self
+  final public func withMetadata(namespace: Swift.String, name: Swift.String, value: Swift.String) throws -> Self
+  final public func writePactFile(directory: Swift.String? = nil, overwrite: Swift.Bool = false) throws
+}
+extension PactSwiftMockServer.Pact.Error : Foundation.LocalizedError {
+  public var failureReason: Swift.String? {
+    get
+  }
+}
+public struct EqualityMatcher<T> : PactSwiftMockServer.Matcher where T : Swift.Encodable, T : Swift.Equatable {
+  public let type: Swift.String
+  public let value: T
+  public init(_ value: T)
+  public typealias ValueType = T
+}
+public struct DecimalMatcher : PactSwiftMockServer.Matcher {
+  public let type: Swift.String
+  public let value: Foundation.Decimal
+  public init(_ value: Foundation.Decimal)
+  public init(_ value: Swift.Double)
+  public typealias ValueType = Foundation.Decimal
+}
+public struct IncludeMatcher : PactSwiftMockServer.Matcher {
+  public let type: Swift.String
+  public let value: Swift.String
+  public init(_ include: Swift.String)
+  public typealias ValueType = Swift.String
+}
+public struct BooleanMatcher : PactSwiftMockServer.Matcher {
+  public let type: Swift.String
+  public let value: Swift.String
+  public init(_ value: Swift.Bool)
+  public typealias ValueType = Swift.String
 }
 extension PactSwiftMockServer.MockServerError : Swift.Equatable {}
 extension PactSwiftMockServer.MockServerError : Swift.Hashable {}
+extension PactSwiftMockServer.Interaction.Error : Swift.Equatable {}
+extension PactSwiftMockServer.Interaction.Error : Swift.Hashable {}
+extension PactSwiftMockServer.Interaction.HTTPMethod : Swift.Equatable {}
+extension PactSwiftMockServer.Interaction.HTTPMethod : Swift.Hashable {}
+extension PactSwiftMockServer.Interaction.HTTPMethod : Swift.RawRepresentable {}
 extension PactSwiftMockServer.TransferProtocol : Swift.Equatable {}
 extension PactSwiftMockServer.TransferProtocol : Swift.Hashable {}
 extension PactSwiftMockServer.TransferProtocol : Swift.RawRepresentable {}
+extension PactSwiftMockServer.Pact.Specification : Swift.Equatable {}
+extension PactSwiftMockServer.Pact.Specification : Swift.Hashable {}
+extension PactSwiftMockServer.Pact.LogLevel : Swift.Equatable {}
+extension PactSwiftMockServer.Pact.LogLevel : Swift.Hashable {}
+extension PactSwiftMockServer.Pact.LogLevel : Swift.RawRepresentable {}

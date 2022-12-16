@@ -191,9 +191,10 @@ public final class Interaction {
             return self
         }
     }
-    
+        
+    /// HTTP Method for an ``Interaction``.
     public enum HTTPMethod: String {
-        case GET = "GET", POST = "POST", PUT = "PUT", PATCH = "PATCH", DELETE = "DELETE"
+        case GET, HEAD, POST, PUT, PATCH, DELETE, TRACE, CONNECT, OPTIONS
     }
     
     private let handle: InteractionHandle

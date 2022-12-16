@@ -55,8 +55,9 @@ public final class Pact {
         }
     }
     
-    private var consumer: String
-    private var provider: String
+    public let consumer: String
+    public let provider: String
+    
     internal let handle: PactHandle
     
     public var filename: String {
@@ -89,6 +90,7 @@ public final class Pact {
         guard pactffi_with_specification(handle, PactSpecification(specification)) else {
             throw Error.canNotBeModified
         }
+        
         return self
     }
     

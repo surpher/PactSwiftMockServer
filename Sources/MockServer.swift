@@ -88,6 +88,16 @@ public class MockServer {
         self.port = result
 	}
 
+    /// Fetch the CA Certificate used to generate the self-signed certificate for the TLS mock server.
+    public var tlsCACertificate: String? {
+        guard let cert = pactffi_get_tls_ca_certificate() else {
+            return nil
+        }
+        defer { pactffi_string_delete(cert) }
+        
+        return String(cString: cert)
+    }
+    
     deinit {
         if port != 0 {
             Logger.log(message: "Shutting down mock server on port \(port)")

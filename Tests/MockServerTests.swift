@@ -32,9 +32,15 @@ class MockServerTests: XCTestCase {
         XCTAssertEqual(server.baseUrl, try XCTUnwrap(URL(string: "http://127.0.0.1:\(server.port)")))
 	}
      
-	func testMockServer_SetsBaseSSLURL() async throws {
+	func testMockServer_SetsBaseSSLURL() throws {
         let pact = Pact(consumer: "Consumer", provider: "Provider")
         let server = try MockServer(pact: pact, transferProtocol: .secure)
         XCTAssertEqual(server.baseUrl, try XCTUnwrap(URL(string: "https://127.0.0.1:\(server.port)")))
 	}
+    
+    func testMockServer_GetTLSCert() throws {
+        let pact = Pact(consumer: "Consumer", provider: "Provider")
+        let server = try MockServer(pact: pact, transferProtocol: .secure)
+        XCTAssertNotNil(server.tlsCACertificate)
+    }
 }

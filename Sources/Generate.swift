@@ -17,7 +17,7 @@
 
 import Foundation
 
-enum Generator {
+enum Generate {
     /// Generates an example string based on provided regex pattern
     ///
     /// Only supports basic regex patterns.
@@ -25,7 +25,7 @@ enum Generator {
     /// - Parameters:
     ///   - regex: The pattern to use
     ///
-    static func generate_value(regex: String) -> String? {
+    static func value(regex: String) -> String? {
         let result = pactffi_generate_regex_value(regex)
         guard result.tag == StringResult_Ok, let stringPointer = result.ok else {
             return nil
@@ -44,7 +44,7 @@ enum Generator {
     /// - Parameters:
     ///   - format: The format of date to generate
     ///
-    static func generate_date(format: String) -> String? {
+    static func date(format: String) -> String? {
         let result = pactffi_generate_datetime_string(format)
         guard result.tag == StringResult_Ok, let stringPointer = result.ok else {
             return nil

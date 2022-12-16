@@ -18,11 +18,11 @@
 import XCTest
 @testable import PactSwiftMockServer
 
-class MatcherExpressionTests: XCTestCase {
+class MatcherDefinitionTests: XCTestCase {
     
     func testParser() throws {
         
-        let expressions: [String: (MatcherExpression.ValueType, String?, String?, MatcherExpression.RuleResult?)] = [
+        let expressions: [String: (MatcherDefinition.ValueType, String?, String?, MatcherDefinition.RuleResult?)] = [
             "matching(equalTo, 'Example')": (.string, "Example", nil, .matchingRule(.equality, "")),
             "matching(type, 'Example value')": (.string, "Example value", nil, .matchingRule(.type, "")),
             "matching(number, 100.09)": (.number, "100.09", nil, .matchingRule(.number, "")),
@@ -45,7 +45,7 @@ class MatcherExpressionTests: XCTestCase {
         ]
         
         for expression in expressions.keys {
-            let sut = try MatcherExpression(expression)
+            let sut = try MatcherDefinition(expression)
                         
             XCTAssertEqual(sut.valueType, expressions[expression]?.0)
             XCTAssertEqual(sut.value, expressions[expression]?.1)

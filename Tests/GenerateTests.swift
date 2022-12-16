@@ -18,12 +18,12 @@
 import XCTest
 @testable import PactSwiftMockServer
 
-class GeneratorTests: XCTestCase {
+class GenerateTests: XCTestCase {
 
     func testGeneratesStringFromRegex() {
-        XCTAssertEqual(Generator.generate_value(regex: #"\d{4}"#)?.count, 4)
+        XCTAssertEqual(Generate.value(regex: #"\d{4}"#)?.count, 4)
 
-        let generatedString = Generator.generate_value(regex: #"\d{4}-\d{2}:\d{2}abc"#)
+        let generatedString = Generate.value(regex: #"\d{4}-\d{2}:\d{2}abc"#)
         XCTAssertEqual(generatedString?.count, 13)
         XCTAssertEqual(generatedString?.suffix(3), "abc")
         XCTAssertNil(generatedString?.prefix(4).rangeOfCharacter(from: CharacterSet.decimalDigits.inverted), "Expected first four characters to be digits")
@@ -33,7 +33,7 @@ class GeneratorTests: XCTestCase {
 
     func testGeneratesDateTimeStringInExpectedFormat() throws {
         let dateFormat = "YYYY-MM-dd"
-        let generatedDatetime = try XCTUnwrap(Generator.generate_date(format: dateFormat))
+        let generatedDatetime = try XCTUnwrap(Generate.date(format: dateFormat))
 
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = dateFormat
@@ -43,7 +43,6 @@ class GeneratorTests: XCTestCase {
     }
 
 }
-
 
 private extension String {
     

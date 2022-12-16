@@ -17,7 +17,7 @@
 
 import Foundation
  
-class MatcherExpression {
+class MatcherDefinition {
 
     enum Error: LocalizedError {
         case failedToParse(String?)
@@ -157,7 +157,7 @@ class MatcherExpression {
     }
 }
 
-extension MatcherExpression.ValueType: RawRepresentable {
+extension MatcherDefinition.ValueType: RawRepresentable {
     
     public init(rawValue: ExpressionValueType) {
         switch rawValue {

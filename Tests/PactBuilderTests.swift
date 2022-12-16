@@ -31,11 +31,7 @@ final class PactBuilderTests: XCTestCase {
     private var pactDirectory: String {
         NSTemporaryDirectory().appending("pacts/")
     }
-    
-    private var pactFilePath: String {
-        pactDirectory.appending("\(consumer)-\(provider).json")
-    }
-    
+        
     override func setUpWithError() throws {
         try super.setUpWithError()
 

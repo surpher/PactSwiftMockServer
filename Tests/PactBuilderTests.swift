@@ -59,6 +59,8 @@ final class PactBuilderTests: XCTestCase {
             .withRequest(path: "/events") { request in
                 try request
                     .queryParam(name: "something", value: "orOther")
+                    .queryParam(name: "limit", matching: .likeDecimal(100))
+                    .queryParam(name: "includeOthers", matching: .like(false))
             }
             .willRespond(with: 200) { response in
                 try response.htmlBody()
@@ -69,6 +71,8 @@ final class PactBuilderTests: XCTestCase {
             components.path = "/events"
             components.queryItems = [
                 URLQueryItem(name: "something", value: "orOther"),
+                URLQueryItem(name: "limit", value: "100"),
+                URLQueryItem(name: "includeOthers", value: "false")
             ]
             
             let (data, response) = try await session.data(from: try XCTUnwrap(components.url))
@@ -108,4 +112,42 @@ final class PactBuilderTests: XCTestCase {
         }
     }
     
+    func testGetEvent() async throws {
+        try builder
+            .uponReceiving("a request for an event with no authorization")
+            .given("There are events")
+            .withRequest(method: .GET, regex: #"/events/\d+"#, example: "/events/100") { request in
+                try request
+                    .queryParam(name: "sorted", matching: .like(true))
+                    .header("Accept", value: "application/json")
+                    .header("X-Version", matching: .likeInteger(1))
+            }
+            .willRespond(with: 200) { response in
+                try response.jsonBody(
+                    AnyMatcher.oneLike([
+                        "id": .likeInteger(1),
+                        "name": .like("An name"),
+                        "postcodes": .multipleLike(.likeInteger(1234), max: 1)
+                    ])
+                )
+            }
+        
+        try await builder.verify { ctx in
+            var components = try XCTUnwrap(URLComponents(url: ctx.mockServerURL, resolvingAgainstBaseURL: false))
+            components.path = "/events/23"
+            components.queryItems = [URLQueryItem(name: "sorted", value: "true")]
+            
+            var request = URLRequest(url: try XCTUnwrap(components.url))
+            request.setValue("application/json", forHTTPHeaderField: "Accept")
+            request.setValue("1", forHTTPHeaderField: "X-Version")
+                        
+            let (data, response) = try await session.data(for: request)
+            
+            let httpResponse = try XCTUnwrap(response as? HTTPURLResponse)
+            XCTAssertEqual(httpResponse.statusCode, 200)
+            XCTAssertEqual(httpResponse.value(forHTTPHeaderField: "Content-Type"), "application/json")
+            XCTAssertEqual(try XCTUnwrap(String(data: data, encoding: .utf8)), #"{"id":1,"name":"An name","postcodes":[1234]}"#)
+        }
+    }
+
 }

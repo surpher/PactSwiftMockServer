@@ -308,7 +308,13 @@ public final class Interaction {
 }
 
 public extension QueryBuilder {
-       
+    
+    @discardableResult
+    func queryParam(name: String, matching: AnyMatcher) throws -> Self {
+        let valueString = try String(data: JSONEncoder().encode(matching), encoding: .utf8)!
+        return try queryParam(name: name, values: [valueString])
+    }
+    
     /// Configures a query parameter for the ``Interaction``.
     ///
     /// - Throws: ``Interaction/Error`` when the interaction or Pact can't be modified (i.e. the mock server for it has already started).
@@ -356,7 +362,7 @@ public extension BodyBuilder {
     
     /// Adds a json body to the ``Interaction``.
     @discardableResult
-    func jsonBody(fromExample example: some Encodable, contentType: String = "application/json") throws -> Self {
+    func jsonBody(_ example: AnyMatcher, contentType: String = "application/json") throws -> Self {
         let bodyString = String(data: try JSONEncoder().encode(example), encoding: .utf8)
         return try body(bodyString, contentType: contentType)
     }
@@ -378,6 +384,30 @@ public extension HeaderBuilder {
     @discardableResult
     func header(_ name: String, value: String) throws -> Self {
        try header(name, values: [value])
+    }
+    
+    @discardableResult
+    func header(_ name: String, matching: AnyMatcher) throws -> Self {
+       let valueString = try String(data: JSONEncoder().encode(matching), encoding: .utf8)!
+       return try header(name, values: [valueString])
+    }
+}
+
+public extension Interaction {
+
+    /// Configures the request for the Interaction.
+    /// - Throws: ``Error/canNotBeModified`` if the interaction or Pact can't be modified (i.e. the mock server for it has already started)
+    /// - Parameters:
+    ///   - method: The request method. Defaults to ``HTTPMethod/GET``.
+    ///   - regex: The request path regex matcher.
+    ///   - example: An example path.
+    ///   - builder: A ``RequestBuilder`` closure.
+    func withRequest(method: HTTPMethod = .GET, regex: String, example: String, builder: RequestBuilder) throws -> Self {
+        try withRequest(
+            method: method,
+            path: String(data: JSONEncoder().encode(AnyMatcher.regex(regex, example: example)), encoding: .utf8)!,
+            builder: builder
+        )
     }
 }
 

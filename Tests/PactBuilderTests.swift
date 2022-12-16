@@ -82,8 +82,6 @@ final class PactBuilderTests: XCTestCase {
             XCTAssertEqual(httpResponse.value(forHTTPHeaderField: "Content-Type"), "text/html")
             XCTAssertTrue(data.isEmpty)
         }
-        
-        // TODO: load file and look for interaction
     }
 
     func testCreateEvent() async throws {

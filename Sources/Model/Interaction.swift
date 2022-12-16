@@ -137,6 +137,38 @@ public final class Interaction {
             
             return self
         }
+        
+        /// Adds a binary file as the body with the expected content type and example contents. Will use  a mime type matcher to match the body.
+        ///
+        /// For HTTP and async message interactions, this will overwrite the body. With asynchronous messages, the part parameter will be ignored.
+        /// With synchronous messages, the request contents will be overwritten while a new response will be appended to the message.
+        ///
+        /// If the `data` is `nil`, it will set the body contents as null.
+        ///
+        /// - Throws: ``Interaction/Error/canNotBeModified`` if the interaction or Pact can't be modified (i.e. the mock server for it has already started).
+        /// - Parameters:
+        ///   - contentType: Expected content type.
+        ///   - data: Example body contents.
+        ///
+        @discardableResult
+        func body(data: Data?, contentType: String) throws -> Self {
+            guard let data = data else {
+                guard pactffi_with_binary_file(handle, .request, contentType.cString(using: .utf8), nil, 0) else {
+                    throw Error.canNotBeModified
+                }
+                
+                return self
+            }
+            
+            try data.withUnsafeBytes { unsafeBytes in
+                let bytes = unsafeBytes.baseAddress!.assumingMemoryBound(to: UInt8.self)
+                guard pactffi_with_binary_file(handle, .response, contentType.cString(using: .utf8), nil, 0) else {
+                    throw Error.canNotBeModified
+                }
+            }
+            
+            return self
+        }
     }
     
     public struct Response: HeaderBuilder, BodyBuilder {
@@ -186,6 +218,38 @@ public final class Interaction {
         public func body(_ body: String? = nil, contentType: String? = nil) throws -> Self {
             guard pactffi_with_body(handle, .response, (contentType ?? "text/plain").cString(using: .utf8), body?.cString(using: .utf8)) else {
                 throw Error.canNotBeModified
+            }
+            
+            return self
+        }
+        
+        /// Adds a binary file as the body with the expected content type and example contents. Will use  a mime type matcher to match the body.
+        ///
+        /// For HTTP and async message interactions, this will overwrite the body. With asynchronous messages, the part parameter will be ignored.
+        /// With synchronous messages, the request contents will be overwritten while a new response will be appended to the message.
+        ///
+        /// If the `data` is `nil`, it will set the body contents as null.
+        ///
+        /// - Throws: ``Interaction/Error/canNotBeModified`` if the interaction or Pact can't be modified (i.e. the mock server for it has already started).
+        /// - Parameters:
+        ///   - contentType: Expected content type.
+        ///   - data: Example body contents.
+        ///
+        @discardableResult
+        func body(data: Data?, contentType: String) throws -> Self {
+            guard let data = data else {
+                guard pactffi_with_binary_file(handle, .response, contentType.cString(using: .utf8), nil, 0) else {
+                    throw Error.canNotBeModified
+                }
+                
+                return self
+            }
+            
+            try data.withUnsafeBytes { unsafeBytes in
+                let bytes = unsafeBytes.baseAddress!.assumingMemoryBound(to: UInt8.self)
+                guard pactffi_with_binary_file(handle, .response, contentType.cString(using: .utf8), nil, 0) else {
+                    throw Error.canNotBeModified
+                }
             }
             
             return self
@@ -346,7 +410,7 @@ public extension BodyBuilder {
     func body(contentType: String? = "text/plain") throws -> Self {
         try body(nil, contentType: contentType)
     }
-    
+        
     /// Adds a json body to the ``Interaction``.
     @discardableResult
     func jsonBody(_ bodyString: String? = nil, contentType: String = "application/json") throws -> Self {

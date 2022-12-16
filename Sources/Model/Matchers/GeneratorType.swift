@@ -17,27 +17,17 @@
 
 import Foundation
 
-struct SimpleMatcher<ValueType: Encodable>: Matcher {
-      
-    var type: String
-    var value: ValueType
-    var generator: GeneratorType? = nil
-    var min: Int? = nil
-    var max: Int? = nil
-    var size: Int? = nil
-    var digits: Int? = nil
-    var format: String? = nil
-    var expression: String? = nil
-    
-    enum CodingKeys: String, CodingKey {
-        case type = "pact:matcher:type"
-        case generator = "pact:generator:type"
-        case value
-        case min
-        case max
-        case size
-        case digits
-        case format
-        case expression
-    }
+enum GeneratorType: String, Encodable {
+    case randomInt = "RandomInt"
+    case uuid = "Uuid"
+    case randomDecimal = "RandomDecimal"
+    case randomHex = "RandomHexadecimal"
+    case randomString = "RandomString"
+    case regex = "Regex"
+    case date = "Date"
+    case time = "Time"
+    case dateTime = "DateTime"
+    case randomBoolean = "RandomBoolean"
+    case providerState = "ProviderState"
+    case mockServerUrl = "MockServerURL"
 }

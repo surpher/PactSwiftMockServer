@@ -15,9 +15,8 @@
 //  IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 //
 
-import Foundation
 import XCTest
-import PactSwiftMockServer
+@testable import PactSwiftMockServer
 
 final class PactBuilderTests: XCTestCase {
 
@@ -113,6 +112,17 @@ final class PactBuilderTests: XCTestCase {
     }
     
     func testGetEvent() async throws {
+        
+        struct Response: Decodable {
+            var id: String
+            var age: Int
+            var name: String
+            var postcodes: [Int]
+            var something: String
+            var hex: String
+            var birthday: String
+        }
+        
         try builder
             .uponReceiving("a request for an event with no authorization")
             .given("There are events")
@@ -125,9 +135,13 @@ final class PactBuilderTests: XCTestCase {
             .willRespond(with: 200) { response in
                 try response.jsonBody(
                     AnyMatcher.oneLike([
-                        "id": .likeInteger(1),
-                        "name": .like("An name"),
-                        "postcodes": .multipleLike(.likeInteger(1234), max: 1)
+                        "id": .randomUUID("urn:uuid:\(UUID())", format: .urn),
+                        "age": .randomInteger(like: 1, range: 1...100),
+                        "name": .randomString("An name", size: 50),
+                        "postcodes": .multipleLike(.likeInteger(1234), max: 2),
+                        "something": .regex(#"\d{4}"#, example: "1234"),
+                        "hex": .randomHexadecimal("DEADBEEF", digits: 8),
+                        "birthday": .randomDate("2022-12-11", format: "yyyy-MM-dd", expression: "+ 1 day")
                     ])
                 )
             }
@@ -146,8 +160,23 @@ final class PactBuilderTests: XCTestCase {
             let httpResponse = try XCTUnwrap(response as? HTTPURLResponse)
             XCTAssertEqual(httpResponse.statusCode, 200)
             XCTAssertEqual(httpResponse.value(forHTTPHeaderField: "Content-Type"), "application/json")
-            XCTAssertEqual(try XCTUnwrap(String(data: data, encoding: .utf8)), #"{"id":1,"name":"An name","postcodes":[1234]}"#)
+            
+            let body = try JSONDecoder().decode(Response.self, from: data)
+            
+            XCTAssertEqual(body.id.prefix(9), "urn:uuid:")
+            XCTAssertGreaterThanOrEqual(body.age, 1)
+            XCTAssertLessThanOrEqual(body.age, 100)
+            XCTAssertEqual(body.name.count, 50)
+            XCTAssertFalse(body.postcodes.isEmpty)
+            XCTAssertGreaterThanOrEqual(body.postcodes.count, 1)
+            XCTAssertEqual(body.something, "1234")
+            XCTAssertEqual(body.hex.count, 8)
+//            XCTAssertEqual(body.birthday)
+            
+            debugPrint(body)
         }
     }
 
 }
+
+

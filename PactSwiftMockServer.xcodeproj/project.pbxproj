@@ -38,6 +38,10 @@
 		A7840F9E294C531C00CF22EF /* SimpleMatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7840F8C294C44E500CF22EF /* SimpleMatcher.swift */; };
 		A7840F9F294C531F00CF22EF /* Matcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7840F88294C440E00CF22EF /* Matcher.swift */; };
 		A7840FA0294C531F00CF22EF /* Matcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7840F88294C440E00CF22EF /* Matcher.swift */; };
+		A7840FA5294C70AC00CF22EF /* GeneratorType.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7840FA4294C70AC00CF22EF /* GeneratorType.swift */; };
+		A7840FA6294C70AC00CF22EF /* GeneratorType.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7840FA4294C70AC00CF22EF /* GeneratorType.swift */; };
+		A7840FA8294C8E8300CF22EF /* UUIDFormat.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7840FA7294C8E8300CF22EF /* UUIDFormat.swift */; };
+		A7840FA9294C8E8300CF22EF /* UUIDFormat.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7840FA7294C8E8300CF22EF /* UUIDFormat.swift */; };
 		AD1597FD2648DE0E007CFAA5 /* PactSwiftMockServer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AD1597F32648DE0E007CFAA5 /* PactSwiftMockServer.framework */; };
 		AD1598042648DE0E007CFAA5 /* PactSwiftMockServer.h in Headers */ = {isa = PBXBuildFile; fileRef = AD1597F62648DE0E007CFAA5 /* PactSwiftMockServer.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		AD1598212648DF73007CFAA5 /* PactSwiftMockServer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AD1598182648DF73007CFAA5 /* PactSwiftMockServer.framework */; };
@@ -121,6 +125,8 @@
 		A7840F8C294C44E500CF22EF /* SimpleMatcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimpleMatcher.swift; sourceTree = "<group>"; };
 		A7840F95294C507000CF22EF /* RegexMatcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegexMatcher.swift; sourceTree = "<group>"; };
 		A7840F98294C531000CF22EF /* MatcherTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatcherTests.swift; sourceTree = "<group>"; };
+		A7840FA4294C70AC00CF22EF /* GeneratorType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeneratorType.swift; sourceTree = "<group>"; };
+		A7840FA7294C8E8300CF22EF /* UUIDFormat.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UUIDFormat.swift; sourceTree = "<group>"; };
 		AD1597F32648DE0E007CFAA5 /* PactSwiftMockServer.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = PactSwiftMockServer.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		AD1597F62648DE0E007CFAA5 /* PactSwiftMockServer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PactSwiftMockServer.h; sourceTree = "<group>"; };
 		AD1597F72648DE0E007CFAA5 /* Info-iOS.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Info-iOS.plist"; sourceTree = "<group>"; };
@@ -225,6 +231,8 @@
 				A7840F88294C440E00CF22EF /* Matcher.swift */,
 				A7840F8C294C44E500CF22EF /* SimpleMatcher.swift */,
 				A7840F95294C507000CF22EF /* RegexMatcher.swift */,
+				A7840FA4294C70AC00CF22EF /* GeneratorType.swift */,
+				A7840FA7294C8E8300CF22EF /* UUIDFormat.swift */,
 			);
 			path = Matchers;
 			sourceTree = "<group>";
@@ -696,8 +704,10 @@
 				AD957F3A28A23B8400860AD1 /* SocketBinder.swift in Sources */,
 				ADE2551026CE335400FA21A9 /* Verifier.swift in Sources */,
 				AD957F3628A23B0B00860AD1 /* PactFileManager.swift in Sources */,
+				A7840FA8294C8E8300CF22EF /* UUIDFormat.swift in Sources */,
 				A7840F7D294BE04600CF22EF /* MatcherExpression.swift in Sources */,
 				A7840F43294A923000CF22EF /* PactBuilder.swift in Sources */,
+				A7840FA5294C70AC00CF22EF /* GeneratorType.swift in Sources */,
 				AD1598312648E32F007CFAA5 /* MockServer.swift in Sources */,
 				A743EC3F2946E8C700EE315D /* Pact.swift in Sources */,
 				A7840F9E294C531C00CF22EF /* SimpleMatcher.swift in Sources */,
@@ -734,8 +744,10 @@
 				AD957F3B28A23B8400860AD1 /* SocketBinder.swift in Sources */,
 				ADE2551126CE335400FA21A9 /* Verifier.swift in Sources */,
 				AD957F3728A23B0B00860AD1 /* PactFileManager.swift in Sources */,
+				A7840FA9294C8E8300CF22EF /* UUIDFormat.swift in Sources */,
 				A7840F7E294BE04700CF22EF /* MatcherExpression.swift in Sources */,
 				A7840F44294A923000CF22EF /* PactBuilder.swift in Sources */,
+				A7840FA6294C70AC00CF22EF /* GeneratorType.swift in Sources */,
 				AD1598322648E32F007CFAA5 /* MockServer.swift in Sources */,
 				A743EC402946E8C700EE315D /* Pact.swift in Sources */,
 				A7840F9D294C531B00CF22EF /* SimpleMatcher.swift in Sources */,

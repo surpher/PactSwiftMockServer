@@ -61,55 +61,236 @@ public extension Matcher {
         SimpleMatcher(type: "type", value: value, min: min, max: max).asAny()
     }
     
-    static func like<T: Encodable>(_ value: T) -> AnyMatcher {
-        SimpleMatcher(type: "type", value: value).asAny()
-    }
-        
-    static func likeInteger<T: BinaryInteger & Encodable>(_ value: T) -> AnyMatcher {
-        SimpleMatcher(type: "integer", value: value).asAny()
-    }
-        
-    static func likeDecimal<T: FloatingPoint & Encodable>(_ value: T) -> AnyMatcher {
-        SimpleMatcher(type: "decimal", value: value).asAny()
-    }
+    // MARK: - Pact Specification v1 matchers
     
-    static func likeNumber<T: Numeric & Encodable>(_ value: T) -> AnyMatcher {
-        SimpleMatcher(type: "number", value: value).asAny()
-    }
-
+    /// A matcher that checks that the values are equal.
+    ///
+    /// - Note: Requires `Pact.Specification.v1`.
+    /// - Parameters:
+    ///   - value: The value to match with.
+    ///
     static func equals<T: Encodable>(_ value: T) -> AnyMatcher {
         SimpleMatcher(type: "equality", value: value).asAny()
     }
     
-    static func includes<T: StringProtocol & Encodable>(_ value: T) -> AnyMatcher {
-        SimpleMatcher(type: "include", value: value).asAny()
-    }
+    // MARK: - Pact Specification v2 matchers
     
-    static func null() -> AnyMatcher {
-        SimpleMatcher(type: "null", value: nil as String?).asAny()
-    }
- 
-    static func bool(_ value: Bool) -> AnyMatcher {
-        SimpleMatcher(type: "boolean", value: value, generator: .randomBoolean).asAny()
-    }
-    
+    /// A matcher that executes a regular expression match against the string representation of a value.
+    ///
+    /// - Note: Requires `Pact.Specification.v2`.
+    /// - Parameters:
+    ///   - regex: The regex to use when matching.
+    ///   - example: An example value that matches the `regex`.
+    ///
     static func regex(_ regex: String, example: String) -> AnyMatcher {
         RegexMatcher(example: example, regex: regex).asAny()
     }
     
+    /// A matcher that executes a type based match against the value, that is, they are equal if they are the same type.
+    ///
+    /// - Note: Requires `Pact.Specification.v2`.
+    /// - Parameters:
+    ///   - value: An example value to match the type of.
+    ///
+    static func like<T: Encodable>(_ value: T) -> AnyMatcher {
+        SimpleMatcher(type: "type", value: value).asAny()
+    }
+    
+    /// A matcher that executes a type based match against the values, that is, they are equal if they are the same type.
+    ///
+    /// In addition, if the values represent a collection, the length of the actual value is compared against the minimum.
+    ///
+    /// - Note: Requires `Pact.Specification.v2`.
+    /// - Parameters:
+    ///   - values: The example values.
+    ///   - min: The minimum length of the array of values.
+    ///
+    static func like<T: Encodable>(_ values: [T], min: Int) -> AnyMatcher {
+        SimpleMatcher(type: "type", value: values, min: min).asAny()
+    }
+    
+    /// A matcher that executes a type based match against the values, that is, they are equal if they are the same type.
+    ///
+    /// In addition, if the values represent a collection, the length of the actual value is compared against the maximum.
+    ///
+    /// - Note: Requires `Pact.Specification.v2`.
+    /// - Parameters:
+    ///   - values: The example values.
+    ///   - max: The maximum length of the array of values.
+    ///
+    static func like<T: Encodable>(_ values: [T], max: Int) -> AnyMatcher {
+        SimpleMatcher(type: "type", value: values, max: max).asAny()
+    }
+    
+    /// A matcher that executes a type based match against the values, that is, they are equal if they are the same type.
+    ///
+    /// In addition, if the values represent a collection, the length of the actual value is compared against the minimum and maximum.
+    ///
+    /// - Note: Requires `Pact.Specification.v2`.
+    /// - Parameters:
+    ///   - values: The example values.
+    ///   - min: The minimum length of the array of values.
+    ///   - max: The maximum length of the array of values.
+    ///
+    static func like<T: Encodable>(_ values: [T], min: Int, max: Int) -> AnyMatcher {
+        SimpleMatcher(type: "type", value: values, min: min, max: max).asAny()
+    }
+    
+    // MARK: - Pact Specification v3 matchers
+    
+    /// A matcher that checks if the string representation of a value contains the substring.
+    ///
+    /// - Parameters:
+    ///   - value: The substring to match with.
+    ///
+    static func includes<T: StringProtocol & Encodable>(_ value: T) -> AnyMatcher {
+        SimpleMatcher(type: "include", value: value).asAny()
+    }
+        
+    /// A matcher that checks if the type of the value is an integer.
+    ///
+    /// - Note: Requires `Pact.Specification.v3`.
+    ///
+    static func likeInteger<T: BinaryInteger & Encodable>(_ value: T) -> AnyMatcher {
+        SimpleMatcher(type: "integer", value: value).asAny()
+    }
+
+    /// A matcher that checks if the type of the value is a number with decimal places.
+    ///
+    /// - Note: Requires `Pact.Specification.v3`.
+    ///
+    static func likeDecimal<T: FloatingPoint & Encodable>(_ value: T) -> AnyMatcher {
+        SimpleMatcher(type: "decimal", value: value).asAny()
+    }
+    
+    /// A matcher that checks if the type of the value is an number.
+    ///
+    /// - Note: Requires `Pact.Specification.v3`.
+    ///
+    static func likeNumber<T: Numeric & Encodable>(_ value: T) -> AnyMatcher {
+        SimpleMatcher(type: "number", value: value).asAny()
+    }
+    
+    /// A matcher that matches the string representation of a value against the datetime format.
+    ///
+    /// - Note: Requires `Pact.Specification.v3`.
+    /// - Parameters:
+    ///   - value: An example value.
+    ///   - format: The date time format to match against  (eg, `"yyyy-MM-dd HH:mm:ss"`).
+    ///
+    static func timestamp(_ value: String, format: String) -> AnyMatcher {
+        SimpleMatcher(type: "datetime", value: value, format: format).asAny()
+    }
+    
+    /// A matcher that matches the string representation of a value against the time format.
+    ///
+    /// - Note: Requires `Pact.Specification.v3`.
+    /// - Parameters:
+    ///   - value: An example value.
+    ///   - format: The time format to match against  (eg, `"HH:mm:ss"`).
+    ///
+    static func time(_ value: String, format: String) -> AnyMatcher {
+        SimpleMatcher(type: "time", value: value, format: format).asAny()
+    }
+    
+    /// A matcher that matches the string representation of a value against the date format.
+    ///
+    /// - Note: Requires `Pact.Specification.v3`.
+    /// - Parameters:
+    ///   - value: An example value.
+    ///   - format: The date format to match against (eg, `"yyyy-MM-dd"`).
+    ///
     static func date(_ value: String, example: String, format: String) -> AnyMatcher {
         SimpleMatcher(type: "date", value: value, format: format).asAny()
     }
     
-    static func datetime(_ value: String, example: String, format: String) -> AnyMatcher {
-        SimpleMatcher(type: "datetime", value: value, format: format).asAny()
+    /// A matcher that matches if the value is a null value (this is content specific, for JSON will match a JSON null).
+    ///
+    /// - Note: Requires `Pact.Specification.v3`.
+    ///
+    static func null() -> AnyMatcher {
+        SimpleMatcher(type: "null", value: nil as String?).asAny()
+    }
+ 
+    /// A matcher that matches if the value is a boolean value (booleans and the string values `"true"` and `"false"`).
+    ///
+    /// - Note: Requires `Pact.Specification.v3`.
+    ///
+    static func bool(_ value: Bool) -> AnyMatcher {
+        SimpleMatcher(type: "boolean", value: value).asAny()
     }
     
-    static func time(_ value: String, example: String, format: String) -> AnyMatcher {
-        SimpleMatcher(type: "time", value: value, format: format).asAny()
+    /// A matcher that matches binary data by its content type (magic file check).
+    ///
+    /// - Note: Requires `Pact.Specification.v3`.
+    ///
+    /// - Parameters:
+    ///   - value: The MIME content type to match against eg (`"image/jpeg"`).
+    ///
+    static func contentType(_ value: String) -> AnyMatcher {
+        SimpleMatcher(type: "contentType", value: value).asAny()
     }
     
-    // TODO: "contentType", "arrayContains", "values", "statusCode", "notEmpty", "semver", "eachKey", "eachValue"
+    /// A matcher that matches the values in a map/dictionary, ignoring the keys
+    ///
+    /// - Note: Requires `Pact.Specification.v3`.
+    ///
+    /// - Parameters:
+    ///   - values: A dictionary to match against. The keys don't matter.
+    ///
+    static func values<T: Encodable>(_ value: [String: T]) -> AnyMatcher {
+        SimpleMatcher(type: "values", value: value).asAny()
+    }
+    
+    // MARK: - Pact Specification v4 matchers
+    
+    // TODO: "arrayContains"
+    
+    /// A matcher that matches the response status code.
+    ///
+    /// - Note: Requires `Pact.Specification.v4`.
+    ///
+    static func statusCode(_ statusCode: HTTPStatus) -> AnyMatcher {
+        switch statusCode {
+        case .information:
+            return SimpleMatcher(type: "statusCode", value: "information").asAny()
+        case .success:
+            return SimpleMatcher(type: "statusCode", value: "success").asAny()
+        case .redirect:
+            return SimpleMatcher(type: "statusCode", value: "redirect").asAny()
+        case .clientError:
+            return SimpleMatcher(type: "statusCode", value: "clientError").asAny()
+        case .serverError:
+            return SimpleMatcher(type: "statusCode", value: "serverError").asAny()
+        case .nonError:
+            return SimpleMatcher(type: "statusCode", value: "nonError").asAny()
+        case .error:
+            return SimpleMatcher(type: "statusCode", value: "error").asAny()
+        case .statusCodes(let codes):
+            return SimpleMatcher(type: "statusCode", value: codes).asAny()
+        }
+    }
+    
+    /// A matcher that matches a value that must be present and not empty (not null or the empty string).
+    ///
+    /// - Note: Requires `Pact.Specification.v4`.
+    ///
+    static func notEmpty() -> AnyMatcher {
+        SimpleMatcher(type: "notEmpty", value: nil as String?).asAny()
+    }
+    
+    /// A matcher that matches a value that must be valid based on the `semver` specification.
+    ///
+    /// - Note: Requires `Pact.Specification.v4`.
+    ///
+    /// - Parameters:
+    ///   - value: An example value (eg: `"1.2.3"`)
+    ///
+    static func semver(_ value: String) -> AnyMatcher {
+        SimpleMatcher(type: "semver", value: value).asAny()
+    }
+    
+    // TODO: "eachKey", "eachValue"
     
     // MARK: - Generators
     
@@ -144,7 +325,7 @@ public extension Matcher {
     static func randomHexadecimal(_ value: String, digits: Int? = nil) -> AnyMatcher {
         SimpleMatcher(type: "type", value: value, generator: .randomHex, digits: digits).asAny()
     }
-        
+
     /// Generate a random date.
     ///
     /// The base date is normally the current system clock.  Given the base date-time of 2000-01-01T10:00Z, then the following will resolve to:
@@ -216,5 +397,3 @@ public extension Matcher {
     }
         
 }
-
-

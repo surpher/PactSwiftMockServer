@@ -199,6 +199,70 @@ public final class Interaction {
     
 }
 
+public extension Interaction {
+
+    struct ProviderState: Hashable {
+        var description: String
+        var name: String?
+        var value: String?
+        
+        /// - Parameters:
+        ///   - description -  The provider state description. It needs to be unique.
+        public init(description: String) {
+            self.description = description
+        }
+        
+        /// - Parameters:
+        ///   - description -  The provider state description. It needs to be unique.
+        ///   - name - Parameter name.
+        ///   - value - Parameter value.
+        public init(description: String, name: String, value: String) {
+            self.description = description
+            self.name = name
+            self.value = value
+        }
+    }
+    
+    /// Adds `providerStates` to the ``Interaction``.
+    ///
+    /// - Throws: ``Error`` if the interaction or Pact can't be modified (i.e. the mock server for it has already started)
+    ///
+    /// - Parameters:
+    ///   - description - The provider state description. It needs to be unique.
+    ///   - name - Parameter name.
+    ///   - value - Parameter value.
+    ///
+    @discardableResult
+    func given(_ providerStates: [ProviderState]) throws -> Self {
+        precondition(Set(providerStates.map(\.description)).count == providerStates.count, "ProviderState descriptions must be unique!")
+        
+        for state in providerStates {
+            if let name = state.name, let value = state.value {
+                try given(state.description, withName: name, value: value)
+            } else {
+                try given(state.description)
+            }
+        }
+        
+        return self
+    }
+    
+    /// Adds `providerStates` to the ``Interaction``.
+    ///
+    /// Throws ``Error`` if the interaction or Pact can't be modified (i.e. the mock server for it has already started)
+    ///
+    /// - Parameters:
+    ///   - description - The provider state description. It needs to be unique.
+    ///   - name - Parameter name.
+    ///   - value - Parameter value.
+    ///
+    @discardableResult
+    func given(_ providerStates: ProviderState...) throws -> Self {
+        try given(providerStates)
+    }
+
+}
+
 extension Interaction.Error: LocalizedError {
     public var failureReason: String? {
         switch self {

@@ -100,9 +100,9 @@ public final class Pact {
     ///
     /// - Throws: ``Error/canNotBeModified`` if Pact can’t be modified (i.e. the mock server for it has already started).
     /// - Parameters:
-    ///   - namespace: The top level metadata key to set any key values on.
-    ///   - name: The key to set
-    ///   - value: The value to set
+    ///   - namespace: The top level metadata key to set the name/values on. Each namespace must be unique (or it will be overwritten).
+    ///   - name: A key name to set.
+    ///   - value: A value to set.
     public func withMetadata(namespace: String, name: String, value: String) throws -> Self {
         guard pactffi_with_pact_metadata(handle, namespace.cString(using: .utf8), name.cString(using: .utf8), value.cString(using: .utf8)) else {
             throw Error.canNotBeModified

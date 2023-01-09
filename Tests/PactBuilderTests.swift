@@ -40,8 +40,8 @@ final class PactBuilderTests: XCTestCase {
         
         let pact = try Pact(consumer: consumer, provider: provider)
             .withSpecification(.v4)
-            .withMetadata(namespace: "events", name: "meta-name1", value: "meta-value1")
-            .withMetadata(namespace: "events", name: "meta-name2", value: "meta-value2")
+            .withMetadata(namespace: "namespace1", name: "name1", value: "value1")
+            .withMetadata(namespace: "namespace2", name: "name2", value: "value2")
         
         let config = PactBuilder.Config(pactDirectory: pactDirectory)
         builder = PactBuilder(pact: pact, config: config)

@@ -1,6 +1,6 @@
 //
-//  Created by Oliver Jones on 16/12/2022.
-//  Copyright © 2022 Oliver Jones. All rights reserved.
+//  Created by Oliver Jones on 9/1/2023.
+//  Copyright © 2023 Oliver Jones. All rights reserved.
 //
 //  Permission to use, copy, modify, and/or distribute this software for any
 //  purpose with or without fee is hereby granted, provided that the above
@@ -17,27 +17,14 @@
 
 import Foundation
 
-struct SimpleMatcher<ValueType: Encodable>: Matcher {
-      
-    var type: String
-    var value: ValueType
-    var generator: GeneratorType? = nil
-    var min: Int? = nil
-    var max: Int? = nil
-    var size: Int? = nil
-    var digits: Int? = nil
-    var format: String? = nil
-    var expression: String? = nil
-    
-    enum CodingKeys: String, CodingKey {
-        case type = "pact:matcher:type"
-        case generator = "pact:generator:type"
-        case value
-        case min
-        case max
-        case size
-        case digits
-        case format
-        case expression
-    }
+public protocol QueryBuilder {
+    /// Configures a query parameter for the Interaction.
+    ///
+    /// Throws the interaction or Pact can't be modified (i.e. the mock server for it has already started)
+    /// - Parameters:
+    ///  - name: The query parameter name.
+    ///  - values: The query parameter values.
+    ///
+    @discardableResult
+    func queryParam(name: String, values: [String]) throws -> Self
 }

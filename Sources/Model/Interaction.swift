@@ -21,80 +21,10 @@ import Foundation
 import PactMockServer
 #endif
 
-public protocol HeaderBuilder {
-           
-    /// Configures a header for the Interaction.
-    ///
-    /// To include matching rules for the header, include the matching rule JSON format with the value as a single JSON document. I.e.
-    ///
-    /// ```
-    /// let value = #"{"value":"2", "pact:matcher:type":"regex", "regex":"\\d+"}"#
-    /// builder.header("id", [value]);
-    /// ```
-    /// See [IntegrationJson.md](https://github.com/pact-foundation/pact-reference/blob/master/rust/pact_ffi/IntegrationJson.md)
-    ///
-    /// - Throws: ``Interaction/Error/canNotBeModified`` if the interaction or Pact can't be modified (i.e. the mock server for it has already started).
-    /// - Parameters:
-    ///   - name: The header name.
-    ///   - value: The header values.
-    ///
-    @discardableResult
-    func header(_ name: String, values: [String]) throws -> Self
-}
-
-public protocol BodyBuilder {
-    /// Adds the body for the ``Interaction``.
-    ///
-    /// For JSON payloads, matching rules can be embedded in the `body`. See [IntegrationJson.md](https://github.com/pact-foundation/pact-reference/blob/master/rust/pact_ffi/IntegrationJson.md).
-    /// If the `body` is `nil` it will set the body contents as null. If the content type is a null pointer, or can't be parsed, it will set the content type as TEXT.
-    ///
-    /// - Throws: ``Interaction/Error/canNotBeModified`` if the interaction or Pact can't be modified (i.e. the mock server for it has already started).
-    /// - Parameters:
-    ///   - contentType - The content type of the body. Defaults to `text/plain`. Will be ignored if a content type header is already set.
-    ///   - body: The body contents.
-    ///
-    @discardableResult
-    func body(_ body: String?, contentType: String?) throws -> Self
-}
-
-public protocol QueryBuilder {
-    /// Configures a query parameter for the Interaction.
-    ///
-    /// Throws the interaction or Pact can't be modified (i.e. the mock server for it has already started)
-    /// - Parameters:
-    ///  - name: The query parameter name.
-    ///  - values: The query parameter values.
-    ///
-    @discardableResult
-    func queryParam(name: String, values: [String]) throws -> Self
-}
-
 public final class Interaction {
     
     public enum Error {
         case canNotBeModified
-    }
-    
-    public struct ProviderState: Hashable {
-        var description: String
-        var name: String?
-        var value: String?
-        
-        /// - Parameters:
-        ///   - description -  The provider state description. It needs to be unique.
-        public init(description: String) {
-            self.description = description
-        }
-        
-        /// - Parameters:
-        ///   - description -  The provider state description. It needs to be unique.
-        ///   - name - Parameter name.
-        ///   - value - Parameter value.
-        public init(description: String, name: String, value: String) {
-            self.description = description
-            self.name = name
-            self.value = value
-        }
     }
     
     public typealias RequestBuilder = (Request) throws -> Void
@@ -211,7 +141,7 @@ public final class Interaction {
     ///   - description - The provider state description. It needs to be unique.
     ///
     @discardableResult
-    private func given(_ description: String) throws -> Self {
+    internal func given(_ description: String) throws -> Self {
         guard pactffi_given(handle, description.cString(using: .utf8)) else {
             throw Error.canNotBeModified
         }
@@ -229,50 +159,12 @@ public final class Interaction {
     ///   - value - Parameter value.
     ///
     @discardableResult
-    private func given(_ description: String, withName name: String, value: String) throws -> Self {
+    internal func given(_ description: String, withName name: String, value: String) throws -> Self {
         guard pactffi_given_with_param(handle, description.cString(using: .utf8), name.cString(using: .utf8), value.cString(using: .utf8)) else {
             throw Error.canNotBeModified
         }
         
         return self
-    }
-    
-    /// Adds `providerStates` to the ``Interaction``.
-    ///
-    /// - Throws: ``Error`` if the interaction or Pact can't be modified (i.e. the mock server for it has already started)
-    ///
-    /// - Parameters:
-    ///   - description - The provider state description. It needs to be unique.
-    ///   - name - Parameter name.
-    ///   - value - Parameter value.
-    ///
-    @discardableResult
-    public func given(_ providerStates: [ProviderState]) throws -> Self {
-        precondition(Set(providerStates.map(\.description)).count == providerStates.count, "ProviderState descriptions must be unique!")
-        
-        for state in providerStates {
-            if let name = state.name, let value = state.value {
-                try given(state.description, withName: name, value: value)
-            } else {
-                try given(state.description)
-            }
-        }
-        
-        return self
-    }
-    
-    /// Adds `providerStates` to the ``Interaction``.
-    ///
-    /// Throws ``Error`` if the interaction or Pact can't be modified (i.e. the mock server for it has already started)
-    ///
-    /// - Parameters:
-    ///   - description - The provider state description. It needs to be unique.
-    ///   - name - Parameter name.
-    ///   - value - Parameter value.
-    ///
-    @discardableResult
-    public func given(_ providerStates: ProviderState...) throws -> Self {
-        try given(providerStates)
     }
     
     /// Configures the request for the ``Interaction``.
@@ -307,110 +199,6 @@ public final class Interaction {
     
 }
 
-public extension QueryBuilder {
-    
-    @discardableResult
-    func queryParam(name: String, matching: AnyMatcher) throws -> Self {
-        let valueString = try String(data: JSONEncoder().encode(matching), encoding: .utf8)!
-        return try queryParam(name: name, values: [valueString])
-    }
-    
-    /// Configures a query parameter for the ``Interaction``.
-    ///
-    /// - Throws: ``Interaction/Error`` when the interaction or Pact can't be modified (i.e. the mock server for it has already started).
-    /// - Parameters:
-    ///  - name: The query parameter name.
-    ///  - value: The query parameter value.
-    @discardableResult
-    func queryParam(name: String, value: String) throws -> Self {
-        try queryParam(name: name, values: [value])
-    }
-    
-    /// Configures a query parameters for the ``Interaction``.
-    ///
-    /// - Throws: ``Interaction/Error`` when the interaction or Pact can't be modified (i.e. the mock server for it has already started).
-    /// - Parameters:
-    ///  - name: The query parameter name.
-    ///  - value: The query parameter value.
-    @discardableResult
-    func queryParams(_ items: [URLQueryItem]) throws -> Self {
-        for item in items {
-            guard let value = item.value else {
-                continue
-            }
-            
-            try queryParam(name: item.name, value: value)
-        }
-        
-        return self
-    }
-}
-
-public extension BodyBuilder {
-    
-    /// Add a null body with the specified `contentType` (defaults to `text/plain`).
-    @discardableResult
-    func body(contentType: String? = "text/plain") throws -> Self {
-        try body(nil, contentType: contentType)
-    }
-        
-    /// Adds a json body to the ``Interaction``.
-    @discardableResult
-    func jsonBody(_ bodyString: String? = nil, contentType: String = "application/json") throws -> Self {
-        try body(bodyString, contentType: contentType)
-    }
-    
-    /// Adds a json body to the ``Interaction``.
-    @discardableResult
-    func jsonBody(_ example: AnyMatcher, contentType: String = "application/json") throws -> Self {
-        let bodyString = String(data: try JSONEncoder().encode(example), encoding: .utf8)
-        return try body(bodyString, contentType: contentType)
-    }
-    
-    /// Adds a HTML body to the ``Interaction``.
-    @discardableResult
-    func htmlBody(_ bodyString: String? = nil, contentType: String = "text/html") throws -> Self {
-        try body(bodyString, contentType: contentType)
-    }
-}
-
-public extension HeaderBuilder {
-    /// Set the `Content-Type` header.
-    @discardableResult
-    func contentType(_ contentType: String) throws -> Self {
-        try header("Content-Type", value: contentType)
-    }
-        
-    @discardableResult
-    func header(_ name: String, value: String) throws -> Self {
-       try header(name, values: [value])
-    }
-    
-    @discardableResult
-    func header(_ name: String, matching: AnyMatcher) throws -> Self {
-       let valueString = try String(data: JSONEncoder().encode(matching), encoding: .utf8)!
-       return try header(name, values: [valueString])
-    }
-}
-
-public extension Interaction {
-
-    /// Configures the request for the Interaction.
-    /// - Throws: ``Error/canNotBeModified`` if the interaction or Pact can't be modified (i.e. the mock server for it has already started)
-    /// - Parameters:
-    ///   - method: The request method. Defaults to ``HTTPMethod/GET``.
-    ///   - regex: The request path regex matcher.
-    ///   - example: An example path.
-    ///   - builder: A ``RequestBuilder`` closure.
-    func withRequest(method: HTTPMethod = .GET, regex: String, example: String, builder: RequestBuilder) throws -> Self {
-        try withRequest(
-            method: method,
-            path: String(data: JSONEncoder().encode(AnyMatcher.regex(regex, example: example)), encoding: .utf8)!,
-            builder: builder
-        )
-    }
-}
-
 extension Interaction.Error: LocalizedError {
     public var failureReason: String? {
         switch self {
@@ -423,10 +211,4 @@ extension Interaction.Error: LocalizedError {
 private extension InteractionPart {
     static var request: Self { InteractionPart(rawValue: 0) }
     static var response: Self { InteractionPart(rawValue: 1) }
-}
-
-extension Interaction.ProviderState: ExpressibleByStringLiteral {
-    public init(stringLiteral value: String) {
-        self.init(description: value)
-    }
 }

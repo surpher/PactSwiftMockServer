@@ -22,28 +22,23 @@
 		A7840F76294AF1D200CF22EF /* Generate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7840F74294AF1D200CF22EF /* Generate.swift */; };
 		A7840F78294AF20500CF22EF /* GenerateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7840F77294AF20500CF22EF /* GenerateTests.swift */; };
 		A7840F79294AF20500CF22EF /* GenerateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7840F77294AF20500CF22EF /* GenerateTests.swift */; };
-		A7840F7D294BE04600CF22EF /* MatcherExpression.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7840F7A294BDFE600CF22EF /* MatcherExpression.swift */; };
-		A7840F7E294BE04700CF22EF /* MatcherExpression.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7840F7A294BDFE600CF22EF /* MatcherExpression.swift */; };
+		A7840F7D294BE04600CF22EF /* MatcherDefinition.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7840F7A294BDFE600CF22EF /* MatcherDefinition.swift */; };
+		A7840F7E294BE04700CF22EF /* MatcherDefinition.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7840F7A294BDFE600CF22EF /* MatcherDefinition.swift */; };
 		A7840F80294BE3CB00CF22EF /* MatcherDefinitionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7840F7F294BE3CB00CF22EF /* MatcherDefinitionTests.swift */; };
 		A7840F81294BE3CB00CF22EF /* MatcherDefinitionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7840F7F294BE3CB00CF22EF /* MatcherDefinitionTests.swift */; };
 		A7840F83294C2ECA00CF22EF /* InteractionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7840F82294C2ECA00CF22EF /* InteractionTests.swift */; };
 		A7840F84294C2ECA00CF22EF /* InteractionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7840F82294C2ECA00CF22EF /* InteractionTests.swift */; };
 		A7840F86294C2ED800CF22EF /* PactTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7840F85294C2ED800CF22EF /* PactTests.swift */; };
 		A7840F87294C2ED800CF22EF /* PactTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7840F85294C2ED800CF22EF /* PactTests.swift */; };
-		A7840F99294C531000CF22EF /* MatcherTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7840F98294C531000CF22EF /* MatcherTests.swift */; };
-		A7840F9A294C531000CF22EF /* MatcherTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7840F98294C531000CF22EF /* MatcherTests.swift */; };
-		A7840F9B294C531700CF22EF /* RegexMatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7840F95294C507000CF22EF /* RegexMatcher.swift */; };
-		A7840F9C294C531700CF22EF /* RegexMatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7840F95294C507000CF22EF /* RegexMatcher.swift */; };
-		A7840F9D294C531B00CF22EF /* SimpleMatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7840F8C294C44E500CF22EF /* SimpleMatcher.swift */; };
-		A7840F9E294C531C00CF22EF /* SimpleMatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7840F8C294C44E500CF22EF /* SimpleMatcher.swift */; };
-		A7840F9F294C531F00CF22EF /* Matcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7840F88294C440E00CF22EF /* Matcher.swift */; };
-		A7840FA0294C531F00CF22EF /* Matcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7840F88294C440E00CF22EF /* Matcher.swift */; };
-		A7840FA5294C70AC00CF22EF /* GeneratorType.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7840FA4294C70AC00CF22EF /* GeneratorType.swift */; };
-		A7840FA6294C70AC00CF22EF /* GeneratorType.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7840FA4294C70AC00CF22EF /* GeneratorType.swift */; };
-		A7840FA8294C8E8300CF22EF /* UUIDFormat.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7840FA7294C8E8300CF22EF /* UUIDFormat.swift */; };
-		A7840FA9294C8E8300CF22EF /* UUIDFormat.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7840FA7294C8E8300CF22EF /* UUIDFormat.swift */; };
-		A7840FAB29503DA600CF22EF /* HTTPStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7840FAA29503DA600CF22EF /* HTTPStatus.swift */; };
-		A7840FAC29503DA600CF22EF /* HTTPStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7840FAA29503DA600CF22EF /* HTTPStatus.swift */; };
+		A7F18573296BE152003AE3F2 /* HeaderBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7F18572296BE152003AE3F2 /* HeaderBuilder.swift */; };
+		A7F18574296BE152003AE3F2 /* HeaderBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7F18572296BE152003AE3F2 /* HeaderBuilder.swift */; };
+		A7F18575296BE152003AE3F2 /* HeaderBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7F18572296BE152003AE3F2 /* HeaderBuilder.swift */; };
+		A7F18577296BE177003AE3F2 /* BodyBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7F18576296BE177003AE3F2 /* BodyBuilder.swift */; };
+		A7F18578296BE177003AE3F2 /* BodyBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7F18576296BE177003AE3F2 /* BodyBuilder.swift */; };
+		A7F18579296BE177003AE3F2 /* BodyBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7F18576296BE177003AE3F2 /* BodyBuilder.swift */; };
+		A7F1857B296BE196003AE3F2 /* QueryBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7F1857A296BE196003AE3F2 /* QueryBuilder.swift */; };
+		A7F1857C296BE196003AE3F2 /* QueryBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7F1857A296BE196003AE3F2 /* QueryBuilder.swift */; };
+		A7F1857D296BE196003AE3F2 /* QueryBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7F1857A296BE196003AE3F2 /* QueryBuilder.swift */; };
 		AD1597FD2648DE0E007CFAA5 /* PactSwiftMockServer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AD1597F32648DE0E007CFAA5 /* PactSwiftMockServer.framework */; };
 		AD1598042648DE0E007CFAA5 /* PactSwiftMockServer.h in Headers */ = {isa = PBXBuildFile; fileRef = AD1597F62648DE0E007CFAA5 /* PactSwiftMockServer.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		AD1598212648DF73007CFAA5 /* PactSwiftMockServer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AD1598182648DF73007CFAA5 /* PactSwiftMockServer.framework */; };
@@ -119,17 +114,13 @@
 		A7840F42294A923000CF22EF /* PactBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PactBuilder.swift; sourceTree = "<group>"; };
 		A7840F74294AF1D200CF22EF /* Generate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Generate.swift; sourceTree = "<group>"; };
 		A7840F77294AF20500CF22EF /* GenerateTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenerateTests.swift; sourceTree = "<group>"; };
-		A7840F7A294BDFE600CF22EF /* MatcherExpression.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatcherExpression.swift; sourceTree = "<group>"; };
+		A7840F7A294BDFE600CF22EF /* MatcherDefinition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatcherDefinition.swift; sourceTree = "<group>"; };
 		A7840F7F294BE3CB00CF22EF /* MatcherDefinitionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatcherDefinitionTests.swift; sourceTree = "<group>"; };
 		A7840F82294C2ECA00CF22EF /* InteractionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InteractionTests.swift; sourceTree = "<group>"; };
 		A7840F85294C2ED800CF22EF /* PactTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PactTests.swift; sourceTree = "<group>"; };
-		A7840F88294C440E00CF22EF /* Matcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Matcher.swift; sourceTree = "<group>"; };
-		A7840F8C294C44E500CF22EF /* SimpleMatcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimpleMatcher.swift; sourceTree = "<group>"; };
-		A7840F95294C507000CF22EF /* RegexMatcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegexMatcher.swift; sourceTree = "<group>"; };
-		A7840F98294C531000CF22EF /* MatcherTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatcherTests.swift; sourceTree = "<group>"; };
-		A7840FA4294C70AC00CF22EF /* GeneratorType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeneratorType.swift; sourceTree = "<group>"; };
-		A7840FA7294C8E8300CF22EF /* UUIDFormat.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UUIDFormat.swift; sourceTree = "<group>"; };
-		A7840FAA29503DA600CF22EF /* HTTPStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPStatus.swift; sourceTree = "<group>"; };
+		A7F18572296BE152003AE3F2 /* HeaderBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeaderBuilder.swift; sourceTree = "<group>"; };
+		A7F18576296BE177003AE3F2 /* BodyBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BodyBuilder.swift; sourceTree = "<group>"; };
+		A7F1857A296BE196003AE3F2 /* QueryBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QueryBuilder.swift; sourceTree = "<group>"; };
 		AD1597F32648DE0E007CFAA5 /* PactSwiftMockServer.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = PactSwiftMockServer.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		AD1597F62648DE0E007CFAA5 /* PactSwiftMockServer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PactSwiftMockServer.h; sourceTree = "<group>"; };
 		AD1597F72648DE0E007CFAA5 /* Info-iOS.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Info-iOS.plist"; sourceTree = "<group>"; };
@@ -228,19 +219,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		A7840F8B294C44D000CF22EF /* Matchers */ = {
-			isa = PBXGroup;
-			children = (
-				A7840F88294C440E00CF22EF /* Matcher.swift */,
-				A7840F8C294C44E500CF22EF /* SimpleMatcher.swift */,
-				A7840F95294C507000CF22EF /* RegexMatcher.swift */,
-				A7840FA4294C70AC00CF22EF /* GeneratorType.swift */,
-				A7840FA7294C8E8300CF22EF /* UUIDFormat.swift */,
-				A7840FAA29503DA600CF22EF /* HTTPStatus.swift */,
-			);
-			path = Matchers;
-			sourceTree = "<group>";
-		};
 		AD1597E92648DE0E007CFAA5 = {
 			isa = PBXGroup;
 			children = (
@@ -302,7 +280,7 @@
 				AD1598382648E690007CFAA5 /* Headers */,
 				AD1598302648E32F007CFAA5 /* MockServer.swift */,
 				A7840F74294AF1D200CF22EF /* Generate.swift */,
-				A7840F7A294BDFE600CF22EF /* MatcherExpression.swift */,
+				A7840F7A294BDFE600CF22EF /* MatcherDefinition.swift */,
 				AD1598392648E6DB007CFAA5 /* Model */,
 				A7840F42294A923000CF22EF /* PactBuilder.swift */,
 				AD957F3428A23AF300860AD1 /* Toolbox */,
@@ -351,7 +329,6 @@
 				A7840F7F294BE3CB00CF22EF /* MatcherDefinitionTests.swift */,
 				A7840F82294C2ECA00CF22EF /* InteractionTests.swift */,
 				A7840F85294C2ED800CF22EF /* PactTests.swift */,
-				A7840F98294C531000CF22EF /* MatcherTests.swift */,
 			);
 			path = Tests;
 			sourceTree = "<group>";
@@ -375,11 +352,13 @@
 		AD1598392648E6DB007CFAA5 /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				A7840F8B294C44D000CF22EF /* Matchers */,
+				A7F18576296BE177003AE3F2 /* BodyBuilder.swift */,
+				A7F18572296BE152003AE3F2 /* HeaderBuilder.swift */,
 				A743EC422946EF1D00EE315D /* Interaction.swift */,
 				A743EC3E2946E8C700EE315D /* Pact.swift */,
 				ADBEF2FC2648FCF200486C4A /* PactVerificationFailure.swift */,
 				ADC15DAF26CE98140010D900 /* ProviderVerificationError.swift */,
+				A7F1857A296BE196003AE3F2 /* QueryBuilder.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -700,7 +679,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A7840F9B294C531700CF22EF /* RegexMatcher.swift in Sources */,
 				ADC15DB026CE98140010D900 /* ProviderVerificationError.swift in Sources */,
 				ADBEF3012648FCF200486C4A /* PactVerificationFailure.swift in Sources */,
 				A743EC432946EF1D00EE315D /* Interaction.swift in Sources */,
@@ -708,15 +686,13 @@
 				AD957F3A28A23B8400860AD1 /* SocketBinder.swift in Sources */,
 				ADE2551026CE335400FA21A9 /* Verifier.swift in Sources */,
 				AD957F3628A23B0B00860AD1 /* PactFileManager.swift in Sources */,
-				A7840FA8294C8E8300CF22EF /* UUIDFormat.swift in Sources */,
-				A7840F7D294BE04600CF22EF /* MatcherExpression.swift in Sources */,
+				A7F18577296BE177003AE3F2 /* BodyBuilder.swift in Sources */,
+				A7840F7D294BE04600CF22EF /* MatcherDefinition.swift in Sources */,
 				A7840F43294A923000CF22EF /* PactBuilder.swift in Sources */,
-				A7840FAB29503DA600CF22EF /* HTTPStatus.swift in Sources */,
-				A7840FA5294C70AC00CF22EF /* GeneratorType.swift in Sources */,
 				AD1598312648E32F007CFAA5 /* MockServer.swift in Sources */,
+				A7F18573296BE152003AE3F2 /* HeaderBuilder.swift in Sources */,
+				A7F1857B296BE196003AE3F2 /* QueryBuilder.swift in Sources */,
 				A743EC3F2946E8C700EE315D /* Pact.swift in Sources */,
-				A7840F9E294C531C00CF22EF /* SimpleMatcher.swift in Sources */,
-				A7840FA0294C531F00CF22EF /* Matcher.swift in Sources */,
 				A7840F75294AF1D200CF22EF /* Generate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -725,7 +701,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A7840F99294C531000CF22EF /* MatcherTests.swift in Sources */,
 				A7840F80294BE3CB00CF22EF /* MatcherDefinitionTests.swift in Sources */,
 				ADC6C61326D0AFBD00844000 /* VerifierTests.swift in Sources */,
 				ADB97FDA26493D5900C54CA9 /* MockServerErrorTests.swift in Sources */,
@@ -741,7 +716,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A7840F9C294C531700CF22EF /* RegexMatcher.swift in Sources */,
 				ADC15DB126CE98140010D900 /* ProviderVerificationError.swift in Sources */,
 				ADBEF3022648FCF200486C4A /* PactVerificationFailure.swift in Sources */,
 				A743EC442946EF1D00EE315D /* Interaction.swift in Sources */,
@@ -749,15 +723,13 @@
 				AD957F3B28A23B8400860AD1 /* SocketBinder.swift in Sources */,
 				ADE2551126CE335400FA21A9 /* Verifier.swift in Sources */,
 				AD957F3728A23B0B00860AD1 /* PactFileManager.swift in Sources */,
-				A7840FA9294C8E8300CF22EF /* UUIDFormat.swift in Sources */,
-				A7840F7E294BE04700CF22EF /* MatcherExpression.swift in Sources */,
+				A7F18578296BE177003AE3F2 /* BodyBuilder.swift in Sources */,
+				A7840F7E294BE04700CF22EF /* MatcherDefinition.swift in Sources */,
 				A7840F44294A923000CF22EF /* PactBuilder.swift in Sources */,
-				A7840FAC29503DA600CF22EF /* HTTPStatus.swift in Sources */,
-				A7840FA6294C70AC00CF22EF /* GeneratorType.swift in Sources */,
 				AD1598322648E32F007CFAA5 /* MockServer.swift in Sources */,
+				A7F18574296BE152003AE3F2 /* HeaderBuilder.swift in Sources */,
+				A7F1857C296BE196003AE3F2 /* QueryBuilder.swift in Sources */,
 				A743EC402946E8C700EE315D /* Pact.swift in Sources */,
-				A7840F9D294C531B00CF22EF /* SimpleMatcher.swift in Sources */,
-				A7840F9F294C531F00CF22EF /* Matcher.swift in Sources */,
 				A7840F76294AF1D200CF22EF /* Generate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -766,7 +738,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A7840F9A294C531000CF22EF /* MatcherTests.swift in Sources */,
 				A7840F81294BE3CB00CF22EF /* MatcherDefinitionTests.swift in Sources */,
 				ADC6C61426D0AFBD00844000 /* VerifierTests.swift in Sources */,
 				ADB97FDB26493D5900C54CA9 /* MockServerErrorTests.swift in Sources */,
@@ -784,8 +755,11 @@
 			files = (
 				ADC15DB226CE98140010D900 /* ProviderVerificationError.swift in Sources */,
 				A743EC452946EF1D00EE315D /* Interaction.swift in Sources */,
+				A7F18575296BE152003AE3F2 /* HeaderBuilder.swift in Sources */,
 				AD957F4028A23BD600860AD1 /* Logger.swift in Sources */,
+				A7F1857D296BE196003AE3F2 /* QueryBuilder.swift in Sources */,
 				AD957F3C28A23B8400860AD1 /* SocketBinder.swift in Sources */,
+				A7F18579296BE177003AE3F2 /* BodyBuilder.swift in Sources */,
 				ADD7CB12264B4A080091A286 /* MockServer.swift in Sources */,
 				ADE2551226CE335400FA21A9 /* Verifier.swift in Sources */,
 				AD957F3828A23B0B00860AD1 /* PactFileManager.swift in Sources */,

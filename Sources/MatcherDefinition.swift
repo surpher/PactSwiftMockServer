@@ -16,7 +16,11 @@
 //
 
 import Foundation
- 
+
+#if SWIFT_PACKAGE
+import PactMockServer
+#endif
+
 class MatcherDefinition {
 
     enum Error: LocalizedError {

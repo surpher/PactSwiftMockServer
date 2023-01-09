@@ -17,7 +17,11 @@
 
 import Foundation
 
-enum Generate {
+#if SWIFT_PACKAGE
+import PactMockServer
+#endif
+
+public enum Generate {
     /// Generates an example string based on provided regex pattern
     ///
     /// Only supports basic regex patterns.
@@ -25,7 +29,7 @@ enum Generate {
     /// - Parameters:
     ///   - regex: The pattern to use
     ///
-    static func value(regex: String) -> String? {
+    public static func value(regex: String) -> String? {
         let result = pactffi_generate_regex_value(regex)
         guard result.tag == StringResult_Ok, let stringPointer = result.ok else {
             return nil
@@ -44,7 +48,7 @@ enum Generate {
     /// - Parameters:
     ///   - format: The format of date to generate
     ///
-    static func date(format: String) -> String? {
+    public static func date(format: String) -> String? {
         let result = pactffi_generate_datetime_string(format)
         guard result.tag == StringResult_Ok, let stringPointer = result.ok else {
             return nil

@@ -56,7 +56,7 @@ public final class Pact {
     
     static private(set) var isInitialized: Bool = false
     
-    public static func initalize(logSinks: [LogSinkConfig] = .defaultSinks) throws {
+    public static func initialize(logSinks: [LogSinkConfig] = .defaultSinks) throws {
         guard isInitialized == false else {
             return
         }
@@ -82,7 +82,7 @@ public final class Pact {
     
     public init(consumer: String, provider: String) {
         do {
-            try Self.initalize()
+            try Self.initialize()
         } catch {
             fatalError("Failed to implicitly initialize Pact: \(error)")
         }

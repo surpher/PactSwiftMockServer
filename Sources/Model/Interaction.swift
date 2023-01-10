@@ -276,3 +276,9 @@ private extension InteractionPart {
     static var request: Self { InteractionPart(rawValue: 0) }
     static var response: Self { InteractionPart(rawValue: 1) }
 }
+
+extension Interaction.ProviderState: ExpressibleByStringLiteral {
+    public init(stringLiteral value: StringLiteralType) {
+        self.init(description: value)
+    }
+}

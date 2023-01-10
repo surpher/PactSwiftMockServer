@@ -1706,6 +1706,34 @@
                 "static": true,
                 "implicit": true,
                 "funcSelfKind": "NonMutating"
+              },
+              {
+                "kind": "Constructor",
+                "name": "init",
+                "printedName": "init(stringLiteral:)",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "ProviderState",
+                    "printedName": "PactSwiftMockServer.Interaction.ProviderState",
+                    "usr": "s:19PactSwiftMockServer11InteractionC13ProviderStateV"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "declKind": "Constructor",
+                "usr": "s:19PactSwiftMockServer11InteractionC13ProviderStateV13stringLiteralAESS_tcfc",
+                "mangledName": "$s19PactSwiftMockServer11InteractionC13ProviderStateV13stringLiteralAESS_tcfc",
+                "moduleName": "PactSwiftMockServer",
+                "declAttributes": [
+                  "AccessControl"
+                ],
+                "isFromExtension": true,
+                "init_kind": "Designated"
               }
             ],
             "declKind": "Struct",
@@ -1727,6 +1755,72 @@
                 "printedName": "Equatable",
                 "usr": "s:SQ",
                 "mangledName": "$sSQ"
+              },
+              {
+                "kind": "Conformance",
+                "name": "ExpressibleByStringLiteral",
+                "printedName": "ExpressibleByStringLiteral",
+                "children": [
+                  {
+                    "kind": "TypeWitness",
+                    "name": "StringLiteralType",
+                    "printedName": "StringLiteralType",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "String",
+                        "printedName": "Swift.String",
+                        "usr": "s:SS"
+                      }
+                    ]
+                  }
+                ],
+                "usr": "s:s26ExpressibleByStringLiteralP",
+                "mangledName": "$ss26ExpressibleByStringLiteralP"
+              },
+              {
+                "kind": "Conformance",
+                "name": "ExpressibleByExtendedGraphemeClusterLiteral",
+                "printedName": "ExpressibleByExtendedGraphemeClusterLiteral",
+                "children": [
+                  {
+                    "kind": "TypeWitness",
+                    "name": "ExtendedGraphemeClusterLiteralType",
+                    "printedName": "ExtendedGraphemeClusterLiteralType",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "String",
+                        "printedName": "Swift.String",
+                        "usr": "s:SS"
+                      }
+                    ]
+                  }
+                ],
+                "usr": "s:s43ExpressibleByExtendedGraphemeClusterLiteralP",
+                "mangledName": "$ss43ExpressibleByExtendedGraphemeClusterLiteralP"
+              },
+              {
+                "kind": "Conformance",
+                "name": "ExpressibleByUnicodeScalarLiteral",
+                "printedName": "ExpressibleByUnicodeScalarLiteral",
+                "children": [
+                  {
+                    "kind": "TypeWitness",
+                    "name": "UnicodeScalarLiteralType",
+                    "printedName": "UnicodeScalarLiteralType",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "String",
+                        "printedName": "Swift.String",
+                        "usr": "s:SS"
+                      }
+                    ]
+                  }
+                ],
+                "usr": "s:s33ExpressibleByUnicodeScalarLiteralP",
+                "mangledName": "$ss33ExpressibleByUnicodeScalarLiteralP"
               }
             ]
           },

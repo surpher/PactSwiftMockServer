@@ -161,6 +161,12 @@ extension PactSwiftMockServer.Interaction.Error : Foundation.LocalizedError {
     get
   }
 }
+extension PactSwiftMockServer.Interaction.ProviderState : Swift.ExpressibleByStringLiteral {
+  public init(stringLiteral value: Swift.StringLiteralType)
+  public typealias ExtendedGraphemeClusterLiteralType = Swift.StringLiteralType
+  public typealias StringLiteralType = Swift.StringLiteralType
+  public typealias UnicodeScalarLiteralType = Swift.StringLiteralType
+}
 public protocol ProviderVerifying {
   func verifyProvider(options args: Swift.String) -> Swift.Result<Swift.Bool, PactSwiftMockServer.ProviderVerificationError>
 }

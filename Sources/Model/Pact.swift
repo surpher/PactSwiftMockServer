@@ -48,7 +48,7 @@ public final class Pact {
     
     static private(set) var isInitialized: Bool = false
     
-    static func initalize(logLevel: LogLevel = .warn) {
+    public static func initalize(logLevel: LogLevel = .warn) {
         if isInitialized == false {
             pactffi_init_with_log_level(logLevel.rawValue.cString(using: .utf8))
             isInitialized = true

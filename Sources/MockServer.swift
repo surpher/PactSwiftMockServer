@@ -126,10 +126,11 @@ public class MockServer {
         
         return String(cString: cString)
     }
-        
+
     /// Get a string representing the mock server logs following interaction testing
     ///
-    /// - Returns: Log string
+    /// - Note: This needs the memory `buffer` log sink to be setup before the mock server is started.
+    /// - Returns: Log string.
     public var logs: String {
         guard port > 0, let cString = pactffi_mock_server_logs(port) else {
             return "ERROR: Unable to retrieve mock server logs"

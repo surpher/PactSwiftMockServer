@@ -30,6 +30,18 @@ public final class Pact {
     public enum Error {
         case canNotBeModified
         
+        case loggerApplyFailed(Int32)
+        
+        /// The logger sink could not be configured. The associated error codes:
+        ///
+        /// - -1: Can't set logger (applying the logger failed, perhaps because one is applied already).
+        /// * -2: No logger has been initialized (call ``Pact/loggerInitialize()`` before any other log function).
+        /// * -3: The sink specifier was not UTF-8 encoded.
+        /// * -4: The sink type specified is not a known type (known types: "stdout", "stderr", or "file /some/path").
+        /// * -5: No file path was specified in a file-type sink specification.
+        /// * -6: Opening a sink to the specified file path failed (check permissions).
+        case loggerSinkFailed(Int32)
+        
         /// The Pact file could not be written.  The associated error codes:
         ///
         /// - 1 - The function panicked.
@@ -37,22 +49,26 @@ public final class Pact {
         /// - 3 - The pact for the given handle was not found.
         case canNotWritePact(Int32)
     }
-    
-    public enum LogLevel: String {
-        case trace = "TRACE", debug = "DEBUG", info = "INFO", warn = "WARN", error = "ERROR"
-    }
-    
+        
     public static var version: String {
         String(cString: pactffi_version())
     }
     
     static private(set) var isInitialized: Bool = false
     
-    public static func initalize(logLevel: LogLevel = .warn) {
-        if isInitialized == false {
-            pactffi_init_with_log_level(logLevel.rawValue.cString(using: .utf8))
+    public static func initalize(logSinks: [LogSinkConfig] = .defaultSinks) throws {
+        guard isInitialized == false else {
+            return
+        }
+        defer {
             isInitialized = true
         }
+        
+        loggerInitialize()
+        for sink in logSinks {
+            try attachLogSink(sink.sink, filter: sink.filter)
+        }
+        try loggerApply()
     }
     
     public let consumer: String
@@ -65,7 +81,12 @@ public final class Pact {
     }
     
     public init(consumer: String, provider: String) {
-        Self.initalize()
+        do {
+            try Self.initalize()
+        } catch {
+            fatalError("Failed to implicitly initialize Pact: \(error)")
+        }
+        
         self.consumer = consumer
         self.provider = provider
         self.handle = pactffi_new_pact(consumer.cString(using: .utf8), provider.cString(using: .utf8))
@@ -141,6 +162,10 @@ public final class Pact {
 extension Pact.Error: LocalizedError {
     public var failureReason: String? {
         switch self {
+        case .loggerSinkFailed(let code):
+            return String.localizedStringWithFormat(NSLocalizedString("Can not configure logger sink (error code: %d)", comment: "Format for error failure reason when configure logger sink"), code)
+        case .loggerApplyFailed(let code):
+            return String.localizedStringWithFormat(NSLocalizedString("Can not apply logger configuration (error code: %d)", comment: "Format for error failure reason when can't apply logger config"), code)
         case .canNotBeModified:
             return NSLocalizedString("Pact can not be modified", comment: "A error failure reason when a Pact can not be modified")
         case .canNotWritePact(let code):

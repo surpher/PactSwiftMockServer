@@ -22,41 +22,41 @@ import PactMockServer
 #endif
 
 public enum Generate {
-    /// Generates an example string based on provided regex pattern
-    ///
-    /// Only supports basic regex patterns.
-    ///
-    /// - Parameters:
-    ///   - regex: The pattern to use
-    ///
-    public static func value(regex: String) -> String? {
-        let result = pactffi_generate_regex_value(regex)
-        guard result.tag == StringResult_Ok, let stringPointer = result.ok else {
-            return nil
-        }
-        
-        let generatedString = String(cString: stringPointer)
-        pactffi_string_delete(stringPointer)
+	/// Generates an example string based on provided regex pattern
+	///
+	/// Only supports basic regex patterns.
+	///
+	/// - Parameters:
+	///   - regex: The pattern to use
+	///
+	public static func value(regex: String) -> String? {
+		let result = pactffi_generate_regex_value(regex)
+		guard result.tag == StringResult_Ok, let stringPointer = result.ok else {
+			return nil
+		}
 
-        return generatedString
-    }
+		let generatedString = String(cString: stringPointer)
+		pactffi_string_delete(stringPointer)
 
-    /// Generates an example datetime string based on provided format
-    ///
-    /// Returns `nil` if the provided format is invalid
-    ///
-    /// - Parameters:
-    ///   - format: The format of date to generate
-    ///
-    public static func date(format: String) -> String? {
-        let result = pactffi_generate_datetime_string(format)
-        guard result.tag == StringResult_Ok, let stringPointer = result.ok else {
-            return nil
-        }
+		return generatedString
+	}
 
-        let generatedDatetime = String(cString: stringPointer)
-        pactffi_string_delete(stringPointer)
+	/// Generates an example datetime string based on provided format
+	///
+	/// Returns `nil` if the provided format is invalid
+	///
+	/// - Parameters:
+	///   - format: The format of date to generate
+	///
+	public static func date(format: String) -> String? {
+		let result = pactffi_generate_datetime_string(format)
+		guard result.tag == StringResult_Ok, let stringPointer = result.ok else {
+			return nil
+		}
 
-        return generatedDatetime
-    }
+		let generatedDatetime = String(cString: stringPointer)
+		pactffi_string_delete(stringPointer)
+
+		return generatedDatetime
+	}
 }

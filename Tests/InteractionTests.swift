@@ -19,17 +19,17 @@ import XCTest
 @testable import PactSwiftMockServer
 
 class InteractionTests: XCTestCase {
- 
-    func testInteractionInitialization() throws {
-        let pact = try Pact(consumer: "consumer", provider: "provider")
-            .withSpecification(.v3)
-        
-        try Interaction(pactHandle: pact.handle, description: "An interaction")
-            .given("Some provider state")
-            .withRequest(method: .GET, path: "/test")
-            .willRespond(with: 200)
-        
-        // Nothing to assert as long as it doesn't crash. There is no externally visible state.
-    }
-    
+	
+	func testInteractionInitialization() throws {
+		let pact = try Pact(consumer: "consumer", provider: "provider")
+			.withSpecification(.v3)
+		
+		try Interaction(pactHandle: pact.handle, description: "An interaction")
+			.given("Some provider state")
+			.withRequest(method: .GET, path: "/test")
+			.willRespond(with: 200)
+		
+		// Nothing to assert as long as it doesn't crash. There is no externally visible state.
+	}
+	
 }

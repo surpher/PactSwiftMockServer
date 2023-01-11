@@ -19,15 +19,15 @@ import XCTest
 @testable import PactSwiftMockServer
 
 class PactTests: XCTestCase {
- 
-    func testPactInitialization() throws {
-        let pact = try Pact(consumer: "consumer", provider: "provider")
-            .withSpecification(.v3)
-            .withMetadata(namespace: "test", name: "name", value: "value")
-        
-        XCTAssertEqual(pact.consumer, "consumer")
-        XCTAssertEqual(pact.provider, "provider")
-        XCTAssertEqual(pact.filename, "consumer-provider.json")
-    }
-    
+	
+	func testPactInitialization() throws {
+		let pact = try Pact(consumer: "consumer", provider: "provider")
+			.withSpecification(.v3)
+			.withMetadata(namespace: "test", name: "name", value: "value")
+		
+		XCTAssertEqual(pact.consumer, "consumer")
+		XCTAssertEqual(pact.provider, "provider")
+		XCTAssertEqual(pact.filename, "consumer-provider.json")
+	}
+	
 }

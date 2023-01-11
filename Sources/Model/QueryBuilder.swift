@@ -18,13 +18,13 @@
 import Foundation
 
 public protocol QueryBuilder {
-    /// Configures a query parameter for the Interaction.
-    ///
-    /// Throws the interaction or Pact can't be modified (i.e. the mock server for it has already started)
-    /// - Parameters:
-    ///  - name: The query parameter name.
-    ///  - values: The query parameter values.
-    ///
-    @discardableResult
-    func queryParam(name: String, values: [String]) throws -> Self
+	/// Configures a query parameter for the Interaction.
+	///
+	/// Throws the interaction or Pact can't be modified (i.e. the mock server for it has already started)
+	/// - Parameters:
+	///  - name: The query parameter name.
+	///  - values: The query parameter values.
+	///
+	@discardableResult
+	func queryParam(name: String, values: [String]) throws -> Self
 }

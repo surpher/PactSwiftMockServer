@@ -19,28 +19,28 @@ import XCTest
 @testable import PactSwiftMockServer
 
 class MockServerTests: XCTestCase {
-    
+	
 	func testMockServer_Initializes() throws {
-        let pact = Pact(consumer: "Consumer", provider: "Provider")
-        let server = try MockServer(pact: pact, transferProtocol: .standard)
-        XCTAssertGreaterThan(server.port, 0)
+		let pact = Pact(consumer: "Consumer", provider: "Provider")
+		let server = try MockServer(pact: pact, transferProtocol: .standard)
+		XCTAssertGreaterThan(server.port, 0)
 	}
-
+	
 	func testMockServer_SetsBaseURL() throws {
-        let pact = Pact(consumer: "Consumer", provider: "Provider")
-        let server = try MockServer(pact: pact, transferProtocol: .standard)
-        XCTAssertEqual(server.baseUrl, try XCTUnwrap(URL(string: "http://127.0.0.1:\(server.port)")))
+		let pact = Pact(consumer: "Consumer", provider: "Provider")
+		let server = try MockServer(pact: pact, transferProtocol: .standard)
+		XCTAssertEqual(server.baseUrl, try XCTUnwrap(URL(string: "http://127.0.0.1:\(server.port)")))
 	}
-     
+	
 	func testMockServer_SetsBaseSSLURL() throws {
-        let pact = Pact(consumer: "Consumer", provider: "Provider")
-        let server = try MockServer(pact: pact, transferProtocol: .secure)
-        XCTAssertEqual(server.baseUrl, try XCTUnwrap(URL(string: "https://127.0.0.1:\(server.port)")))
+		let pact = Pact(consumer: "Consumer", provider: "Provider")
+		let server = try MockServer(pact: pact, transferProtocol: .secure)
+		XCTAssertEqual(server.baseUrl, try XCTUnwrap(URL(string: "https://127.0.0.1:\(server.port)")))
 	}
-    
-    func testMockServer_GetTLSCert() throws {
-        let pact = Pact(consumer: "Consumer", provider: "Provider")
-        let server = try MockServer(pact: pact, transferProtocol: .secure)
-        XCTAssertNotNil(server.tlsCACertificate)
-    }
+	
+	func testMockServer_GetTLSCert() throws {
+		let pact = Pact(consumer: "Consumer", provider: "Provider")
+		let server = try MockServer(pact: pact, transferProtocol: .secure)
+		XCTAssertNotNil(server.tlsCACertificate)
+	}
 }

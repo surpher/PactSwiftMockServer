@@ -109,15 +109,15 @@
 
 /* Begin PBXFileReference section */
 		A743EC3E2946E8C700EE315D /* Pact.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Pact.swift; sourceTree = "<group>"; };
-		A743EC422946EF1D00EE315D /* Interaction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Interaction.swift; sourceTree = "<group>"; };
+		A743EC422946EF1D00EE315D /* Interaction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Interaction.swift; sourceTree = "<group>"; usesTabs = 1; };
 		A75EC3AC2942B2FB0054BADB /* LICENSE.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = LICENSE.md; sourceTree = "<group>"; };
 		A75EC3AD2942B2FB0054BADB /* CHANGELOG.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = CHANGELOG.md; sourceTree = "<group>"; };
 		A75EC3AE2942B2FB0054BADB /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		A7840F3F2949AA4200CF22EF /* PactBuilderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PactBuilderTests.swift; sourceTree = "<group>"; };
 		A7840F42294A923000CF22EF /* PactBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PactBuilder.swift; sourceTree = "<group>"; };
-		A7840F74294AF1D200CF22EF /* Generate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Generate.swift; sourceTree = "<group>"; };
+		A7840F74294AF1D200CF22EF /* Generate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Generate.swift; sourceTree = "<group>"; usesTabs = 1; };
 		A7840F77294AF20500CF22EF /* GenerateTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenerateTests.swift; sourceTree = "<group>"; };
-		A7840F7A294BDFE600CF22EF /* MatcherDefinition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatcherDefinition.swift; sourceTree = "<group>"; };
+		A7840F7A294BDFE600CF22EF /* MatcherDefinition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatcherDefinition.swift; sourceTree = "<group>"; usesTabs = 1; };
 		A7840F7F294BE3CB00CF22EF /* MatcherDefinitionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatcherDefinitionTests.swift; sourceTree = "<group>"; };
 		A7840F82294C2ECA00CF22EF /* InteractionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InteractionTests.swift; sourceTree = "<group>"; };
 		A7840F85294C2ED800CF22EF /* PactTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PactTests.swift; sourceTree = "<group>"; };
@@ -238,6 +238,7 @@
 				AD1598342648E522007CFAA5 /* Tests */,
 			);
 			sourceTree = "<group>";
+			usesTabs = 1;
 		};
 		AD1597F42648DE0E007CFAA5 /* Products */ = {
 			isa = PBXGroup;

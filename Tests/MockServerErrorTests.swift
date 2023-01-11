@@ -20,33 +20,33 @@ import PactSwiftMockServer
 
 class MockServerErrorTests: XCTestCase {
 
-    public enum Error: Equatable {
-        case unknown(Int32)
-        case invalidHandle
-        case invalidPactJSON
-        case unableToStart
-        case panic
-        case invalidAddress
-        case tlsConfigFailure
-    }
-    
-	func testErrorCodes() {
-        XCTAssertEqual(MockServer.Error.invalidHandle.rawValue, -1)
-        XCTAssertEqual(MockServer.Error.invalidPactJSON.rawValue, -2)
-        XCTAssertEqual(MockServer.Error.unableToStart.rawValue, -3)
-        XCTAssertEqual(MockServer.Error.panicked.rawValue, -4)
-        XCTAssertEqual(MockServer.Error.invalidAddress.rawValue, -5)
-        XCTAssertEqual(MockServer.Error.tlsConfigFailure.rawValue, -6)
-        XCTAssertEqual(MockServer.Error.unknown(-10).rawValue, -10)
+	public enum Error: Equatable {
+		case unknown(Int32)
+		case invalidHandle
+		case invalidPactJSON
+		case unableToStart
+		case panic
+		case invalidAddress
+		case tlsConfigFailure
 	}
-    
-    func testRawRepresentable() {
-        XCTAssertEqual(MockServer.Error(rawValue: -1), .invalidHandle)
-        XCTAssertEqual(MockServer.Error(rawValue: -2), .invalidPactJSON)
-        XCTAssertEqual(MockServer.Error(rawValue: -3), .unableToStart)
-        XCTAssertEqual(MockServer.Error(rawValue: -4), .panicked)
-        XCTAssertEqual(MockServer.Error(rawValue: -5), .invalidAddress)
-        XCTAssertEqual(MockServer.Error(rawValue: -6), .tlsConfigFailure)
-        XCTAssertEqual(MockServer.Error(rawValue: -10), .unknown(-10))
-    }
+
+	func testErrorCodes() {
+		XCTAssertEqual(MockServer.Error.invalidHandle.rawValue, -1)
+		XCTAssertEqual(MockServer.Error.invalidPactJSON.rawValue, -2)
+		XCTAssertEqual(MockServer.Error.unableToStart.rawValue, -3)
+		XCTAssertEqual(MockServer.Error.panicked.rawValue, -4)
+		XCTAssertEqual(MockServer.Error.invalidAddress.rawValue, -5)
+		XCTAssertEqual(MockServer.Error.tlsConfigFailure.rawValue, -6)
+		XCTAssertEqual(MockServer.Error.unknown(-10).rawValue, -10)
+	}
+
+	func testRawRepresentable() {
+		XCTAssertEqual(MockServer.Error(rawValue: -1), .invalidHandle)
+		XCTAssertEqual(MockServer.Error(rawValue: -2), .invalidPactJSON)
+		XCTAssertEqual(MockServer.Error(rawValue: -3), .unableToStart)
+		XCTAssertEqual(MockServer.Error(rawValue: -4), .panicked)
+		XCTAssertEqual(MockServer.Error(rawValue: -5), .invalidAddress)
+		XCTAssertEqual(MockServer.Error(rawValue: -6), .tlsConfigFailure)
+		XCTAssertEqual(MockServer.Error(rawValue: -10), .unknown(-10))
+	}
 }

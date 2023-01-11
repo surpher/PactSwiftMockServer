@@ -18,16 +18,16 @@
 import Foundation
 
 public protocol BodyBuilder {
-    /// Adds the body for the ``Interaction``.
-    ///
-    /// For JSON payloads, matching rules can be embedded in the `body`. See [IntegrationJson.md](https://github.com/pact-foundation/pact-reference/blob/master/rust/pact_ffi/IntegrationJson.md).
-    /// If the `body` is `nil` it will set the body contents as null. If the content type is a null pointer, or can't be parsed, it will set the content type as TEXT.
-    ///
-    /// - Throws: ``Interaction/Error/canNotBeModified`` if the interaction or Pact can't be modified (i.e. the mock server for it has already started).
-    /// - Parameters:
-    ///   - contentType - The content type of the body. Defaults to `text/plain`. Will be ignored if a content type header is already set.
-    ///   - body: The body contents.
-    ///
-    @discardableResult
-    func body(_ body: String?, contentType: String?) throws -> Self
+	/// Adds the body for the ``Interaction``.
+	///
+	/// For JSON payloads, matching rules can be embedded in the `body`. See [IntegrationJson.md](https://github.com/pact-foundation/pact-reference/blob/master/rust/pact_ffi/IntegrationJson.md).
+	/// If the `body` is `nil` it will set the body contents as null. If the content type is a null pointer, or can't be parsed, it will set the content type as TEXT.
+	///
+	/// - Throws: ``Interaction/Error/canNotBeModified`` if the interaction or Pact can't be modified (i.e. the mock server for it has already started).
+	/// - Parameters:
+	///   - contentType - The content type of the body. Defaults to `text/plain`. Will be ignored if a content type header is already set.
+	///   - body: The body contents.
+	///
+	@discardableResult
+	func body(_ body: String?, contentType: String?) throws -> Self
 }

@@ -30,15 +30,15 @@ public enum Generate {
 	///   - regex: The pattern to use
 	///
 	public static func value(regex: String) -> String? {
-		let result = pactffi_generate_regex_value(regex)
+		let result = pactffi_generate_regex_value(regex.cString(using: .utf8))
 		guard result.tag == StringResult_Ok, let stringPointer = result.ok else {
 			return nil
 		}
+		defer {
+			pactffi_string_delete(stringPointer)
+		}
 
-		let generatedString = String(cString: stringPointer)
-		pactffi_string_delete(stringPointer)
-
-		return generatedString
+		return String(cString: stringPointer)
 	}
 
 	/// Generates an example datetime string based on provided format
@@ -49,14 +49,14 @@ public enum Generate {
 	///   - format: The format of date to generate
 	///
 	public static func date(format: String) -> String? {
-		let result = pactffi_generate_datetime_string(format)
+		let result = pactffi_generate_datetime_string(format.cString(using: .utf8))
 		guard result.tag == StringResult_Ok, let stringPointer = result.ok else {
 			return nil
 		}
+		defer {
+			pactffi_string_delete(stringPointer)
+		}
 
-		let generatedDatetime = String(cString: stringPointer)
-		pactffi_string_delete(stringPointer)
-
-		return generatedDatetime
+		return String(cString: stringPointer)
 	}
 }

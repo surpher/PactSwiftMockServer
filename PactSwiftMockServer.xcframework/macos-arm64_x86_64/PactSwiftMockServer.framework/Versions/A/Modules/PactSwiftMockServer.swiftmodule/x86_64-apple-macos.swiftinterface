@@ -7,8 +7,6 @@ import Foundation
 import Swift
 import _Concurrency
 import _StringProcessing
-import os.log
-import os
 public enum ProviderVerificationError : Swift.Error, Swift.Equatable {
   case verificationFailed
   case nullPointer
@@ -279,14 +277,12 @@ final public class Pact {
   }
   public enum Error {
     case canNotBeModified
-    case loggerApplyFailed(Swift.Int32)
-    case loggerSinkFailed(Swift.Int32)
     case canNotWritePact(Swift.Int32)
   }
   public static var version: Swift.String {
     get
   }
-  public static func initialize(logSinks: [PactSwiftMockServer.Pact.LogSinkConfig] = .defaultSinks) throws
+  public static func initialize(logSinks: [PactSwiftMockServer.Logging.Sink.Config] = .defaultSinks) throws
   final public let consumer: Swift.String
   final public let provider: Swift.String
   final public var filename: Swift.String {
@@ -307,33 +303,54 @@ public enum Generate {
   public static func value(regex: Swift.String) -> Swift.String?
   public static func date(format: Swift.String) -> Swift.String?
 }
-extension PactSwiftMockServer.Pact {
-  public struct LogSinkConfig {
-    public init(_ sink: PactSwiftMockServer.Pact.LogSink, filter: PactSwiftMockServer.Pact.LogLevelFilter)
+public enum Logging {
+  public enum Error {
+    case loggerApplyFailed(Swift.Int32)
+    case loggerSinkFailed(Swift.Int32)
   }
-  public enum LogLevelFilter {
+  public enum Level : Swift.String {
+    case trace, debug, info, warn, error
+    public init?(rawValue: Swift.String)
+    public typealias RawValue = Swift.String
+    public var rawValue: Swift.String {
+      get
+    }
+  }
+  public enum Filter {
     case off, error, warn, info, debug, trace
-    public static func == (a: PactSwiftMockServer.Pact.LogLevelFilter, b: PactSwiftMockServer.Pact.LogLevelFilter) -> Swift.Bool
+    public static func == (a: PactSwiftMockServer.Logging.Filter, b: PactSwiftMockServer.Logging.Filter) -> Swift.Bool
     public func hash(into hasher: inout Swift.Hasher)
     public var hashValue: Swift.Int {
       get
     }
   }
-  public enum LogSink {
+  public enum Sink {
+    public struct Config {
+      public init(_ sink: PactSwiftMockServer.Logging.Sink, filter: PactSwiftMockServer.Logging.Filter)
+    }
     case standardOut
     case standardError
     case file(Swift.String)
     case buffer
   }
-  public static func loggerApply() throws
-  public static func loggerInitialize()
-  public static func attachLogSink(_ sink: PactSwiftMockServer.Pact.LogSink, filter: PactSwiftMockServer.Pact.LogLevelFilter) throws
-  public static var logBuffer: Swift.String {
+  public static func apply() throws
+  public static func initialize()
+  public static func attachSink(_ sink: PactSwiftMockServer.Logging.Sink, filter: PactSwiftMockServer.Logging.Filter) throws
+  public static var buffer: Swift.String {
+    get
+  }
+  public static func log(_ level: PactSwiftMockServer.Logging.Level, message: Swift.String)
+  public static var lastInternalErrorMessage: Swift.String? {
     get
   }
 }
-extension Swift.Array where Element == PactSwiftMockServer.Pact.LogSinkConfig {
-  public static var defaultSinks: [PactSwiftMockServer.Pact.LogSinkConfig]
+extension Swift.Array where Element == PactSwiftMockServer.Logging.Sink.Config {
+  public static var defaultSinks: [PactSwiftMockServer.Logging.Sink.Config]
+}
+extension PactSwiftMockServer.Logging.Error : Foundation.LocalizedError {
+  public var failureReason: Swift.String? {
+    get
+  }
 }
 extension PactSwiftMockServer.Interaction.Error : Swift.Equatable {}
 extension PactSwiftMockServer.Interaction.Error : Swift.Hashable {}
@@ -345,5 +362,8 @@ extension PactSwiftMockServer.MockServer.TransferProtocol : Swift.Hashable {}
 extension PactSwiftMockServer.MockServer.TransferProtocol : Swift.RawRepresentable {}
 extension PactSwiftMockServer.Pact.Specification : Swift.Equatable {}
 extension PactSwiftMockServer.Pact.Specification : Swift.Hashable {}
-extension PactSwiftMockServer.Pact.LogLevelFilter : Swift.Equatable {}
-extension PactSwiftMockServer.Pact.LogLevelFilter : Swift.Hashable {}
+extension PactSwiftMockServer.Logging.Level : Swift.Equatable {}
+extension PactSwiftMockServer.Logging.Level : Swift.Hashable {}
+extension PactSwiftMockServer.Logging.Level : Swift.RawRepresentable {}
+extension PactSwiftMockServer.Logging.Filter : Swift.Equatable {}
+extension PactSwiftMockServer.Logging.Filter : Swift.Hashable {}

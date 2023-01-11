@@ -3539,23 +3539,6 @@
       },
       {
         "kind": "Import",
-        "name": "os.log",
-        "printedName": "os.log",
-        "declKind": "Import",
-        "moduleName": "PactSwiftMockServer"
-      },
-      {
-        "kind": "Import",
-        "name": "Foundation",
-        "printedName": "Foundation",
-        "declKind": "Import",
-        "moduleName": "PactSwiftMockServer",
-        "declAttributes": [
-          "RawDocComment"
-        ]
-      },
-      {
-        "kind": "Import",
         "name": "Foundation",
         "printedName": "Foundation",
         "declKind": "Import",
@@ -5954,109 +5937,6 @@
               },
               {
                 "kind": "Var",
-                "name": "loggerApplyFailed",
-                "printedName": "loggerApplyFailed",
-                "children": [
-                  {
-                    "kind": "TypeFunc",
-                    "name": "Function",
-                    "printedName": "(PactSwiftMockServer.Pact.Error.Type) -> (Swift.Int32) -> PactSwiftMockServer.Pact.Error",
-                    "children": [
-                      {
-                        "kind": "TypeFunc",
-                        "name": "Function",
-                        "printedName": "(Swift.Int32) -> PactSwiftMockServer.Pact.Error",
-                        "children": [
-                          {
-                            "kind": "TypeNominal",
-                            "name": "Error",
-                            "printedName": "PactSwiftMockServer.Pact.Error",
-                            "usr": "s:19PactSwiftMockServer0A0C5ErrorO"
-                          },
-                          {
-                            "kind": "TypeNominal",
-                            "name": "Int32",
-                            "printedName": "Swift.Int32",
-                            "usr": "s:s5Int32V"
-                          }
-                        ]
-                      },
-                      {
-                        "kind": "TypeNominal",
-                        "name": "Metatype",
-                        "printedName": "PactSwiftMockServer.Pact.Error.Type",
-                        "children": [
-                          {
-                            "kind": "TypeNominal",
-                            "name": "Error",
-                            "printedName": "PactSwiftMockServer.Pact.Error",
-                            "usr": "s:19PactSwiftMockServer0A0C5ErrorO"
-                          }
-                        ]
-                      }
-                    ]
-                  }
-                ],
-                "declKind": "EnumElement",
-                "usr": "s:19PactSwiftMockServer0A0C5ErrorO17loggerApplyFailedyAEs5Int32VcAEmF",
-                "mangledName": "$s19PactSwiftMockServer0A0C5ErrorO17loggerApplyFailedyAEs5Int32VcAEmF",
-                "moduleName": "PactSwiftMockServer"
-              },
-              {
-                "kind": "Var",
-                "name": "loggerSinkFailed",
-                "printedName": "loggerSinkFailed",
-                "children": [
-                  {
-                    "kind": "TypeFunc",
-                    "name": "Function",
-                    "printedName": "(PactSwiftMockServer.Pact.Error.Type) -> (Swift.Int32) -> PactSwiftMockServer.Pact.Error",
-                    "children": [
-                      {
-                        "kind": "TypeFunc",
-                        "name": "Function",
-                        "printedName": "(Swift.Int32) -> PactSwiftMockServer.Pact.Error",
-                        "children": [
-                          {
-                            "kind": "TypeNominal",
-                            "name": "Error",
-                            "printedName": "PactSwiftMockServer.Pact.Error",
-                            "usr": "s:19PactSwiftMockServer0A0C5ErrorO"
-                          },
-                          {
-                            "kind": "TypeNominal",
-                            "name": "Int32",
-                            "printedName": "Swift.Int32",
-                            "usr": "s:s5Int32V"
-                          }
-                        ]
-                      },
-                      {
-                        "kind": "TypeNominal",
-                        "name": "Metatype",
-                        "printedName": "PactSwiftMockServer.Pact.Error.Type",
-                        "children": [
-                          {
-                            "kind": "TypeNominal",
-                            "name": "Error",
-                            "printedName": "PactSwiftMockServer.Pact.Error",
-                            "usr": "s:19PactSwiftMockServer0A0C5ErrorO"
-                          }
-                        ]
-                      }
-                    ]
-                  }
-                ],
-                "declKind": "EnumElement",
-                "usr": "s:19PactSwiftMockServer0A0C5ErrorO16loggerSinkFailedyAEs5Int32VcAEmF",
-                "mangledName": "$s19PactSwiftMockServer0A0C5ErrorO16loggerSinkFailedyAEs5Int32VcAEmF",
-                "moduleName": "PactSwiftMockServer",
-                "declAttributes": [
-                  "RawDocComment"
-                ]
-              },
-              {
-                "kind": "Var",
                 "name": "canNotWritePact",
                 "printedName": "canNotWritePact",
                 "children": [
@@ -6257,13 +6137,13 @@
               {
                 "kind": "TypeNominal",
                 "name": "Array",
-                "printedName": "[PactSwiftMockServer.Pact.LogSinkConfig]",
+                "printedName": "[PactSwiftMockServer.Logging.Sink.Config]",
                 "children": [
                   {
                     "kind": "TypeNominal",
-                    "name": "LogSinkConfig",
-                    "printedName": "PactSwiftMockServer.Pact.LogSinkConfig",
-                    "usr": "s:19PactSwiftMockServer0A0C13LogSinkConfigV"
+                    "name": "Config",
+                    "printedName": "PactSwiftMockServer.Logging.Sink.Config",
+                    "usr": "s:19PactSwiftMockServer7LoggingO4SinkO6ConfigV"
                   }
                 ],
                 "hasDefaultArg": true,
@@ -6271,8 +6151,8 @@
               }
             ],
             "declKind": "Func",
-            "usr": "s:19PactSwiftMockServer0A0C10initialize8logSinksySayAC13LogSinkConfigVG_tKFZ",
-            "mangledName": "$s19PactSwiftMockServer0A0C10initialize8logSinksySayAC13LogSinkConfigVG_tKFZ",
+            "usr": "s:19PactSwiftMockServer0A0C10initialize8logSinksySayAA7LoggingO4SinkO6ConfigVG_tKFZ",
+            "mangledName": "$s19PactSwiftMockServer0A0C10initialize8logSinksySayAA7LoggingO4SinkO6ConfigVG_tKFZ",
             "moduleName": "PactSwiftMockServer",
             "static": true,
             "declAttributes": [
@@ -6569,704 +6449,6 @@
             ],
             "throwing": true,
             "funcSelfKind": "NonMutating"
-          },
-          {
-            "kind": "TypeDecl",
-            "name": "LogSinkConfig",
-            "printedName": "LogSinkConfig",
-            "children": [
-              {
-                "kind": "Constructor",
-                "name": "init",
-                "printedName": "init(_:filter:)",
-                "children": [
-                  {
-                    "kind": "TypeNominal",
-                    "name": "LogSinkConfig",
-                    "printedName": "PactSwiftMockServer.Pact.LogSinkConfig",
-                    "usr": "s:19PactSwiftMockServer0A0C13LogSinkConfigV"
-                  },
-                  {
-                    "kind": "TypeNominal",
-                    "name": "LogSink",
-                    "printedName": "PactSwiftMockServer.Pact.LogSink",
-                    "usr": "s:19PactSwiftMockServer0A0C7LogSinkO"
-                  },
-                  {
-                    "kind": "TypeNominal",
-                    "name": "LogLevelFilter",
-                    "printedName": "PactSwiftMockServer.Pact.LogLevelFilter",
-                    "usr": "s:19PactSwiftMockServer0A0C14LogLevelFilterO"
-                  }
-                ],
-                "declKind": "Constructor",
-                "usr": "s:19PactSwiftMockServer0A0C13LogSinkConfigV_6filterAeC0eF0O_AC0E11LevelFilterOtcfc",
-                "mangledName": "$s19PactSwiftMockServer0A0C13LogSinkConfigV_6filterAeC0eF0O_AC0E11LevelFilterOtcfc",
-                "moduleName": "PactSwiftMockServer",
-                "declAttributes": [
-                  "AccessControl"
-                ],
-                "init_kind": "Designated"
-              }
-            ],
-            "declKind": "Struct",
-            "usr": "s:19PactSwiftMockServer0A0C13LogSinkConfigV",
-            "mangledName": "$s19PactSwiftMockServer0A0C13LogSinkConfigV",
-            "moduleName": "PactSwiftMockServer",
-            "isFromExtension": true
-          },
-          {
-            "kind": "TypeDecl",
-            "name": "LogLevelFilter",
-            "printedName": "LogLevelFilter",
-            "children": [
-              {
-                "kind": "Var",
-                "name": "off",
-                "printedName": "off",
-                "children": [
-                  {
-                    "kind": "TypeFunc",
-                    "name": "Function",
-                    "printedName": "(PactSwiftMockServer.Pact.LogLevelFilter.Type) -> PactSwiftMockServer.Pact.LogLevelFilter",
-                    "children": [
-                      {
-                        "kind": "TypeNominal",
-                        "name": "LogLevelFilter",
-                        "printedName": "PactSwiftMockServer.Pact.LogLevelFilter",
-                        "usr": "s:19PactSwiftMockServer0A0C14LogLevelFilterO"
-                      },
-                      {
-                        "kind": "TypeNominal",
-                        "name": "Metatype",
-                        "printedName": "PactSwiftMockServer.Pact.LogLevelFilter.Type",
-                        "children": [
-                          {
-                            "kind": "TypeNominal",
-                            "name": "LogLevelFilter",
-                            "printedName": "PactSwiftMockServer.Pact.LogLevelFilter",
-                            "usr": "s:19PactSwiftMockServer0A0C14LogLevelFilterO"
-                          }
-                        ]
-                      }
-                    ]
-                  }
-                ],
-                "declKind": "EnumElement",
-                "usr": "s:19PactSwiftMockServer0A0C14LogLevelFilterO3offyA2EmF",
-                "mangledName": "$s19PactSwiftMockServer0A0C14LogLevelFilterO3offyA2EmF",
-                "moduleName": "PactSwiftMockServer"
-              },
-              {
-                "kind": "Var",
-                "name": "error",
-                "printedName": "error",
-                "children": [
-                  {
-                    "kind": "TypeFunc",
-                    "name": "Function",
-                    "printedName": "(PactSwiftMockServer.Pact.LogLevelFilter.Type) -> PactSwiftMockServer.Pact.LogLevelFilter",
-                    "children": [
-                      {
-                        "kind": "TypeNominal",
-                        "name": "LogLevelFilter",
-                        "printedName": "PactSwiftMockServer.Pact.LogLevelFilter",
-                        "usr": "s:19PactSwiftMockServer0A0C14LogLevelFilterO"
-                      },
-                      {
-                        "kind": "TypeNominal",
-                        "name": "Metatype",
-                        "printedName": "PactSwiftMockServer.Pact.LogLevelFilter.Type",
-                        "children": [
-                          {
-                            "kind": "TypeNominal",
-                            "name": "LogLevelFilter",
-                            "printedName": "PactSwiftMockServer.Pact.LogLevelFilter",
-                            "usr": "s:19PactSwiftMockServer0A0C14LogLevelFilterO"
-                          }
-                        ]
-                      }
-                    ]
-                  }
-                ],
-                "declKind": "EnumElement",
-                "usr": "s:19PactSwiftMockServer0A0C14LogLevelFilterO5erroryA2EmF",
-                "mangledName": "$s19PactSwiftMockServer0A0C14LogLevelFilterO5erroryA2EmF",
-                "moduleName": "PactSwiftMockServer"
-              },
-              {
-                "kind": "Var",
-                "name": "warn",
-                "printedName": "warn",
-                "children": [
-                  {
-                    "kind": "TypeFunc",
-                    "name": "Function",
-                    "printedName": "(PactSwiftMockServer.Pact.LogLevelFilter.Type) -> PactSwiftMockServer.Pact.LogLevelFilter",
-                    "children": [
-                      {
-                        "kind": "TypeNominal",
-                        "name": "LogLevelFilter",
-                        "printedName": "PactSwiftMockServer.Pact.LogLevelFilter",
-                        "usr": "s:19PactSwiftMockServer0A0C14LogLevelFilterO"
-                      },
-                      {
-                        "kind": "TypeNominal",
-                        "name": "Metatype",
-                        "printedName": "PactSwiftMockServer.Pact.LogLevelFilter.Type",
-                        "children": [
-                          {
-                            "kind": "TypeNominal",
-                            "name": "LogLevelFilter",
-                            "printedName": "PactSwiftMockServer.Pact.LogLevelFilter",
-                            "usr": "s:19PactSwiftMockServer0A0C14LogLevelFilterO"
-                          }
-                        ]
-                      }
-                    ]
-                  }
-                ],
-                "declKind": "EnumElement",
-                "usr": "s:19PactSwiftMockServer0A0C14LogLevelFilterO4warnyA2EmF",
-                "mangledName": "$s19PactSwiftMockServer0A0C14LogLevelFilterO4warnyA2EmF",
-                "moduleName": "PactSwiftMockServer"
-              },
-              {
-                "kind": "Var",
-                "name": "info",
-                "printedName": "info",
-                "children": [
-                  {
-                    "kind": "TypeFunc",
-                    "name": "Function",
-                    "printedName": "(PactSwiftMockServer.Pact.LogLevelFilter.Type) -> PactSwiftMockServer.Pact.LogLevelFilter",
-                    "children": [
-                      {
-                        "kind": "TypeNominal",
-                        "name": "LogLevelFilter",
-                        "printedName": "PactSwiftMockServer.Pact.LogLevelFilter",
-                        "usr": "s:19PactSwiftMockServer0A0C14LogLevelFilterO"
-                      },
-                      {
-                        "kind": "TypeNominal",
-                        "name": "Metatype",
-                        "printedName": "PactSwiftMockServer.Pact.LogLevelFilter.Type",
-                        "children": [
-                          {
-                            "kind": "TypeNominal",
-                            "name": "LogLevelFilter",
-                            "printedName": "PactSwiftMockServer.Pact.LogLevelFilter",
-                            "usr": "s:19PactSwiftMockServer0A0C14LogLevelFilterO"
-                          }
-                        ]
-                      }
-                    ]
-                  }
-                ],
-                "declKind": "EnumElement",
-                "usr": "s:19PactSwiftMockServer0A0C14LogLevelFilterO4infoyA2EmF",
-                "mangledName": "$s19PactSwiftMockServer0A0C14LogLevelFilterO4infoyA2EmF",
-                "moduleName": "PactSwiftMockServer"
-              },
-              {
-                "kind": "Var",
-                "name": "debug",
-                "printedName": "debug",
-                "children": [
-                  {
-                    "kind": "TypeFunc",
-                    "name": "Function",
-                    "printedName": "(PactSwiftMockServer.Pact.LogLevelFilter.Type) -> PactSwiftMockServer.Pact.LogLevelFilter",
-                    "children": [
-                      {
-                        "kind": "TypeNominal",
-                        "name": "LogLevelFilter",
-                        "printedName": "PactSwiftMockServer.Pact.LogLevelFilter",
-                        "usr": "s:19PactSwiftMockServer0A0C14LogLevelFilterO"
-                      },
-                      {
-                        "kind": "TypeNominal",
-                        "name": "Metatype",
-                        "printedName": "PactSwiftMockServer.Pact.LogLevelFilter.Type",
-                        "children": [
-                          {
-                            "kind": "TypeNominal",
-                            "name": "LogLevelFilter",
-                            "printedName": "PactSwiftMockServer.Pact.LogLevelFilter",
-                            "usr": "s:19PactSwiftMockServer0A0C14LogLevelFilterO"
-                          }
-                        ]
-                      }
-                    ]
-                  }
-                ],
-                "declKind": "EnumElement",
-                "usr": "s:19PactSwiftMockServer0A0C14LogLevelFilterO5debugyA2EmF",
-                "mangledName": "$s19PactSwiftMockServer0A0C14LogLevelFilterO5debugyA2EmF",
-                "moduleName": "PactSwiftMockServer"
-              },
-              {
-                "kind": "Var",
-                "name": "trace",
-                "printedName": "trace",
-                "children": [
-                  {
-                    "kind": "TypeFunc",
-                    "name": "Function",
-                    "printedName": "(PactSwiftMockServer.Pact.LogLevelFilter.Type) -> PactSwiftMockServer.Pact.LogLevelFilter",
-                    "children": [
-                      {
-                        "kind": "TypeNominal",
-                        "name": "LogLevelFilter",
-                        "printedName": "PactSwiftMockServer.Pact.LogLevelFilter",
-                        "usr": "s:19PactSwiftMockServer0A0C14LogLevelFilterO"
-                      },
-                      {
-                        "kind": "TypeNominal",
-                        "name": "Metatype",
-                        "printedName": "PactSwiftMockServer.Pact.LogLevelFilter.Type",
-                        "children": [
-                          {
-                            "kind": "TypeNominal",
-                            "name": "LogLevelFilter",
-                            "printedName": "PactSwiftMockServer.Pact.LogLevelFilter",
-                            "usr": "s:19PactSwiftMockServer0A0C14LogLevelFilterO"
-                          }
-                        ]
-                      }
-                    ]
-                  }
-                ],
-                "declKind": "EnumElement",
-                "usr": "s:19PactSwiftMockServer0A0C14LogLevelFilterO5traceyA2EmF",
-                "mangledName": "$s19PactSwiftMockServer0A0C14LogLevelFilterO5traceyA2EmF",
-                "moduleName": "PactSwiftMockServer"
-              },
-              {
-                "kind": "Function",
-                "name": "==",
-                "printedName": "==(_:_:)",
-                "children": [
-                  {
-                    "kind": "TypeNominal",
-                    "name": "Bool",
-                    "printedName": "Swift.Bool",
-                    "usr": "s:Sb"
-                  },
-                  {
-                    "kind": "TypeNominal",
-                    "name": "LogLevelFilter",
-                    "printedName": "PactSwiftMockServer.Pact.LogLevelFilter",
-                    "usr": "s:19PactSwiftMockServer0A0C14LogLevelFilterO"
-                  },
-                  {
-                    "kind": "TypeNominal",
-                    "name": "LogLevelFilter",
-                    "printedName": "PactSwiftMockServer.Pact.LogLevelFilter",
-                    "usr": "s:19PactSwiftMockServer0A0C14LogLevelFilterO"
-                  }
-                ],
-                "declKind": "Func",
-                "usr": "s:19PactSwiftMockServer0A0C14LogLevelFilterO2eeoiySbAE_AEtFZ",
-                "mangledName": "$s19PactSwiftMockServer0A0C14LogLevelFilterO2eeoiySbAE_AEtFZ",
-                "moduleName": "PactSwiftMockServer",
-                "static": true,
-                "implicit": true,
-                "funcSelfKind": "NonMutating"
-              },
-              {
-                "kind": "Var",
-                "name": "hashValue",
-                "printedName": "hashValue",
-                "children": [
-                  {
-                    "kind": "TypeNominal",
-                    "name": "Int",
-                    "printedName": "Swift.Int",
-                    "usr": "s:Si"
-                  }
-                ],
-                "declKind": "Var",
-                "usr": "s:19PactSwiftMockServer0A0C14LogLevelFilterO9hashValueSivp",
-                "mangledName": "$s19PactSwiftMockServer0A0C14LogLevelFilterO9hashValueSivp",
-                "moduleName": "PactSwiftMockServer",
-                "implicit": true,
-                "accessors": [
-                  {
-                    "kind": "Accessor",
-                    "name": "Get",
-                    "printedName": "Get()",
-                    "children": [
-                      {
-                        "kind": "TypeNominal",
-                        "name": "Int",
-                        "printedName": "Swift.Int",
-                        "usr": "s:Si"
-                      }
-                    ],
-                    "declKind": "Accessor",
-                    "usr": "s:19PactSwiftMockServer0A0C14LogLevelFilterO9hashValueSivg",
-                    "mangledName": "$s19PactSwiftMockServer0A0C14LogLevelFilterO9hashValueSivg",
-                    "moduleName": "PactSwiftMockServer",
-                    "implicit": true,
-                    "accessorKind": "get"
-                  }
-                ]
-              },
-              {
-                "kind": "Function",
-                "name": "hash",
-                "printedName": "hash(into:)",
-                "children": [
-                  {
-                    "kind": "TypeNominal",
-                    "name": "Void",
-                    "printedName": "()"
-                  },
-                  {
-                    "kind": "TypeNominal",
-                    "name": "Hasher",
-                    "printedName": "Swift.Hasher",
-                    "paramValueOwnership": "InOut",
-                    "usr": "s:s6HasherV"
-                  }
-                ],
-                "declKind": "Func",
-                "usr": "s:19PactSwiftMockServer0A0C14LogLevelFilterO4hash4intoys6HasherVz_tF",
-                "mangledName": "$s19PactSwiftMockServer0A0C14LogLevelFilterO4hash4intoys6HasherVz_tF",
-                "moduleName": "PactSwiftMockServer",
-                "implicit": true,
-                "funcSelfKind": "NonMutating"
-              }
-            ],
-            "declKind": "Enum",
-            "usr": "s:19PactSwiftMockServer0A0C14LogLevelFilterO",
-            "mangledName": "$s19PactSwiftMockServer0A0C14LogLevelFilterO",
-            "moduleName": "PactSwiftMockServer",
-            "isFromExtension": true,
-            "conformances": [
-              {
-                "kind": "Conformance",
-                "name": "Equatable",
-                "printedName": "Equatable",
-                "usr": "s:SQ",
-                "mangledName": "$sSQ"
-              },
-              {
-                "kind": "Conformance",
-                "name": "Hashable",
-                "printedName": "Hashable",
-                "usr": "s:SH",
-                "mangledName": "$sSH"
-              }
-            ]
-          },
-          {
-            "kind": "TypeDecl",
-            "name": "LogSink",
-            "printedName": "LogSink",
-            "children": [
-              {
-                "kind": "Var",
-                "name": "standardOut",
-                "printedName": "standardOut",
-                "children": [
-                  {
-                    "kind": "TypeFunc",
-                    "name": "Function",
-                    "printedName": "(PactSwiftMockServer.Pact.LogSink.Type) -> PactSwiftMockServer.Pact.LogSink",
-                    "children": [
-                      {
-                        "kind": "TypeNominal",
-                        "name": "LogSink",
-                        "printedName": "PactSwiftMockServer.Pact.LogSink",
-                        "usr": "s:19PactSwiftMockServer0A0C7LogSinkO"
-                      },
-                      {
-                        "kind": "TypeNominal",
-                        "name": "Metatype",
-                        "printedName": "PactSwiftMockServer.Pact.LogSink.Type",
-                        "children": [
-                          {
-                            "kind": "TypeNominal",
-                            "name": "LogSink",
-                            "printedName": "PactSwiftMockServer.Pact.LogSink",
-                            "usr": "s:19PactSwiftMockServer0A0C7LogSinkO"
-                          }
-                        ]
-                      }
-                    ]
-                  }
-                ],
-                "declKind": "EnumElement",
-                "usr": "s:19PactSwiftMockServer0A0C7LogSinkO11standardOutyA2EmF",
-                "mangledName": "$s19PactSwiftMockServer0A0C7LogSinkO11standardOutyA2EmF",
-                "moduleName": "PactSwiftMockServer"
-              },
-              {
-                "kind": "Var",
-                "name": "standardError",
-                "printedName": "standardError",
-                "children": [
-                  {
-                    "kind": "TypeFunc",
-                    "name": "Function",
-                    "printedName": "(PactSwiftMockServer.Pact.LogSink.Type) -> PactSwiftMockServer.Pact.LogSink",
-                    "children": [
-                      {
-                        "kind": "TypeNominal",
-                        "name": "LogSink",
-                        "printedName": "PactSwiftMockServer.Pact.LogSink",
-                        "usr": "s:19PactSwiftMockServer0A0C7LogSinkO"
-                      },
-                      {
-                        "kind": "TypeNominal",
-                        "name": "Metatype",
-                        "printedName": "PactSwiftMockServer.Pact.LogSink.Type",
-                        "children": [
-                          {
-                            "kind": "TypeNominal",
-                            "name": "LogSink",
-                            "printedName": "PactSwiftMockServer.Pact.LogSink",
-                            "usr": "s:19PactSwiftMockServer0A0C7LogSinkO"
-                          }
-                        ]
-                      }
-                    ]
-                  }
-                ],
-                "declKind": "EnumElement",
-                "usr": "s:19PactSwiftMockServer0A0C7LogSinkO13standardErroryA2EmF",
-                "mangledName": "$s19PactSwiftMockServer0A0C7LogSinkO13standardErroryA2EmF",
-                "moduleName": "PactSwiftMockServer"
-              },
-              {
-                "kind": "Var",
-                "name": "file",
-                "printedName": "file",
-                "children": [
-                  {
-                    "kind": "TypeFunc",
-                    "name": "Function",
-                    "printedName": "(PactSwiftMockServer.Pact.LogSink.Type) -> (Swift.String) -> PactSwiftMockServer.Pact.LogSink",
-                    "children": [
-                      {
-                        "kind": "TypeFunc",
-                        "name": "Function",
-                        "printedName": "(Swift.String) -> PactSwiftMockServer.Pact.LogSink",
-                        "children": [
-                          {
-                            "kind": "TypeNominal",
-                            "name": "LogSink",
-                            "printedName": "PactSwiftMockServer.Pact.LogSink",
-                            "usr": "s:19PactSwiftMockServer0A0C7LogSinkO"
-                          },
-                          {
-                            "kind": "TypeNominal",
-                            "name": "String",
-                            "printedName": "Swift.String",
-                            "usr": "s:SS"
-                          }
-                        ]
-                      },
-                      {
-                        "kind": "TypeNominal",
-                        "name": "Metatype",
-                        "printedName": "PactSwiftMockServer.Pact.LogSink.Type",
-                        "children": [
-                          {
-                            "kind": "TypeNominal",
-                            "name": "LogSink",
-                            "printedName": "PactSwiftMockServer.Pact.LogSink",
-                            "usr": "s:19PactSwiftMockServer0A0C7LogSinkO"
-                          }
-                        ]
-                      }
-                    ]
-                  }
-                ],
-                "declKind": "EnumElement",
-                "usr": "s:19PactSwiftMockServer0A0C7LogSinkO4fileyAESScAEmF",
-                "mangledName": "$s19PactSwiftMockServer0A0C7LogSinkO4fileyAESScAEmF",
-                "moduleName": "PactSwiftMockServer"
-              },
-              {
-                "kind": "Var",
-                "name": "buffer",
-                "printedName": "buffer",
-                "children": [
-                  {
-                    "kind": "TypeFunc",
-                    "name": "Function",
-                    "printedName": "(PactSwiftMockServer.Pact.LogSink.Type) -> PactSwiftMockServer.Pact.LogSink",
-                    "children": [
-                      {
-                        "kind": "TypeNominal",
-                        "name": "LogSink",
-                        "printedName": "PactSwiftMockServer.Pact.LogSink",
-                        "usr": "s:19PactSwiftMockServer0A0C7LogSinkO"
-                      },
-                      {
-                        "kind": "TypeNominal",
-                        "name": "Metatype",
-                        "printedName": "PactSwiftMockServer.Pact.LogSink.Type",
-                        "children": [
-                          {
-                            "kind": "TypeNominal",
-                            "name": "LogSink",
-                            "printedName": "PactSwiftMockServer.Pact.LogSink",
-                            "usr": "s:19PactSwiftMockServer0A0C7LogSinkO"
-                          }
-                        ]
-                      }
-                    ]
-                  }
-                ],
-                "declKind": "EnumElement",
-                "usr": "s:19PactSwiftMockServer0A0C7LogSinkO6bufferyA2EmF",
-                "mangledName": "$s19PactSwiftMockServer0A0C7LogSinkO6bufferyA2EmF",
-                "moduleName": "PactSwiftMockServer"
-              }
-            ],
-            "declKind": "Enum",
-            "usr": "s:19PactSwiftMockServer0A0C7LogSinkO",
-            "mangledName": "$s19PactSwiftMockServer0A0C7LogSinkO",
-            "moduleName": "PactSwiftMockServer",
-            "declAttributes": [
-              "RawDocComment"
-            ],
-            "isFromExtension": true
-          },
-          {
-            "kind": "Function",
-            "name": "loggerApply",
-            "printedName": "loggerApply()",
-            "children": [
-              {
-                "kind": "TypeNominal",
-                "name": "Void",
-                "printedName": "()"
-              }
-            ],
-            "declKind": "Func",
-            "usr": "s:19PactSwiftMockServer0A0C11loggerApplyyyKFZ",
-            "mangledName": "$s19PactSwiftMockServer0A0C11loggerApplyyyKFZ",
-            "moduleName": "PactSwiftMockServer",
-            "static": true,
-            "declAttributes": [
-              "Final",
-              "RawDocComment"
-            ],
-            "isFromExtension": true,
-            "throwing": true,
-            "funcSelfKind": "NonMutating"
-          },
-          {
-            "kind": "Function",
-            "name": "loggerInitialize",
-            "printedName": "loggerInitialize()",
-            "children": [
-              {
-                "kind": "TypeNominal",
-                "name": "Void",
-                "printedName": "()"
-              }
-            ],
-            "declKind": "Func",
-            "usr": "s:19PactSwiftMockServer0A0C16loggerInitializeyyFZ",
-            "mangledName": "$s19PactSwiftMockServer0A0C16loggerInitializeyyFZ",
-            "moduleName": "PactSwiftMockServer",
-            "static": true,
-            "declAttributes": [
-              "Final",
-              "RawDocComment"
-            ],
-            "isFromExtension": true,
-            "funcSelfKind": "NonMutating"
-          },
-          {
-            "kind": "Function",
-            "name": "attachLogSink",
-            "printedName": "attachLogSink(_:filter:)",
-            "children": [
-              {
-                "kind": "TypeNominal",
-                "name": "Void",
-                "printedName": "()"
-              },
-              {
-                "kind": "TypeNominal",
-                "name": "LogSink",
-                "printedName": "PactSwiftMockServer.Pact.LogSink",
-                "usr": "s:19PactSwiftMockServer0A0C7LogSinkO"
-              },
-              {
-                "kind": "TypeNominal",
-                "name": "LogLevelFilter",
-                "printedName": "PactSwiftMockServer.Pact.LogLevelFilter",
-                "usr": "s:19PactSwiftMockServer0A0C14LogLevelFilterO"
-              }
-            ],
-            "declKind": "Func",
-            "usr": "s:19PactSwiftMockServer0A0C13attachLogSink_6filteryAC0fG0O_AC0F11LevelFilterOtKFZ",
-            "mangledName": "$s19PactSwiftMockServer0A0C13attachLogSink_6filteryAC0fG0O_AC0F11LevelFilterOtKFZ",
-            "moduleName": "PactSwiftMockServer",
-            "static": true,
-            "declAttributes": [
-              "Final",
-              "RawDocComment"
-            ],
-            "isFromExtension": true,
-            "throwing": true,
-            "funcSelfKind": "NonMutating"
-          },
-          {
-            "kind": "Var",
-            "name": "logBuffer",
-            "printedName": "logBuffer",
-            "children": [
-              {
-                "kind": "TypeNominal",
-                "name": "String",
-                "printedName": "Swift.String",
-                "usr": "s:SS"
-              }
-            ],
-            "declKind": "Var",
-            "usr": "s:19PactSwiftMockServer0A0C9logBufferSSvpZ",
-            "mangledName": "$s19PactSwiftMockServer0A0C9logBufferSSvpZ",
-            "moduleName": "PactSwiftMockServer",
-            "static": true,
-            "declAttributes": [
-              "Final",
-              "RawDocComment"
-            ],
-            "isFromExtension": true,
-            "accessors": [
-              {
-                "kind": "Accessor",
-                "name": "Get",
-                "printedName": "Get()",
-                "children": [
-                  {
-                    "kind": "TypeNominal",
-                    "name": "String",
-                    "printedName": "Swift.String",
-                    "usr": "s:SS"
-                  }
-                ],
-                "declKind": "Accessor",
-                "usr": "s:19PactSwiftMockServer0A0C9logBufferSSvgZ",
-                "mangledName": "$s19PactSwiftMockServer0A0C9logBufferSSvgZ",
-                "moduleName": "PactSwiftMockServer",
-                "static": true,
-                "declAttributes": [
-                  "Final"
-                ],
-                "isFromExtension": true,
-                "accessorKind": "get"
-              }
-            ]
           }
         ],
         "declKind": "Class",
@@ -7388,6 +6570,1318 @@
       },
       {
         "kind": "TypeDecl",
+        "name": "Logging",
+        "printedName": "Logging",
+        "children": [
+          {
+            "kind": "TypeDecl",
+            "name": "Error",
+            "printedName": "Error",
+            "children": [
+              {
+                "kind": "Var",
+                "name": "loggerApplyFailed",
+                "printedName": "loggerApplyFailed",
+                "children": [
+                  {
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(PactSwiftMockServer.Logging.Error.Type) -> (Swift.Int32) -> PactSwiftMockServer.Logging.Error",
+                    "children": [
+                      {
+                        "kind": "TypeFunc",
+                        "name": "Function",
+                        "printedName": "(Swift.Int32) -> PactSwiftMockServer.Logging.Error",
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Error",
+                            "printedName": "PactSwiftMockServer.Logging.Error",
+                            "usr": "s:19PactSwiftMockServer7LoggingO5ErrorO"
+                          },
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Int32",
+                            "printedName": "Swift.Int32",
+                            "usr": "s:s5Int32V"
+                          }
+                        ]
+                      },
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "PactSwiftMockServer.Logging.Error.Type",
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Error",
+                            "printedName": "PactSwiftMockServer.Logging.Error",
+                            "usr": "s:19PactSwiftMockServer7LoggingO5ErrorO"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ],
+                "declKind": "EnumElement",
+                "usr": "s:19PactSwiftMockServer7LoggingO5ErrorO17loggerApplyFailedyAEs5Int32VcAEmF",
+                "mangledName": "$s19PactSwiftMockServer7LoggingO5ErrorO17loggerApplyFailedyAEs5Int32VcAEmF",
+                "moduleName": "PactSwiftMockServer"
+              },
+              {
+                "kind": "Var",
+                "name": "loggerSinkFailed",
+                "printedName": "loggerSinkFailed",
+                "children": [
+                  {
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(PactSwiftMockServer.Logging.Error.Type) -> (Swift.Int32) -> PactSwiftMockServer.Logging.Error",
+                    "children": [
+                      {
+                        "kind": "TypeFunc",
+                        "name": "Function",
+                        "printedName": "(Swift.Int32) -> PactSwiftMockServer.Logging.Error",
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Error",
+                            "printedName": "PactSwiftMockServer.Logging.Error",
+                            "usr": "s:19PactSwiftMockServer7LoggingO5ErrorO"
+                          },
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Int32",
+                            "printedName": "Swift.Int32",
+                            "usr": "s:s5Int32V"
+                          }
+                        ]
+                      },
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "PactSwiftMockServer.Logging.Error.Type",
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Error",
+                            "printedName": "PactSwiftMockServer.Logging.Error",
+                            "usr": "s:19PactSwiftMockServer7LoggingO5ErrorO"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ],
+                "declKind": "EnumElement",
+                "usr": "s:19PactSwiftMockServer7LoggingO5ErrorO16loggerSinkFailedyAEs5Int32VcAEmF",
+                "mangledName": "$s19PactSwiftMockServer7LoggingO5ErrorO16loggerSinkFailedyAEs5Int32VcAEmF",
+                "moduleName": "PactSwiftMockServer",
+                "declAttributes": [
+                  "RawDocComment"
+                ]
+              },
+              {
+                "kind": "Var",
+                "name": "failureReason",
+                "printedName": "failureReason",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "Swift.String?",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "String",
+                        "printedName": "Swift.String",
+                        "usr": "s:SS"
+                      }
+                    ],
+                    "usr": "s:Sq"
+                  }
+                ],
+                "declKind": "Var",
+                "usr": "s:19PactSwiftMockServer7LoggingO5ErrorO13failureReasonSSSgvp",
+                "mangledName": "$s19PactSwiftMockServer7LoggingO5ErrorO13failureReasonSSSgvp",
+                "moduleName": "PactSwiftMockServer",
+                "declAttributes": [
+                  "AccessControl"
+                ],
+                "isFromExtension": true,
+                "accessors": [
+                  {
+                    "kind": "Accessor",
+                    "name": "Get",
+                    "printedName": "Get()",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Optional",
+                        "printedName": "Swift.String?",
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "String",
+                            "printedName": "Swift.String",
+                            "usr": "s:SS"
+                          }
+                        ],
+                        "usr": "s:Sq"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "usr": "s:19PactSwiftMockServer7LoggingO5ErrorO13failureReasonSSSgvg",
+                    "mangledName": "$s19PactSwiftMockServer7LoggingO5ErrorO13failureReasonSSSgvg",
+                    "moduleName": "PactSwiftMockServer",
+                    "isFromExtension": true,
+                    "accessorKind": "get"
+                  }
+                ]
+              }
+            ],
+            "declKind": "Enum",
+            "usr": "s:19PactSwiftMockServer7LoggingO5ErrorO",
+            "mangledName": "$s19PactSwiftMockServer7LoggingO5ErrorO",
+            "moduleName": "PactSwiftMockServer",
+            "declAttributes": [
+              "AccessControl"
+            ],
+            "conformances": [
+              {
+                "kind": "Conformance",
+                "name": "LocalizedError",
+                "printedName": "LocalizedError",
+                "usr": "s:10Foundation14LocalizedErrorP",
+                "mangledName": "$s10Foundation14LocalizedErrorP"
+              },
+              {
+                "kind": "Conformance",
+                "name": "Error",
+                "printedName": "Error",
+                "usr": "s:s5ErrorP",
+                "mangledName": "$ss5ErrorP"
+              },
+              {
+                "kind": "Conformance",
+                "name": "Sendable",
+                "printedName": "Sendable",
+                "usr": "s:s8SendableP",
+                "mangledName": "$ss8SendableP"
+              }
+            ]
+          },
+          {
+            "kind": "TypeDecl",
+            "name": "Level",
+            "printedName": "Level",
+            "children": [
+              {
+                "kind": "Var",
+                "name": "trace",
+                "printedName": "trace",
+                "children": [
+                  {
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(PactSwiftMockServer.Logging.Level.Type) -> PactSwiftMockServer.Logging.Level",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Level",
+                        "printedName": "PactSwiftMockServer.Logging.Level",
+                        "usr": "s:19PactSwiftMockServer7LoggingO5LevelO"
+                      },
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "PactSwiftMockServer.Logging.Level.Type",
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Level",
+                            "printedName": "PactSwiftMockServer.Logging.Level",
+                            "usr": "s:19PactSwiftMockServer7LoggingO5LevelO"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ],
+                "declKind": "EnumElement",
+                "usr": "s:19PactSwiftMockServer7LoggingO5LevelO5traceyA2EmF",
+                "mangledName": "$s19PactSwiftMockServer7LoggingO5LevelO5traceyA2EmF",
+                "moduleName": "PactSwiftMockServer"
+              },
+              {
+                "kind": "Var",
+                "name": "debug",
+                "printedName": "debug",
+                "children": [
+                  {
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(PactSwiftMockServer.Logging.Level.Type) -> PactSwiftMockServer.Logging.Level",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Level",
+                        "printedName": "PactSwiftMockServer.Logging.Level",
+                        "usr": "s:19PactSwiftMockServer7LoggingO5LevelO"
+                      },
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "PactSwiftMockServer.Logging.Level.Type",
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Level",
+                            "printedName": "PactSwiftMockServer.Logging.Level",
+                            "usr": "s:19PactSwiftMockServer7LoggingO5LevelO"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ],
+                "declKind": "EnumElement",
+                "usr": "s:19PactSwiftMockServer7LoggingO5LevelO5debugyA2EmF",
+                "mangledName": "$s19PactSwiftMockServer7LoggingO5LevelO5debugyA2EmF",
+                "moduleName": "PactSwiftMockServer"
+              },
+              {
+                "kind": "Var",
+                "name": "info",
+                "printedName": "info",
+                "children": [
+                  {
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(PactSwiftMockServer.Logging.Level.Type) -> PactSwiftMockServer.Logging.Level",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Level",
+                        "printedName": "PactSwiftMockServer.Logging.Level",
+                        "usr": "s:19PactSwiftMockServer7LoggingO5LevelO"
+                      },
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "PactSwiftMockServer.Logging.Level.Type",
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Level",
+                            "printedName": "PactSwiftMockServer.Logging.Level",
+                            "usr": "s:19PactSwiftMockServer7LoggingO5LevelO"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ],
+                "declKind": "EnumElement",
+                "usr": "s:19PactSwiftMockServer7LoggingO5LevelO4infoyA2EmF",
+                "mangledName": "$s19PactSwiftMockServer7LoggingO5LevelO4infoyA2EmF",
+                "moduleName": "PactSwiftMockServer"
+              },
+              {
+                "kind": "Var",
+                "name": "warn",
+                "printedName": "warn",
+                "children": [
+                  {
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(PactSwiftMockServer.Logging.Level.Type) -> PactSwiftMockServer.Logging.Level",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Level",
+                        "printedName": "PactSwiftMockServer.Logging.Level",
+                        "usr": "s:19PactSwiftMockServer7LoggingO5LevelO"
+                      },
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "PactSwiftMockServer.Logging.Level.Type",
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Level",
+                            "printedName": "PactSwiftMockServer.Logging.Level",
+                            "usr": "s:19PactSwiftMockServer7LoggingO5LevelO"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ],
+                "declKind": "EnumElement",
+                "usr": "s:19PactSwiftMockServer7LoggingO5LevelO4warnyA2EmF",
+                "mangledName": "$s19PactSwiftMockServer7LoggingO5LevelO4warnyA2EmF",
+                "moduleName": "PactSwiftMockServer"
+              },
+              {
+                "kind": "Var",
+                "name": "error",
+                "printedName": "error",
+                "children": [
+                  {
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(PactSwiftMockServer.Logging.Level.Type) -> PactSwiftMockServer.Logging.Level",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Level",
+                        "printedName": "PactSwiftMockServer.Logging.Level",
+                        "usr": "s:19PactSwiftMockServer7LoggingO5LevelO"
+                      },
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "PactSwiftMockServer.Logging.Level.Type",
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Level",
+                            "printedName": "PactSwiftMockServer.Logging.Level",
+                            "usr": "s:19PactSwiftMockServer7LoggingO5LevelO"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ],
+                "declKind": "EnumElement",
+                "usr": "s:19PactSwiftMockServer7LoggingO5LevelO5erroryA2EmF",
+                "mangledName": "$s19PactSwiftMockServer7LoggingO5LevelO5erroryA2EmF",
+                "moduleName": "PactSwiftMockServer"
+              },
+              {
+                "kind": "Constructor",
+                "name": "init",
+                "printedName": "init(rawValue:)",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "PactSwiftMockServer.Logging.Level?",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Level",
+                        "printedName": "PactSwiftMockServer.Logging.Level",
+                        "usr": "s:19PactSwiftMockServer7LoggingO5LevelO"
+                      }
+                    ],
+                    "usr": "s:Sq"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "declKind": "Constructor",
+                "usr": "s:19PactSwiftMockServer7LoggingO5LevelO8rawValueAESgSS_tcfc",
+                "mangledName": "$s19PactSwiftMockServer7LoggingO5LevelO8rawValueAESgSS_tcfc",
+                "moduleName": "PactSwiftMockServer",
+                "implicit": true,
+                "init_kind": "Designated"
+              },
+              {
+                "kind": "Var",
+                "name": "rawValue",
+                "printedName": "rawValue",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "declKind": "Var",
+                "usr": "s:19PactSwiftMockServer7LoggingO5LevelO8rawValueSSvp",
+                "mangledName": "$s19PactSwiftMockServer7LoggingO5LevelO8rawValueSSvp",
+                "moduleName": "PactSwiftMockServer",
+                "implicit": true,
+                "accessors": [
+                  {
+                    "kind": "Accessor",
+                    "name": "Get",
+                    "printedName": "Get()",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "String",
+                        "printedName": "Swift.String",
+                        "usr": "s:SS"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "usr": "s:19PactSwiftMockServer7LoggingO5LevelO8rawValueSSvg",
+                    "mangledName": "$s19PactSwiftMockServer7LoggingO5LevelO8rawValueSSvg",
+                    "moduleName": "PactSwiftMockServer",
+                    "implicit": true,
+                    "accessorKind": "get"
+                  }
+                ]
+              }
+            ],
+            "declKind": "Enum",
+            "usr": "s:19PactSwiftMockServer7LoggingO5LevelO",
+            "mangledName": "$s19PactSwiftMockServer7LoggingO5LevelO",
+            "moduleName": "PactSwiftMockServer",
+            "declAttributes": [
+              "AccessControl",
+              "RawDocComment"
+            ],
+            "enumRawTypeName": "String",
+            "conformances": [
+              {
+                "kind": "Conformance",
+                "name": "Equatable",
+                "printedName": "Equatable",
+                "usr": "s:SQ",
+                "mangledName": "$sSQ"
+              },
+              {
+                "kind": "Conformance",
+                "name": "Hashable",
+                "printedName": "Hashable",
+                "usr": "s:SH",
+                "mangledName": "$sSH"
+              },
+              {
+                "kind": "Conformance",
+                "name": "RawRepresentable",
+                "printedName": "RawRepresentable",
+                "children": [
+                  {
+                    "kind": "TypeWitness",
+                    "name": "RawValue",
+                    "printedName": "RawValue",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "String",
+                        "printedName": "Swift.String",
+                        "usr": "s:SS"
+                      }
+                    ]
+                  }
+                ],
+                "usr": "s:SY",
+                "mangledName": "$sSY"
+              }
+            ]
+          },
+          {
+            "kind": "TypeDecl",
+            "name": "Filter",
+            "printedName": "Filter",
+            "children": [
+              {
+                "kind": "Var",
+                "name": "off",
+                "printedName": "off",
+                "children": [
+                  {
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(PactSwiftMockServer.Logging.Filter.Type) -> PactSwiftMockServer.Logging.Filter",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Filter",
+                        "printedName": "PactSwiftMockServer.Logging.Filter",
+                        "usr": "s:19PactSwiftMockServer7LoggingO6FilterO"
+                      },
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "PactSwiftMockServer.Logging.Filter.Type",
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Filter",
+                            "printedName": "PactSwiftMockServer.Logging.Filter",
+                            "usr": "s:19PactSwiftMockServer7LoggingO6FilterO"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ],
+                "declKind": "EnumElement",
+                "usr": "s:19PactSwiftMockServer7LoggingO6FilterO3offyA2EmF",
+                "mangledName": "$s19PactSwiftMockServer7LoggingO6FilterO3offyA2EmF",
+                "moduleName": "PactSwiftMockServer"
+              },
+              {
+                "kind": "Var",
+                "name": "error",
+                "printedName": "error",
+                "children": [
+                  {
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(PactSwiftMockServer.Logging.Filter.Type) -> PactSwiftMockServer.Logging.Filter",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Filter",
+                        "printedName": "PactSwiftMockServer.Logging.Filter",
+                        "usr": "s:19PactSwiftMockServer7LoggingO6FilterO"
+                      },
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "PactSwiftMockServer.Logging.Filter.Type",
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Filter",
+                            "printedName": "PactSwiftMockServer.Logging.Filter",
+                            "usr": "s:19PactSwiftMockServer7LoggingO6FilterO"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ],
+                "declKind": "EnumElement",
+                "usr": "s:19PactSwiftMockServer7LoggingO6FilterO5erroryA2EmF",
+                "mangledName": "$s19PactSwiftMockServer7LoggingO6FilterO5erroryA2EmF",
+                "moduleName": "PactSwiftMockServer"
+              },
+              {
+                "kind": "Var",
+                "name": "warn",
+                "printedName": "warn",
+                "children": [
+                  {
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(PactSwiftMockServer.Logging.Filter.Type) -> PactSwiftMockServer.Logging.Filter",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Filter",
+                        "printedName": "PactSwiftMockServer.Logging.Filter",
+                        "usr": "s:19PactSwiftMockServer7LoggingO6FilterO"
+                      },
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "PactSwiftMockServer.Logging.Filter.Type",
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Filter",
+                            "printedName": "PactSwiftMockServer.Logging.Filter",
+                            "usr": "s:19PactSwiftMockServer7LoggingO6FilterO"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ],
+                "declKind": "EnumElement",
+                "usr": "s:19PactSwiftMockServer7LoggingO6FilterO4warnyA2EmF",
+                "mangledName": "$s19PactSwiftMockServer7LoggingO6FilterO4warnyA2EmF",
+                "moduleName": "PactSwiftMockServer"
+              },
+              {
+                "kind": "Var",
+                "name": "info",
+                "printedName": "info",
+                "children": [
+                  {
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(PactSwiftMockServer.Logging.Filter.Type) -> PactSwiftMockServer.Logging.Filter",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Filter",
+                        "printedName": "PactSwiftMockServer.Logging.Filter",
+                        "usr": "s:19PactSwiftMockServer7LoggingO6FilterO"
+                      },
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "PactSwiftMockServer.Logging.Filter.Type",
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Filter",
+                            "printedName": "PactSwiftMockServer.Logging.Filter",
+                            "usr": "s:19PactSwiftMockServer7LoggingO6FilterO"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ],
+                "declKind": "EnumElement",
+                "usr": "s:19PactSwiftMockServer7LoggingO6FilterO4infoyA2EmF",
+                "mangledName": "$s19PactSwiftMockServer7LoggingO6FilterO4infoyA2EmF",
+                "moduleName": "PactSwiftMockServer"
+              },
+              {
+                "kind": "Var",
+                "name": "debug",
+                "printedName": "debug",
+                "children": [
+                  {
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(PactSwiftMockServer.Logging.Filter.Type) -> PactSwiftMockServer.Logging.Filter",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Filter",
+                        "printedName": "PactSwiftMockServer.Logging.Filter",
+                        "usr": "s:19PactSwiftMockServer7LoggingO6FilterO"
+                      },
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "PactSwiftMockServer.Logging.Filter.Type",
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Filter",
+                            "printedName": "PactSwiftMockServer.Logging.Filter",
+                            "usr": "s:19PactSwiftMockServer7LoggingO6FilterO"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ],
+                "declKind": "EnumElement",
+                "usr": "s:19PactSwiftMockServer7LoggingO6FilterO5debugyA2EmF",
+                "mangledName": "$s19PactSwiftMockServer7LoggingO6FilterO5debugyA2EmF",
+                "moduleName": "PactSwiftMockServer"
+              },
+              {
+                "kind": "Var",
+                "name": "trace",
+                "printedName": "trace",
+                "children": [
+                  {
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(PactSwiftMockServer.Logging.Filter.Type) -> PactSwiftMockServer.Logging.Filter",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Filter",
+                        "printedName": "PactSwiftMockServer.Logging.Filter",
+                        "usr": "s:19PactSwiftMockServer7LoggingO6FilterO"
+                      },
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "PactSwiftMockServer.Logging.Filter.Type",
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Filter",
+                            "printedName": "PactSwiftMockServer.Logging.Filter",
+                            "usr": "s:19PactSwiftMockServer7LoggingO6FilterO"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ],
+                "declKind": "EnumElement",
+                "usr": "s:19PactSwiftMockServer7LoggingO6FilterO5traceyA2EmF",
+                "mangledName": "$s19PactSwiftMockServer7LoggingO6FilterO5traceyA2EmF",
+                "moduleName": "PactSwiftMockServer"
+              },
+              {
+                "kind": "Function",
+                "name": "==",
+                "printedName": "==(_:_:)",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Bool",
+                    "printedName": "Swift.Bool",
+                    "usr": "s:Sb"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Filter",
+                    "printedName": "PactSwiftMockServer.Logging.Filter",
+                    "usr": "s:19PactSwiftMockServer7LoggingO6FilterO"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Filter",
+                    "printedName": "PactSwiftMockServer.Logging.Filter",
+                    "usr": "s:19PactSwiftMockServer7LoggingO6FilterO"
+                  }
+                ],
+                "declKind": "Func",
+                "usr": "s:19PactSwiftMockServer7LoggingO6FilterO2eeoiySbAE_AEtFZ",
+                "mangledName": "$s19PactSwiftMockServer7LoggingO6FilterO2eeoiySbAE_AEtFZ",
+                "moduleName": "PactSwiftMockServer",
+                "static": true,
+                "implicit": true,
+                "funcSelfKind": "NonMutating"
+              },
+              {
+                "kind": "Var",
+                "name": "hashValue",
+                "printedName": "hashValue",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "Var",
+                "usr": "s:19PactSwiftMockServer7LoggingO6FilterO9hashValueSivp",
+                "mangledName": "$s19PactSwiftMockServer7LoggingO6FilterO9hashValueSivp",
+                "moduleName": "PactSwiftMockServer",
+                "implicit": true,
+                "accessors": [
+                  {
+                    "kind": "Accessor",
+                    "name": "Get",
+                    "printedName": "Get()",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Int",
+                        "printedName": "Swift.Int",
+                        "usr": "s:Si"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "usr": "s:19PactSwiftMockServer7LoggingO6FilterO9hashValueSivg",
+                    "mangledName": "$s19PactSwiftMockServer7LoggingO6FilterO9hashValueSivg",
+                    "moduleName": "PactSwiftMockServer",
+                    "implicit": true,
+                    "accessorKind": "get"
+                  }
+                ]
+              },
+              {
+                "kind": "Function",
+                "name": "hash",
+                "printedName": "hash(into:)",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Void",
+                    "printedName": "()"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Hasher",
+                    "printedName": "Swift.Hasher",
+                    "paramValueOwnership": "InOut",
+                    "usr": "s:s6HasherV"
+                  }
+                ],
+                "declKind": "Func",
+                "usr": "s:19PactSwiftMockServer7LoggingO6FilterO4hash4intoys6HasherVz_tF",
+                "mangledName": "$s19PactSwiftMockServer7LoggingO6FilterO4hash4intoys6HasherVz_tF",
+                "moduleName": "PactSwiftMockServer",
+                "implicit": true,
+                "funcSelfKind": "NonMutating"
+              }
+            ],
+            "declKind": "Enum",
+            "usr": "s:19PactSwiftMockServer7LoggingO6FilterO",
+            "mangledName": "$s19PactSwiftMockServer7LoggingO6FilterO",
+            "moduleName": "PactSwiftMockServer",
+            "declAttributes": [
+              "AccessControl",
+              "RawDocComment"
+            ],
+            "conformances": [
+              {
+                "kind": "Conformance",
+                "name": "Equatable",
+                "printedName": "Equatable",
+                "usr": "s:SQ",
+                "mangledName": "$sSQ"
+              },
+              {
+                "kind": "Conformance",
+                "name": "Hashable",
+                "printedName": "Hashable",
+                "usr": "s:SH",
+                "mangledName": "$sSH"
+              }
+            ]
+          },
+          {
+            "kind": "TypeDecl",
+            "name": "Sink",
+            "printedName": "Sink",
+            "children": [
+              {
+                "kind": "TypeDecl",
+                "name": "Config",
+                "printedName": "Config",
+                "children": [
+                  {
+                    "kind": "Constructor",
+                    "name": "init",
+                    "printedName": "init(_:filter:)",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Config",
+                        "printedName": "PactSwiftMockServer.Logging.Sink.Config",
+                        "usr": "s:19PactSwiftMockServer7LoggingO4SinkO6ConfigV"
+                      },
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Sink",
+                        "printedName": "PactSwiftMockServer.Logging.Sink",
+                        "usr": "s:19PactSwiftMockServer7LoggingO4SinkO"
+                      },
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Filter",
+                        "printedName": "PactSwiftMockServer.Logging.Filter",
+                        "usr": "s:19PactSwiftMockServer7LoggingO6FilterO"
+                      }
+                    ],
+                    "declKind": "Constructor",
+                    "usr": "s:19PactSwiftMockServer7LoggingO4SinkO6ConfigV_6filterAgE_AC6FilterOtcfc",
+                    "mangledName": "$s19PactSwiftMockServer7LoggingO4SinkO6ConfigV_6filterAgE_AC6FilterOtcfc",
+                    "moduleName": "PactSwiftMockServer",
+                    "declAttributes": [
+                      "AccessControl"
+                    ],
+                    "init_kind": "Designated"
+                  }
+                ],
+                "declKind": "Struct",
+                "usr": "s:19PactSwiftMockServer7LoggingO4SinkO6ConfigV",
+                "mangledName": "$s19PactSwiftMockServer7LoggingO4SinkO6ConfigV",
+                "moduleName": "PactSwiftMockServer",
+                "declAttributes": [
+                  "AccessControl",
+                  "RawDocComment"
+                ]
+              },
+              {
+                "kind": "Var",
+                "name": "standardOut",
+                "printedName": "standardOut",
+                "children": [
+                  {
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(PactSwiftMockServer.Logging.Sink.Type) -> PactSwiftMockServer.Logging.Sink",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Sink",
+                        "printedName": "PactSwiftMockServer.Logging.Sink",
+                        "usr": "s:19PactSwiftMockServer7LoggingO4SinkO"
+                      },
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "PactSwiftMockServer.Logging.Sink.Type",
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Sink",
+                            "printedName": "PactSwiftMockServer.Logging.Sink",
+                            "usr": "s:19PactSwiftMockServer7LoggingO4SinkO"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ],
+                "declKind": "EnumElement",
+                "usr": "s:19PactSwiftMockServer7LoggingO4SinkO11standardOutyA2EmF",
+                "mangledName": "$s19PactSwiftMockServer7LoggingO4SinkO11standardOutyA2EmF",
+                "moduleName": "PactSwiftMockServer"
+              },
+              {
+                "kind": "Var",
+                "name": "standardError",
+                "printedName": "standardError",
+                "children": [
+                  {
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(PactSwiftMockServer.Logging.Sink.Type) -> PactSwiftMockServer.Logging.Sink",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Sink",
+                        "printedName": "PactSwiftMockServer.Logging.Sink",
+                        "usr": "s:19PactSwiftMockServer7LoggingO4SinkO"
+                      },
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "PactSwiftMockServer.Logging.Sink.Type",
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Sink",
+                            "printedName": "PactSwiftMockServer.Logging.Sink",
+                            "usr": "s:19PactSwiftMockServer7LoggingO4SinkO"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ],
+                "declKind": "EnumElement",
+                "usr": "s:19PactSwiftMockServer7LoggingO4SinkO13standardErroryA2EmF",
+                "mangledName": "$s19PactSwiftMockServer7LoggingO4SinkO13standardErroryA2EmF",
+                "moduleName": "PactSwiftMockServer"
+              },
+              {
+                "kind": "Var",
+                "name": "file",
+                "printedName": "file",
+                "children": [
+                  {
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(PactSwiftMockServer.Logging.Sink.Type) -> (Swift.String) -> PactSwiftMockServer.Logging.Sink",
+                    "children": [
+                      {
+                        "kind": "TypeFunc",
+                        "name": "Function",
+                        "printedName": "(Swift.String) -> PactSwiftMockServer.Logging.Sink",
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Sink",
+                            "printedName": "PactSwiftMockServer.Logging.Sink",
+                            "usr": "s:19PactSwiftMockServer7LoggingO4SinkO"
+                          },
+                          {
+                            "kind": "TypeNominal",
+                            "name": "String",
+                            "printedName": "Swift.String",
+                            "usr": "s:SS"
+                          }
+                        ]
+                      },
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "PactSwiftMockServer.Logging.Sink.Type",
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Sink",
+                            "printedName": "PactSwiftMockServer.Logging.Sink",
+                            "usr": "s:19PactSwiftMockServer7LoggingO4SinkO"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ],
+                "declKind": "EnumElement",
+                "usr": "s:19PactSwiftMockServer7LoggingO4SinkO4fileyAESScAEmF",
+                "mangledName": "$s19PactSwiftMockServer7LoggingO4SinkO4fileyAESScAEmF",
+                "moduleName": "PactSwiftMockServer"
+              },
+              {
+                "kind": "Var",
+                "name": "buffer",
+                "printedName": "buffer",
+                "children": [
+                  {
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(PactSwiftMockServer.Logging.Sink.Type) -> PactSwiftMockServer.Logging.Sink",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Sink",
+                        "printedName": "PactSwiftMockServer.Logging.Sink",
+                        "usr": "s:19PactSwiftMockServer7LoggingO4SinkO"
+                      },
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "PactSwiftMockServer.Logging.Sink.Type",
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Sink",
+                            "printedName": "PactSwiftMockServer.Logging.Sink",
+                            "usr": "s:19PactSwiftMockServer7LoggingO4SinkO"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ],
+                "declKind": "EnumElement",
+                "usr": "s:19PactSwiftMockServer7LoggingO4SinkO6bufferyA2EmF",
+                "mangledName": "$s19PactSwiftMockServer7LoggingO4SinkO6bufferyA2EmF",
+                "moduleName": "PactSwiftMockServer"
+              }
+            ],
+            "declKind": "Enum",
+            "usr": "s:19PactSwiftMockServer7LoggingO4SinkO",
+            "mangledName": "$s19PactSwiftMockServer7LoggingO4SinkO",
+            "moduleName": "PactSwiftMockServer",
+            "declAttributes": [
+              "AccessControl",
+              "RawDocComment"
+            ]
+          },
+          {
+            "kind": "Function",
+            "name": "apply",
+            "printedName": "apply()",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              }
+            ],
+            "declKind": "Func",
+            "usr": "s:19PactSwiftMockServer7LoggingO5applyyyKFZ",
+            "mangledName": "$s19PactSwiftMockServer7LoggingO5applyyyKFZ",
+            "moduleName": "PactSwiftMockServer",
+            "static": true,
+            "declAttributes": [
+              "AccessControl",
+              "RawDocComment"
+            ],
+            "throwing": true,
+            "funcSelfKind": "NonMutating"
+          },
+          {
+            "kind": "Function",
+            "name": "initialize",
+            "printedName": "initialize()",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              }
+            ],
+            "declKind": "Func",
+            "usr": "s:19PactSwiftMockServer7LoggingO10initializeyyFZ",
+            "mangledName": "$s19PactSwiftMockServer7LoggingO10initializeyyFZ",
+            "moduleName": "PactSwiftMockServer",
+            "static": true,
+            "declAttributes": [
+              "AccessControl",
+              "RawDocComment"
+            ],
+            "funcSelfKind": "NonMutating"
+          },
+          {
+            "kind": "Function",
+            "name": "attachSink",
+            "printedName": "attachSink(_:filter:)",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Sink",
+                "printedName": "PactSwiftMockServer.Logging.Sink",
+                "usr": "s:19PactSwiftMockServer7LoggingO4SinkO"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Filter",
+                "printedName": "PactSwiftMockServer.Logging.Filter",
+                "usr": "s:19PactSwiftMockServer7LoggingO6FilterO"
+              }
+            ],
+            "declKind": "Func",
+            "usr": "s:19PactSwiftMockServer7LoggingO10attachSink_6filteryAC0G0O_AC6FilterOtKFZ",
+            "mangledName": "$s19PactSwiftMockServer7LoggingO10attachSink_6filteryAC0G0O_AC6FilterOtKFZ",
+            "moduleName": "PactSwiftMockServer",
+            "static": true,
+            "declAttributes": [
+              "AccessControl",
+              "RawDocComment"
+            ],
+            "throwing": true,
+            "funcSelfKind": "NonMutating"
+          },
+          {
+            "kind": "Var",
+            "name": "buffer",
+            "printedName": "buffer",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              }
+            ],
+            "declKind": "Var",
+            "usr": "s:19PactSwiftMockServer7LoggingO6bufferSSvpZ",
+            "mangledName": "$s19PactSwiftMockServer7LoggingO6bufferSSvpZ",
+            "moduleName": "PactSwiftMockServer",
+            "static": true,
+            "declAttributes": [
+              "AccessControl",
+              "RawDocComment"
+            ],
+            "accessors": [
+              {
+                "kind": "Accessor",
+                "name": "Get",
+                "printedName": "Get()",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "declKind": "Accessor",
+                "usr": "s:19PactSwiftMockServer7LoggingO6bufferSSvgZ",
+                "mangledName": "$s19PactSwiftMockServer7LoggingO6bufferSSvgZ",
+                "moduleName": "PactSwiftMockServer",
+                "static": true,
+                "accessorKind": "get"
+              }
+            ]
+          },
+          {
+            "kind": "Function",
+            "name": "log",
+            "printedName": "log(_:message:)",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Level",
+                "printedName": "PactSwiftMockServer.Logging.Level",
+                "usr": "s:19PactSwiftMockServer7LoggingO5LevelO"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              }
+            ],
+            "declKind": "Func",
+            "usr": "s:19PactSwiftMockServer7LoggingO3log_7messageyAC5LevelO_SStFZ",
+            "mangledName": "$s19PactSwiftMockServer7LoggingO3log_7messageyAC5LevelO_SStFZ",
+            "moduleName": "PactSwiftMockServer",
+            "static": true,
+            "declAttributes": [
+              "AccessControl",
+              "RawDocComment"
+            ],
+            "funcSelfKind": "NonMutating"
+          },
+          {
+            "kind": "Var",
+            "name": "lastInternalErrorMessage",
+            "printedName": "lastInternalErrorMessage",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "Swift.String?",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "usr": "s:Sq"
+              }
+            ],
+            "declKind": "Var",
+            "usr": "s:19PactSwiftMockServer7LoggingO24lastInternalErrorMessageSSSgvpZ",
+            "mangledName": "$s19PactSwiftMockServer7LoggingO24lastInternalErrorMessageSSSgvpZ",
+            "moduleName": "PactSwiftMockServer",
+            "static": true,
+            "declAttributes": [
+              "AccessControl",
+              "RawDocComment"
+            ],
+            "accessors": [
+              {
+                "kind": "Accessor",
+                "name": "Get",
+                "printedName": "Get()",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "Swift.String?",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "String",
+                        "printedName": "Swift.String",
+                        "usr": "s:SS"
+                      }
+                    ],
+                    "usr": "s:Sq"
+                  }
+                ],
+                "declKind": "Accessor",
+                "usr": "s:19PactSwiftMockServer7LoggingO24lastInternalErrorMessageSSSgvgZ",
+                "mangledName": "$s19PactSwiftMockServer7LoggingO24lastInternalErrorMessageSSSgvgZ",
+                "moduleName": "PactSwiftMockServer",
+                "static": true,
+                "accessorKind": "get"
+              }
+            ]
+          }
+        ],
+        "declKind": "Enum",
+        "usr": "s:19PactSwiftMockServer7LoggingO",
+        "mangledName": "$s19PactSwiftMockServer7LoggingO",
+        "moduleName": "PactSwiftMockServer",
+        "declAttributes": [
+          "AccessControl"
+        ]
+      },
+      {
+        "kind": "TypeDecl",
         "name": "Array",
         "printedName": "Array",
         "children": [
@@ -7399,21 +7893,21 @@
               {
                 "kind": "TypeNominal",
                 "name": "Array",
-                "printedName": "[PactSwiftMockServer.Pact.LogSinkConfig]",
+                "printedName": "[PactSwiftMockServer.Logging.Sink.Config]",
                 "children": [
                   {
                     "kind": "TypeNominal",
-                    "name": "LogSinkConfig",
-                    "printedName": "PactSwiftMockServer.Pact.LogSinkConfig",
-                    "usr": "s:19PactSwiftMockServer0A0C13LogSinkConfigV"
+                    "name": "Config",
+                    "printedName": "PactSwiftMockServer.Logging.Sink.Config",
+                    "usr": "s:19PactSwiftMockServer7LoggingO4SinkO6ConfigV"
                   }
                 ],
                 "usr": "s:Sa"
               }
             ],
             "declKind": "Var",
-            "usr": "s:Sa19PactSwiftMockServerAA0A0C13LogSinkConfigVRszlE12defaultSinksSayAEGvpZ",
-            "mangledName": "$sSa19PactSwiftMockServerAA0A0C13LogSinkConfigVRszlE12defaultSinksSayAEGvpZ",
+            "usr": "s:Sa19PactSwiftMockServerAA7LoggingO4SinkO6ConfigVRszlE12defaultSinksSayAGGvpZ",
+            "mangledName": "$sSa19PactSwiftMockServerAA7LoggingO4SinkO6ConfigVRszlE12defaultSinksSayAGGvpZ",
             "moduleName": "PactSwiftMockServer",
             "static": true,
             "declAttributes": [
@@ -7431,24 +7925,24 @@
                   {
                     "kind": "TypeNominal",
                     "name": "Array",
-                    "printedName": "[PactSwiftMockServer.Pact.LogSinkConfig]",
+                    "printedName": "[PactSwiftMockServer.Logging.Sink.Config]",
                     "children": [
                       {
                         "kind": "TypeNominal",
-                        "name": "LogSinkConfig",
-                        "printedName": "PactSwiftMockServer.Pact.LogSinkConfig",
-                        "usr": "s:19PactSwiftMockServer0A0C13LogSinkConfigV"
+                        "name": "Config",
+                        "printedName": "PactSwiftMockServer.Logging.Sink.Config",
+                        "usr": "s:19PactSwiftMockServer7LoggingO4SinkO6ConfigV"
                       }
                     ],
                     "usr": "s:Sa"
                   }
                 ],
                 "declKind": "Accessor",
-                "usr": "s:Sa19PactSwiftMockServerAA0A0C13LogSinkConfigVRszlE12defaultSinksSayAEGvgZ",
-                "mangledName": "$sSa19PactSwiftMockServerAA0A0C13LogSinkConfigVRszlE12defaultSinksSayAEGvgZ",
+                "usr": "s:Sa19PactSwiftMockServerAA7LoggingO4SinkO6ConfigVRszlE12defaultSinksSayAGGvgZ",
+                "mangledName": "$sSa19PactSwiftMockServerAA7LoggingO4SinkO6ConfigVRszlE12defaultSinksSayAGGvgZ",
                 "moduleName": "PactSwiftMockServer",
-                "genericSig": "<τ_0_0 where τ_0_0 == PactSwiftMockServer.Pact.LogSinkConfig>",
-                "sugared_genericSig": "<Element where Element == PactSwiftMockServer.Pact.LogSinkConfig>",
+                "genericSig": "<τ_0_0 where τ_0_0 == PactSwiftMockServer.Logging.Sink.Config>",
+                "sugared_genericSig": "<Element where Element == PactSwiftMockServer.Logging.Sink.Config>",
                 "static": true,
                 "implicit": true,
                 "isFromExtension": true,
@@ -7467,24 +7961,24 @@
                   {
                     "kind": "TypeNominal",
                     "name": "Array",
-                    "printedName": "[PactSwiftMockServer.Pact.LogSinkConfig]",
+                    "printedName": "[PactSwiftMockServer.Logging.Sink.Config]",
                     "children": [
                       {
                         "kind": "TypeNominal",
-                        "name": "LogSinkConfig",
-                        "printedName": "PactSwiftMockServer.Pact.LogSinkConfig",
-                        "usr": "s:19PactSwiftMockServer0A0C13LogSinkConfigV"
+                        "name": "Config",
+                        "printedName": "PactSwiftMockServer.Logging.Sink.Config",
+                        "usr": "s:19PactSwiftMockServer7LoggingO4SinkO6ConfigV"
                       }
                     ],
                     "usr": "s:Sa"
                   }
                 ],
                 "declKind": "Accessor",
-                "usr": "s:Sa19PactSwiftMockServerAA0A0C13LogSinkConfigVRszlE12defaultSinksSayAEGvsZ",
-                "mangledName": "$sSa19PactSwiftMockServerAA0A0C13LogSinkConfigVRszlE12defaultSinksSayAEGvsZ",
+                "usr": "s:Sa19PactSwiftMockServerAA7LoggingO4SinkO6ConfigVRszlE12defaultSinksSayAGGvsZ",
+                "mangledName": "$sSa19PactSwiftMockServerAA7LoggingO4SinkO6ConfigVRszlE12defaultSinksSayAGGvsZ",
                 "moduleName": "PactSwiftMockServer",
-                "genericSig": "<τ_0_0 where τ_0_0 == PactSwiftMockServer.Pact.LogSinkConfig>",
-                "sugared_genericSig": "<Element where Element == PactSwiftMockServer.Pact.LogSinkConfig>",
+                "genericSig": "<τ_0_0 where τ_0_0 == PactSwiftMockServer.Logging.Sink.Config>",
+                "sugared_genericSig": "<Element where Element == PactSwiftMockServer.Logging.Sink.Config>",
                 "static": true,
                 "implicit": true,
                 "isFromExtension": true,
@@ -7502,11 +7996,11 @@
                   }
                 ],
                 "declKind": "Accessor",
-                "usr": "s:Sa19PactSwiftMockServerAA0A0C13LogSinkConfigVRszlE12defaultSinksSayAEGvMZ",
-                "mangledName": "$sSa19PactSwiftMockServerAA0A0C13LogSinkConfigVRszlE12defaultSinksSayAEGvMZ",
+                "usr": "s:Sa19PactSwiftMockServerAA7LoggingO4SinkO6ConfigVRszlE12defaultSinksSayAGGvMZ",
+                "mangledName": "$sSa19PactSwiftMockServerAA7LoggingO4SinkO6ConfigVRszlE12defaultSinksSayAGGvMZ",
                 "moduleName": "PactSwiftMockServer",
-                "genericSig": "<τ_0_0 where τ_0_0 == PactSwiftMockServer.Pact.LogSinkConfig>",
-                "sugared_genericSig": "<Element where Element == PactSwiftMockServer.Pact.LogSinkConfig>",
+                "genericSig": "<τ_0_0 where τ_0_0 == PactSwiftMockServer.Logging.Sink.Config>",
+                "sugared_genericSig": "<Element where Element == PactSwiftMockServer.Logging.Sink.Config>",
                 "static": true,
                 "implicit": true,
                 "isFromExtension": true,
@@ -8170,548 +8664,618 @@
     {
       "filePath": "\/Users\/oliver\/Developer\/Coles\/PactSwiftMockServer\/Sources\/Model\/Interaction.swift",
       "kind": "StringLiteral",
-      "offset": 7222,
+      "offset": 6233,
       "length": 3,
       "value": "\"\/\""
     },
     {
       "filePath": "\/Users\/oliver\/Developer\/Coles\/PactSwiftMockServer\/Sources\/MatcherDefinition.swift",
       "kind": "IntegerLiteral",
-      "offset": 1561,
+      "offset": 1445,
       "length": 1,
       "value": "1"
     },
     {
       "filePath": "\/Users\/oliver\/Developer\/Coles\/PactSwiftMockServer\/Sources\/MatcherDefinition.swift",
       "kind": "IntegerLiteral",
-      "offset": 1588,
+      "offset": 1463,
       "length": 1,
       "value": "2"
     },
     {
       "filePath": "\/Users\/oliver\/Developer\/Coles\/PactSwiftMockServer\/Sources\/MatcherDefinition.swift",
       "kind": "IntegerLiteral",
-      "offset": 1614,
+      "offset": 1480,
       "length": 1,
       "value": "3"
     },
     {
       "filePath": "\/Users\/oliver\/Developer\/Coles\/PactSwiftMockServer\/Sources\/MatcherDefinition.swift",
       "kind": "IntegerLiteral",
-      "offset": 1643,
+      "offset": 1500,
       "length": 1,
       "value": "4"
     },
     {
       "filePath": "\/Users\/oliver\/Developer\/Coles\/PactSwiftMockServer\/Sources\/MatcherDefinition.swift",
       "kind": "IntegerLiteral",
-      "offset": 1672,
+      "offset": 1520,
       "length": 1,
       "value": "5"
     },
     {
       "filePath": "\/Users\/oliver\/Developer\/Coles\/PactSwiftMockServer\/Sources\/MatcherDefinition.swift",
       "kind": "IntegerLiteral",
-      "offset": 1704,
+      "offset": 1543,
       "length": 1,
       "value": "6"
     },
     {
       "filePath": "\/Users\/oliver\/Developer\/Coles\/PactSwiftMockServer\/Sources\/MatcherDefinition.swift",
       "kind": "IntegerLiteral",
-      "offset": 1735,
+      "offset": 1565,
       "length": 1,
       "value": "7"
     },
     {
       "filePath": "\/Users\/oliver\/Developer\/Coles\/PactSwiftMockServer\/Sources\/MatcherDefinition.swift",
       "kind": "IntegerLiteral",
-      "offset": 1761,
+      "offset": 1582,
       "length": 1,
       "value": "8"
     },
     {
       "filePath": "\/Users\/oliver\/Developer\/Coles\/PactSwiftMockServer\/Sources\/MatcherDefinition.swift",
       "kind": "IntegerLiteral",
-      "offset": 1787,
+      "offset": 1599,
       "length": 1,
       "value": "9"
     },
     {
       "filePath": "\/Users\/oliver\/Developer\/Coles\/PactSwiftMockServer\/Sources\/MatcherDefinition.swift",
       "kind": "IntegerLiteral",
-      "offset": 1816,
+      "offset": 1619,
       "length": 2,
       "value": "10"
     },
     {
       "filePath": "\/Users\/oliver\/Developer\/Coles\/PactSwiftMockServer\/Sources\/MatcherDefinition.swift",
       "kind": "IntegerLiteral",
-      "offset": 1845,
+      "offset": 1639,
       "length": 2,
       "value": "11"
     },
     {
       "filePath": "\/Users\/oliver\/Developer\/Coles\/PactSwiftMockServer\/Sources\/MatcherDefinition.swift",
       "kind": "IntegerLiteral",
-      "offset": 1875,
+      "offset": 1660,
       "length": 2,
       "value": "12"
     },
     {
       "filePath": "\/Users\/oliver\/Developer\/Coles\/PactSwiftMockServer\/Sources\/MatcherDefinition.swift",
       "kind": "IntegerLiteral",
-      "offset": 1905,
+      "offset": 1681,
       "length": 2,
       "value": "13"
     },
     {
       "filePath": "\/Users\/oliver\/Developer\/Coles\/PactSwiftMockServer\/Sources\/MatcherDefinition.swift",
       "kind": "IntegerLiteral",
-      "offset": 1932,
+      "offset": 1699,
       "length": 2,
       "value": "14"
     },
     {
       "filePath": "\/Users\/oliver\/Developer\/Coles\/PactSwiftMockServer\/Sources\/MatcherDefinition.swift",
       "kind": "IntegerLiteral",
-      "offset": 1966,
+      "offset": 1724,
       "length": 2,
       "value": "15"
     },
     {
       "filePath": "\/Users\/oliver\/Developer\/Coles\/PactSwiftMockServer\/Sources\/MatcherDefinition.swift",
       "kind": "IntegerLiteral",
-      "offset": 2002,
+      "offset": 1751,
       "length": 2,
       "value": "16"
     },
     {
       "filePath": "\/Users\/oliver\/Developer\/Coles\/PactSwiftMockServer\/Sources\/MatcherDefinition.swift",
       "kind": "IntegerLiteral",
-      "offset": 2031,
+      "offset": 1771,
       "length": 2,
       "value": "17"
     },
     {
       "filePath": "\/Users\/oliver\/Developer\/Coles\/PactSwiftMockServer\/Sources\/MatcherDefinition.swift",
       "kind": "IntegerLiteral",
-      "offset": 2061,
+      "offset": 1792,
       "length": 2,
       "value": "18"
     },
     {
       "filePath": "\/Users\/oliver\/Developer\/Coles\/PactSwiftMockServer\/Sources\/MatcherDefinition.swift",
       "kind": "IntegerLiteral",
-      "offset": 2094,
+      "offset": 1816,
       "length": 2,
       "value": "19"
     },
     {
       "filePath": "\/Users\/oliver\/Developer\/Coles\/PactSwiftMockServer\/Sources\/MatcherDefinition.swift",
       "kind": "IntegerLiteral",
-      "offset": 2125,
+      "offset": 1838,
       "length": 2,
       "value": "20"
     },
     {
       "filePath": "\/Users\/oliver\/Developer\/Coles\/PactSwiftMockServer\/Sources\/MatcherDefinition.swift",
       "kind": "IntegerLiteral",
-      "offset": 2154,
+      "offset": 1858,
       "length": 2,
       "value": "21"
     },
     {
       "filePath": "\/Users\/oliver\/Developer\/Coles\/PactSwiftMockServer\/Sources\/MatcherDefinition.swift",
       "kind": "IntegerLiteral",
-      "offset": 2184,
+      "offset": 1879,
       "length": 2,
       "value": "22"
     },
     {
       "filePath": "\/Users\/oliver\/Developer\/Coles\/PactSwiftMockServer\/Sources\/MatcherDefinition.swift",
       "kind": "IntegerLiteral",
-      "offset": 2216,
+      "offset": 1902,
       "length": 2,
       "value": "23"
     },
     {
       "filePath": "\/Users\/oliver\/Developer\/Coles\/PactSwiftMockServer\/Sources\/MatcherDefinition.swift",
       "kind": "IntegerLiteral",
-      "offset": 1561,
+      "offset": 1445,
       "length": 1,
       "value": "1"
     },
     {
       "filePath": "\/Users\/oliver\/Developer\/Coles\/PactSwiftMockServer\/Sources\/MatcherDefinition.swift",
       "kind": "IntegerLiteral",
-      "offset": 1588,
+      "offset": 1463,
       "length": 1,
       "value": "2"
     },
     {
       "filePath": "\/Users\/oliver\/Developer\/Coles\/PactSwiftMockServer\/Sources\/MatcherDefinition.swift",
       "kind": "IntegerLiteral",
-      "offset": 1614,
+      "offset": 1480,
       "length": 1,
       "value": "3"
     },
     {
       "filePath": "\/Users\/oliver\/Developer\/Coles\/PactSwiftMockServer\/Sources\/MatcherDefinition.swift",
       "kind": "IntegerLiteral",
-      "offset": 1643,
+      "offset": 1500,
       "length": 1,
       "value": "4"
     },
     {
       "filePath": "\/Users\/oliver\/Developer\/Coles\/PactSwiftMockServer\/Sources\/MatcherDefinition.swift",
       "kind": "IntegerLiteral",
-      "offset": 1672,
+      "offset": 1520,
       "length": 1,
       "value": "5"
     },
     {
       "filePath": "\/Users\/oliver\/Developer\/Coles\/PactSwiftMockServer\/Sources\/MatcherDefinition.swift",
       "kind": "IntegerLiteral",
-      "offset": 1704,
+      "offset": 1543,
       "length": 1,
       "value": "6"
     },
     {
       "filePath": "\/Users\/oliver\/Developer\/Coles\/PactSwiftMockServer\/Sources\/MatcherDefinition.swift",
       "kind": "IntegerLiteral",
-      "offset": 1735,
+      "offset": 1565,
       "length": 1,
       "value": "7"
     },
     {
       "filePath": "\/Users\/oliver\/Developer\/Coles\/PactSwiftMockServer\/Sources\/MatcherDefinition.swift",
       "kind": "IntegerLiteral",
-      "offset": 1761,
+      "offset": 1582,
       "length": 1,
       "value": "8"
     },
     {
       "filePath": "\/Users\/oliver\/Developer\/Coles\/PactSwiftMockServer\/Sources\/MatcherDefinition.swift",
       "kind": "IntegerLiteral",
-      "offset": 1787,
+      "offset": 1599,
       "length": 1,
       "value": "9"
     },
     {
       "filePath": "\/Users\/oliver\/Developer\/Coles\/PactSwiftMockServer\/Sources\/MatcherDefinition.swift",
       "kind": "IntegerLiteral",
-      "offset": 1816,
+      "offset": 1619,
       "length": 2,
       "value": "10"
     },
     {
       "filePath": "\/Users\/oliver\/Developer\/Coles\/PactSwiftMockServer\/Sources\/MatcherDefinition.swift",
       "kind": "IntegerLiteral",
-      "offset": 1845,
+      "offset": 1639,
       "length": 2,
       "value": "11"
     },
     {
       "filePath": "\/Users\/oliver\/Developer\/Coles\/PactSwiftMockServer\/Sources\/MatcherDefinition.swift",
       "kind": "IntegerLiteral",
-      "offset": 1875,
+      "offset": 1660,
       "length": 2,
       "value": "12"
     },
     {
       "filePath": "\/Users\/oliver\/Developer\/Coles\/PactSwiftMockServer\/Sources\/MatcherDefinition.swift",
       "kind": "IntegerLiteral",
-      "offset": 1905,
+      "offset": 1681,
       "length": 2,
       "value": "13"
     },
     {
       "filePath": "\/Users\/oliver\/Developer\/Coles\/PactSwiftMockServer\/Sources\/MatcherDefinition.swift",
       "kind": "IntegerLiteral",
-      "offset": 1932,
+      "offset": 1699,
       "length": 2,
       "value": "14"
     },
     {
       "filePath": "\/Users\/oliver\/Developer\/Coles\/PactSwiftMockServer\/Sources\/MatcherDefinition.swift",
       "kind": "IntegerLiteral",
-      "offset": 1966,
+      "offset": 1724,
       "length": 2,
       "value": "15"
     },
     {
       "filePath": "\/Users\/oliver\/Developer\/Coles\/PactSwiftMockServer\/Sources\/MatcherDefinition.swift",
       "kind": "IntegerLiteral",
-      "offset": 2002,
+      "offset": 1751,
       "length": 2,
       "value": "16"
     },
     {
       "filePath": "\/Users\/oliver\/Developer\/Coles\/PactSwiftMockServer\/Sources\/MatcherDefinition.swift",
       "kind": "IntegerLiteral",
-      "offset": 2031,
+      "offset": 1771,
       "length": 2,
       "value": "17"
     },
     {
       "filePath": "\/Users\/oliver\/Developer\/Coles\/PactSwiftMockServer\/Sources\/MatcherDefinition.swift",
       "kind": "IntegerLiteral",
-      "offset": 2061,
+      "offset": 1792,
       "length": 2,
       "value": "18"
     },
     {
       "filePath": "\/Users\/oliver\/Developer\/Coles\/PactSwiftMockServer\/Sources\/MatcherDefinition.swift",
       "kind": "IntegerLiteral",
-      "offset": 2094,
+      "offset": 1816,
       "length": 2,
       "value": "19"
     },
     {
       "filePath": "\/Users\/oliver\/Developer\/Coles\/PactSwiftMockServer\/Sources\/MatcherDefinition.swift",
       "kind": "IntegerLiteral",
-      "offset": 2125,
+      "offset": 1838,
       "length": 2,
       "value": "20"
     },
     {
       "filePath": "\/Users\/oliver\/Developer\/Coles\/PactSwiftMockServer\/Sources\/MatcherDefinition.swift",
       "kind": "IntegerLiteral",
-      "offset": 2154,
+      "offset": 1858,
       "length": 2,
       "value": "21"
     },
     {
       "filePath": "\/Users\/oliver\/Developer\/Coles\/PactSwiftMockServer\/Sources\/MatcherDefinition.swift",
       "kind": "IntegerLiteral",
-      "offset": 2184,
+      "offset": 1879,
       "length": 2,
       "value": "22"
     },
     {
       "filePath": "\/Users\/oliver\/Developer\/Coles\/PactSwiftMockServer\/Sources\/MatcherDefinition.swift",
       "kind": "IntegerLiteral",
-      "offset": 2216,
+      "offset": 1902,
       "length": 2,
       "value": "23"
     },
     {
       "filePath": "\/Users\/oliver\/Developer\/Coles\/PactSwiftMockServer\/Sources\/MatcherDefinition.swift",
       "kind": "IntegerLiteral",
-      "offset": 1561,
+      "offset": 1445,
       "length": 1,
       "value": "1"
     },
     {
       "filePath": "\/Users\/oliver\/Developer\/Coles\/PactSwiftMockServer\/Sources\/MatcherDefinition.swift",
       "kind": "IntegerLiteral",
-      "offset": 1588,
+      "offset": 1463,
       "length": 1,
       "value": "2"
     },
     {
       "filePath": "\/Users\/oliver\/Developer\/Coles\/PactSwiftMockServer\/Sources\/MatcherDefinition.swift",
       "kind": "IntegerLiteral",
-      "offset": 1614,
+      "offset": 1480,
       "length": 1,
       "value": "3"
     },
     {
       "filePath": "\/Users\/oliver\/Developer\/Coles\/PactSwiftMockServer\/Sources\/MatcherDefinition.swift",
       "kind": "IntegerLiteral",
-      "offset": 1643,
+      "offset": 1500,
       "length": 1,
       "value": "4"
     },
     {
       "filePath": "\/Users\/oliver\/Developer\/Coles\/PactSwiftMockServer\/Sources\/MatcherDefinition.swift",
       "kind": "IntegerLiteral",
-      "offset": 1672,
+      "offset": 1520,
       "length": 1,
       "value": "5"
     },
     {
       "filePath": "\/Users\/oliver\/Developer\/Coles\/PactSwiftMockServer\/Sources\/MatcherDefinition.swift",
       "kind": "IntegerLiteral",
-      "offset": 1704,
+      "offset": 1543,
       "length": 1,
       "value": "6"
     },
     {
       "filePath": "\/Users\/oliver\/Developer\/Coles\/PactSwiftMockServer\/Sources\/MatcherDefinition.swift",
       "kind": "IntegerLiteral",
-      "offset": 1735,
+      "offset": 1565,
       "length": 1,
       "value": "7"
     },
     {
       "filePath": "\/Users\/oliver\/Developer\/Coles\/PactSwiftMockServer\/Sources\/MatcherDefinition.swift",
       "kind": "IntegerLiteral",
-      "offset": 1761,
+      "offset": 1582,
       "length": 1,
       "value": "8"
     },
     {
       "filePath": "\/Users\/oliver\/Developer\/Coles\/PactSwiftMockServer\/Sources\/MatcherDefinition.swift",
       "kind": "IntegerLiteral",
-      "offset": 1787,
+      "offset": 1599,
       "length": 1,
       "value": "9"
     },
     {
       "filePath": "\/Users\/oliver\/Developer\/Coles\/PactSwiftMockServer\/Sources\/MatcherDefinition.swift",
       "kind": "IntegerLiteral",
-      "offset": 1816,
+      "offset": 1619,
       "length": 2,
       "value": "10"
     },
     {
       "filePath": "\/Users\/oliver\/Developer\/Coles\/PactSwiftMockServer\/Sources\/MatcherDefinition.swift",
       "kind": "IntegerLiteral",
-      "offset": 1845,
+      "offset": 1639,
       "length": 2,
       "value": "11"
     },
     {
       "filePath": "\/Users\/oliver\/Developer\/Coles\/PactSwiftMockServer\/Sources\/MatcherDefinition.swift",
       "kind": "IntegerLiteral",
-      "offset": 1875,
+      "offset": 1660,
       "length": 2,
       "value": "12"
     },
     {
       "filePath": "\/Users\/oliver\/Developer\/Coles\/PactSwiftMockServer\/Sources\/MatcherDefinition.swift",
       "kind": "IntegerLiteral",
-      "offset": 1905,
+      "offset": 1681,
       "length": 2,
       "value": "13"
     },
     {
       "filePath": "\/Users\/oliver\/Developer\/Coles\/PactSwiftMockServer\/Sources\/MatcherDefinition.swift",
       "kind": "IntegerLiteral",
-      "offset": 1932,
+      "offset": 1699,
       "length": 2,
       "value": "14"
     },
     {
       "filePath": "\/Users\/oliver\/Developer\/Coles\/PactSwiftMockServer\/Sources\/MatcherDefinition.swift",
       "kind": "IntegerLiteral",
-      "offset": 1966,
+      "offset": 1724,
       "length": 2,
       "value": "15"
     },
     {
       "filePath": "\/Users\/oliver\/Developer\/Coles\/PactSwiftMockServer\/Sources\/MatcherDefinition.swift",
       "kind": "IntegerLiteral",
-      "offset": 2002,
+      "offset": 1751,
       "length": 2,
       "value": "16"
     },
     {
       "filePath": "\/Users\/oliver\/Developer\/Coles\/PactSwiftMockServer\/Sources\/MatcherDefinition.swift",
       "kind": "IntegerLiteral",
-      "offset": 2031,
+      "offset": 1771,
       "length": 2,
       "value": "17"
     },
     {
       "filePath": "\/Users\/oliver\/Developer\/Coles\/PactSwiftMockServer\/Sources\/MatcherDefinition.swift",
       "kind": "IntegerLiteral",
-      "offset": 2061,
+      "offset": 1792,
       "length": 2,
       "value": "18"
     },
     {
       "filePath": "\/Users\/oliver\/Developer\/Coles\/PactSwiftMockServer\/Sources\/MatcherDefinition.swift",
       "kind": "IntegerLiteral",
-      "offset": 2094,
+      "offset": 1816,
       "length": 2,
       "value": "19"
     },
     {
       "filePath": "\/Users\/oliver\/Developer\/Coles\/PactSwiftMockServer\/Sources\/MatcherDefinition.swift",
       "kind": "IntegerLiteral",
-      "offset": 2125,
+      "offset": 1838,
       "length": 2,
       "value": "20"
     },
     {
       "filePath": "\/Users\/oliver\/Developer\/Coles\/PactSwiftMockServer\/Sources\/MatcherDefinition.swift",
       "kind": "IntegerLiteral",
-      "offset": 2154,
+      "offset": 1858,
       "length": 2,
       "value": "21"
     },
     {
       "filePath": "\/Users\/oliver\/Developer\/Coles\/PactSwiftMockServer\/Sources\/MatcherDefinition.swift",
       "kind": "IntegerLiteral",
-      "offset": 2184,
+      "offset": 1879,
       "length": 2,
       "value": "22"
     },
     {
       "filePath": "\/Users\/oliver\/Developer\/Coles\/PactSwiftMockServer\/Sources\/MatcherDefinition.swift",
       "kind": "IntegerLiteral",
-      "offset": 2216,
+      "offset": 1902,
       "length": 2,
       "value": "23"
     },
     {
       "filePath": "\/Users\/oliver\/Developer\/Coles\/PactSwiftMockServer\/Sources\/PactBuilder.swift",
       "kind": "Array",
-      "offset": 1377,
+      "offset": 1283,
       "length": 2,
       "value": "[]"
     },
     {
       "filePath": "\/Users\/oliver\/Developer\/Coles\/PactSwiftMockServer\/Sources\/MockServer.swift",
       "kind": "IntegerLiteral",
-      "offset": 1290,
+      "offset": 1220,
       "length": 6,
       "value": "1"
     },
     {
       "filePath": "\/Users\/oliver\/Developer\/Coles\/PactSwiftMockServer\/Sources\/MockServer.swift",
       "kind": "IntegerLiteral",
-      "offset": 1290,
+      "offset": 1220,
       "length": 6,
       "value": "1"
     },
     {
       "filePath": "\/Users\/oliver\/Developer\/Coles\/PactSwiftMockServer\/Sources\/MockServer.swift",
       "kind": "IntegerLiteral",
-      "offset": 1290,
+      "offset": 1220,
       "length": 6,
       "value": "1"
     },
     {
       "filePath": "\/Users\/oliver\/Developer\/Coles\/PactSwiftMockServer\/Sources\/MockServer.swift",
       "kind": "StringLiteral",
-      "offset": 1706,
+      "offset": 1553,
       "length": 11,
       "value": "\"127.0.0.1\""
     },
     {
       "filePath": "\/Users\/oliver\/Developer\/Coles\/PactSwiftMockServer\/Sources\/MockServer.swift",
       "kind": "IntegerLiteral",
-      "offset": 1883,
+      "offset": 1724,
       "length": 1,
       "value": "0"
     },
     {
       "filePath": "\/Users\/oliver\/Developer\/Coles\/PactSwiftMockServer\/Sources\/Model\/Pact.swift",
       "kind": "BooleanLiteral",
-      "offset": 2288,
+      "offset": 1432,
       "length": 5,
       "value": "false"
     },
     {
       "filePath": "\/Users\/oliver\/Developer\/Coles\/PactSwiftMockServer\/Sources\/Model\/Pact.swift",
       "kind": "BooleanLiteral",
-      "offset": 5781,
+      "offset": 4465,
       "length": 5,
       "value": "false"
+    },
+    {
+      "filePath": "\/Users\/oliver\/Developer\/Coles\/PactSwiftMockServer\/Sources\/Model\/Logging.swift",
+      "kind": "StringLiteral",
+      "offset": 1664,
+      "length": 7,
+      "value": "\"TRACE\""
+    },
+    {
+      "filePath": "\/Users\/oliver\/Developer\/Coles\/PactSwiftMockServer\/Sources\/Model\/Logging.swift",
+      "kind": "StringLiteral",
+      "offset": 1681,
+      "length": 7,
+      "value": "\"DEBUG\""
+    },
+    {
+      "filePath": "\/Users\/oliver\/Developer\/Coles\/PactSwiftMockServer\/Sources\/Model\/Logging.swift",
+      "kind": "StringLiteral",
+      "offset": 1697,
+      "length": 6,
+      "value": "\"INFO\""
+    },
+    {
+      "filePath": "\/Users\/oliver\/Developer\/Coles\/PactSwiftMockServer\/Sources\/Model\/Logging.swift",
+      "kind": "StringLiteral",
+      "offset": 1712,
+      "length": 6,
+      "value": "\"WARN\""
+    },
+    {
+      "filePath": "\/Users\/oliver\/Developer\/Coles\/PactSwiftMockServer\/Sources\/Model\/Logging.swift",
+      "kind": "StringLiteral",
+      "offset": 1728,
+      "length": 7,
+      "value": "\"ERROR\""
+    },
+    {
+      "filePath": "\/Users\/oliver\/Developer\/Coles\/PactSwiftMockServer\/Sources\/Model\/Logging.swift",
+      "kind": "StringLiteral",
+      "offset": 1664,
+      "length": 7,
+      "value": "\"TRACE\""
+    },
+    {
+      "filePath": "\/Users\/oliver\/Developer\/Coles\/PactSwiftMockServer\/Sources\/Model\/Logging.swift",
+      "kind": "StringLiteral",
+      "offset": 1681,
+      "length": 7,
+      "value": "\"DEBUG\""
+    },
+    {
+      "filePath": "\/Users\/oliver\/Developer\/Coles\/PactSwiftMockServer\/Sources\/Model\/Logging.swift",
+      "kind": "StringLiteral",
+      "offset": 1697,
+      "length": 6,
+      "value": "\"INFO\""
+    },
+    {
+      "filePath": "\/Users\/oliver\/Developer\/Coles\/PactSwiftMockServer\/Sources\/Model\/Logging.swift",
+      "kind": "StringLiteral",
+      "offset": 1712,
+      "length": 6,
+      "value": "\"WARN\""
+    },
+    {
+      "filePath": "\/Users\/oliver\/Developer\/Coles\/PactSwiftMockServer\/Sources\/Model\/Logging.swift",
+      "kind": "StringLiteral",
+      "offset": 1728,
+      "length": 7,
+      "value": "\"ERROR\""
     }
   ]
 }

@@ -30,18 +30,6 @@ public final class Pact {
 	public enum Error {
 		case canNotBeModified
 
-		case loggerApplyFailed(Int32)
-
-		/// The logger sink could not be configured. The associated error codes:
-		///
-		/// - -1: Can't set logger (applying the logger failed, perhaps because one is applied already).
-		/// * -2: No logger has been initialized (call ``Pact/loggerInitialize()`` before any other log function).
-		/// * -3: The sink specifier was not UTF-8 encoded.
-		/// * -4: The sink type specified is not a known type (known types: "stdout", "stderr", or "file /some/path").
-		/// * -5: No file path was specified in a file-type sink specification.
-		/// * -6: Opening a sink to the specified file path failed (check permissions).
-		case loggerSinkFailed(Int32)
-
 		/// The Pact file could not be written.  The associated error codes:
 		///
 		/// - 1 - The function panicked.
@@ -56,7 +44,7 @@ public final class Pact {
 
 	static private(set) var isInitialized: Bool = false
 
-	public static func initialize(logSinks: [LogSinkConfig] = .defaultSinks) throws {
+	public static func initialize(logSinks: [Logging.Sink.Config] = .defaultSinks) throws {
 		guard isInitialized == false else {
 			return
 		}
@@ -64,11 +52,11 @@ public final class Pact {
 			isInitialized = true
 		}
 
-		loggerInitialize()
+		Logging.initialize()
 		for sink in logSinks {
-			try attachLogSink(sink.sink, filter: sink.filter)
+			try Logging.attachSink(sink.sink, filter: sink.filter)
 		}
-		try loggerApply()
+		try Logging.apply()
 	}
 
 	public let consumer: String
@@ -95,7 +83,8 @@ public final class Pact {
 	deinit {
 		let result = pactffi_free_pact_handle(handle)
 		if result > 0 {
-			Logger.log(
+			Logging.log(
+				.error,
 				message: """
 						 Error freeing Pact handle (code: \(result))
 						 1 - The handle is not valid or does not refer to a valid Pact. Could be that it was previously deleted.
@@ -148,13 +137,13 @@ public final class Pact {
 	///
 	public func writePactFile(directory: String? = nil, overwrite: Bool = false) throws {
 		let writeDirectory = directory ?? FileManager.default.currentDirectoryPath
-		Logger.log(message: "Attempting to write pact to file in directory '\(writeDirectory)'")
+		Logging.log(.debug, message: "Attempting to write pact to file in directory '\(writeDirectory)'")
 		let result = pactffi_pact_handle_write_file(handle, writeDirectory.cString(using: .utf8), overwrite)
 		guard result == 0 else {
 			throw Error.canNotWritePact(result)
 		}
 
-		Logger.log(message: "Wrote pact to '\(writeDirectory)/\(filename)'")
+		Logging.log(.info, message: "Wrote pact to '\(writeDirectory)/\(filename)'")
 	}
 
 }
@@ -162,10 +151,6 @@ public final class Pact {
 extension Pact.Error: LocalizedError {
 	public var failureReason: String? {
 		switch self {
-		case .loggerSinkFailed(let code):
-			return String.localizedStringWithFormat(NSLocalizedString("Can not configure logger sink (error code: %d)", comment: "Format for error failure reason when configure logger sink"), code)
-		case .loggerApplyFailed(let code):
-			return String.localizedStringWithFormat(NSLocalizedString("Can not apply logger configuration (error code: %d)", comment: "Format for error failure reason when can't apply logger config"), code)
 		case .canNotBeModified:
 			return NSLocalizedString("Pact can not be modified", comment: "A error failure reason when a Pact can not be modified")
 		case .canNotWritePact(let code):

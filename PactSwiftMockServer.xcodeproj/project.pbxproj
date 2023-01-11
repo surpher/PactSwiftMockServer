@@ -39,9 +39,9 @@
 		A7F1857B296BE196003AE3F2 /* QueryBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7F1857A296BE196003AE3F2 /* QueryBuilder.swift */; };
 		A7F1857C296BE196003AE3F2 /* QueryBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7F1857A296BE196003AE3F2 /* QueryBuilder.swift */; };
 		A7F1857D296BE196003AE3F2 /* QueryBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7F1857A296BE196003AE3F2 /* QueryBuilder.swift */; };
-		A7F18596296CED58003AE3F2 /* Pact+Logging.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7F18595296CED58003AE3F2 /* Pact+Logging.swift */; };
-		A7F18597296CED58003AE3F2 /* Pact+Logging.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7F18595296CED58003AE3F2 /* Pact+Logging.swift */; };
-		A7F18598296CED58003AE3F2 /* Pact+Logging.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7F18595296CED58003AE3F2 /* Pact+Logging.swift */; };
+		A7F18596296CED58003AE3F2 /* Logging.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7F18595296CED58003AE3F2 /* Logging.swift */; };
+		A7F18597296CED58003AE3F2 /* Logging.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7F18595296CED58003AE3F2 /* Logging.swift */; };
+		A7F18598296CED58003AE3F2 /* Logging.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7F18595296CED58003AE3F2 /* Logging.swift */; };
 		AD1597FD2648DE0E007CFAA5 /* PactSwiftMockServer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AD1597F32648DE0E007CFAA5 /* PactSwiftMockServer.framework */; };
 		AD1598042648DE0E007CFAA5 /* PactSwiftMockServer.h in Headers */ = {isa = PBXBuildFile; fileRef = AD1597F62648DE0E007CFAA5 /* PactSwiftMockServer.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		AD1598212648DF73007CFAA5 /* PactSwiftMockServer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AD1598182648DF73007CFAA5 /* PactSwiftMockServer.framework */; };
@@ -63,9 +63,6 @@
 		AD957F3A28A23B8400860AD1 /* SocketBinder.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD957F3928A23B8400860AD1 /* SocketBinder.swift */; };
 		AD957F3B28A23B8400860AD1 /* SocketBinder.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD957F3928A23B8400860AD1 /* SocketBinder.swift */; };
 		AD957F3C28A23B8400860AD1 /* SocketBinder.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD957F3928A23B8400860AD1 /* SocketBinder.swift */; };
-		AD957F3E28A23BD600860AD1 /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD957F3D28A23BD600860AD1 /* Logger.swift */; };
-		AD957F3F28A23BD600860AD1 /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD957F3D28A23BD600860AD1 /* Logger.swift */; };
-		AD957F4028A23BD600860AD1 /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD957F3D28A23BD600860AD1 /* Logger.swift */; };
 		ADB97FDA26493D5900C54CA9 /* MockServerErrorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADB97FD926493D5900C54CA9 /* MockServerErrorTests.swift */; };
 		ADB97FDB26493D5900C54CA9 /* MockServerErrorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADB97FD926493D5900C54CA9 /* MockServerErrorTests.swift */; };
 		ADBEF3012648FCF200486C4A /* PactVerificationFailure.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADBEF2FC2648FCF200486C4A /* PactVerificationFailure.swift */; };
@@ -124,7 +121,7 @@
 		A7F18572296BE152003AE3F2 /* HeaderBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeaderBuilder.swift; sourceTree = "<group>"; };
 		A7F18576296BE177003AE3F2 /* BodyBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BodyBuilder.swift; sourceTree = "<group>"; };
 		A7F1857A296BE196003AE3F2 /* QueryBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QueryBuilder.swift; sourceTree = "<group>"; };
-		A7F18595296CED58003AE3F2 /* Pact+Logging.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Pact+Logging.swift"; sourceTree = "<group>"; };
+		A7F18595296CED58003AE3F2 /* Logging.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logging.swift; sourceTree = "<group>"; };
 		AD1597F32648DE0E007CFAA5 /* PactSwiftMockServer.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = PactSwiftMockServer.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		AD1597F62648DE0E007CFAA5 /* PactSwiftMockServer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PactSwiftMockServer.h; sourceTree = "<group>"; };
 		AD1597F72648DE0E007CFAA5 /* Info-iOS.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Info-iOS.plist"; sourceTree = "<group>"; };
@@ -147,7 +144,6 @@
 		AD9336A5269C33EB0004EBD8 /* libpact_ffi.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libpact_ffi.a; sourceTree = "<group>"; };
 		AD957F3528A23B0B00860AD1 /* PactFileManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PactFileManager.swift; sourceTree = "<group>"; };
 		AD957F3928A23B8400860AD1 /* SocketBinder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SocketBinder.swift; sourceTree = "<group>"; };
-		AD957F3D28A23BD600860AD1 /* Logger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
 		ADB97FD926493D5900C54CA9 /* MockServerErrorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockServerErrorTests.swift; sourceTree = "<group>"; };
 		ADBEF2EA2648FB0600486C4A /* Target-macOS-Tests-Shared.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "Target-macOS-Tests-Shared.xcconfig"; sourceTree = "<group>"; };
 		ADBEF2EB2648FB0600486C4A /* Target-iOS-Tests-Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "Target-iOS-Tests-Debug.xcconfig"; sourceTree = "<group>"; };
@@ -361,7 +357,7 @@
 				A7F18572296BE152003AE3F2 /* HeaderBuilder.swift */,
 				A743EC422946EF1D00EE315D /* Interaction.swift */,
 				A743EC3E2946E8C700EE315D /* Pact.swift */,
-				A7F18595296CED58003AE3F2 /* Pact+Logging.swift */,
+				A7F18595296CED58003AE3F2 /* Logging.swift */,
 				ADBEF2FC2648FCF200486C4A /* PactVerificationFailure.swift */,
 				ADC15DAF26CE98140010D900 /* ProviderVerificationError.swift */,
 				A7F1857A296BE196003AE3F2 /* QueryBuilder.swift */,
@@ -380,7 +376,6 @@
 		AD957F3428A23AF300860AD1 /* Toolbox */ = {
 			isa = PBXGroup;
 			children = (
-				AD957F3D28A23BD600860AD1 /* Logger.swift */,
 				AD957F3528A23B0B00860AD1 /* PactFileManager.swift */,
 				AD957F3928A23B8400860AD1 /* SocketBinder.swift */,
 			);
@@ -688,7 +683,6 @@
 				ADC15DB026CE98140010D900 /* ProviderVerificationError.swift in Sources */,
 				ADBEF3012648FCF200486C4A /* PactVerificationFailure.swift in Sources */,
 				A743EC432946EF1D00EE315D /* Interaction.swift in Sources */,
-				AD957F3E28A23BD600860AD1 /* Logger.swift in Sources */,
 				AD957F3A28A23B8400860AD1 /* SocketBinder.swift in Sources */,
 				ADE2551026CE335400FA21A9 /* Verifier.swift in Sources */,
 				AD957F3628A23B0B00860AD1 /* PactFileManager.swift in Sources */,
@@ -700,7 +694,7 @@
 				A7F1857B296BE196003AE3F2 /* QueryBuilder.swift in Sources */,
 				A743EC3F2946E8C700EE315D /* Pact.swift in Sources */,
 				A7840F75294AF1D200CF22EF /* Generate.swift in Sources */,
-				A7F18596296CED58003AE3F2 /* Pact+Logging.swift in Sources */,
+				A7F18596296CED58003AE3F2 /* Logging.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -726,7 +720,6 @@
 				ADC15DB126CE98140010D900 /* ProviderVerificationError.swift in Sources */,
 				ADBEF3022648FCF200486C4A /* PactVerificationFailure.swift in Sources */,
 				A743EC442946EF1D00EE315D /* Interaction.swift in Sources */,
-				AD957F3F28A23BD600860AD1 /* Logger.swift in Sources */,
 				AD957F3B28A23B8400860AD1 /* SocketBinder.swift in Sources */,
 				ADE2551126CE335400FA21A9 /* Verifier.swift in Sources */,
 				AD957F3728A23B0B00860AD1 /* PactFileManager.swift in Sources */,
@@ -738,7 +731,7 @@
 				A7F1857C296BE196003AE3F2 /* QueryBuilder.swift in Sources */,
 				A743EC402946E8C700EE315D /* Pact.swift in Sources */,
 				A7840F76294AF1D200CF22EF /* Generate.swift in Sources */,
-				A7F18597296CED58003AE3F2 /* Pact+Logging.swift in Sources */,
+				A7F18597296CED58003AE3F2 /* Logging.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -764,8 +757,7 @@
 				ADC15DB226CE98140010D900 /* ProviderVerificationError.swift in Sources */,
 				A743EC452946EF1D00EE315D /* Interaction.swift in Sources */,
 				A7F18575296BE152003AE3F2 /* HeaderBuilder.swift in Sources */,
-				A7F18598296CED58003AE3F2 /* Pact+Logging.swift in Sources */,
-				AD957F4028A23BD600860AD1 /* Logger.swift in Sources */,
+				A7F18598296CED58003AE3F2 /* Logging.swift in Sources */,
 				A7F1857D296BE196003AE3F2 /* QueryBuilder.swift in Sources */,
 				AD957F3C28A23B8400860AD1 /* SocketBinder.swift in Sources */,
 				A7F18579296BE177003AE3F2 /* BodyBuilder.swift in Sources */,

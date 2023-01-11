@@ -77,14 +77,14 @@ public class MockServer {
 		self.pact = pact
 
 		let tryPort = port ?? Self.randomPort
-		Logger.log(message: "Starting mock server on \(socketAddress):\(tryPort)")
+		Logging.log(.debug, message: "Starting mock server on \(socketAddress):\(tryPort)")
 
 		let result = pactffi_create_mock_server_for_transport(pact.handle, socketAddress, UInt16(tryPort), useTLS ? "https" : "http", nil)
 		if result <= 0 {
 			throw Error(rawValue: result)
 		}
 
-		Logger.log(message: "Mock server started on port \(result)")
+		Logging.log(.debug, message: "Mock server started on port \(result)")
 		self.port = result
 	}
 
@@ -100,9 +100,9 @@ public class MockServer {
 
 	deinit {
 		if port != 0 {
-			Logger.log(message: "Shutting down mock server on port \(port)")
+			Logging.log(.debug, message: "Shutting down mock server on port \(port)")
 			if pactffi_cleanup_mock_server(port) == false {
-				Logger.log(message: "Failed to shut down mock server!")
+				Logging.log(.debug, message: "Failed to shut down mock server!")
 			}
 		}
 	}

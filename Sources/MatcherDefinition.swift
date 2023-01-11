@@ -132,7 +132,7 @@ class MatcherDefinition {
 				let type = RuleResult.RuleType(rawValue: result.pointee.matching_rule._0)
 				let example = result.pointee.matching_rule._1.map(String.init(cString:)) ?? ""
 
-				// FIXME: Can't turn every rule result into json (Rust code crashes)
+				// FIXME: Can't turn every rule result into json (Rust code crashes) - I might be doing this wrong.
 				/*
 				if type != .equality && type != .timestamp && type != .eachValue && type != .regex && type != .eachKey {
 					let jsonCString = pactffi_matching_rule_to_json(result.pointee.matching_rule._2)

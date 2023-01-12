@@ -48,7 +48,7 @@ final class PactBuilderTests: XCTestCase {
 	}
 
 	func testPactVersion() throws {
-		XCTAssertEqual(Pact.version, "0.3.15")
+		XCTAssertEqual(Pact.version, "0.4.0")
 	}
 
 	func testGetEvents() async throws {

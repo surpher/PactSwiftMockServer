@@ -22,10 +22,6 @@
 		A7840F76294AF1D200CF22EF /* Generate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7840F74294AF1D200CF22EF /* Generate.swift */; };
 		A7840F78294AF20500CF22EF /* GenerateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7840F77294AF20500CF22EF /* GenerateTests.swift */; };
 		A7840F79294AF20500CF22EF /* GenerateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7840F77294AF20500CF22EF /* GenerateTests.swift */; };
-		A7840F7D294BE04600CF22EF /* MatcherDefinition.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7840F7A294BDFE600CF22EF /* MatcherDefinition.swift */; };
-		A7840F7E294BE04700CF22EF /* MatcherDefinition.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7840F7A294BDFE600CF22EF /* MatcherDefinition.swift */; };
-		A7840F80294BE3CB00CF22EF /* MatcherDefinitionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7840F7F294BE3CB00CF22EF /* MatcherDefinitionTests.swift */; };
-		A7840F81294BE3CB00CF22EF /* MatcherDefinitionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7840F7F294BE3CB00CF22EF /* MatcherDefinitionTests.swift */; };
 		A7840F83294C2ECA00CF22EF /* InteractionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7840F82294C2ECA00CF22EF /* InteractionTests.swift */; };
 		A7840F84294C2ECA00CF22EF /* InteractionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7840F82294C2ECA00CF22EF /* InteractionTests.swift */; };
 		A7840F86294C2ED800CF22EF /* PactTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7840F85294C2ED800CF22EF /* PactTests.swift */; };
@@ -114,8 +110,6 @@
 		A7840F42294A923000CF22EF /* PactBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PactBuilder.swift; sourceTree = "<group>"; };
 		A7840F74294AF1D200CF22EF /* Generate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Generate.swift; sourceTree = "<group>"; usesTabs = 1; };
 		A7840F77294AF20500CF22EF /* GenerateTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenerateTests.swift; sourceTree = "<group>"; };
-		A7840F7A294BDFE600CF22EF /* MatcherDefinition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatcherDefinition.swift; sourceTree = "<group>"; usesTabs = 1; };
-		A7840F7F294BE3CB00CF22EF /* MatcherDefinitionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatcherDefinitionTests.swift; sourceTree = "<group>"; };
 		A7840F82294C2ECA00CF22EF /* InteractionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InteractionTests.swift; sourceTree = "<group>"; };
 		A7840F85294C2ED800CF22EF /* PactTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PactTests.swift; sourceTree = "<group>"; };
 		A7F18572296BE152003AE3F2 /* HeaderBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeaderBuilder.swift; sourceTree = "<group>"; };
@@ -281,7 +275,6 @@
 				AD1598382648E690007CFAA5 /* Headers */,
 				AD1598302648E32F007CFAA5 /* MockServer.swift */,
 				A7840F74294AF1D200CF22EF /* Generate.swift */,
-				A7840F7A294BDFE600CF22EF /* MatcherDefinition.swift */,
 				AD1598392648E6DB007CFAA5 /* Model */,
 				A7840F42294A923000CF22EF /* PactBuilder.swift */,
 				AD957F3428A23AF300860AD1 /* Toolbox */,
@@ -327,7 +320,6 @@
 				ADC6C61226D0AFBD00844000 /* VerifierTests.swift */,
 				A7840F3F2949AA4200CF22EF /* PactBuilderTests.swift */,
 				A7840F77294AF20500CF22EF /* GenerateTests.swift */,
-				A7840F7F294BE3CB00CF22EF /* MatcherDefinitionTests.swift */,
 				A7840F82294C2ECA00CF22EF /* InteractionTests.swift */,
 				A7840F85294C2ED800CF22EF /* PactTests.swift */,
 			);
@@ -687,7 +679,6 @@
 				ADE2551026CE335400FA21A9 /* Verifier.swift in Sources */,
 				AD957F3628A23B0B00860AD1 /* PactFileManager.swift in Sources */,
 				A7F18577296BE177003AE3F2 /* BodyBuilder.swift in Sources */,
-				A7840F7D294BE04600CF22EF /* MatcherDefinition.swift in Sources */,
 				A7840F43294A923000CF22EF /* PactBuilder.swift in Sources */,
 				AD1598312648E32F007CFAA5 /* MockServer.swift in Sources */,
 				A7F18573296BE152003AE3F2 /* HeaderBuilder.swift in Sources */,
@@ -702,7 +693,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A7840F80294BE3CB00CF22EF /* MatcherDefinitionTests.swift in Sources */,
 				ADC6C61326D0AFBD00844000 /* VerifierTests.swift in Sources */,
 				ADB97FDA26493D5900C54CA9 /* MockServerErrorTests.swift in Sources */,
 				A7840F402949AA4200CF22EF /* PactBuilderTests.swift in Sources */,
@@ -724,7 +714,6 @@
 				ADE2551126CE335400FA21A9 /* Verifier.swift in Sources */,
 				AD957F3728A23B0B00860AD1 /* PactFileManager.swift in Sources */,
 				A7F18578296BE177003AE3F2 /* BodyBuilder.swift in Sources */,
-				A7840F7E294BE04700CF22EF /* MatcherDefinition.swift in Sources */,
 				A7840F44294A923000CF22EF /* PactBuilder.swift in Sources */,
 				AD1598322648E32F007CFAA5 /* MockServer.swift in Sources */,
 				A7F18574296BE152003AE3F2 /* HeaderBuilder.swift in Sources */,
@@ -739,7 +728,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A7840F81294BE3CB00CF22EF /* MatcherDefinitionTests.swift in Sources */,
 				ADC6C61426D0AFBD00844000 /* VerifierTests.swift in Sources */,
 				ADB97FDB26493D5900C54CA9 /* MockServerErrorTests.swift in Sources */,
 				A7840F412949AA4200CF22EF /* PactBuilderTests.swift in Sources */,

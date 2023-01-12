@@ -207,11 +207,6 @@ final public class Verifier : PactSwiftMockServer.ProviderVerifying {
   final public func verifyProvider(options args: Swift.String) -> Swift.Result<Swift.Bool, PactSwiftMockServer.ProviderVerificationError>
   @objc deinit
 }
-public enum PactFileManager {
-  public static var defaultPactDirectoryPath: Swift.String {
-    get
-  }
-}
 final public class PactBuilder {
   public enum Error {
     case pactFailure([PactSwiftMockServer.PactVerificationFailure])

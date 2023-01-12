@@ -47,6 +47,40 @@ typedef enum ExpressionValueType {
 } ExpressionValueType;
 
 /**
+ * Enum defining the categories that generators can be applied to
+ */
+typedef enum GeneratorCategory {
+  /**
+   * Request Method
+   */
+  GeneratorCategory_METHOD,
+  /**
+   * Request Path
+   */
+  GeneratorCategory_PATH,
+  /**
+   * Request/Response Header
+   */
+  GeneratorCategory_HEADER,
+  /**
+   * Request Query Parameter
+   */
+  GeneratorCategory_QUERY,
+  /**
+   * Body
+   */
+  GeneratorCategory_BODY,
+  /**
+   * Response Status
+   */
+  GeneratorCategory_STATUS,
+  /**
+   * Message metadata
+   */
+  GeneratorCategory_METADATA,
+} GeneratorCategory;
+
+/**
  * Request or Response enum
  */
 typedef enum InteractionPart {
@@ -74,6 +108,44 @@ typedef enum LevelFilter {
   LevelFilter_Debug,
   LevelFilter_Trace,
 } LevelFilter;
+
+/**
+ * Enum defining the categories that matching rules can be applied to
+ */
+typedef enum MatchingRuleCategory {
+  /**
+   * Request Method
+   */
+  MatchingRuleCategory_METHOD,
+  /**
+   * Request Path
+   */
+  MatchingRuleCategory_PATH,
+  /**
+   * Request/Response Header
+   */
+  MatchingRuleCategory_HEADER,
+  /**
+   * Request Query Parameter
+   */
+  MatchingRuleCategory_QUERY,
+  /**
+   * Body
+   */
+  MatchingRuleCategory_BODY,
+  /**
+   * Response Status
+   */
+  MatchingRuleCategory_STATUS,
+  /**
+   * Message contents (body)
+   */
+  MatchingRuleCategory_CONTENTS,
+  /**
+   * Message metadata
+   */
+  MatchingRuleCategory_METADATA,
+} MatchingRuleCategory;
 
 /**
  * Enum defining the pact specification versions supported by the library
@@ -106,6 +178,11 @@ typedef enum PactSpecification {
 } PactSpecification;
 
 /**
+ * Asynchronous interactions as a sequence of messages
+ */
+typedef struct AsynchronousMessage AsynchronousMessage;
+
+/**
  * Struct that defines the consumer of the pact.
  */
 typedef struct Consumer Consumer;
@@ -116,9 +193,31 @@ typedef struct Consumer Consumer;
 typedef struct Generator Generator;
 
 /**
+ * An iterator that enables FFI iteration over the generators for a particular generator
+ * category.
+ */
+typedef struct GeneratorCategoryIterator GeneratorCategoryIterator;
+
+/**
+ * Struct that defines the HTTP request.
+ */
+typedef struct HttpRequest HttpRequest;
+
+/**
+ * Struct that defines the HTTP response.
+ */
+typedef struct HttpResponse HttpResponse;
+
+/**
  * Set of all matching rules
  */
 typedef struct MatchingRule MatchingRule;
+
+/**
+ * An iterator that enables FFI iteration over the matching rules for a particular matching rule
+ * category.
+ */
+typedef struct MatchingRuleCategoryIterator MatchingRuleCategoryIterator;
 
 /**
  * Result of parsing a matching rule definition
@@ -131,9 +230,46 @@ typedef struct MatchingRuleDefinitionResult MatchingRuleDefinitionResult;
 typedef struct MatchingRuleIterator MatchingRuleIterator;
 
 /**
+ * The matching rule or reference from parsing the matching definition expression.
+ *
+ * For matching rules, the ID corresponds to the following rules:
+ * | Rule | ID |
+ * | ---- | -- |
+ * | Equality | 1 |
+ * | Regex | 2 |
+ * | Type | 3 |
+ * | MinType | 4 |
+ * | MaxType | 5 |
+ * | MinMaxType | 6 |
+ * | Timestamp | 7 |
+ * | Time | 8 |
+ * | Date | 9 |
+ * | Include | 10 |
+ * | Number | 11 |
+ * | Integer | 12 |
+ * | Decimal | 13 |
+ * | Null | 14 |
+ * | ContentType | 15 |
+ * | ArrayContains | 16 |
+ * | Values | 17 |
+ * | Boolean | 18 |
+ * | StatusCode | 19 |
+ * | NotEmpty | 20 |
+ * | Semver | 21 |
+ * | EachKey | 22 |
+ * | EachValue | 23 |
+ */
+typedef struct MatchingRuleResult MatchingRuleResult;
+
+/**
  * Struct that defines a message.
  */
 typedef struct Message Message;
+
+/**
+ * Contents of a message interaction
+ */
+typedef struct MessageContents MessageContents;
 
 /**
  * An iterator that enables FFI iteration over metadata by putting all the keys on the heap
@@ -184,17 +320,27 @@ typedef struct MismatchesIterator MismatchesIterator;
 typedef struct Pact Pact;
 
 /**
+ * Opaque type for use as a pointer to a Pact interaction model
+ */
+typedef struct PactInteraction PactInteraction;
+
+/**
+ * An iterator over the interactions in a pact.
+ */
+typedef struct PactInteractionIterator PactInteractionIterator;
+
+/**
  * An iterator over messages in a pact.
  */
 typedef struct PactMessageIterator PactMessageIterator;
 
 /**
- * An iterator over synchronous HTTP request/response interactions in a pact.
+ * An iterator over synchronous HTTP request/response interactions in a V4 pact.
  */
 typedef struct PactSyncHttpIterator PactSyncHttpIterator;
 
 /**
- * An iterator over synchronous request/response messages in a pact.
+ * An iterator over synchronous request/response messages in a V4 pact.
  */
 typedef struct PactSyncMessageIterator PactSyncMessageIterator;
 
@@ -235,6 +381,34 @@ typedef struct SynchronousMessage SynchronousMessage;
  * Wraps a Pact verifier
  */
 typedef struct VerifierHandle VerifierHandle;
+
+/**
+ * A single key-value pair of a path and generator exported to the C-side.
+ */
+typedef struct GeneratorKeyValuePair {
+  /**
+   * The generator path
+   */
+  const char *path;
+  /**
+   * The generator
+   */
+  const struct Generator *generator;
+} GeneratorKeyValuePair;
+
+/**
+ * A single key-value pair of a path and matching rule exported to the C-side.
+ */
+typedef struct MatchingRuleKeyValuePair {
+  /**
+   * The matching rule path
+   */
+  const char *path;
+  /**
+   * The matching rule
+   */
+  const struct MatchingRule *rule;
+} MatchingRuleKeyValuePair;
 
 /**
  * A single key-value pair exported to the C-side.
@@ -281,63 +455,6 @@ typedef struct ProviderStateParamPair {
    */
   const char *value;
 } ProviderStateParamPair;
-
-/**
- * The matching rule or reference from parsing the matching definition expression.
- *
- * For matching rules, the ID corresponds to the following rules:
- * | Rule | ID |
- * | ---- | -- |
- * | Equality | 1 |
- * | Regex | 2 |
- * | Type | 3 |
- * | MinType | 4 |
- * | MaxType | 5 |
- * | MinMaxType | 6 |
- * | Timestamp | 7 |
- * | Time | 8 |
- * | Date | 9 |
- * | Include | 10 |
- * | Number | 11 |
- * | Integer | 12 |
- * | Decimal | 13 |
- * | Null | 14 |
- * | ContentType | 15 |
- * | ArrayContains | 16 |
- * | Values | 17 |
- * | Boolean | 18 |
- * | StatusCode | 19 |
- * | NotEmpty | 20 |
- * | Semver | 21 |
- * | EachKey | 22 |
- * | EachValue | 23 |
- */
-typedef enum MatchingRuleResult_Tag {
-  /**
-   * The matching rule from the expression.
-   */
-  MatchingRuleResult_MatchingRule,
-  /**
-   * A reference to a named item.
-   */
-  MatchingRuleResult_MatchingReference,
-} MatchingRuleResult_Tag;
-
-typedef struct MatchingRuleResult_MatchingRule_Body {
-  uint16_t _0;
-  const char *_1;
-  const struct MatchingRule *_2;
-} MatchingRuleResult_MatchingRule_Body;
-
-typedef struct MatchingRuleResult {
-  MatchingRuleResult_Tag tag;
-  union {
-    MatchingRuleResult_MatchingRule_Body matching_rule;
-    struct {
-      const char *matching_reference;
-    };
-  };
-} MatchingRuleResult;
 
 /**
  * Wraps a Pact model struct
@@ -651,6 +768,222 @@ struct Pact *pactffi_parse_pact_json(const char *json);
 void pactffi_pact_model_delete(struct Pact *pact);
 
 /**
+ * Returns an iterator over all the interactions in the Pact. The iterator will have to be
+ * deleted using the `pactffi_pact_interaction_iter_delete` function. The iterator will
+ * contain a copy of the interactions, so it will not be affected but mutations to the Pact
+ * model and will still function if the Pact model is deleted.
+ *
+ * # Safety
+ * This function is safe as long as the Pact pointer is a valid pointer.
+ *
+ * # Errors
+ * On any error, this function will return a NULL pointer.
+ */
+struct PactInteractionIterator *pactffi_pact_model_interaction_iterator(struct Pact *pact);
+
+/**
+ * Returns the Pact specification enum that the Pact is for.
+ */
+enum PactSpecification pactffi_pact_spec_version(const struct Pact *pact);
+
+/**
+ * Frees the memory used by the Pact interaction model
+ */
+void pactffi_pact_interaction_delete(const struct PactInteraction *interaction);
+
+/**
+ * Get a mutable pointer to a newly-created default message on the heap.
+ *
+ * # Safety
+ *
+ * This function is safe.
+ *
+ * # Error Handling
+ *
+ * Returns NULL on error.
+ */
+struct AsynchronousMessage *pactffi_async_message_new(void);
+
+/**
+ * Destroy the `AsynchronousMessage` being pointed to.
+ */
+void pactffi_async_message_delete(const struct AsynchronousMessage *message);
+
+/**
+ * Get the message contents of an `AsynchronousMessage` as a `MessageContents` pointer.
+ *
+ * # Safety
+ *
+ * The data pointed to by the pointer this function returns will be deleted when the message
+ * is deleted. Trying to use if after the message is deleted will result in undefined behaviour.
+ *
+ * # Error Handling
+ *
+ * If the message is NULL, returns NULL.
+ */
+const struct MessageContents *pactffi_async_message_get_contents(const struct AsynchronousMessage *message);
+
+/**
+ * Get the message contents of an `AsynchronousMessage` in string form.
+ *
+ * # Safety
+ *
+ * The returned string must be deleted with `pactffi_string_delete`.
+ *
+ * The returned string can outlive the message.
+ *
+ * # Error Handling
+ *
+ * If the message is NULL, returns NULL. If the body of the message
+ * is missing, then this function also returns NULL. This means there's
+ * no mechanism to differentiate with this function call alone between
+ * a NULL message and a missing message body.
+ */
+const char *pactffi_async_message_get_contents_str(const struct AsynchronousMessage *message);
+
+/**
+ * Sets the contents of the message as a string.
+ *
+ * * `message` - the message to set the contents for
+ * * `contents` - pointer to contents to copy from. Must be a valid NULL-terminated UTF-8 string pointer.
+ * * `content_type` - pointer to the NULL-terminated UTF-8 string containing the content type of the data.
+ *
+ * # Safety
+ *
+ * The message contents and content type must either be NULL pointers, or point to valid
+ * UTF-8 encoded NULL-terminated strings. Otherwise behaviour is undefined.
+ *
+ * # Error Handling
+ *
+ * If the contents is a NULL pointer, it will set the message contents as null. If the content
+ * type is a null pointer, or can't be parsed, it will set the content type as unknown.
+ */
+void pactffi_async_message_set_contents_str(struct AsynchronousMessage *message,
+                                            const char *contents,
+                                            const char *content_type);
+
+/**
+ * Get the length of the contents of a `AsynchronousMessage`.
+ *
+ * # Safety
+ *
+ * This function is safe.
+ *
+ * # Error Handling
+ *
+ * If the message is NULL, returns 0. If the body of the request
+ * is missing, then this function also returns 0.
+ */
+size_t pactffi_async_message_get_contents_length(const struct AsynchronousMessage *message);
+
+/**
+ * Get the contents of an `AsynchronousMessage` as a pointer to an array of bytes.
+ *
+ * # Safety
+ *
+ * The number of bytes in the buffer will be returned by `pactffi_async_message_get_contents_length`.
+ * It is safe to use the pointer while the message is not deleted or changed. Using the pointer
+ * after the message is mutated or deleted may lead to undefined behaviour.
+ *
+ * # Error Handling
+ *
+ * If the message is NULL, returns NULL. If the body of the message
+ * is missing, then this function also returns NULL.
+ */
+const unsigned char *pactffi_async_message_get_contents_bin(const struct AsynchronousMessage *message);
+
+/**
+ * Sets the contents of the message as an array of bytes.
+ *
+ * * `message` - the message to set the contents for
+ * * `contents` - pointer to contents to copy from
+ * * `len` - number of bytes to copy from the contents pointer
+ * * `content_type` - pointer to the NULL-terminated UTF-8 string containing the content type of the data.
+ *
+ * # Safety
+ *
+ * The contents pointer must be valid for reads of `len` bytes, and it must be properly aligned
+ * and consecutive. Otherwise behaviour is undefined.
+ *
+ * # Error Handling
+ *
+ * If the contents is a NULL pointer, it will set the message contents as null. If the content
+ * type is a null pointer, or can't be parsed, it will set the content type as unknown.
+ */
+void pactffi_async_message_set_contents_bin(struct AsynchronousMessage *message,
+                                            const unsigned char *contents,
+                                            size_t len,
+                                            const char *content_type);
+
+/**
+ * Get a copy of the description.
+ *
+ * # Safety
+ *
+ * The returned string must be deleted with `pactffi_string_delete`.
+ *
+ * Since it is a copy, the returned string may safely outlive the `AsynchronousMessage`.
+ *
+ * # Errors
+ *
+ * On failure, this function will return a NULL pointer.
+ *
+ * This function may fail if the Rust string contains embedded
+ * null ('\0') bytes.
+ */
+const char *pactffi_async_message_get_description(const struct AsynchronousMessage *message);
+
+/**
+ * Write the `description` field on the `AsynchronousMessage`.
+ *
+ * # Safety
+ *
+ * `description` must contain valid UTF-8. Invalid UTF-8
+ * will be replaced with U+FFFD REPLACEMENT CHARACTER.
+ *
+ * This function will only reallocate if the new string
+ * does not fit in the existing buffer.
+ *
+ * # Error Handling
+ *
+ * Errors will be reported with a non-zero return value.
+ */
+int pactffi_async_message_set_description(struct AsynchronousMessage *message,
+                                          const char *description);
+
+/**
+ * Get a copy of the provider state at the given index from this message.
+ *
+ * # Safety
+ *
+ * The returned structure must be deleted with `provider_state_delete`.
+ *
+ * Since it is a copy, the returned structure may safely outlive the `AsynchronousMessage`.
+ *
+ * # Error Handling
+ *
+ * On failure, this function will return a variant other than Success.
+ *
+ * This function may fail if the index requested is out of bounds,
+ * or if any of the Rust strings contain embedded null ('\0') bytes.
+ */
+const struct ProviderState *pactffi_async_message_get_provider_state(const struct AsynchronousMessage *message,
+                                                                     unsigned int index);
+
+/**
+ * Get an iterator over provider states.
+ *
+ * # Safety
+ *
+ * The underlying data must not change during iteration.
+ *
+ * # Error Handling
+ *
+ * Returns NULL if an error occurs.
+ */
+struct ProviderStateIterator *pactffi_async_message_get_provider_state_iter(struct AsynchronousMessage *message);
+
+/**
  * Get a copy of this consumer's name.
  *
  * The copy must be deleted with `pactffi_string_delete`.
@@ -687,6 +1020,1025 @@ void pactffi_pact_model_delete(struct Pact *pact);
  * In the case of error, a NULL pointer will be returned.
  */
 const char *pactffi_consumer_get_name(const struct Consumer *consumer);
+
+/**
+ * Get the consumer from a Pact. This returns a copy of the consumer model, and needs to
+ * be cleaned up with `pactffi_pact_consumer_delete` when no longer required.
+ *
+ * # Errors
+ *
+ * This function will fail if it is passed a NULL pointer.
+ * In the case of error, a NULL pointer will be returned.
+ */
+const struct Consumer *pactffi_pact_get_consumer(const struct Pact *pact);
+
+/**
+ * Frees the memory used by the Pact consumer
+ */
+void pactffi_pact_consumer_delete(const struct Consumer *consumer);
+
+/**
+ * Get the message contents in string form.
+ *
+ * # Safety
+ *
+ * The returned string must be deleted with `pactffi_string_delete`.
+ *
+ * The returned string can outlive the message.
+ *
+ * # Error Handling
+ *
+ * If the message contents is NULL, returns NULL. If the body of the message
+ * is missing, then this function also returns NULL. This means there's
+ * no mechanism to differentiate with this function call alone between
+ * a NULL message and a missing message body.
+ */
+const char *pactffi_message_contents_get_contents_str(const struct MessageContents *contents);
+
+/**
+ * Sets the contents of the message as a string.
+ *
+ * * `contents` - the message contents to set the contents for
+ * * `contents_str` - pointer to contents to copy from. Must be a valid NULL-terminated UTF-8 string pointer.
+ * * `content_type` - pointer to the NULL-terminated UTF-8 string containing the content type of the data.
+ *
+ * # Safety
+ *
+ * The message contents and content type must either be NULL pointers, or point to valid
+ * UTF-8 encoded NULL-terminated strings. Otherwise behaviour is undefined.
+ *
+ * # Error Handling
+ *
+ * If the contents string is a NULL pointer, it will set the message contents as null. If the content
+ * type is a null pointer, or can't be parsed, it will set the content type as unknown.
+ */
+void pactffi_message_contents_set_contents_str(struct MessageContents *contents,
+                                               const char *contents_str,
+                                               const char *content_type);
+
+/**
+ * Get the length of the message contents.
+ *
+ * # Safety
+ *
+ * This function is safe.
+ *
+ * # Error Handling
+ *
+ * If the message is NULL, returns 0. If the body of the message
+ * is missing, then this function also returns 0.
+ */
+size_t pactffi_message_contents_get_contents_length(const struct MessageContents *contents);
+
+/**
+ * Get the contents of a message as a pointer to an array of bytes.
+ *
+ * # Safety
+ *
+ * The number of bytes in the buffer will be returned by `pactffi_message_contents_get_contents_length`.
+ * It is safe to use the pointer while the message is not deleted or changed. Using the pointer
+ * after the message is mutated or deleted may lead to undefined behaviour.
+ *
+ * # Error Handling
+ *
+ * If the message is NULL, returns NULL. If the body of the message
+ * is missing, then this function also returns NULL.
+ */
+const unsigned char *pactffi_message_contents_get_contents_bin(const struct MessageContents *contents);
+
+/**
+ * Sets the contents of the message as an array of bytes.
+ *
+ * * `message` - the message contents to set the contents for
+ * * `contents_bin` - pointer to contents to copy from
+ * * `len` - number of bytes to copy from the contents pointer
+ * * `content_type` - pointer to the NULL-terminated UTF-8 string containing the content type of the data.
+ *
+ * # Safety
+ *
+ * The contents pointer must be valid for reads of `len` bytes, and it must be properly aligned
+ * and consecutive. Otherwise behaviour is undefined.
+ *
+ * # Error Handling
+ *
+ * If the contents is a NULL pointer, it will set the message contents as null. If the content
+ * type is a null pointer, or can't be parsed, it will set the content type as unknown.
+ */
+void pactffi_message_contents_set_contents_bin(struct MessageContents *contents,
+                                               const unsigned char *contents_bin,
+                                               size_t len,
+                                               const char *content_type);
+
+/**
+ * Get an iterator over the metadata of a message.
+ *
+ * The returned pointer must be deleted with `pactffi_message_metadata_iter_delete` when done
+ * with it.
+ *
+ * # Safety
+ *
+ * This iterator carries a pointer to the message contents, and must
+ * not outlive the message.
+ *
+ * The message metadata also must not be modified during iteration. If it is,
+ * the old iterator must be deleted and a new iterator created.
+ *
+ * # Error Handling
+ *
+ * On failure, this function will return a NULL pointer.
+ *
+ * This function may fail if any of the Rust strings contain
+ * embedded null ('\0') bytes.
+ */
+struct MessageMetadataIterator *pactffi_message_contents_get_metadata_iter(const struct MessageContents *contents);
+
+/**
+ * Get an iterator over the matching rules for a category of a message.
+ *
+ * The returned pointer must be deleted with `pactffi_matching_rules_iter_delete` when done
+ * with it.
+ *
+ * Note that there could be multiple matching rules for the same key, so this iterator will
+ * sequentially return each rule with the same key.
+ *
+ * For sample, given the following rules:
+ *    "$.a" => Type,
+ *    "$.b" => Regex("\\d+"), Number
+ *
+ * This iterator will return a sequence of 3 values: ("$.a", Type), ("$.b", Regex("\\d+")), ("$.b", Number)
+ *
+ * # Safety
+ *
+ * The iterator contains a copy of the data, so is safe to use when the message or message
+ * contents has been deleted.
+ *
+ * # Error Handling
+ *
+ * On failure, this function will return a NULL pointer.
+ */
+struct MatchingRuleCategoryIterator *pactffi_message_contents_get_matching_rule_iter(const struct MessageContents *contents,
+                                                                                     enum MatchingRuleCategory category);
+
+/**
+ * Get an iterator over the matching rules for a category of an HTTP request.
+ *
+ * The returned pointer must be deleted with `pactffi_matching_rules_iter_delete` when done
+ * with it.
+ *
+ * For sample, given the following rules:
+ *    "$.a" => Type,
+ *    "$.b" => Regex("\\d+"), Number
+ *
+ * This iterator will return a sequence of 3 values: ("$.a", Type), ("$.b", Regex("\\d+")), ("$.b", Number)
+ *
+ * # Safety
+ *
+ * The iterator contains a copy of the data, so is safe to use when the interaction or request
+ * contents has been deleted.
+ *
+ * # Error Handling
+ *
+ * On failure, this function will return a NULL pointer.
+ */
+struct MatchingRuleCategoryIterator *pactffi_request_contents_get_matching_rule_iter(const struct HttpRequest *request,
+                                                                                     enum MatchingRuleCategory category);
+
+/**
+ * Get an iterator over the matching rules for a category of an HTTP response.
+ *
+ * The returned pointer must be deleted with `pactffi_matching_rules_iter_delete` when done
+ * with it.
+ *
+ * For sample, given the following rules:
+ *    "$.a" => Type,
+ *    "$.b" => Regex("\\d+"), Number
+ *
+ * This iterator will return a sequence of 3 values: ("$.a", Type), ("$.b", Regex("\\d+")), ("$.b", Number)
+ *
+ * # Safety
+ *
+ * The iterator contains a copy of the data, so is safe to use when the interaction or response
+ * contents has been deleted.
+ *
+ * # Error Handling
+ *
+ * On failure, this function will return a NULL pointer.
+ */
+struct MatchingRuleCategoryIterator *pactffi_response_contents_get_matching_rule_iter(const struct HttpResponse *response,
+                                                                                      enum MatchingRuleCategory category);
+
+/**
+ * Get an iterator over the generators for a category of a message.
+ *
+ * The returned pointer must be deleted with `pactffi_generators_iter_delete` when done
+ * with it.
+ *
+ * # Safety
+ *
+ * The iterator contains a copy of the data, so is safe to use when the message or message
+ * contents has been deleted.
+ *
+ * # Error Handling
+ *
+ * On failure, this function will return a NULL pointer.
+ */
+struct GeneratorCategoryIterator *pactffi_message_contents_get_generators_iter(const struct MessageContents *contents,
+                                                                               enum GeneratorCategory category);
+
+/**
+ * Get an iterator over the generators for a category of an HTTP request.
+ *
+ * The returned pointer must be deleted with `pactffi_generators_iter_delete` when done
+ * with it.
+ *
+ * # Safety
+ *
+ * The iterator contains a copy of the data, so is safe to use when the interaction or request
+ * contents has been deleted.
+ *
+ * # Error Handling
+ *
+ * On failure, this function will return a NULL pointer.
+ */
+struct GeneratorCategoryIterator *pactffi_request_contents_get_generators_iter(const struct HttpRequest *request,
+                                                                               enum GeneratorCategory category);
+
+/**
+ * Get an iterator over the generators for a category of an HTTP response.
+ *
+ * The returned pointer must be deleted with `pactffi_generators_iter_delete` when done
+ * with it.
+ *
+ * # Safety
+ *
+ * The iterator contains a copy of the data, so is safe to use when the interaction or response
+ * contents has been deleted.
+ *
+ * # Error Handling
+ *
+ * On failure, this function will return a NULL pointer.
+ */
+struct GeneratorCategoryIterator *pactffi_response_contents_get_generators_iter(const struct HttpResponse *response,
+                                                                                enum GeneratorCategory category);
+
+/**
+ * Parse a matcher definition string into a MatchingRuleDefinition containing the example value,
+ * and matching rules and any generator.
+ *
+ * The following are examples of matching rule definitions:
+ * * `matching(type,'Name')` - type matcher with string value 'Name'
+ * * `matching(number,100)` - number matcher
+ * * `matching(datetime, 'yyyy-MM-dd','2000-01-01')` - datetime matcher with format string
+ *
+ * See [Matching Rule definition expressions](https://docs.rs/pact_models/latest/pact_models/matchingrules/expressions/index.html).
+ *
+ * The returned value needs to be freed up with the `pactffi_matcher_definition_delete` function.
+ *
+ * # Errors
+ * If the expression is invalid, the MatchingRuleDefinition error will be set. You can check for
+ * this value with the `pactffi_matcher_definition_error` function.
+ *
+ * # Safety
+ *
+ * This function is safe if the expression is a valid NULL terminated string pointer.
+ */
+const struct MatchingRuleDefinitionResult *pactffi_parse_matcher_definition(const char *expression);
+
+/**
+ * Returns any error message from parsing a matching definition expression. If there is no error,
+ * it will return a NULL pointer, otherwise returns the error message as a NULL-terminated string.
+ * The returned string must be freed using the `pactffi_string_delete` function once done with it.
+ */
+const char *pactffi_matcher_definition_error(const struct MatchingRuleDefinitionResult *definition);
+
+/**
+ * Returns the value from parsing a matching definition expression. If there was an error,
+ * it will return a NULL pointer, otherwise returns the value as a NULL-terminated string.
+ * The returned string must be freed using the `pactffi_string_delete` function once done with it.
+ *
+ * Note that different expressions values can have types other than a string. Use
+ * `pactffi_matcher_definition_value_type` to get the actual type of the value. This function
+ * will always return the string representation of the value.
+ */
+const char *pactffi_matcher_definition_value(const struct MatchingRuleDefinitionResult *definition);
+
+/**
+ * Frees the memory used by the result of parsing the matching definition expression
+ */
+void pactffi_matcher_definition_delete(const struct MatchingRuleDefinitionResult *definition);
+
+/**
+ * Returns the generator from parsing a matching definition expression. If there was an error or
+ * there is no associated generator, it will return a NULL pointer, otherwise returns the generator
+ * as a pointer.
+ *
+ * The generator pointer will be a valid pointer as long as `pactffi_matcher_definition_delete`
+ * has not been called on the definition. Using the generator pointer after the definition
+ * has been deleted will result in undefined behaviour.
+ */
+const struct Generator *pactffi_matcher_definition_generator(const struct MatchingRuleDefinitionResult *definition);
+
+/**
+ * Returns the type of the value from parsing a matching definition expression. If there was an
+ * error parsing the expression, it will return Unknown.
+ */
+enum ExpressionValueType pactffi_matcher_definition_value_type(const struct MatchingRuleDefinitionResult *definition);
+
+/**
+ * Free the iterator when you're done using it.
+ */
+void pactffi_matching_rule_iter_delete(struct MatchingRuleIterator *iter);
+
+/**
+ * Returns an iterator over the matching rules from the parsed definition. The iterator needs to
+ * be deleted with the `pactffi_matching_rule_iter_delete` function once done with it.
+ *
+ * If there was an error parsing the expression, this function will return a NULL pointer.
+ */
+struct MatchingRuleIterator *pactffi_matcher_definition_iter(const struct MatchingRuleDefinitionResult *definition);
+
+/**
+ * Get the next matching rule or reference from the iterator. As the values returned are owned
+ * by the iterator, they do not need to be deleted but will be cleaned up when the iterator is
+ * deleted.
+ *
+ * Will return a NULL pointer when the iterator has advanced past the end of the list.
+ *
+ * # Safety
+ *
+ * This function is safe.
+ *
+ * # Error Handling
+ *
+ * This function will return a NULL pointer if passed a NULL pointer or if an error occurs.
+ */
+const struct MatchingRuleResult *pactffi_matching_rule_iter_next(struct MatchingRuleIterator *iter);
+
+/**
+ * Return the ID of the matching rule.
+ *
+ * The ID corresponds to the following rules:
+ * | Rule | ID |
+ * | ---- | -- |
+ * | Equality | 1 |
+ * | Regex | 2 |
+ * | Type | 3 |
+ * | MinType | 4 |
+ * | MaxType | 5 |
+ * | MinMaxType | 6 |
+ * | Timestamp | 7 |
+ * | Time | 8 |
+ * | Date | 9 |
+ * | Include | 10 |
+ * | Number | 11 |
+ * | Integer | 12 |
+ * | Decimal | 13 |
+ * | Null | 14 |
+ * | ContentType | 15 |
+ * | ArrayContains | 16 |
+ * | Values | 17 |
+ * | Boolean | 18 |
+ * | StatusCode | 19 |
+ * | NotEmpty | 20 |
+ * | Semver | 21 |
+ * | EachKey | 22 |
+ * | EachValue | 23 |
+ *
+ * # Safety
+ *
+ * This function is safe as long as the MatchingRuleResult pointer is a valid pointer and the
+ * iterator has not been deleted.
+ */
+uint16_t pactffi_matching_rule_id(const struct MatchingRuleResult *rule_result);
+
+/**
+ * Returns the associated value for the matching rule. If the matching rule does not have an
+ * associated value, will return a NULL pointer.
+ *
+ * The associated values for the rules are:
+ * | Rule | ID | VALUE |
+ * | ---- | -- | ----- |
+ * | Equality | 1 | NULL |
+ * | Regex | 2 | Regex value |
+ * | Type | 3 | NULL |
+ * | MinType | 4 | Minimum value |
+ * | MaxType | 5 | Maximum value |
+ * | MinMaxType | 6 | "min:max" |
+ * | Timestamp | 7 | Format string |
+ * | Time | 8 | Format string |
+ * | Date | 9 | Format string |
+ * | Include | 10 | String value |
+ * | Number | 11 | NULL |
+ * | Integer | 12 | NULL |
+ * | Decimal | 13 | NULL |
+ * | Null | 14 | NULL |
+ * | ContentType | 15 | Content type |
+ * | ArrayContains | 16 | NULL |
+ * | Values | 17 | NULL |
+ * | Boolean | 18 | NULL |
+ * | StatusCode | 19 | NULL |
+ * | NotEmpty | 20 | NULL |
+ * | Semver | 21 | NULL |
+ * | EachKey | 22 | NULL |
+ * | EachValue | 23 | NULL |
+ *
+ * Will return a NULL pointer if the matching rule was a reference or does not have an
+ * associated value.
+ *
+ * # Safety
+ *
+ * This function is safe as long as the MatchingRuleResult pointer is a valid pointer and the
+ * iterator it came from has not been deleted.
+ */
+const char *pactffi_matching_rule_value(const struct MatchingRuleResult *rule_result);
+
+/**
+ * Returns the matching rule pointer for the matching rule. Will return a NULL pointer if the
+ * matching rule result was a reference.
+ *
+ * # Safety
+ *
+ * This function is safe as long as the MatchingRuleResult pointer is a valid pointer and the
+ * iterator it came from has not been deleted.
+ */
+const struct MatchingRule *pactffi_matching_rule_pointer(const struct MatchingRuleResult *rule_result);
+
+/**
+ * Return any matching rule reference to a attribute by name. This is when the matcher should
+ * be configured to match the type of a structure. I.e.,
+ *
+ * ```json
+ * {
+ *   "pact:match": "eachValue(matching($'person'))",
+ *   "person": {
+ *     "name": "Fred",
+ *     "age": 100
+ *   }
+ * }
+ * ```
+ *
+ * Will return a NULL pointer if the matching rule was not a reference.
+ *
+ * # Safety
+ *
+ * This function is safe as long as the MatchingRuleResult pointer is a valid pointer and the
+ * iterator has not been deleted.
+ */
+const char *pactffi_matching_rule_reference_name(const struct MatchingRuleResult *rule_result);
+
+/**
+ * Get the JSON form of the generator.
+ *
+ * The returned string must be deleted with `pactffi_string_delete`.
+ *
+ * # Safety
+ *
+ * This function will fail if it is passed a NULL pointer, or the owner of the generator has
+ * been deleted.
+ */
+const char *pactffi_generator_to_json(const struct Generator *generator);
+
+/**
+ * Generate a string value using the provided generator and an optional JSON payload containing
+ * any generator context. The context value is used for generators like `MockServerURL` (which
+ * should contain details about the running mock server) and `ProviderStateGenerator` (which
+ * should be the values returned from the Provider State callback function).
+ *
+ * If anything goes wrong, it will return a NULL pointer.
+ */
+const char *pactffi_generator_generate_string(const struct Generator *generator,
+                                              const char *context_json);
+
+/**
+ * Generate an integer value using the provided generator and an optional JSON payload containing
+ * any generator context. The context value is used for generators like `ProviderStateGenerator`
+ * (which should be the values returned from the Provider State callback function).
+ *
+ * If anything goes wrong or the generator is not a type that can generate an integer value, it
+ * will return a zero value.
+ */
+unsigned short pactffi_generator_generate_integer(const struct Generator *generator,
+                                                  const char *context_json);
+
+/**
+ * Free the iterator when you're done using it.
+ */
+void pactffi_generators_iter_delete(struct GeneratorCategoryIterator *iter);
+
+/**
+ * Get the next path and generator out of the iterator, if possible.
+ *
+ * The returned pointer must be deleted with `pactffi_generator_iter_pair_delete`.
+ *
+ * # Safety
+ *
+ * The underlying data is owned by the `GeneratorKeyValuePair`, so is always safe to use.
+ *
+ * # Error Handling
+ *
+ * If no further data is present, returns NULL.
+ */
+const struct GeneratorKeyValuePair *pactffi_generators_iter_next(struct GeneratorCategoryIterator *iter);
+
+/**
+ * Free a pair of key and value returned from `pactffi_generators_iter_next`.
+ */
+void pactffi_generators_iter_pair_delete(const struct GeneratorKeyValuePair *pair);
+
+/**
+ * Get a mutable pointer to a newly-created default interaction on the heap.
+ *
+ * # Safety
+ *
+ * This function is safe.
+ *
+ * # Error Handling
+ *
+ * Returns NULL on error.
+ */
+struct SynchronousHttp *pactffi_sync_http_new(void);
+
+/**
+ * Destroy the `SynchronousHttp` interaction being pointed to.
+ */
+void pactffi_sync_http_delete(const struct SynchronousHttp *interaction);
+
+/**
+ * Get the request of a `SynchronousHttp` interaction.
+ *
+ * # Safety
+ *
+ * The data pointed to by the pointer this function returns will be deleted when the interaction
+ * is deleted. Trying to use if after the interaction is deleted will result in undefined behaviour.
+ *
+ * # Error Handling
+ *
+ * If the interaction is NULL, returns NULL.
+ */
+const struct HttpRequest *pactffi_sync_http_get_request(const struct SynchronousHttp *interaction);
+
+/**
+ * Get the request contents of a `SynchronousHttp` interaction in string form.
+ *
+ * # Safety
+ *
+ * The returned string must be deleted with `pactffi_string_delete`.
+ *
+ * The returned string can outlive the interaction.
+ *
+ * # Error Handling
+ *
+ * If the interaction is NULL, returns NULL. If the body of the request
+ * is missing, then this function also returns NULL. This means there's
+ * no mechanism to differentiate with this function call alone between
+ * a NULL body and a missing body.
+ */
+const char *pactffi_sync_http_get_request_contents(const struct SynchronousHttp *interaction);
+
+/**
+ * Sets the request contents of the interaction.
+ *
+ * * `interaction` - the interaction to set the request contents for
+ * * `contents` - pointer to contents to copy from. Must be a valid NULL-terminated UTF-8 string pointer.
+ * * `content_type` - pointer to the NULL-terminated UTF-8 string containing the content type of the data.
+ *
+ * # Safety
+ *
+ * The request contents and content type must either be NULL pointers, or point to valid
+ * UTF-8 encoded NULL-terminated strings. Otherwise behaviour is undefined.
+ *
+ * # Error Handling
+ *
+ * If the contents is a NULL pointer, it will set the request contents as null. If the content
+ * type is a null pointer, or can't be parsed, it will set the content type as unknown.
+ */
+void pactffi_sync_http_set_request_contents(struct SynchronousHttp *interaction,
+                                            const char *contents,
+                                            const char *content_type);
+
+/**
+ * Get the length of the request contents of a `SynchronousHttp` interaction.
+ *
+ * # Safety
+ *
+ * This function is safe.
+ *
+ * # Error Handling
+ *
+ * If the interaction is NULL, returns 0. If the body of the request
+ * is missing, then this function also returns 0.
+ */
+size_t pactffi_sync_http_get_request_contents_length(const struct SynchronousHttp *interaction);
+
+/**
+ * Get the request contents of a `SynchronousHttp` interaction as a pointer to an array of bytes.
+ *
+ * # Safety
+ *
+ * The number of bytes in the buffer will be returned by `pactffi_sync_http_get_request_contents_length`.
+ * It is safe to use the pointer while the interaction is not deleted or changed. Using the pointer
+ * after the interaction is mutated or deleted may lead to undefined behaviour.
+ *
+ * # Error Handling
+ *
+ * If the interaction is NULL, returns NULL. If the body of the request
+ * is missing, then this function also returns NULL.
+ */
+const unsigned char *pactffi_sync_http_get_request_contents_bin(const struct SynchronousHttp *interaction);
+
+/**
+ * Sets the request contents of the interaction as an array of bytes.
+ *
+ * * `interaction` - the interaction to set the request contents for
+ * * `contents` - pointer to contents to copy from
+ * * `len` - number of bytes to copy from the contents pointer
+ * * `content_type` - pointer to the NULL-terminated UTF-8 string containing the content type of the data.
+ *
+ * # Safety
+ *
+ * The contents pointer must be valid for reads of `len` bytes, and it must be properly aligned
+ * and consecutive. Otherwise behaviour is undefined.
+ *
+ * # Error Handling
+ *
+ * If the contents is a NULL pointer, it will set the request contents as null. If the content
+ * type is a null pointer, or can't be parsed, it will set the content type as unknown.
+ */
+void pactffi_sync_http_set_request_contents_bin(struct SynchronousHttp *interaction,
+                                                const unsigned char *contents,
+                                                size_t len,
+                                                const char *content_type);
+
+/**
+ * Get the response of a `SynchronousHttp` interaction.
+ *
+ * # Safety
+ *
+ * The data pointed to by the pointer this function returns will be deleted when the interaction
+ * is deleted. Trying to use if after the interaction is deleted will result in undefined behaviour.
+ *
+ * # Error Handling
+ *
+ * If the interaction is NULL, returns NULL.
+ */
+const struct HttpResponse *pactffi_sync_http_get_response(const struct SynchronousHttp *interaction);
+
+/**
+ * Get the response contents of a `SynchronousHttp` interaction in string form.
+ *
+ * # Safety
+ *
+ * The returned string must be deleted with `pactffi_string_delete`.
+ *
+ * The returned string can outlive the interaction.
+ *
+ * # Error Handling
+ *
+ * If the interaction is NULL, returns NULL.
+ *
+ * If the body of the response is missing, then this function also returns NULL.
+ * This means there's no mechanism to differentiate with this function call alone between
+ * a NULL body and a missing body.
+ */
+const char *pactffi_sync_http_get_response_contents(const struct SynchronousHttp *interaction);
+
+/**
+ * Sets the response contents of the interaction.
+ *
+ * * `interaction` - the interaction to set the response contents for
+ * * `contents` - pointer to contents to copy from. Must be a valid NULL-terminated UTF-8 string pointer.
+ * * `content_type` - pointer to the NULL-terminated UTF-8 string containing the content type of the data.
+ *
+ * # Safety
+ *
+ * The response contents and content type must either be NULL pointers, or point to valid
+ * UTF-8 encoded NULL-terminated strings. Otherwise behaviour is undefined.
+ *
+ * # Error Handling
+ *
+ * If the contents is a NULL pointer, it will set the response contents as null. If the content
+ * type is a null pointer, or can't be parsed, it will set the content type as unknown.
+ */
+void pactffi_sync_http_set_response_contents(struct SynchronousHttp *interaction,
+                                             const char *contents,
+                                             const char *content_type);
+
+/**
+ * Get the length of the response contents of a `SynchronousHttp` interaction.
+ *
+ * # Safety
+ *
+ * This function is safe.
+ *
+ * # Error Handling
+ *
+ * If the interaction is NULL or the index is not valid, returns 0. If the body of the response
+ * is missing, then this function also returns 0.
+ */
+size_t pactffi_sync_http_get_response_contents_length(const struct SynchronousHttp *interaction);
+
+/**
+ * Get the response contents of a `SynchronousHttp` interaction as a pointer to an array of bytes.
+ *
+ * # Safety
+ *
+ * The number of bytes in the buffer will be returned by `pactffi_sync_http_get_response_contents_length`.
+ * It is safe to use the pointer while the interaction is not deleted or changed. Using the pointer
+ * after the interaction is mutated or deleted may lead to undefined behaviour.
+ *
+ * # Error Handling
+ *
+ * If the interaction is NULL, returns NULL. If the body of the response
+ * is missing, then this function also returns NULL.
+ */
+const unsigned char *pactffi_sync_http_get_response_contents_bin(const struct SynchronousHttp *interaction);
+
+/**
+ * Sets the response contents of the `SynchronousHttp` interaction as an array of bytes.
+ *
+ * * `interaction` - the interaction to set the response contents for
+ * * `contents` - pointer to contents to copy from
+ * * `len` - number of bytes to copy
+ * * `content_type` - pointer to the NULL-terminated UTF-8 string containing the content type of the data.
+ *
+ * # Safety
+ *
+ * The contents pointer must be valid for reads of `len` bytes, and it must be properly aligned
+ * and consecutive. Otherwise behaviour is undefined.
+ *
+ * # Error Handling
+ *
+ * If the contents is a NULL pointer, it will set the response contents as null. If the content
+ * type is a null pointer, or can't be parsed, it will set the content type as unknown.
+ */
+void pactffi_sync_http_set_response_contents_bin(struct SynchronousHttp *interaction,
+                                                 const unsigned char *contents,
+                                                 size_t len,
+                                                 const char *content_type);
+
+/**
+ * Get a copy of the description.
+ *
+ * # Safety
+ *
+ * The returned string must be deleted with `pactffi_string_delete`.
+ *
+ * Since it is a copy, the returned string may safely outlive
+ * the `SynchronousHttp` interaction.
+ *
+ * # Errors
+ *
+ * On failure, this function will return a NULL pointer.
+ *
+ * This function may fail if the Rust string contains embedded
+ * null ('\0') bytes.
+ */
+const char *pactffi_sync_http_get_description(const struct SynchronousHttp *interaction);
+
+/**
+ * Write the `description` field on the `SynchronousHttp`.
+ *
+ * # Safety
+ *
+ * `description` must contain valid UTF-8. Invalid UTF-8
+ * will be replaced with U+FFFD REPLACEMENT CHARACTER.
+ *
+ * This function will only reallocate if the new string
+ * does not fit in the existing buffer.
+ *
+ * # Error Handling
+ *
+ * Errors will be reported with a non-zero return value.
+ */
+int pactffi_sync_http_set_description(struct SynchronousHttp *interaction, const char *description);
+
+/**
+ * Get a copy of the provider state at the given index from this interaction.
+ *
+ * # Safety
+ *
+ * The returned structure must be deleted with `provider_state_delete`.
+ *
+ * Since it is a copy, the returned structure may safely outlive
+ * the `SynchronousHttp`.
+ *
+ * # Error Handling
+ *
+ * On failure, this function will return a variant other than Success.
+ *
+ * This function may fail if the index requested is out of bounds,
+ * or if any of the Rust strings contain embedded null ('\0') bytes.
+ */
+const struct ProviderState *pactffi_sync_http_get_provider_state(const struct SynchronousHttp *interaction,
+                                                                 unsigned int index);
+
+/**
+ * Get an iterator over provider states.
+ *
+ * # Safety
+ *
+ * The underlying data must not change during iteration.
+ *
+ * # Error Handling
+ *
+ * Returns NULL if an error occurs.
+ */
+struct ProviderStateIterator *pactffi_sync_http_get_provider_state_iter(struct SynchronousHttp *interaction);
+
+/**
+ * Casts this interaction to a `SynchronousHttp` interaction. Returns a NULL pointer if the
+ * interaction can not be casted to a `SynchronousHttp` interaction (for instance, it is a
+ * message interaction). The returned pointer must be freed with `pactffi_sync_http_delete`
+ * when no longer required.
+ *
+ * # Safety
+ * This function is safe as long as the interaction pointer is a valid pointer.
+ *
+ * # Errors
+ * On any error, this function will return a NULL pointer.
+ */
+const struct SynchronousHttp *pactffi_pact_interaction_as_synchronous_http(const struct PactInteraction *interaction);
+
+/**
+ * Casts this interaction to a `Message` interaction. Returns a NULL pointer if the
+ * interaction can not be casted to a `Message` interaction (for instance, it is a
+ * http interaction). The returned pointer must be freed with `pactffi_message_delete`
+ * when no longer required.
+ *
+ * Note that if the interaction is a V4 `AsynchronousMessage`, it will be converted to a V3
+ * `Message` before being returned.
+ *
+ * # Safety
+ * This function is safe as long as the interaction pointer is a valid pointer.
+ *
+ * # Errors
+ * On any error, this function will return a NULL pointer.
+ */
+const struct Message *pactffi_pact_interaction_as_message(const struct PactInteraction *interaction);
+
+/**
+ * Casts this interaction to a `AsynchronousMessage` interaction. Returns a NULL pointer if the
+ * interaction can not be casted to a `AsynchronousMessage` interaction (for instance, it is a
+ * http interaction). The returned pointer must be freed with `pactffi_async_message_delete`
+ * when no longer required.
+ *
+ * Note that if the interaction is a V3 `Message`, it will be converted to a V4
+ * `AsynchronousMessage` before being returned.
+ *
+ * # Safety
+ * This function is safe as long as the interaction pointer is a valid pointer.
+ *
+ * # Errors
+ * On any error, this function will return a NULL pointer.
+ */
+const struct AsynchronousMessage *pactffi_pact_interaction_as_asynchronous_message(const struct PactInteraction *interaction);
+
+/**
+ * Casts this interaction to a `SynchronousMessage` interaction. Returns a NULL pointer if the
+ * interaction can not be casted to a `SynchronousMessage` interaction (for instance, it is a
+ * http interaction). The returned pointer must be freed with `pactffi_sync_message_delete`
+ * when no longer required.
+ *
+ * # Safety
+ * This function is safe as long as the interaction pointer is a valid pointer.
+ *
+ * # Errors
+ * On any error, this function will return a NULL pointer.
+ */
+const struct SynchronousMessage *pactffi_pact_interaction_as_synchronous_message(const struct PactInteraction *interaction);
+
+/**
+ * Free the iterator when you're done using it.
+ */
+void pactffi_pact_message_iter_delete(struct PactMessageIterator *iter);
+
+/**
+ * Get the next message from the message pact. As the messages returned are owned by the
+ * iterator, they do not need to be deleted but will be cleaned up when the iterator is
+ * deleted.
+ *
+ * Will return a NULL pointer when the iterator has advanced past the end of the list.
+ *
+ * # Safety
+ *
+ * This function is safe.
+ *
+ * Deleting a message returned by the iterator can lead to undefined behaviour.
+ *
+ * # Error Handling
+ *
+ * This function will return a NULL pointer if passed a NULL pointer or if an error occurs.
+ */
+struct Message *pactffi_pact_message_iter_next(struct PactMessageIterator *iter);
+
+/**
+ * Get the next synchronous request/response message from the V4 pact. As the messages returned are owned by the
+ * iterator, they do not need to be deleted but will be cleaned up when the iterator is
+ * deleted.
+ *
+ * Will return a NULL pointer when the iterator has advanced past the end of the list.
+ *
+ * # Safety
+ *
+ * This function is safe.
+ *
+ * Deleting a message returned by the iterator can lead to undefined behaviour.
+ *
+ * # Error Handling
+ *
+ * This function will return a NULL pointer if passed a NULL pointer or if an error occurs.
+ */
+struct SynchronousMessage *pactffi_pact_sync_message_iter_next(struct PactSyncMessageIterator *iter);
+
+/**
+ * Free the iterator when you're done using it.
+ */
+void pactffi_pact_sync_message_iter_delete(struct PactSyncMessageIterator *iter);
+
+/**
+ * Get the next synchronous HTTP request/response interaction from the V4 pact. As the
+ * interactions returned are owned by the iterator, they do not need to be deleted but
+ * will be cleaned up when the iterator is deleted.
+ *
+ * Will return a NULL pointer when the iterator has advanced past the end of the list.
+ *
+ * # Safety
+ *
+ * This function is safe.
+ *
+ * Deleting an interaction returned by the iterator can lead to undefined behaviour.
+ *
+ * # Error Handling
+ *
+ * This function will return a NULL pointer if passed a NULL pointer or if an error occurs.
+ */
+struct SynchronousHttp *pactffi_pact_sync_http_iter_next(struct PactSyncHttpIterator *iter);
+
+/**
+ * Free the iterator when you're done using it.
+ */
+void pactffi_pact_sync_http_iter_delete(struct PactSyncHttpIterator *iter);
+
+/**
+ * Get the next interaction from the pact. As the interactions returned are owned by the
+ * iterator, they do not need to be deleted but will be cleaned up when the iterator is
+ * deleted.
+ *
+ * Will return a NULL pointer when the iterator has advanced past the end of the list.
+ *
+ * # Safety
+ *
+ * This function is safe.
+ *
+ * Deleting an interaction returned by the iterator can lead to undefined behaviour.
+ *
+ * # Error Handling
+ *
+ * This function will return a NULL pointer if passed a NULL pointer or if an error occurs.
+ */
+const struct PactInteraction *pactffi_pact_interaction_iter_next(struct PactInteractionIterator *iter);
+
+/**
+ * Free the iterator when you're done using it.
+ */
+void pactffi_pact_interaction_iter_delete(struct PactInteractionIterator *iter);
+
+/**
+ * Get the JSON form of the matching rule.
+ *
+ * The returned string must be deleted with `pactffi_string_delete`.
+ *
+ * # Safety
+ *
+ * This function will fail if it is passed a NULL pointer, or the iterator that owns the
+ * value of the matching rule has been deleted.
+ */
+const char *pactffi_matching_rule_to_json(const struct MatchingRule *rule);
+
+/**
+ * Free the iterator when you're done using it.
+ */
+void pactffi_matching_rules_iter_delete(struct MatchingRuleCategoryIterator *iter);
+
+/**
+ * Get the next path and matching rule out of the iterator, if possible.
+ *
+ * The returned pointer must be deleted with `pactffi_matching_rules_iter_pair_delete`.
+ *
+ * # Safety
+ *
+ * The underlying data is owned by the `MatchingRuleKeyValuePair`, so is always safe to use.
+ *
+ * # Error Handling
+ *
+ * If no further data is present, returns NULL.
+ */
+const struct MatchingRuleKeyValuePair *pactffi_matching_rules_iter_next(struct MatchingRuleCategoryIterator *iter);
+
+/**
+ * Free a pair of key and value returned from `message_metadata_iter_next`.
+ */
+void pactffi_matching_rules_iter_pair_delete(const struct MatchingRuleKeyValuePair *pair);
 
 /**
  * Get a mutable pointer to a newly-created default message on the heap.
@@ -947,6 +2299,21 @@ const char *pactffi_message_find_metadata(const struct Message *message, const c
 int pactffi_message_insert_metadata(struct Message *message, const char *key, const char *value);
 
 /**
+ * Get the next key and value out of the iterator, if possible.
+ *
+ * The returned pointer must be deleted with `pactffi_message_metadata_pair_delete`.
+ *
+ * # Safety
+ *
+ * The underlying data must not change during iteration.
+ *
+ * # Error Handling
+ *
+ * If no further data is present, returns NULL.
+ */
+struct MessageMetadataPair *pactffi_message_metadata_iter_next(struct MessageMetadataIterator *iter);
+
+/**
  * Get an iterator over the metadata of a message.
  *
  * # Safety
@@ -965,19 +2332,6 @@ int pactffi_message_insert_metadata(struct Message *message, const char *key, co
  * embedded null ('\0') bytes.
  */
 struct MessageMetadataIterator *pactffi_message_get_metadata_iter(struct Message *message);
-
-/**
- * Get the next key and value out of the iterator, if possible
- *
- * # Safety
- *
- * The underlying data must not change during iteration.
- *
- * # Error Handling
- *
- * If no further data is present, returns NULL.
- */
-struct MessageMetadataPair *pactffi_message_metadata_iter_next(struct MessageMetadataIterator *iter);
 
 /**
  * Free the metadata iterator when you're done using it.
@@ -1186,6 +2540,22 @@ void pactffi_message_pact_metadata_triple_delete(struct MessagePactMetadataTripl
 const char *pactffi_provider_get_name(const struct Provider *provider);
 
 /**
+ * Get the provider from a Pact. This returns a copy of the provider model, and needs to
+ * be cleaned up with `pactffi_pact_provider_delete` when no longer required.
+ *
+ * # Errors
+ *
+ * This function will fail if it is passed a NULL pointer.
+ * In the case of error, a NULL pointer will be returned.
+ */
+const struct Provider *pactffi_pact_get_provider(const struct Pact *pact);
+
+/**
+ * Frees the memory used by the Pact provider
+ */
+void pactffi_pact_provider_delete(const struct Provider *provider);
+
+/**
  * Get the name of the provider state as a string, which needs to be deleted with `pactffi_string_delete`.
  *
  * # Safety
@@ -1252,78 +2622,6 @@ void pactffi_provider_state_param_iter_delete(struct ProviderStateParamIterator 
 void pactffi_provider_state_param_pair_delete(struct ProviderStateParamPair *pair);
 
 /**
- * Free the iterator when you're done using it.
- */
-void pactffi_pact_message_iter_delete(struct PactMessageIterator *iter);
-
-/**
- * Get the next message from the message pact. As the messages returned are owned by the
- * iterator, they do not need to be deleted but will be cleaned up when the iterator is
- * deleted.
- *
- * Will return a NULL pointer when the iterator has advanced past the end of the list.
- *
- * # Safety
- *
- * This function is safe.
- *
- * Deleting a message returned by the iterator can lead to undefined behaviour.
- *
- * # Error Handling
- *
- * This function will return a NULL pointer if passed a NULL pointer or if an error occurs.
- */
-struct Message *pactffi_pact_message_iter_next(struct PactMessageIterator *iter);
-
-/**
- * Get the next synchronous request/response message from the pact. As the messages returned are owned by the
- * iterator, they do not need to be deleted but will be cleaned up when the iterator is
- * deleted.
- *
- * Will return a NULL pointer when the iterator has advanced past the end of the list.
- *
- * # Safety
- *
- * This function is safe.
- *
- * Deleting a message returned by the iterator can lead to undefined behaviour.
- *
- * # Error Handling
- *
- * This function will return a NULL pointer if passed a NULL pointer or if an error occurs.
- */
-struct SynchronousMessage *pactffi_pact_sync_message_iter_next(struct PactSyncMessageIterator *iter);
-
-/**
- * Free the iterator when you're done using it.
- */
-void pactffi_pact_sync_message_iter_delete(struct PactSyncMessageIterator *iter);
-
-/**
- * Get the next synchronous HTTP request/response interaction from the pact. As the
- * interactions returned are owned by the iterator, they do not need to be deleted but
- * will be cleaned up when the iterator is deleted.
- *
- * Will return a NULL pointer when the iterator has advanced past the end of the list.
- *
- * # Safety
- *
- * This function is safe.
- *
- * Deleting an interaction returned by the iterator can lead to undefined behaviour.
- *
- * # Error Handling
- *
- * This function will return a NULL pointer if passed a NULL pointer or if an error occurs.
- */
-struct SynchronousHttp *pactffi_pact_sync_http_iter_next(struct PactSyncHttpIterator *iter);
-
-/**
- * Free the iterator when you're done using it.
- */
-void pactffi_pact_sync_http_iter_delete(struct PactSyncHttpIterator *iter);
-
-/**
  * Get a mutable pointer to a newly-created default message on the heap.
  *
  * # Safety
@@ -1357,7 +2655,7 @@ void pactffi_sync_message_delete(struct SynchronousMessage *message);
  * no mechanism to differentiate with this function call alone between
  * a NULL message and a missing message body.
  */
-const char *pactffi_sync_message_get_request_contents(const struct SynchronousMessage *message);
+const char *pactffi_sync_message_get_request_contents_str(const struct SynchronousMessage *message);
 
 /**
  * Sets the request contents of the message.
@@ -1376,9 +2674,9 @@ const char *pactffi_sync_message_get_request_contents(const struct SynchronousMe
  * If the contents is a NULL pointer, it will set the message contents as null. If the content
  * type is a null pointer, or can't be parsed, it will set the content type as unknown.
  */
-void pactffi_sync_message_set_request_contents(struct SynchronousMessage *message,
-                                               const char *contents,
-                                               const char *content_type);
+void pactffi_sync_message_set_request_contents_str(struct SynchronousMessage *message,
+                                                   const char *contents,
+                                                   const char *content_type);
 
 /**
  * Get the length of the request contents of a `SynchronousMessage`.
@@ -1434,6 +2732,20 @@ void pactffi_sync_message_set_request_contents_bin(struct SynchronousMessage *me
                                                    const char *content_type);
 
 /**
+ * Get the request contents of an `SynchronousMessage` as a `MessageContents` pointer.
+ *
+ * # Safety
+ *
+ * The data pointed to by the pointer this function returns will be deleted when the message
+ * is deleted. Trying to use if after the message is deleted will result in undefined behaviour.
+ *
+ * # Error Handling
+ *
+ * If the message is NULL, returns NULL.
+ */
+const struct MessageContents *pactffi_sync_message_get_request_contents(const struct SynchronousMessage *message);
+
+/**
  * Get the number of response messages in the `SynchronousMessage`.
  *
  * # Safety
@@ -1463,11 +2775,11 @@ size_t pactffi_sync_message_get_number_responses(const struct SynchronousMessage
  * This means there's no mechanism to differentiate with this function call alone between
  * a NULL message and a missing message body.
  */
-const char *pactffi_sync_message_get_response_contents(const struct SynchronousMessage *message,
-                                                       size_t index);
+const char *pactffi_sync_message_get_response_contents_str(const struct SynchronousMessage *message,
+                                                           size_t index);
 
 /**
- * Sets the response contents of the message. If index is greater than the number of responses
+ * Sets the response contents of the message as a string. If index is greater than the number of responses
  * in the message, the responses will be padded with default values.
  *
  * * `message` - the message to set the response contents for
@@ -1485,10 +2797,10 @@ const char *pactffi_sync_message_get_response_contents(const struct SynchronousM
  * If the contents is a NULL pointer, it will set the response contents as null. If the content
  * type is a null pointer, or can't be parsed, it will set the content type as unknown.
  */
-void pactffi_sync_message_set_response_contents(struct SynchronousMessage *message,
-                                                size_t index,
-                                                const char *contents,
-                                                const char *content_type);
+void pactffi_sync_message_set_response_contents_str(struct SynchronousMessage *message,
+                                                    size_t index,
+                                                    const char *contents,
+                                                    const char *content_type);
 
 /**
  * Get the length of the response contents of a `SynchronousMessage`.
@@ -1548,6 +2860,21 @@ void pactffi_sync_message_set_response_contents_bin(struct SynchronousMessage *m
                                                     const unsigned char *contents,
                                                     size_t len,
                                                     const char *content_type);
+
+/**
+ * Get the response contents of an `SynchronousMessage` as a `MessageContents` pointer.
+ *
+ * # Safety
+ *
+ * The data pointed to by the pointer this function returns will be deleted when the message
+ * is deleted. Trying to use if after the message is deleted will result in undefined behaviour.
+ *
+ * # Error Handling
+ *
+ * If the message is NULL or the index is not valid, returns NULL.
+ */
+const struct MessageContents *pactffi_sync_message_get_response_contents(const struct SynchronousMessage *message,
+                                                                         size_t index);
 
 /**
  * Get a copy of the description.
@@ -1618,417 +2945,6 @@ const struct ProviderState *pactffi_sync_message_get_provider_state(const struct
  * Returns NULL if an error occurs.
  */
 struct ProviderStateIterator *pactffi_sync_message_get_provider_state_iter(struct SynchronousMessage *message);
-
-/**
- * Get a mutable pointer to a newly-created default interaction on the heap.
- *
- * # Safety
- *
- * This function is safe.
- *
- * # Error Handling
- *
- * Returns NULL on error.
- */
-struct SynchronousHttp *pactffi_sync_http_new(void);
-
-/**
- * Destroy the `SynchronousHttp` interaction being pointed to.
- */
-void pactffi_sync_http_delete(struct SynchronousHttp *interaction);
-
-/**
- * Get the request contents of a `SynchronousHttp` interaction in string form.
- *
- * # Safety
- *
- * The returned string must be deleted with `pactffi_string_delete`.
- *
- * The returned string can outlive the interaction.
- *
- * # Error Handling
- *
- * If the interaction is NULL, returns NULL. If the body of the request
- * is missing, then this function also returns NULL. This means there's
- * no mechanism to differentiate with this function call alone between
- * a NULL body and a missing body.
- */
-const char *pactffi_sync_http_get_request_contents(const struct SynchronousHttp *interaction);
-
-/**
- * Sets the request contents of the interaction.
- *
- * * `interaction` - the interaction to set the request contents for
- * * `contents` - pointer to contents to copy from. Must be a valid NULL-terminated UTF-8 string pointer.
- * * `content_type` - pointer to the NULL-terminated UTF-8 string containing the content type of the data.
- *
- * # Safety
- *
- * The request contents and content type must either be NULL pointers, or point to valid
- * UTF-8 encoded NULL-terminated strings. Otherwise behaviour is undefined.
- *
- * # Error Handling
- *
- * If the contents is a NULL pointer, it will set the request contents as null. If the content
- * type is a null pointer, or can't be parsed, it will set the content type as unknown.
- */
-void pactffi_sync_http_set_request_contents(struct SynchronousHttp *interaction,
-                                            const char *contents,
-                                            const char *content_type);
-
-/**
- * Get the length of the request contents of a `SynchronousHttp` interaction.
- *
- * # Safety
- *
- * This function is safe.
- *
- * # Error Handling
- *
- * If the interaction is NULL, returns 0. If the body of the request
- * is missing, then this function also returns 0.
- */
-size_t pactffi_sync_http_get_request_contents_length(const struct SynchronousHttp *interaction);
-
-/**
- * Get the request contents of a `SynchronousHttp` interaction as a pointer to an array of bytes.
- *
- * # Safety
- *
- * The number of bytes in the buffer will be returned by `pactffi_sync_http_get_request_contents_length`.
- * It is safe to use the pointer while the interaction is not deleted or changed. Using the pointer
- * after the interaction is mutated or deleted may lead to undefined behaviour.
- *
- * # Error Handling
- *
- * If the interaction is NULL, returns NULL. If the body of the request
- * is missing, then this function also returns NULL.
- */
-const unsigned char *pactffi_sync_http_get_request_contents_bin(const struct SynchronousHttp *interaction);
-
-/**
- * Sets the request contents of the interaction as an array of bytes.
- *
- * * `interaction` - the interaction to set the request contents for
- * * `contents` - pointer to contents to copy from
- * * `len` - number of bytes to copy from the contents pointer
- * * `content_type` - pointer to the NULL-terminated UTF-8 string containing the content type of the data.
- *
- * # Safety
- *
- * The contents pointer must be valid for reads of `len` bytes, and it must be properly aligned
- * and consecutive. Otherwise behaviour is undefined.
- *
- * # Error Handling
- *
- * If the contents is a NULL pointer, it will set the request contents as null. If the content
- * type is a null pointer, or can't be parsed, it will set the content type as unknown.
- */
-void pactffi_sync_http_set_request_contents_bin(struct SynchronousHttp *interaction,
-                                                const unsigned char *contents,
-                                                size_t len,
-                                                const char *content_type);
-
-/**
- * Get the response contents of a `SynchronousHttp` interaction in string form.
- *
- * # Safety
- *
- * The returned string must be deleted with `pactffi_string_delete`.
- *
- * The returned string can outlive the interaction.
- *
- * # Error Handling
- *
- * If the interaction is NULL, returns NULL.
- *
- * If the body of the response is missing, then this function also returns NULL.
- * This means there's no mechanism to differentiate with this function call alone between
- * a NULL body and a missing body.
- */
-const char *pactffi_sync_http_get_response_contents(const struct SynchronousHttp *interaction);
-
-/**
- * Sets the response contents of the interaction.
- *
- * * `interaction` - the interaction to set the response contents for
- * * `contents` - pointer to contents to copy from. Must be a valid NULL-terminated UTF-8 string pointer.
- * * `content_type` - pointer to the NULL-terminated UTF-8 string containing the content type of the data.
- *
- * # Safety
- *
- * The response contents and content type must either be NULL pointers, or point to valid
- * UTF-8 encoded NULL-terminated strings. Otherwise behaviour is undefined.
- *
- * # Error Handling
- *
- * If the contents is a NULL pointer, it will set the response contents as null. If the content
- * type is a null pointer, or can't be parsed, it will set the content type as unknown.
- */
-void pactffi_sync_http_set_response_contents(struct SynchronousHttp *interaction,
-                                             const char *contents,
-                                             const char *content_type);
-
-/**
- * Get the length of the response contents of a `SynchronousHttp` interaction.
- *
- * # Safety
- *
- * This function is safe.
- *
- * # Error Handling
- *
- * If the interaction is NULL or the index is not valid, returns 0. If the body of the response
- * is missing, then this function also returns 0.
- */
-size_t pactffi_sync_http_get_response_contents_length(const struct SynchronousHttp *interaction);
-
-/**
- * Get the response contents of a `SynchronousHttp` interaction as a pointer to an array of bytes.
- *
- * # Safety
- *
- * The number of bytes in the buffer will be returned by `pactffi_sync_http_get_response_contents_length`.
- * It is safe to use the pointer while the interaction is not deleted or changed. Using the pointer
- * after the interaction is mutated or deleted may lead to undefined behaviour.
- *
- * # Error Handling
- *
- * If the interaction is NULL, returns NULL. If the body of the response
- * is missing, then this function also returns NULL.
- */
-const unsigned char *pactffi_sync_http_get_response_contents_bin(const struct SynchronousHttp *interaction);
-
-/**
- * Sets the response contents of the `SynchronousHttp` interaction as an array of bytes.
- *
- * * `interaction` - the interaction to set the response contents for
- * * `contents` - pointer to contents to copy from
- * * `len` - number of bytes to copy
- * * `content_type` - pointer to the NULL-terminated UTF-8 string containing the content type of the data.
- *
- * # Safety
- *
- * The contents pointer must be valid for reads of `len` bytes, and it must be properly aligned
- * and consecutive. Otherwise behaviour is undefined.
- *
- * # Error Handling
- *
- * If the contents is a NULL pointer, it will set the response contents as null. If the content
- * type is a null pointer, or can't be parsed, it will set the content type as unknown.
- */
-void pactffi_sync_http_set_response_contents_bin(struct SynchronousHttp *interaction,
-                                                 const unsigned char *contents,
-                                                 size_t len,
-                                                 const char *content_type);
-
-/**
- * Get a copy of the description.
- *
- * # Safety
- *
- * The returned string must be deleted with `pactffi_string_delete`.
- *
- * Since it is a copy, the returned string may safely outlive
- * the `SynchronousHttp` interaction.
- *
- * # Errors
- *
- * On failure, this function will return a NULL pointer.
- *
- * This function may fail if the Rust string contains embedded
- * null ('\0') bytes.
- */
-const char *pactffi_sync_http_get_description(const struct SynchronousHttp *interaction);
-
-/**
- * Write the `description` field on the `SynchronousHttp`.
- *
- * # Safety
- *
- * `description` must contain valid UTF-8. Invalid UTF-8
- * will be replaced with U+FFFD REPLACEMENT CHARACTER.
- *
- * This function will only reallocate if the new string
- * does not fit in the existing buffer.
- *
- * # Error Handling
- *
- * Errors will be reported with a non-zero return value.
- */
-int pactffi_sync_http_set_description(struct SynchronousHttp *interaction, const char *description);
-
-/**
- * Get a copy of the provider state at the given index from this interaction.
- *
- * # Safety
- *
- * The returned structure must be deleted with `provider_state_delete`.
- *
- * Since it is a copy, the returned structure may safely outlive
- * the `SynchronousHttp`.
- *
- * # Error Handling
- *
- * On failure, this function will return a variant other than Success.
- *
- * This function may fail if the index requested is out of bounds,
- * or if any of the Rust strings contain embedded null ('\0') bytes.
- */
-const struct ProviderState *pactffi_sync_http_get_provider_state(const struct SynchronousHttp *interaction,
-                                                                 unsigned int index);
-
-/**
- * Get an iterator over provider states.
- *
- * # Safety
- *
- * The underlying data must not change during iteration.
- *
- * # Error Handling
- *
- * Returns NULL if an error occurs.
- */
-struct ProviderStateIterator *pactffi_sync_http_get_provider_state_iter(struct SynchronousHttp *interaction);
-
-/**
- * Parse a matcher definition string into a MatchingRuleDefinition containing the example value,
- * and matching rules and any generator.
- *
- * The following are examples of matching rule definitions:
- * * `matching(type,'Name')` - type matcher with string value 'Name'
- * * `matching(number,100)` - number matcher
- * * `matching(datetime, 'yyyy-MM-dd','2000-01-01')` - datetime matcher with format string
- *
- * See [Matching Rule definition expressions](https://docs.rs/pact_models/latest/pact_models/matchingrules/expressions/index.html).
- *
- * The returned value needs to be freed up with the `pactffi_matcher_definition_delete` function.
- *
- * # Errors
- * If the expression is invalid, the MatchingRuleDefinition error will be set. You can check for
- * this value with the `pactffi_matcher_definition_error` function.
- *
- * # Safety
- *
- * This function is safe if the expression is a valid NULL terminated string pointer.
- */
-const struct MatchingRuleDefinitionResult *pactffi_parse_matcher_definition(const char *expression);
-
-/**
- * Returns any error message from parsing a matching definition expression. If there is no error,
- * it will return a NULL pointer, otherwise returns the error message as a NULL-terminated string.
- * The returned string must be freed using the `pactffi_string_delete` function once done with it.
- */
-const char *pactffi_matcher_definition_error(const struct MatchingRuleDefinitionResult *definition);
-
-/**
- * Returns the value from parsing a matching definition expression. If there was an error,
- * it will return a NULL pointer, otherwise returns the value as a NULL-terminated string.
- * The returned string must be freed using the `pactffi_string_delete` function once done with it.
- *
- * Note that different expressions values can have types other than a string. Use
- * `pactffi_matcher_definition_value_type` to get the actual type of the value. This function
- * will always return the string representation of the value.
- */
-const char *pactffi_matcher_definition_value(const struct MatchingRuleDefinitionResult *definition);
-
-/**
- * Frees the memory used by the result of parsing the matching definition expression
- */
-void pactffi_matcher_definition_delete(const struct MatchingRuleDefinitionResult *definition);
-
-/**
- * Returns the generator from parsing a matching definition expression. If there was an error or
- * there is no associated generator, it will return a NULL pointer, otherwise returns the generator
- * as a pointer.
- *
- * The generator pointer will be a valid pointer as long as `pactffi_matcher_definition_delete`
- * has not been called on the definition. Using the generator pointer after the definition
- * has been deleted will result in undefined behaviour.
- */
-const struct Generator *pactffi_matcher_definition_generator(const struct MatchingRuleDefinitionResult *definition);
-
-/**
- * Returns the type of the value from parsing a matching definition expression. If there was an
- * error parsing the expression, it will return Unknown.
- */
-enum ExpressionValueType pactffi_matcher_definition_value_type(const struct MatchingRuleDefinitionResult *definition);
-
-/**
- * Free the iterator when you're done using it.
- */
-void pactffi_matching_rule_iter_delete(struct MatchingRuleIterator *iter);
-
-/**
- * Returns an iterator over the matching rules from the parsed definition. The iterator needs to
- * be deleted with the `pactffi_matching_rule_iter_delete` function once done with it.
- *
- * If there was an error parsing the expression, this function will return a NULL pointer.
- */
-struct MatchingRuleIterator *pactffi_matcher_definition_iter(const struct MatchingRuleDefinitionResult *definition);
-
-/**
- * Get the next matching rule or reference from the iterator. As the values returned are owned
- * by the iterator, they do not need to be deleted but will be cleaned up when the iterator is
- * deleted.
- *
- * Will return a NULL pointer when the iterator has advanced past the end of the list.
- *
- * # Safety
- *
- * This function is safe.
- *
- * # Error Handling
- *
- * This function will return a NULL pointer if passed a NULL pointer or if an error occurs.
- */
-const struct MatchingRuleResult *pactffi_matching_rule_iter_next(struct MatchingRuleIterator *iter);
-
-/**
- * Get the JSON form of the matching rule.
- *
- * The returned string must be deleted with `pactffi_string_delete`.
- *
- * # Safety
- *
- * This function will fail if it is passed a NULL pointer, or the iterator that owns the
- * value of the matching rule has been deleted.
- */
-const char *pactffi_matching_rule_to_json(const struct MatchingRule *rule);
-
-/**
- * Get the JSON form of the generator.
- *
- * The returned string must be deleted with `pactffi_string_delete`.
- *
- * # Safety
- *
- * This function will fail if it is passed a NULL pointer, or the owner of the generator has
- * been deleted.
- */
-const char *pactffi_generator_to_json(const struct Generator *generator);
-
-/**
- * Generate a string value using the provided generator and an optional JSON payload containing
- * any generator context. The context value is used for generators like `MockServerURL` (which
- * should contain details about the running mock server) and `ProviderStateGenerator` (which
- * should be the values returned from the Provider State callback function).
- *
- * If anything goes wrong, it will return a NULL pointer.
- */
-const char *pactffi_generator_generate_string(const struct Generator *generator,
-                                              const char *context_json);
-
-/**
- * Generate an integer value using the provided generator and an optional JSON payload containing
- * any generator context. The context value is used for generators like `ProviderStateGenerator`
- * (which should be the values returned from the Provider State callback function).
- *
- * If anything goes wrong or the generator is not a type that can generate an integer value, it
- * will return a zero value.
- */
-unsigned short pactffi_generator_generate_integer(const struct Generator *generator,
-                                                  const char *context_json);
 
 /**
  * Delete a string previously returned by this FFI.
@@ -3324,5 +4240,153 @@ unsigned int pactffi_interaction_contents(InteractionHandle interaction,
                                           enum InteractionPart part,
                                           const char *content_type,
                                           const char *contents);
+
+/**
+ * Determines if the string value matches the given matching rule. If the value matches OK,
+ * will return a NULL pointer. If the value does not match, will return a error message as
+ * a NULL terminated string. The error message pointer will need to be deleted with the
+ * `pactffi_string_delete` function once it is no longer required.
+ *
+ * * matching_rule - pointer to a matching rule
+ * * expected_value - value we expect to get as a NULL terminated string
+ * * actual_value - value to match as a NULL terminated string
+ * * cascaded - if the matching rule has been cascaded from a parent. 0 == false, 1 == true
+ *
+ * # Safety
+ *
+ * The matching rule pointer must be a valid pointer, and the value parameters must be
+ * valid pointers to a NULL terminated strings.
+ */
+const char *pactffi_matches_string_value(const struct MatchingRule *matching_rule,
+                                         const char *expected_value,
+                                         const char *actual_value,
+                                         uint8_t cascaded);
+
+/**
+ * Determines if the unsigned integer value matches the given matching rule. If the value matches OK,
+ * will return a NULL pointer. If the value does not match, will return a error message as
+ * a NULL terminated string. The error message pointer will need to be deleted with the
+ * `pactffi_string_delete` function once it is no longer required.
+ *
+ * * matching_rule - pointer to a matching rule
+ * * expected_value - value we expect to get
+ * * actual_value - value to match
+ * * cascaded - if the matching rule has been cascaded from a parent. 0 == false, 1 == true
+ *
+ * # Safety
+ *
+ * The matching rule pointer must be a valid pointer.
+ */
+const char *pactffi_matches_u64_value(const struct MatchingRule *matching_rule,
+                                      uint64_t expected_value,
+                                      uint64_t actual_value,
+                                      uint8_t cascaded);
+
+/**
+ * Determines if the signed integer value matches the given matching rule. If the value matches OK,
+ * will return a NULL pointer. If the value does not match, will return a error message as
+ * a NULL terminated string. The error message pointer will need to be deleted with the
+ * `pactffi_string_delete` function once it is no longer required.
+ *
+ * * matching_rule - pointer to a matching rule
+ * * expected_value - value we expect to get
+ * * actual_value - value to match
+ * * cascaded - if the matching rule has been cascaded from a parent. 0 == false, 1 == true
+ *
+ * # Safety
+ *
+ * The matching rule pointer must be a valid pointer.
+ */
+const char *pactffi_matches_i64_value(const struct MatchingRule *matching_rule,
+                                      int64_t expected_value,
+                                      int64_t actual_value,
+                                      uint8_t cascaded);
+
+/**
+ * Determines if the floating point value matches the given matching rule. If the value matches OK,
+ * will return a NULL pointer. If the value does not match, will return a error message as
+ * a NULL terminated string. The error message pointer will need to be deleted with the
+ * `pactffi_string_delete` function once it is no longer required.
+ *
+ * * matching_rule - pointer to a matching rule
+ * * expected_value - value we expect to get
+ * * actual_value - value to match
+ * * cascaded - if the matching rule has been cascaded from a parent. 0 == false, 1 == true
+ *
+ * # Safety
+ *
+ * The matching rule pointer must be a valid pointer.
+ */
+const char *pactffi_matches_f64_value(const struct MatchingRule *matching_rule,
+                                      double expected_value,
+                                      double actual_value,
+                                      uint8_t cascaded);
+
+/**
+ * Determines if the boolean value matches the given matching rule. If the value matches OK,
+ * will return a NULL pointer. If the value does not match, will return a error message as
+ * a NULL terminated string. The error message pointer will need to be deleted with the
+ * `pactffi_string_delete` function once it is no longer required.
+ *
+ * * matching_rule - pointer to a matching rule
+ * * expected_value - value we expect to get, 0 == false and 1 == true
+ * * actual_value - value to match, 0 == false and 1 == true
+ * * cascaded - if the matching rule has been cascaded from a parent. 0 == false, 1 == true
+ *
+ * # Safety
+ *
+ * The matching rule pointer must be a valid pointer.
+ */
+const char *pactffi_matches_bool_value(const struct MatchingRule *matching_rule,
+                                       uint8_t expected_value,
+                                       uint8_t actual_value,
+                                       uint8_t cascaded);
+
+/**
+ * Determines if the binary value matches the given matching rule. If the value matches OK,
+ * will return a NULL pointer. If the value does not match, will return a error message as
+ * a NULL terminated string. The error message pointer will need to be deleted with the
+ * `pactffi_string_delete` function once it is no longer required.
+ *
+ * * matching_rule - pointer to a matching rule
+ * * expected_value - value we expect to get
+ * * expected_value_len - length of the expected value bytes
+ * * actual_value - value to match
+ * * actual_value_len - length of the actual value bytes
+ * * cascaded - if the matching rule has been cascaded from a parent. 0 == false, 1 == true
+ *
+ * # Safety
+ *
+ * The matching rule, expected value and actual value pointers must be a valid pointers.
+ * expected_value_len and actual_value_len must contain the number of bytes that the value
+ * pointers point to. Passing invalid lengths can lead to undefined behaviour.
+ */
+const char *pactffi_matches_binary_value(const struct MatchingRule *matching_rule,
+                                         const unsigned char *expected_value,
+                                         uintptr_t expected_value_len,
+                                         const unsigned char *actual_value,
+                                         uintptr_t actual_value_len,
+                                         uint8_t cascaded);
+
+/**
+ * Determines if the JSON value matches the given matching rule. If the value matches OK,
+ * will return a NULL pointer. If the value does not match, will return a error message as
+ * a NULL terminated string. The error message pointer will need to be deleted with the
+ * `pactffi_string_delete` function once it is no longer required.
+ *
+ * * matching_rule - pointer to a matching rule
+ * * expected_value - value we expect to get as a NULL terminated string
+ * * actual_value - value to match as a NULL terminated string
+ * * cascaded - if the matching rule has been cascaded from a parent. 0 == false, 1 == true
+ *
+ * # Safety
+ *
+ * The matching rule pointer must be a valid pointer, and the value parameters must be
+ * valid pointers to a NULL terminated strings.
+ */
+const char *pactffi_matches_json_value(const struct MatchingRule *matching_rule,
+                                       const char *expected_value,
+                                       const char *actual_value,
+                                       uint8_t cascaded);
 
 #endif /* pact_ffi_h */

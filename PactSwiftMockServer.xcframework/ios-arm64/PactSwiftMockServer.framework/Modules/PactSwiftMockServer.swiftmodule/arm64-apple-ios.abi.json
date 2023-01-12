@@ -8556,7 +8556,7 @@
     {
       "filePath": "\/Users\/oliver\/Developer\/Coles\/PactSwiftMockServer\/Sources\/Model\/Interaction.swift",
       "kind": "StringLiteral",
-      "offset": 6233,
+      "offset": 6221,
       "length": 3,
       "value": "\"\/\""
     },
@@ -8654,14 +8654,14 @@
     {
       "filePath": "\/Users\/oliver\/Developer\/Coles\/PactSwiftMockServer\/Sources\/MockServer.swift",
       "kind": "StringLiteral",
-      "offset": 1553,
+      "offset": 1533,
       "length": 11,
       "value": "\"127.0.0.1\""
     },
     {
       "filePath": "\/Users\/oliver\/Developer\/Coles\/PactSwiftMockServer\/Sources\/MockServer.swift",
       "kind": "IntegerLiteral",
-      "offset": 1724,
+      "offset": 1704,
       "length": 1,
       "value": "0"
     },
@@ -8675,14 +8675,14 @@
     {
       "filePath": "\/Users\/oliver\/Developer\/Coles\/PactSwiftMockServer\/Sources\/Model\/Pact.swift",
       "kind": "BooleanLiteral",
-      "offset": 1432,
+      "offset": 1426,
       "length": 5,
       "value": "false"
     },
     {
       "filePath": "\/Users\/oliver\/Developer\/Coles\/PactSwiftMockServer\/Sources\/Model\/Pact.swift",
       "kind": "BooleanLiteral",
-      "offset": 4465,
+      "offset": 4459,
       "length": 5,
       "value": "false"
     }

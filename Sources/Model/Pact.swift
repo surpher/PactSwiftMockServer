@@ -42,7 +42,7 @@ public final class Pact {
 		String(cString: pactffi_version())
 	}
 
-	static private(set) var isInitialized: Bool = false
+	static private(set) var isInitialized = false
 
 	public static func initialize(logSinks: [Logging.Sink.Config] = .defaultSinks) throws {
 		guard isInitialized == false else {
@@ -154,7 +154,13 @@ extension Pact.Error: LocalizedError {
 		case .canNotBeModified:
 			return NSLocalizedString("Pact can not be modified", comment: "A error failure reason when a Pact can not be modified")
 		case .canNotWritePact(let code):
-			return String.localizedStringWithFormat(NSLocalizedString("Can not write to Pact file (error code: %d)", comment: "Format for error failure reason when can't write to Pact file"), code)
+			return String.localizedStringWithFormat(
+				NSLocalizedString(
+					"Can not write to Pact file (error code: %d)",
+					comment: "Format for error failure reason when can't write to Pact file"
+				),
+				code
+			)
 		}
 	}
 }
@@ -171,4 +177,3 @@ private extension PactSpecification {
 	}
 
 }
-

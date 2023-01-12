@@ -43,14 +43,12 @@ public class MockServer {
 
 	/// The URL on which MockServer is running.
 	public var baseUrl: URL {
-		get {
-			var components = URLComponents()
-			components.scheme = transferProtocol.protocol
-			components.port = Int(port)
-			components.host = socketAddress
-			
-			return components.url!
-		}
+		var components = URLComponents()
+		components.scheme = transferProtocol.protocol
+		components.port = Int(port)
+		components.host = socketAddress
+
+		return components.url!
 	}
 
 	private let socketAddress = "127.0.0.1"

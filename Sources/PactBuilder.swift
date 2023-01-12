@@ -79,8 +79,6 @@ public final class PactBuilder {
 	///   - mockServer: The ``MockServer`` instance.
 	private func verifyInternal(mockServer: MockServer) throws {
 		guard mockServer.requestsMatched else {
-			// TODO: log the verification mismatches
-
 			let failures = try JSONDecoder().decode([PactVerificationFailure].self, from: mockServer.mismatchesJSON?.data(using: .utf8) ?? Data())
 			throw Error.pactFailure(failures)
 		}

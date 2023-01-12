@@ -117,7 +117,7 @@ public enum Logging {
 
 	/// Get the last error message from the underlying `pact_ffi` library.
 	public static var lastInternalErrorMessage: String? {
-		withUnsafeTemporaryAllocation(of: CChar.self, capacity: 1024) { buffer in
+		withUnsafeTemporaryAllocation(of: CChar.self, capacity: 1_024) { buffer in // swiftlint:disable:this numbers_smell
 			guard let baseAddress = buffer.baseAddress else {
 				Logging.log(.error, message: "Failed to allocated temporary buffer!")
 				return nil
@@ -176,7 +176,7 @@ private extension Logging.Sink {
 public extension Array where Element == Logging.Sink.Config {
 	static var defaultSinks: Self = [
 		Element(.standardError, filter: .info),
-		Element(.buffer, filter: .trace)
+		Element(.buffer, filter: .trace),
 	]
 }
 
@@ -184,9 +184,21 @@ extension Logging.Error: LocalizedError {
 	public var failureReason: String? {
 		switch self {
 		case .loggerSinkFailed(let code):
-			return String.localizedStringWithFormat(NSLocalizedString("Can not configure logger sink (error code: %d)", comment: "Format for error failure reason when configure logger sink"), code)
+			return String.localizedStringWithFormat(
+				NSLocalizedString(
+					"Can not configure logger sink (error code: %d)",
+					comment: "Format for error failure reason when configure logger sink"
+				),
+				code
+			)
 		case .loggerApplyFailed(let code):
-			return String.localizedStringWithFormat(NSLocalizedString("Can not apply logger configuration (error code: %d)", comment: "Format for error failure reason when can't apply logger config"), code)
+			return String.localizedStringWithFormat(
+				NSLocalizedString(
+					"Can not apply logger configuration (error code: %d)",
+					comment: "Format for error failure reason when can't apply logger config"
+				),
+				code
+			)
 		}
 	}
 }

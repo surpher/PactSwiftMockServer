@@ -89,7 +89,7 @@ extension PactVerificationFailure.Request: CustomStringConvertible {
 		"""
 		Request:
 		  \(method) \(path)
-		  \((headers?.map { k,v in "\(k): \(v)" } ?? []).joined(separator: "\n  "))
+		  \((headers?.map { k, v in "\(k): \(v)" } ?? []).joined(separator: "\n  "))
 		--
 		"""
 	}

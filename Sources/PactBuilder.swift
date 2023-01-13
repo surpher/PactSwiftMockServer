@@ -23,12 +23,16 @@ public final class PactBuilder {
 		case pactFailure([PactVerificationFailure])
 	}
 
-	public struct ConsumerContext {
-		public var mockServerURL: URL
+	public struct ConsumerContext: Sendable {
+		public let mockServerURL: URL
+
+		public init(mockServerURL: URL) {
+			self.mockServerURL = mockServerURL
+		}
 	}
 
-	public struct Config {
-		public var pactDirectory: String
+	public struct Config: Sendable {
+		public let pactDirectory: String
 
 		public init(pactDirectory: String) {
 			self.pactDirectory = pactDirectory
@@ -66,7 +70,7 @@ public final class PactBuilder {
 	/// Verify the configured interactions.
 	///
 	/// - Throws: An ``Error/pactFailure(_:)`` if the pact fails to verify or a ``MockServer/Error`` if the mock server fails.
-	public func verify(handler: (ConsumerContext) async throws -> Void) async throws {
+	public func verify(handler: @Sendable (ConsumerContext) async throws -> Void) async throws {
 		let mockServer = try MockServer(pact: pact, transferProtocol: .standard)
 
 		try await handler(ConsumerContext(mockServerURL: mockServer.baseUrl))

@@ -17,14 +17,14 @@
 
 import Foundation
 
-public struct PactVerificationFailure {
+public struct PactVerificationFailure: Sendable {
 	public let type: FailureType
 	public let method: String
 	public let path: String
 	public let request: Request?
 	public let mismatches: [Mismatch]
 
-	public enum FailureType {
+	public enum FailureType: Sendable {
 		case missing
 		case requestNotFound
 		case requestMismatch
@@ -32,20 +32,20 @@ public struct PactVerificationFailure {
 		case unknown(String)
 	}
 
-	public struct Request {
+	public struct Request: Sendable {
 		let method: String
 		let path: String
 		let headers: [String: String]?
 	}
 
-	public struct Mismatch {
+	public struct Mismatch: Sendable {
 		public let type: MismatchType
 		public let expected: Expected
 		public let actual: Actual?
 		public let parameter: String?
 		public let mismatch: String?
 
-		public enum MismatchType {
+		public enum MismatchType: Sendable {
 			case query
 			case body
 			case bodyType
@@ -53,12 +53,12 @@ public struct PactVerificationFailure {
 			case unknown(String)
 		}
 
-		public struct Expected {
+		public struct Expected: Sendable {
 			let expectedString: String
 			let expectedIntArray: [Int]
 		}
 
-		public struct Actual {
+		public struct Actual: Sendable {
 			let actualString: String
 			let actualIntArray: [Int]
 		}

@@ -18,8 +18,15 @@
 import XCTest
 @testable import PactSwiftMockServer
 
+@MainActor
 class InteractionTests: XCTestCase {
-	
+
+	@MainActor
+	class override func setUp() {
+		super.setUp()
+		Logging.initialize()
+	}
+
 	func testInteractionInitialization() throws {
 		let pact = try Pact(consumer: "consumer", provider: "provider")
 			.withSpecification(.v3)

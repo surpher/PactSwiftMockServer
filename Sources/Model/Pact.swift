@@ -42,23 +42,6 @@ public final class Pact {
 		String(cString: pactffi_version())
 	}
 
-	static private(set) var isInitialized = false
-
-	public static func initialize(logSinks: [Logging.Sink.Config] = .defaultSinks) throws {
-		guard isInitialized == false else {
-			return
-		}
-		defer {
-			isInitialized = true
-		}
-
-		Logging.initialize()
-		for sink in logSinks {
-			try Logging.attachSink(sink.sink, filter: sink.filter)
-		}
-		try Logging.apply()
-	}
-
 	public let consumer: String
 	public let provider: String
 
@@ -69,12 +52,6 @@ public final class Pact {
 	}
 
 	public init(consumer: String, provider: String) {
-		do {
-			try Self.initialize()
-		} catch {
-			fatalError("Failed to implicitly initialize Pact: \(error)")
-		}
-
 		self.consumer = consumer
 		self.provider = provider
 		self.handle = pactffi_new_pact(consumer.cString(using: .utf8), provider.cString(using: .utf8))

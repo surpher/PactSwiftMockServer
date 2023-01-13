@@ -23,12 +23,16 @@ final class PactBuilderTests: XCTestCase {
 	private let consumer = "Test_Consumer"
 	private let provider = "Test_Provider"
 
-	private let session = URLSession(configuration: .ephemeral)
-
 	var builder: PactBuilder!
 
 	private var pactDirectory: String {
 		NSTemporaryDirectory().appending("pacts/")
+	}
+
+	@MainActor
+	class override func setUp() {
+		super.setUp()
+		Logging.initialize()
 	}
 
 	override func setUpWithError() throws {
@@ -69,6 +73,7 @@ final class PactBuilderTests: XCTestCase {
 				URLQueryItem(name: "something", value: "orOther"),
 			]
 
+			let session = URLSession(configuration: .ephemeral)
 			let (data, response) = try await session.data(from: try XCTUnwrap(components.url))
 
 			let httpResponse = try XCTUnwrap(response as? HTTPURLResponse)
@@ -97,6 +102,7 @@ final class PactBuilderTests: XCTestCase {
 			request.httpMethod = "POST"
 			request.setValue("application/json", forHTTPHeaderField: "Accept")
 
+			let session = URLSession(configuration: .ephemeral)
 			let (data, response) = try await session.data(for: request)
 
 			let httpResponse = try XCTUnwrap(response as? HTTPURLResponse)

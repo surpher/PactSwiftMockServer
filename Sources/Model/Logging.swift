@@ -66,7 +66,8 @@ public enum Logging {
 	/// Apply the previously configured sinks and levels to the program. If no sinks have been setup will set the log level to ``Level/info`` and the target to ``Sink/standardOut``.
 	///
 	/// This function will install a global tracing subscriber. Any attempts to modify the logger after the call to `loggerApply()` will fail.
-	public static func apply() throws {
+	@MainActor
+	internal static func apply() throws {
 		let result = pactffi_logger_apply()
 		guard result == 0 else {
 			throw Error.loggerApplyFailed(result)
@@ -76,16 +77,61 @@ public enum Logging {
 	/// Initialize the logger with no sinks.
 	///
 	/// This initialized logger does nothing until ``Logging/apply()`` has been called.
-	///
-	public static func initialize() {
+	@MainActor @discardableResult
+	internal static func initialize() -> Bool {
+		guard isInitialized == false else {
+			return false
+		}
+
 		pactffi_logger_init()
+		isInitialized = true
+		return true
+	}
+
+	/// Returns a value indicating whether the PactSwift ``Logging`` has been initialized.
+	@MainActor
+	public private(set) static var isInitialized: Bool = false
+
+	/// Initialize the Pact logging infrastructure.
+	///
+	/// You should call this early
+	/// in the lifetime of your Pact test case. Subsequent calls will do nothing.
+	///
+	/// For example:
+	/// ```
+	/// class PactTests: XCTestCase {
+	///
+	///   @MainActor
+	///   class override func setUp() {
+	///	    super.setUp()
+	///     Logging.initialize()
+	///   }
+	///
+	///   // ... tests...
+	/// }
+	/// ```
+	///
+	/// - Note: By default the underlying Pact library will not log messages.
+	/// - Parameters:
+	///   - logSinks: An array of ``Logging/Sink/Config`` instances to configure the log sinks.
+	@MainActor
+	public static func initialize(with logSinks: [Logging.Sink.Config] = .defaultSinks) throws {
+		guard initialize() else {
+			return
+		}
+
+		for sink in logSinks {
+			try Logging.attachSink(sink.sink, filter: sink.filter)
+		}
+		try Logging.apply()
 	}
 
 	/// Attach an additional sink to the thread-local logger.
 	///
 	/// - Note: This logger does nothing until ``Logging/apply`` has been called.
 	///
-	public static func attachSink(_ sink: Sink, filter: Filter) throws {
+	@MainActor
+	internal static func attachSink(_ sink: Sink, filter: Filter) throws {
 		let result = pactffi_logger_attach_sink(sink.specifier.cString(using: .utf8), LevelFilter(filter))
 		guard result == 0 else {
 			throw Error.loggerSinkFailed(result)
@@ -174,7 +220,7 @@ private extension Logging.Sink {
 }
 
 public extension Array where Element == Logging.Sink.Config {
-	static var defaultSinks: Self = [
+	static let defaultSinks: Self = [
 		Element(.standardError, filter: .info),
 		Element(.buffer, filter: .trace),
 	]

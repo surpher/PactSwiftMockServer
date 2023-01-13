@@ -19,7 +19,13 @@ import XCTest
 @testable import PactSwiftMockServer
 
 class MockServerTests: XCTestCase {
-	
+
+	@MainActor
+	class override func setUp() {
+		super.setUp()
+		Logging.initialize()
+	}
+
 	func testMockServer_Initializes() throws {
 		let pact = Pact(consumer: "Consumer", provider: "Provider")
 		let server = try MockServer(pact: pact, transferProtocol: .standard)

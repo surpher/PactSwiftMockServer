@@ -21,12 +21,11 @@ public enum ProviderVerificationError : Swift.Error, Swift.Equatable {
 }
 @_hasMissingDesignatedInitializers final public class Interaction {
   public enum Error {
+    case panic(Swift.String?)
+    case handleInvalid
     case canNotBeModified
-    public static func == (a: PactSwiftMockServer.Interaction.Error, b: PactSwiftMockServer.Interaction.Error) -> Swift.Bool
-    public func hash(into hasher: inout Swift.Hasher)
-    public var hashValue: Swift.Int {
-      get
-    }
+    case unsupportedForSpecificationVersion
+    case unknownResult(Swift.Int)
   }
   public typealias RequestBuilder = (PactSwiftMockServer.Interaction.Request) throws -> Swift.Void
   public typealias ResponseBuilder = (PactSwiftMockServer.Interaction.Response) throws -> Swift.Void
@@ -54,6 +53,8 @@ public enum ProviderVerificationError : Swift.Error, Swift.Equatable {
       get
     }
   }
+  @discardableResult
+  final public func testName(_ name: Swift.String) throws -> Self
   @discardableResult
   final public func withRequest(method: PactSwiftMockServer.Interaction.HTTPMethod = .GET, path: Swift.String = "/", builder: (PactSwiftMockServer.Interaction.Request) throws -> Swift.Void = { _ in }) throws -> Self
   @discardableResult
@@ -344,8 +345,6 @@ extension PactSwiftMockServer.PactVerificationFailure.Mismatch.Expected : Swift.
 extension PactSwiftMockServer.PactVerificationFailure.Mismatch.Actual : Swift.Decodable {
   public init(from decoder: Swift.Decoder) throws
 }
-extension PactSwiftMockServer.Interaction.Error : Swift.Equatable {}
-extension PactSwiftMockServer.Interaction.Error : Swift.Hashable {}
 extension PactSwiftMockServer.Interaction.HTTPMethod : Swift.Equatable {}
 extension PactSwiftMockServer.Interaction.HTTPMethod : Swift.Hashable {}
 extension PactSwiftMockServer.Interaction.HTTPMethod : Swift.RawRepresentable {}

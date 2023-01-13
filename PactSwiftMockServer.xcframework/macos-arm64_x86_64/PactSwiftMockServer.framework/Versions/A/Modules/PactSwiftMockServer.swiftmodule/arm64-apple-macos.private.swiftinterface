@@ -19,37 +19,37 @@ public enum ProviderVerificationError : Swift.Error, Swift.Equatable {
   }
   public static func == (a: PactSwiftMockServer.ProviderVerificationError, b: PactSwiftMockServer.ProviderVerificationError) -> Swift.Bool
 }
-public struct PactVerificationFailure {
+public struct PactVerificationFailure : Swift.Sendable {
   public let type: PactSwiftMockServer.PactVerificationFailure.FailureType
   public let method: Swift.String
   public let path: Swift.String
   public let request: PactSwiftMockServer.PactVerificationFailure.Request?
   public let mismatches: [PactSwiftMockServer.PactVerificationFailure.Mismatch]
-  public enum FailureType {
+  public enum FailureType : Swift.Sendable {
     case missing
     case requestNotFound
     case requestMismatch
     case mockServerParsingFail
     case unknown(Swift.String)
   }
-  public struct Request {
+  public struct Request : Swift.Sendable {
   }
-  public struct Mismatch {
+  public struct Mismatch : Swift.Sendable {
     public let type: PactSwiftMockServer.PactVerificationFailure.Mismatch.MismatchType
     public let expected: PactSwiftMockServer.PactVerificationFailure.Mismatch.Expected
     public let actual: PactSwiftMockServer.PactVerificationFailure.Mismatch.Actual?
     public let parameter: Swift.String?
     public let mismatch: Swift.String?
-    public enum MismatchType {
+    public enum MismatchType : Swift.Sendable {
       case query
       case body
       case bodyType
       case headers
       case unknown(Swift.String)
     }
-    public struct Expected {
+    public struct Expected : Swift.Sendable {
     }
-    public struct Actual {
+    public struct Actual : Swift.Sendable {
     }
   }
 }
@@ -181,18 +181,19 @@ final public class PactBuilder {
   public enum Error {
     case pactFailure([PactSwiftMockServer.PactVerificationFailure])
   }
-  public struct ConsumerContext {
-    public var mockServerURL: Foundation.URL
+  public struct ConsumerContext : Swift.Sendable {
+    public let mockServerURL: Foundation.URL
+    public init(mockServerURL: Foundation.URL)
   }
-  public struct Config {
-    public var pactDirectory: Swift.String
+  public struct Config : Swift.Sendable {
+    public let pactDirectory: Swift.String
     public init(pactDirectory: Swift.String)
   }
   public init(pact: PactSwiftMockServer.Pact, config: PactSwiftMockServer.PactBuilder.Config)
   final public func uponReceiving(_ description: Swift.String) -> PactSwiftMockServer.Interaction
   final public func verify(handler: (PactSwiftMockServer.PactBuilder.ConsumerContext) throws -> Swift.Void) throws
-  #if compiler(>=5.3) && $AsyncAwait
-  final public func verify(handler: (PactSwiftMockServer.PactBuilder.ConsumerContext) async throws -> Swift.Void) async throws
+  #if compiler(>=5.3) && $AsyncAwait && $Sendable
+  final public func verify(handler: @Sendable (PactSwiftMockServer.PactBuilder.ConsumerContext) async throws -> Swift.Void) async throws
   #endif
   @objc deinit
 }
@@ -277,7 +278,6 @@ final public class Pact {
   public static var version: Swift.String {
     get
   }
-  public static func initialize(logSinks: [PactSwiftMockServer.Logging.Sink.Config] = .defaultSinks) throws
   final public let consumer: Swift.String
   final public let provider: Swift.String
   final public var filename: Swift.String {
@@ -328,9 +328,10 @@ public enum Logging {
     case file(Swift.String)
     case buffer
   }
-  public static func apply() throws
-  public static func initialize()
-  public static func attachSink(_ sink: PactSwiftMockServer.Logging.Sink, filter: PactSwiftMockServer.Logging.Filter) throws
+  @_Concurrency.MainActor public static var isInitialized: Swift.Bool {
+    get
+  }
+  @_Concurrency.MainActor public static func initialize(with logSinks: [PactSwiftMockServer.Logging.Sink.Config] = .defaultSinks) throws
   public static var buffer: Swift.String {
     get
   }
@@ -340,7 +341,7 @@ public enum Logging {
   }
 }
 extension Swift.Array where Element == PactSwiftMockServer.Logging.Sink.Config {
-  public static var defaultSinks: [PactSwiftMockServer.Logging.Sink.Config]
+  public static let defaultSinks: [PactSwiftMockServer.Logging.Sink.Config]
 }
 extension PactSwiftMockServer.Logging.Error : Foundation.LocalizedError {
   public var failureReason: Swift.String? {

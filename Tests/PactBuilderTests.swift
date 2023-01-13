@@ -32,7 +32,7 @@ final class PactBuilderTests: XCTestCase {
 	@MainActor
 	class override func setUp() {
 		super.setUp()
-		Logging.initialize()
+		try! Logging.initialize()
 	}
 
 	override func setUpWithError() throws {

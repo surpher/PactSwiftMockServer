@@ -67,7 +67,7 @@ public enum Logging {
 	///
 	/// This function will install a global tracing subscriber. Any attempts to modify the logger after the call to `loggerApply()` will fail.
 	@MainActor
-	internal static func apply() throws {
+	private static func apply() throws {
 		let result = pactffi_logger_apply()
 		guard result == 0 else {
 			throw Error.loggerApplyFailed(result)
@@ -78,7 +78,7 @@ public enum Logging {
 	///
 	/// This initialized logger does nothing until ``Logging/apply()`` has been called.
 	@MainActor @discardableResult
-	internal static func initialize() -> Bool {
+	private static func initialize() -> Bool {
 		guard isInitialized == false else {
 			return false
 		}
@@ -104,7 +104,7 @@ public enum Logging {
 	///   @MainActor
 	///   class override func setUp() {
 	///	    super.setUp()
-	///     Logging.initialize()
+	///     try! Logging.initialize()
 	///   }
 	///
 	///   // ... tests...
@@ -115,7 +115,7 @@ public enum Logging {
 	/// - Parameters:
 	///   - logSinks: An array of ``Logging/Sink/Config`` instances to configure the log sinks.
 	@MainActor
-	public static func initialize(with logSinks: [Logging.Sink.Config] = .defaultSinks) throws {
+	public static func initialize(_ logSinks: [Logging.Sink.Config] = .defaultSinks) throws {
 		guard initialize() else {
 			return
 		}
@@ -131,7 +131,7 @@ public enum Logging {
 	/// - Note: This logger does nothing until ``Logging/apply`` has been called.
 	///
 	@MainActor
-	internal static func attachSink(_ sink: Sink, filter: Filter) throws {
+	private static func attachSink(_ sink: Sink, filter: Filter) throws {
 		let result = pactffi_logger_attach_sink(sink.specifier.cString(using: .utf8), LevelFilter(filter))
 		guard result == 0 else {
 			throw Error.loggerSinkFailed(result)

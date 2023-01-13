@@ -24,7 +24,7 @@ class InteractionTests: XCTestCase {
 	@MainActor
 	class override func setUp() {
 		super.setUp()
-		Logging.initialize()
+		try! Logging.initialize()
 	}
 
 	func testInteractionInitialization() throws {

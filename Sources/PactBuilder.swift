@@ -20,10 +20,13 @@ import Foundation
 public final class PactBuilder {
 
 	public enum Error {
+		/// Thrown when the Pact fails to verify.
 		case pactFailure([PactVerificationFailure])
 	}
 
 	public struct ConsumerContext: Sendable {
+
+		/// The base URL of the mock server.
 		public let mockServerURL: URL
 
 		public init(mockServerURL: URL) {
@@ -32,6 +35,7 @@ public final class PactBuilder {
 	}
 
 	public struct Config: Sendable {
+		/// The directory in to which Pacts are written.
 		public let pactDirectory: String
 
 		public init(pactDirectory: String) {
@@ -41,8 +45,6 @@ public final class PactBuilder {
 
 	private let pact: Pact
 	private let config: Config
-
-	private var interactions: [Interaction] = []
 
 	public init(pact: Pact, config: Config) {
 		self.pact = pact

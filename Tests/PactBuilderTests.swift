@@ -59,6 +59,7 @@ final class PactBuilderTests: XCTestCase {
 		try builder
 			.uponReceiving("a request to retrieve all events with no authorization")
 			.given("There are events")
+			.testName(name)
 			.withRequest(path: "/events") { request in
 				try request.queryParam(name: "something", values: ["orOther"])
 			}
@@ -87,6 +88,7 @@ final class PactBuilderTests: XCTestCase {
 		try builder
 			.uponReceiving("a request to create an event with no authorization")
 			.given("There are events")
+			.testName(name)
 			.withRequest(method: .POST, path: "/events") { request in
 				try request.header("Accept", values: ["application/json"])
 			}

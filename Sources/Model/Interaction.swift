@@ -24,7 +24,11 @@ import PactMockServer
 public final class Interaction {
 
 	public enum Error {
+		case panic(String?)
+		case handleInvalid
 		case canNotBeModified
+		case unsupportedForSpecificationVersion
+		case unknownResult(Int)
 	}
 
 	public typealias RequestBuilder = (Request) throws -> Void
@@ -152,6 +156,31 @@ public final class Interaction {
 		return self
 	}
 
+	/// Sets the test name annotation for the interaction. This allows capturing the name of the test as metadata.
+	/// - Warning: This can only be used with ``Pact/Specification/v4`` interactions.
+	@discardableResult
+	public func testName(_ name: String) throws -> Self {
+		precondition(name.isEmpty == false, "The test name must not be empty!")
+
+		let result = pactffi_interaction_test_name(handle, name.cString(using: .utf8))
+		guard result == 0 else {
+			switch result {
+			case 1: // Function panicked. Error message will be available by calling `pactffi_get_error_message`.
+				throw Error.panic(Logging.lastInternalErrorMessage)
+			case 2: // Handle was not valid.
+				throw Error.handleInvalid
+			case 3: // Mock server was already started and the integration can not be modified.
+				throw Error.canNotBeModified
+			case 4: // Not a V4 interaction.
+				throw Error.unsupportedForSpecificationVersion
+			default:
+				throw Error.unknownResult(Int(result))
+			}
+		}
+
+		return self
+	}
+
 	/// Adds a provider state to the Interaction with a parameter key and value.
 	///
 	/// Throws ``Error`` if the interaction or Pact can't be modified (i.e. the mock server for it has already started)
@@ -270,7 +299,24 @@ extension Interaction.Error: LocalizedError {
 	public var failureReason: String? {
 		switch self {
 		case .canNotBeModified:
-			return NSLocalizedString("Can not be modified", comment: "The interaction can not be modified")
+			return NSLocalizedString("Can not be modified", comment: "Error message when the interaction can not be modified")
+		case .handleInvalid:
+			return NSLocalizedString("Invalid Interaction handle", comment: "Error message when the interaction handle is invalid")
+		case .unsupportedForSpecificationVersion:
+			return NSLocalizedString(
+				"Unsupported for specification version",
+				comment: "Error message when the action is not supported by the specification version in use"
+			)
+		case .unknownResult(let code):
+			return String.localizedStringWithFormat(
+				NSLocalizedString("Unknown result (error code: %d)", comment: "Error message when an unknown result is returned"),
+				code
+			)
+		case .panic(let errorMessage):
+			return String.localizedStringWithFormat(
+				NSLocalizedString("Function paniced (error: %@)", comment: "Error message when a rust function panics"),
+				errorMessage ?? ""
+			)
 		}
 	}
 }

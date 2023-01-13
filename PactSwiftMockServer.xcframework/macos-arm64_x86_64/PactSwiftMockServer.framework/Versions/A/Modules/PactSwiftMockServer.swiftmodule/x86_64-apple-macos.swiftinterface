@@ -331,7 +331,7 @@ public enum Logging {
   @_Concurrency.MainActor public static var isInitialized: Swift.Bool {
     get
   }
-  @_Concurrency.MainActor public static func initialize(with logSinks: [PactSwiftMockServer.Logging.Sink.Config] = .defaultSinks) throws
+  @_Concurrency.MainActor public static func initialize(_ logSinks: [PactSwiftMockServer.Logging.Sink.Config] = .defaultSinks) throws
   public static var buffer: Swift.String {
     get
   }

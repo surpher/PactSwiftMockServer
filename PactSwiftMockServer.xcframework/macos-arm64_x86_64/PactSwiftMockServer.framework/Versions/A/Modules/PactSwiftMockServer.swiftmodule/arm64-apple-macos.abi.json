@@ -7604,7 +7604,7 @@
           {
             "kind": "Function",
             "name": "initialize",
-            "printedName": "initialize(with:)",
+            "printedName": "initialize(_:)",
             "children": [
               {
                 "kind": "TypeNominal",
@@ -7628,8 +7628,8 @@
               }
             ],
             "declKind": "Func",
-            "usr": "s:19PactSwiftMockServer7LoggingO10initialize4withySayAC4SinkO6ConfigVG_tKFZ",
-            "mangledName": "$s19PactSwiftMockServer7LoggingO10initialize4withySayAC4SinkO6ConfigVG_tKFZ",
+            "usr": "s:19PactSwiftMockServer7LoggingO10initializeyySayAC4SinkO6ConfigVGKFZ",
+            "mangledName": "$s19PactSwiftMockServer7LoggingO10initializeyySayAC4SinkO6ConfigVGKFZ",
             "moduleName": "PactSwiftMockServer",
             "static": true,
             "declAttributes": [
@@ -8638,7 +8638,7 @@
     {
       "filePath": "\/Users\/oliver\/Developer\/Coles\/PactSwiftMockServer\/Sources\/Model\/Logging.swift",
       "kind": "BooleanLiteral",
-      "offset": 3204,
+      "offset": 3202,
       "length": 5,
       "value": "false"
     }

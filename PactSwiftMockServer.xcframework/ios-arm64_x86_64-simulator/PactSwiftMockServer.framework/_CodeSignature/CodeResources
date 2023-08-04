@@ -6,7 +6,7 @@
 	<dict>
 		<key>Headers/PactSwiftMockServer-Swift.h</key>
 		<data>
-		5UeY/0aYEULjtna8u1Z5hJAAZIQ=
+		BzsDyN3HWnolI85YWiEtLRnOCZo=
 		</data>
 		<key>Headers/PactSwiftMockServer.h</key>
 		<data>
@@ -14,39 +14,55 @@
 		</data>
 		<key>Headers/pact_ffi.h</key>
 		<data>
-		mBgw6iA35MNIuyq4hCU53MgDcME=
+		1UdRnum9kGSYMQhtuKNEN7dWxZM=
 		</data>
 		<key>Info.plist</key>
 		<data>
-		eaYOPNABVsV61dKCXC4jN2IY6ns=
+		Uvjku4jxGTk70kVtOPvwfmfDOsA=
+		</data>
+		<key>Modules/PactSwiftMockServer.swiftmodule/arm64-apple-ios-simulator.abi.json</key>
+		<data>
+		DNFtrX5FDZxL04rdDL7/kk4Exco=
+		</data>
+		<key>Modules/PactSwiftMockServer.swiftmodule/arm64-apple-ios-simulator.private.swiftinterface</key>
+		<data>
+		3KaQofTyvw2o63bUhmCTYoJUceY=
 		</data>
 		<key>Modules/PactSwiftMockServer.swiftmodule/arm64-apple-ios-simulator.swiftdoc</key>
 		<data>
-		pWxsLicL8qCewwsiuQjiqUPHi3I=
+		stnYT8ifMWdBlXHBCyfkZsnS7yE=
 		</data>
 		<key>Modules/PactSwiftMockServer.swiftmodule/arm64-apple-ios-simulator.swiftinterface</key>
 		<data>
-		z2F0rMVuDVasS13/xx8xQYFtfrA=
+		3KaQofTyvw2o63bUhmCTYoJUceY=
 		</data>
 		<key>Modules/PactSwiftMockServer.swiftmodule/arm64-apple-ios-simulator.swiftmodule</key>
 		<data>
-		7VDav0ka5DHmuQjGAm89k010vWM=
+		OEyS2CfSIg9VGFQhCZwVDP1aWGQ=
+		</data>
+		<key>Modules/PactSwiftMockServer.swiftmodule/x86_64-apple-ios-simulator.abi.json</key>
+		<data>
+		DNFtrX5FDZxL04rdDL7/kk4Exco=
+		</data>
+		<key>Modules/PactSwiftMockServer.swiftmodule/x86_64-apple-ios-simulator.private.swiftinterface</key>
+		<data>
+		EsYGFv5yRLLG6/Pd605E+pZ2tX4=
 		</data>
 		<key>Modules/PactSwiftMockServer.swiftmodule/x86_64-apple-ios-simulator.swiftdoc</key>
 		<data>
-		OoGPE5HEOzwFA6YEolSGQUcdIDc=
+		CCzac/u9STZ/CW3nAqVhSKK9vGc=
 		</data>
 		<key>Modules/PactSwiftMockServer.swiftmodule/x86_64-apple-ios-simulator.swiftinterface</key>
 		<data>
-		bZMy9SHIl8D0qEGwyomhB3IHjIg=
+		EsYGFv5yRLLG6/Pd605E+pZ2tX4=
 		</data>
 		<key>Modules/PactSwiftMockServer.swiftmodule/x86_64-apple-ios-simulator.swiftmodule</key>
 		<data>
-		gv3Rgg7Aiofei83IXZVHE9smYhc=
+		gKvf2QgKN/8P/pspVNYeNAE8Cs4=
 		</data>
 		<key>Modules/module.modulemap</key>
 		<data>
-		6VdiipQdecMN8IC5UMNQRPD8n+4=
+		Mz3zhVsXidljSrZ71l+RbyLtSbc=
 		</data>
 	</dict>
 	<key>files2</key>
@@ -55,7 +71,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			0jlOHYZs35lF3ZRSrXn+ozaODctN2UmUlyJRWq8S0tw=
+			ITh5RaYu0K+eurisry484dhaOf+NfpYeO9Ze0L9IKuk=
 			</data>
 		</dict>
 		<key>Headers/PactSwiftMockServer.h</key>
@@ -69,56 +85,84 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			LTdUdDOjpD/gCF2T/04h6zLSnnoq2wDrzpQ55zn65dY=
+			23zTkERFfLGQmnwQpC0e5Hy52WUs+dsBZUA9hydNA0Q=
+			</data>
+		</dict>
+		<key>Modules/PactSwiftMockServer.swiftmodule/arm64-apple-ios-simulator.abi.json</key>
+		<dict>
+			<key>hash2</key>
+			<data>
+			pjFXvzOB+2jl4ZEoIjpFWL/04GQ9Gtu2UDEK1Ay1jbA=
+			</data>
+		</dict>
+		<key>Modules/PactSwiftMockServer.swiftmodule/arm64-apple-ios-simulator.private.swiftinterface</key>
+		<dict>
+			<key>hash2</key>
+			<data>
+			HfLaQB24rjxQ1X1AkgFvjcbzJ6a3jb6ipdjvubWSvi8=
 			</data>
 		</dict>
 		<key>Modules/PactSwiftMockServer.swiftmodule/arm64-apple-ios-simulator.swiftdoc</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			N2MyctYWdmA4jIBcZG2saULmEiCn4MtkbXsww9MFAyY=
+			mnEdKYiMFlIic9x84XP1DIAbyqbXKXbFv3tcCoVr4YE=
 			</data>
 		</dict>
 		<key>Modules/PactSwiftMockServer.swiftmodule/arm64-apple-ios-simulator.swiftinterface</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			o8QabKsFlKBLML8QG9w7x+wKSHq1ebB2u2S/eN/Rd38=
+			HfLaQB24rjxQ1X1AkgFvjcbzJ6a3jb6ipdjvubWSvi8=
 			</data>
 		</dict>
 		<key>Modules/PactSwiftMockServer.swiftmodule/arm64-apple-ios-simulator.swiftmodule</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			YqcsYwgj/Fqe6MawjmUPdbIpCBHAKnprWS0qhbKakhI=
+			4UPTLmWTInBu5wysY58ZGtm8w7Q9DmOkUcwzIsMtoJ4=
+			</data>
+		</dict>
+		<key>Modules/PactSwiftMockServer.swiftmodule/x86_64-apple-ios-simulator.abi.json</key>
+		<dict>
+			<key>hash2</key>
+			<data>
+			pjFXvzOB+2jl4ZEoIjpFWL/04GQ9Gtu2UDEK1Ay1jbA=
+			</data>
+		</dict>
+		<key>Modules/PactSwiftMockServer.swiftmodule/x86_64-apple-ios-simulator.private.swiftinterface</key>
+		<dict>
+			<key>hash2</key>
+			<data>
+			vHerBivVKSH3Vh4fsH5b8kp/8544C4MO+b4MavqRjrY=
 			</data>
 		</dict>
 		<key>Modules/PactSwiftMockServer.swiftmodule/x86_64-apple-ios-simulator.swiftdoc</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			3auZJg2ej2RwCNUwe6uaAJBjMdV0YZIbSbJ6ZxiAS/A=
+			uVWOT6Qpfj0Oi0PvwCPvRyyr3AL4ERjZRo08ViI0+48=
 			</data>
 		</dict>
 		<key>Modules/PactSwiftMockServer.swiftmodule/x86_64-apple-ios-simulator.swiftinterface</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			UwfLFHJpfi4svahYRpKNe9wmfJrhEoyVau0DzNgt7cQ=
+			vHerBivVKSH3Vh4fsH5b8kp/8544C4MO+b4MavqRjrY=
 			</data>
 		</dict>
 		<key>Modules/PactSwiftMockServer.swiftmodule/x86_64-apple-ios-simulator.swiftmodule</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			fSXW37EnES/pMcI7GlSu0/EoorO88XV2EeMpdG5x6bQ=
+			SeIDsZt+J5ipnKXvU7gYKhbdC/uYpCXzNxZkX6SbDUc=
 			</data>
 		</dict>
 		<key>Modules/module.modulemap</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			sQAOpDPezHh95lf9vhVK1QoVHnShpE9ANmKIujEWQk8=
+			cjH6SJR6ArMxjtsCVrVnT7lcqUJyd1S69w02X539S6w=
 			</data>
 		</dict>
 	</dict>

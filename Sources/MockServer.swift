@@ -149,13 +149,15 @@ public extension MockServer {
 	///   - regex: The pattern to use
 	///
 	static func generate_value(regex: String) -> String? {
-		guard let stringPointer = pactffi_generate_regex_value(regex).ok._0 else {
+		let result = pactffi_generate_regex_value(regex.cString(using: .utf8))
+		guard result.tag == StringResult_Ok, let stringPointer = result.ok else {
 			return nil
 		}
-		let generatedString = String(cString: stringPointer)
-		pactffi_free_string(stringPointer)
+		defer {
+			pactffi_string_delete(stringPointer)
+		}
 
-		return generatedString
+		return String(cString: stringPointer)
 	}
 
 	/// Generates an example datetime string based on provided format
@@ -166,14 +168,15 @@ public extension MockServer {
 	///   - format: The format of date to generate
 	///
 	static func generate_date(format: String) -> String? {
-		guard let stringPointer = pactffi_generate_datetime_string(format).ok._0 else {
+		let result = pactffi_generate_datetime_string(format.cString(using: .utf8))
+		guard result.tag == StringResult_Ok, let stringPointer = result.ok else {
 			return nil
 		}
+		defer {
+			pactffi_string_delete(stringPointer)
+		}
 
-		let generatedDatetime = String(cString: stringPointer)
-		pactffi_free_string(stringPointer)
-
-		return generatedDatetime
+		return String(cString: stringPointer)
 	}
 
 	/// Finds an unsued port on Darwin. Returns ``0`` on Linux.

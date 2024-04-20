@@ -120,7 +120,7 @@ echo "🏗  Building pact_ffi.h..."
 mkdir -p build && cd build
 
 cmake .. && cmake --build .
-cbindgen .. -o ../include/pact_ffi.h 
+cbindgen .. -o ../include/pact_ffi.h
 
 cd ..
 

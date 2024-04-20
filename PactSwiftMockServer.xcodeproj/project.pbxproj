@@ -46,10 +46,11 @@
 		AD1598442648EC16007CFAA5 /* PactSwiftMockServer.h in Headers */ = {isa = PBXBuildFile; fileRef = AD1597F62648DE0E007CFAA5 /* PactSwiftMockServer.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		AD1598522648F2E1007CFAA5 /* MockServerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD1598512648F2E1007CFAA5 /* MockServerTests.swift */; };
 		AD1598532648F2E1007CFAA5 /* MockServerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD1598512648F2E1007CFAA5 /* MockServerTests.swift */; };
+		AD3192DE2BD3A12000A6C2AC /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AD3192DD2BD3A12000A6C2AC /* SystemConfiguration.framework */; };
+		AD3771212BD387E700206BF2 /* libpact_ffi.a in Frameworks */ = {isa = PBXBuildFile; fileRef = AD933642269C2DD80004EBD8 /* libpact_ffi.a */; };
 		AD38D300264A33E800124396 /* PactSwiftMockServer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AD38D2F7264A33E800124396 /* PactSwiftMockServer.framework */; };
 		AD63D08226A02C28002682EB /* libpact_ffi.a in Frameworks */ = {isa = PBXBuildFile; fileRef = AD63D08126A02C28002682EB /* libpact_ffi.a */; };
 		AD63D08F26A02C64002682EB /* libpact_ffi.a in Frameworks */ = {isa = PBXBuildFile; fileRef = AD9336A5269C33EB0004EBD8 /* libpact_ffi.a */; };
-		AD933643269C2DD80004EBD8 /* libpact_ffi.a in Frameworks */ = {isa = PBXBuildFile; fileRef = AD933642269C2DD80004EBD8 /* libpact_ffi.a */; };
 		AD93364D269C2EC30004EBD8 /* pact_ffi.h in Headers */ = {isa = PBXBuildFile; fileRef = AD93364C269C2EC30004EBD8 /* pact_ffi.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		AD93364E269C2EC30004EBD8 /* pact_ffi.h in Headers */ = {isa = PBXBuildFile; fileRef = AD93364C269C2EC30004EBD8 /* pact_ffi.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		AD93364F269C2EC30004EBD8 /* pact_ffi.h in Headers */ = {isa = PBXBuildFile; fileRef = AD93364C269C2EC30004EBD8 /* pact_ffi.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -124,6 +125,7 @@
 		AD1598272648DF73007CFAA5 /* Info-macOSTests.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Info-macOSTests.plist"; sourceTree = "<group>"; };
 		AD1598302648E32F007CFAA5 /* MockServer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockServer.swift; sourceTree = "<group>"; };
 		AD1598512648F2E1007CFAA5 /* MockServerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockServerTests.swift; sourceTree = "<group>"; };
+		AD3192DD2BD3A12000A6C2AC /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		AD38D2F7264A33E800124396 /* PactSwiftMockServer.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = PactSwiftMockServer.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		AD38D2FF264A33E800124396 /* PactSwiftMockServer_iphoneosTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PactSwiftMockServer_iphoneosTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		AD38D313264A346900124396 /* Target-iPhone-iOS-Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "Target-iPhone-iOS-Release.xcconfig"; sourceTree = "<group>"; };
@@ -178,7 +180,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				AD933643269C2DD80004EBD8 /* libpact_ffi.a in Frameworks */,
+				AD3192DE2BD3A12000A6C2AC /* SystemConfiguration.framework in Frameworks */,
+				AD3771212BD387E700206BF2 /* libpact_ffi.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -216,12 +219,12 @@
 				A75EC3AC2942B2FB0054BADB /* LICENSE.md */,
 				A75EC3AE2942B2FB0054BADB /* README.md */,
 				AD1598332648E486007CFAA5 /* Configurations */,
-				AD1598352648E59E007CFAA5 /* Frameworks */,
 				ADF2E5832674623F0029507D /* Package.swift */,
 				AD1597F42648DE0E007CFAA5 /* Products */,
 				AD15980D2648DECB007CFAA5 /* Resources */,
 				AD15982F2648E31A007CFAA5 /* Sources */,
 				AD1598342648E522007CFAA5 /* Tests */,
+				AD3192DC2BD3A12000A6C2AC /* Frameworks */,
 			);
 			sourceTree = "<group>";
 			usesTabs = 1;
@@ -322,13 +325,6 @@
 			path = Tests;
 			sourceTree = "<group>";
 		};
-		AD1598352648E59E007CFAA5 /* Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = Frameworks;
-			sourceTree = "<group>";
-		};
 		AD1598382648E690007CFAA5 /* Headers */ = {
 			isa = PBXGroup;
 			children = (
@@ -351,6 +347,14 @@
 				A7F1857A296BE196003AE3F2 /* QueryBuilder.swift */,
 			);
 			path = Model;
+			sourceTree = "<group>";
+		};
+		AD3192DC2BD3A12000A6C2AC /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				AD3192DD2BD3A12000A6C2AC /* SystemConfiguration.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 		AD38D310264A33F800124396 /* iOS-device */ = {
@@ -796,10 +800,16 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = ADBEF2F42648FB0600486C4A /* Target-iOS-Debug.xcconfig */;
 			buildSettings = {
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Resources/iOS-simulator",
 				);
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
 		};
@@ -807,10 +817,16 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = ADBEF2F82648FB0600486C4A /* Target-iOS-Release.xcconfig */;
 			buildSettings = {
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Resources/iOS-simulator",
 				);
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
 		};
@@ -832,6 +848,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = ADBEF2F72648FB0600486C4A /* Target-macOS-Debug.xcconfig */;
 			buildSettings = {
+				MACOSX_DEPLOYMENT_TARGET = 12.0;
 			};
 			name = Debug;
 		};
@@ -839,6 +856,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = ADBEF2F32648FB0600486C4A /* Target-macOS-Release.xcconfig */;
 			buildSettings = {
+				MACOSX_DEPLOYMENT_TARGET = 12.0;
 			};
 			name = Release;
 		};

@@ -52,7 +52,7 @@ final class PactBuilderTests: XCTestCase {
 	}
 
 	func testPactVersion() throws {
-		XCTAssertEqual(Pact.version, "0.4.0")
+		XCTAssertEqual(Pact.version, "0.4.19")
 	}
 
 	func testGetEvents() async throws {
@@ -114,5 +114,3 @@ final class PactBuilderTests: XCTestCase {
 		}
 	}
 }
-
-

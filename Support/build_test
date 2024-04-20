@@ -20,7 +20,7 @@
 set -euo pipefail
 
 SCHEME=${SCHEME:-"PactSwiftMockServer-macOS"}
-DESTINATION=${DESTINATION:-"arch=x86_64"}
+DESTINATION=${DESTINATION:-"arch=arm64"}
 
 set -o pipefail && xcodebuild clean test \
 	-project PactSwiftMockServer.xcodeproj \

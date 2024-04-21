@@ -1,5 +1,4 @@
 // swift-tools-version:5.7
-
 import PackageDescription
 
 let package = Package(
@@ -32,13 +31,13 @@ let package = Package(
 
 	targets: [
 
-		// Vending a XCFramwork binary for Apple's platforms
+		// Vending a XCFramework for Apple platforms
 		.binaryTarget(
 			name: "PactSwiftMockServer",
 			path: "PactSwiftMockServer.xcframework"
 		),
 
-		// Vending the framework for Linux platform
+		// Vending source for Linux platform
 		.target(
 			name: "PactSwiftMockServerLinux",
 			dependencies: [
@@ -50,5 +49,4 @@ let package = Package(
 	],
 
 	swiftLanguageVersions: [.v5]
-
 )

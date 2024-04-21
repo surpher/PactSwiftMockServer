@@ -19,7 +19,7 @@ import Foundation
 
 enum SocketBinder {
 
-	public static func unusedPort() -> Int32 {
+	static func unusedPort() -> Int32 {
 		#if os(Linux)
 		return getAvailablePort()
 		#else

@@ -17,24 +17,20 @@
 #  IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #
 
+set -ue
 set -o pipefail
 
 # Scirpt that prepares PactSwift.xcframework
 
 # Properties
+IPHONEOS_DEPLOYMENT_TARGET=16.0
+MACOSX_DEPLOYMENT_TARGET=13.0
 
 TMP_DIR="./.tmp/build-xcframework"
 PRODUCT_NAME="PactSwiftMockServer"
 
-# Helpers
-
-function handleInput {
-  if [[ ! $1 =~ ^[Yy]$ ]]
-	then
-    echo "⚠️  Aborting the process of building XCFrameworks!"
-    exit 1
-  fi
-}
+# Only use xcbeautify if it can be found in path.
+XCBEAUTIFY=$(command -v xcbeautify || command -v cat)
 
 ########################
 # Pre-build checks     #
@@ -47,9 +43,13 @@ function handleInput {
 echo "⚠️ Checking for the right Xcode tools..."
 xcode-select -p && xcode-select -v
 
-read -r -p "🚨 Are you running this using Xcode 12.x tools!? It should be 12.x!" -n 1 USER_INPUT
-handleInput $USER_INPUT
-echo
+echo "🚨 Are you running this using Xcode 14.x tools!? It should be 14.x!"
+select yn in "Yes" "No"; do
+    case $yn in
+        Yes) break;;
+        No) exit 1;;
+    esac
+done
 
 # Setup
 
@@ -71,35 +71,35 @@ rm -fr $TMP_DIR
 
 echo "🏗  Building for iOS..."
 xcodebuild archive \
-    -sdk iphoneos IPHONEOS_DEPLOYMENT_TARGET=12.0 \
+    -sdk iphoneos IPHONEOS_DEPLOYMENT_TARGET=${IPHONEOS_DEPLOYMENT_TARGET} \
     -arch arm64 \
     -scheme "${PRODUCT_NAME}-iphoneos" \
     -archivePath "${TMP_DIR}/iphoneos/${PRODUCT_NAME}.xcarchive" \
     BUILD_LIBRARY_FOR_DISTRIBUTION=YES \
-    SKIP_INSTALL=NO | xcbeautify
+    SKIP_INSTALL=NO | ${XCBEAUTIFY}
 
 echo "👍  Framework for arm64 device built"
 
 echo "🏗  Building for iOS Simulator..."
 xcodebuild archive \
-    -sdk iphonesimulator IPHONEOS_DEPLOYMENT_TARGET=12.0 \
+    -sdk iphonesimulator IPHONEOS_DEPLOYMENT_TARGET=${IPHONEOS_DEPLOYMENT_TARGET} \
     -arch x86_64 -arch arm64 \
     -scheme "${PRODUCT_NAME}-iOS" \
     -archivePath "${TMP_DIR}/iphonesimulator/${PRODUCT_NAME}.xcarchive" \
     BUILD_LIBRARY_FOR_DISTRIBUTION=YES \
-    SKIP_INSTALL=NO | xcbeautify
+    SKIP_INSTALL=NO | ${XCBEAUTIFY}
 echo "👍  Framework for iOS Simulator built for x86_64 and arm64 architecture"
 
 # macOS
 
 echo "🏗  Building for macOS..."
 xcodebuild archive \
-    -sdk macosx MACOSX_DEPLOYMENT_TARGET=11.0 \
+    -sdk macosx MACOSX_DEPLOYMENT_TARGET=${MACOSX_DEPLOYMENT_TARGET} \
     -arch x86_64 -arch arm64 \
     -scheme "${PRODUCT_NAME}-macOS" \
     -archivePath "${TMP_DIR}/macos/${PRODUCT_NAME}.xcarchive" \
     BUILD_LIBRARY_FOR_DISTRIBUTION=YES \
-    SKIP_INSTALL=NO | xcbeautify
+    SKIP_INSTALL=NO | ${XCBEAUTIFY}
 echo "👍  Framework for macOS built for x86_64 and arm64 architectures"
 
 # XCFramework

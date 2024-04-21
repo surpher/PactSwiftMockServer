@@ -1,3 +1,8 @@
+# 1.0.0 - v1.0.0
+* d08c413 - chore: Change to use updated package API
+* 6995bb2 - tech: Update MockServer to be an actor
+* 2cf3ec4 - docs: Add doc file references to Xcode project
+* 883b8ee - tech: Set min iOS target to 14.0 & macOS to 11.0
 # 0.4.4 - v0.4.4
 * 7728901 - chore: Upgrade Pact FFI Library to 0.3.15 (Marko Justinek)
 * 9ec0d7d - chore: Submodule sync (Marko Justinek)

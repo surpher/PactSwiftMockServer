@@ -1,6 +1,9 @@
 name: Build and Test
 
 on:
+  pull_request:
+    branches:
+      - 'main'
   push:
     branches:
       - 'main'
@@ -21,14 +24,14 @@ env:
 
 jobs:
   build:
-    name: "Prepare libpact_ffi binaries"
-    runs-on: macos-11
+    name: "Build libpact_ffi binaries"
+    runs-on: macos-14-arm64
     timeout-minutes: 60
     strategy:
       fail-fast: true
 
     concurrency:
-      group: build-macos11-${{ github.ref }}
+      group: build-macos14-arm64-${{ github.ref }}
       cancel-in-progress: true
 
     steps:
@@ -53,14 +56,14 @@ jobs:
         with:
           files: "Resources/**/libpact_ffi.a"
 
-      - name: "🎁  Prepare binaries (if not cached)"
+      - name: "🎁  Build binaries (if not cached)"
         if: steps.check_files.outputs.files_exist == 'false'
         run: |
           Support/build_rust_dependencies
 
-  testMacOS11:
-    name: "Test macOS 11"
-    runs-on: macos-11
+  testMacOS14:
+    name: "Test macOS 14 arm64"
+    runs-on: macos-14-arm64
     needs: [build]
 
     concurrency:
@@ -72,9 +75,9 @@ jobs:
       matrix:
         include:
           - scheme: "PactSwiftMockServer-iOS"
-            destination: "platform=iOS Simulator,name=iPhone 12 Pro"
+            destination: "platform=iOS Simulator,name=iPhone 15 Pro"
           - scheme: "PactSwiftMockServer-macOS"
-            destination: "arch=x86_64"
+            destination: "arch=arm64"
 
     env:
       SCHEME: ${{ matrix.scheme }}
@@ -92,12 +95,12 @@ jobs:
           path: |
             ${{ env.RUST_TARGET_PATH }}
             ${{ env.BINARIES_PATH }}
-          key: build-${{ runner.os }}-rust-${{ hashFiles('**/libpact_ffi.version') }}
+          key: build14-${{ runner.os }}-rust-${{ hashFiles('**/libpact_ffi.version') }}
           restore-keys: |
-            build-${{ runner.os }}-rust-
+            build14-${{ runner.os }}-rust-
 
-      - name: "🏗  Use Xcode 12.4"
-        run: sudo xcode-select -switch /Applications/Xcode_12.4.app
+      - name: "🏗  Use Xcode 15.3"
+        run: sudo xcode-select -switch /Applications/Xcode_15.3.app
 
       - name: "🛠  Prepare Tools"
         run: |
@@ -107,9 +110,9 @@ jobs:
         run: |
           sh Support/build_test
 
-  testMacOS12:
-    name: "Test macOS 12"
-    runs-on: macos-12
+  testMacOS13:
+    name: "Test macOS 13"
+    runs-on: macos-13
     needs: [build]
 
     strategy:
@@ -117,7 +120,7 @@ jobs:
       matrix:
         include:
           - scheme: "PactSwiftMockServer-iOS"
-            destination: "platform=iOS Simulator,name=iPhone 13 Pro"
+            destination: "platform=iOS Simulator,name=iPhone 14 Pro"
           - scheme: "PactSwiftMockServer-macOS"
             destination: "arch=x86_64"
 
@@ -141,12 +144,12 @@ jobs:
           path: |
             ${{ env.RUST_TARGET_PATH }}
             ${{ env.BINARIES_PATH }}
-          key: build-${{ runner.os }}-rust-${{ hashFiles('**/libpact_ffi.version') }}
+          key: build13-${{ runner.os }}-rust-${{ hashFiles('**/libpact_ffi.version') }}
           restore-keys: |
-            build-${{ runner.os }}-rust-
+            build13-${{ runner.os }}-rust-
 
-      - name: "🏗  Use Xcode 13.4.1"
-        run: sudo xcode-select -switch /Applications/Xcode_13.4.1.app
+      - name: "🏗  Use Xcode 15.2"
+        run: sudo xcode-select -switch /Applications/Xcode_15.2.app
 
       - name: "🛠  Prepare Tools"
         run: |

@@ -43,7 +43,7 @@ public final class Verifier: ProviderVerifying {
 	/// See [pact_verifier_cli](https://docs.pact.io/implementation_guides/rust/pact_verifier_cli) for more
 	///
 	public func verifyProvider(options args: String) -> Result<Bool, ProviderVerificationError> {
-		Logger.log(message: "VerificationOptions", data: Data(args.utf8))
+		Logging.log(.debug, message: "VerificationOptions: \(args)")
 		let verificationResult = pactffi_verify(args)
 
 		// Errors are returned as non-zero numeric values

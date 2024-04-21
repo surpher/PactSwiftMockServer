@@ -1,0 +1,364 @@
+// swift-interface-format-version: 1.0
+// swift-compiler-version: Apple Swift version 5.7.2 (swiftlang-5.7.2.135.5 clang-1400.0.29.51)
+// swift-module-flags: -target arm64-apple-macos13.0 -enable-objc-interop -enable-library-evolution -swift-version 5 -enforce-exclusivity=checked -O -module-name PactSwiftMockServer
+// swift-module-flags-ignorable: -enable-bare-slash-regex
+import Foundation
+@_exported import PactSwiftMockServer
+import Swift
+import _Concurrency
+import _StringProcessing
+public enum ProviderVerificationError : Swift.Error, Swift.Equatable {
+  case verificationFailed
+  case nullPointer
+  case methodPanicked
+  case invalidArguments
+  case usageError(Swift.String)
+  case unknown
+  public var description: Swift.String {
+    get
+  }
+  public static func == (a: PactSwiftMockServer.ProviderVerificationError, b: PactSwiftMockServer.ProviderVerificationError) -> Swift.Bool
+}
+public struct PactVerificationFailure : Swift.Sendable {
+  public let type: PactSwiftMockServer.PactVerificationFailure.FailureType
+  public let method: Swift.String
+  public let path: Swift.String
+  public let request: PactSwiftMockServer.PactVerificationFailure.Request?
+  public let mismatches: [PactSwiftMockServer.PactVerificationFailure.Mismatch]
+  public enum FailureType : Swift.Sendable {
+    case missing
+    case requestNotFound
+    case requestMismatch
+    case mockServerParsingFail
+    case unknown(Swift.String)
+  }
+  public struct Request : Swift.Sendable {
+  }
+  public struct Mismatch : Swift.Sendable {
+    public let type: PactSwiftMockServer.PactVerificationFailure.Mismatch.MismatchType
+    public let expected: PactSwiftMockServer.PactVerificationFailure.Mismatch.Expected
+    public let actual: PactSwiftMockServer.PactVerificationFailure.Mismatch.Actual?
+    public let parameter: Swift.String?
+    public let mismatch: Swift.String?
+    public enum MismatchType : Swift.Sendable {
+      case query
+      case body
+      case bodyType
+      case headers
+      case unknown(Swift.String)
+    }
+    public struct Expected : Swift.Sendable {
+    }
+    public struct Actual : Swift.Sendable {
+    }
+  }
+}
+extension PactSwiftMockServer.PactVerificationFailure : Swift.Decodable {
+  public init(from decoder: Swift.Decoder) throws
+}
+extension PactSwiftMockServer.PactVerificationFailure.Request : Swift.CustomStringConvertible {
+  public var description: Swift.String {
+    get
+  }
+}
+extension PactSwiftMockServer.PactVerificationFailure : Swift.CustomStringConvertible {
+  public var description: Swift.String {
+    get
+  }
+}
+extension PactSwiftMockServer.PactVerificationFailure.Request : Swift.Decodable {
+  public init(from decoder: Swift.Decoder) throws
+}
+extension PactSwiftMockServer.PactVerificationFailure.Mismatch : Swift.Decodable, Swift.CustomStringConvertible {
+  public var description: Swift.String {
+    get
+  }
+  public init(from decoder: Swift.Decoder) throws
+}
+extension PactSwiftMockServer.PactVerificationFailure.Mismatch.MismatchType : Swift.RawRepresentable, Swift.Decodable {
+  public init(rawValue: Swift.String)
+  public var rawValue: Swift.String {
+    get
+  }
+  public typealias RawValue = Swift.String
+}
+extension PactSwiftMockServer.PactVerificationFailure.FailureType : Swift.RawRepresentable, Swift.Decodable, Swift.CustomStringConvertible {
+  public init?(rawValue: Swift.String)
+  public var rawValue: Swift.String {
+    get
+  }
+  public var description: Swift.String {
+    get
+  }
+  public typealias RawValue = Swift.String
+}
+extension PactSwiftMockServer.PactVerificationFailure.Mismatch.Expected : Swift.Decodable {
+  public init(from decoder: Swift.Decoder) throws
+}
+extension PactSwiftMockServer.PactVerificationFailure.Mismatch.Actual : Swift.Decodable {
+  public init(from decoder: Swift.Decoder) throws
+}
+@_hasMissingDesignatedInitializers final public class Interaction {
+  public enum Error {
+    case panic(Swift.String?)
+    case handleInvalid
+    case canNotBeModified
+    case unsupportedForSpecificationVersion
+    case unknownResult(Swift.Int)
+  }
+  public typealias RequestBuilder = (PactSwiftMockServer.Interaction.Request) throws -> Swift.Void
+  public typealias ResponseBuilder = (PactSwiftMockServer.Interaction.Response) throws -> Swift.Void
+  public struct Request : PactSwiftMockServer.HeaderBuilder, PactSwiftMockServer.BodyBuilder, PactSwiftMockServer.QueryBuilder {
+    @discardableResult
+    public func queryParam(name: Swift.String, values: [Swift.String]) throws -> PactSwiftMockServer.Interaction.Request
+    @discardableResult
+    public func header(_ name: Swift.String, values: [Swift.String]) throws -> PactSwiftMockServer.Interaction.Request
+    @discardableResult
+    public func body(_ body: Swift.String? = nil, contentType: Swift.String? = nil) throws -> PactSwiftMockServer.Interaction.Request
+  }
+  public struct Response : PactSwiftMockServer.HeaderBuilder, PactSwiftMockServer.BodyBuilder {
+    @discardableResult
+    public func status(_ status: Swift.Int) throws -> PactSwiftMockServer.Interaction.Response
+    @discardableResult
+    public func header(_ name: Swift.String, values: [Swift.String]) throws -> PactSwiftMockServer.Interaction.Response
+    @discardableResult
+    public func body(_ body: Swift.String? = nil, contentType: Swift.String? = nil) throws -> PactSwiftMockServer.Interaction.Response
+  }
+  public enum HTTPMethod : Swift.String {
+    case GET, HEAD, POST, PUT, PATCH, DELETE, TRACE, CONNECT, OPTIONS
+    public init?(rawValue: Swift.String)
+    public typealias RawValue = Swift.String
+    public var rawValue: Swift.String {
+      get
+    }
+  }
+  @discardableResult
+  final public func testName(_ name: Swift.String) throws -> Self
+  @discardableResult
+  final public func withRequest(method: PactSwiftMockServer.Interaction.HTTPMethod = .GET, path: Swift.String = "/", builder: (PactSwiftMockServer.Interaction.Request) throws -> Swift.Void = { _ in }) throws -> Self
+  @discardableResult
+  final public func willRespond(with status: Swift.Int, builder: (PactSwiftMockServer.Interaction.Response) throws -> Swift.Void = { _ in }) throws -> Self
+  @objc deinit
+}
+extension PactSwiftMockServer.Interaction {
+  public struct ProviderState : Swift.Hashable {
+    public init(description: Swift.String)
+    public init(description: Swift.String, name: Swift.String, value: Swift.String)
+    public func hash(into hasher: inout Swift.Hasher)
+    public static func == (a: PactSwiftMockServer.Interaction.ProviderState, b: PactSwiftMockServer.Interaction.ProviderState) -> Swift.Bool
+    public var hashValue: Swift.Int {
+      get
+    }
+  }
+  @discardableResult
+  final public func given(_ providerStates: [PactSwiftMockServer.Interaction.ProviderState]) throws -> Self
+  @discardableResult
+  final public func given(_ providerStates: PactSwiftMockServer.Interaction.ProviderState...) throws -> Self
+}
+extension PactSwiftMockServer.Interaction.Error : Foundation.LocalizedError {
+  public var failureReason: Swift.String? {
+    get
+  }
+}
+extension PactSwiftMockServer.Interaction.ProviderState : Swift.ExpressibleByStringLiteral {
+  public init(stringLiteral value: Swift.StringLiteralType)
+  public typealias ExtendedGraphemeClusterLiteralType = Swift.StringLiteralType
+  public typealias StringLiteralType = Swift.StringLiteralType
+  public typealias UnicodeScalarLiteralType = Swift.StringLiteralType
+}
+public protocol ProviderVerifying {
+  func verifyProvider(options args: Swift.String) -> Swift.Result<Swift.Bool, PactSwiftMockServer.ProviderVerificationError>
+}
+final public class Verifier : PactSwiftMockServer.ProviderVerifying {
+  public init()
+  final public func verifyProvider(options args: Swift.String) -> Swift.Result<Swift.Bool, PactSwiftMockServer.ProviderVerificationError>
+  @objc deinit
+}
+public protocol BodyBuilder {
+  @discardableResult
+  func body(_ body: Swift.String?, contentType: Swift.String?) throws -> Self
+}
+final public class PactBuilder {
+  public enum Error {
+    case pactFailure([PactSwiftMockServer.PactVerificationFailure])
+  }
+  public struct ConsumerContext : Swift.Sendable {
+    public let mockServerURL: Foundation.URL
+    public init(mockServerURL: Foundation.URL)
+  }
+  public struct Config : Swift.Sendable {
+    public let pactDirectory: Swift.String
+    public init(pactDirectory: Swift.String)
+  }
+  public init(pact: PactSwiftMockServer.Pact, config: PactSwiftMockServer.PactBuilder.Config)
+  final public func uponReceiving(_ description: Swift.String) -> PactSwiftMockServer.Interaction
+  final public func verify(handler: (PactSwiftMockServer.PactBuilder.ConsumerContext) throws -> Swift.Void) throws
+  #if compiler(>=5.3) && $AsyncAwait && $Sendable
+  final public func verify(handler: @Sendable (PactSwiftMockServer.PactBuilder.ConsumerContext) async throws -> Swift.Void) async throws
+  #endif
+  @objc deinit
+}
+extension PactSwiftMockServer.PactBuilder.Error : Foundation.LocalizedError {
+  public var failureReason: Swift.String? {
+    get
+  }
+}
+public class MockServer {
+  public enum Error : Swift.Equatable {
+    case unknown(Swift.Int32)
+    case invalidHandle
+    case invalidPactJSON
+    case unableToStart
+    case panicked
+    case invalidAddress
+    case tlsConfigFailure
+  }
+  public enum TransferProtocol : Swift.Int {
+    case standard
+    case secure
+    public init?(rawValue: Swift.Int)
+    public typealias RawValue = Swift.Int
+    public var rawValue: Swift.Int {
+      get
+    }
+  }
+  public var baseUrl: Foundation.URL {
+    get
+  }
+  public var port: Swift.Int32 {
+    get
+  }
+  public init(pact: PactSwiftMockServer.Pact, transferProtocol: PactSwiftMockServer.MockServer.TransferProtocol = .standard, port: Swift.Int32? = nil) throws
+  public var tlsCACertificate: Swift.String? {
+    get
+  }
+  @objc deinit
+  public var requestsMatched: Swift.Bool {
+    get
+  }
+  public var mismatchesJSON: Swift.String? {
+    get
+  }
+  public var logs: Swift.String {
+    get
+  }
+}
+extension PactSwiftMockServer.MockServer.Error : Foundation.LocalizedError {
+  public var failureReason: Swift.String? {
+    get
+  }
+}
+extension PactSwiftMockServer.MockServer.Error : Swift.RawRepresentable {
+  public init(rawValue: Swift.Int32)
+  public var rawValue: Swift.Int32 {
+    get
+  }
+  public typealias RawValue = Swift.Int32
+}
+public protocol HeaderBuilder {
+  @discardableResult
+  func header(_ name: Swift.String, values: [Swift.String]) throws -> Self
+}
+public protocol QueryBuilder {
+  @discardableResult
+  func queryParam(name: Swift.String, values: [Swift.String]) throws -> Self
+}
+final public class Pact {
+  public enum Specification {
+    case v1, v1_1, v2, v3, v4
+    public static func == (a: PactSwiftMockServer.Pact.Specification, b: PactSwiftMockServer.Pact.Specification) -> Swift.Bool
+    public func hash(into hasher: inout Swift.Hasher)
+    public var hashValue: Swift.Int {
+      get
+    }
+  }
+  public enum Error {
+    case canNotBeModified
+    case canNotWritePact(Swift.Int32)
+  }
+  public static var version: Swift.String {
+    get
+  }
+  final public let consumer: Swift.String
+  final public let provider: Swift.String
+  final public var filename: Swift.String {
+    get
+  }
+  public init(consumer: Swift.String, provider: Swift.String)
+  @objc deinit
+  final public func withSpecification(_ specification: PactSwiftMockServer.Pact.Specification) throws -> Self
+  final public func withMetadata(namespace: Swift.String, name: Swift.String, value: Swift.String) throws -> Self
+  final public func writePactFile(directory: Swift.String? = nil, overwrite: Swift.Bool = false) throws
+}
+extension PactSwiftMockServer.Pact.Error : Foundation.LocalizedError {
+  public var failureReason: Swift.String? {
+    get
+  }
+}
+public enum Generate {
+  public static func value(regex: Swift.String) -> Swift.String?
+  public static func date(format: Swift.String) -> Swift.String?
+}
+public enum Logging {
+  public enum Error {
+    case loggerApplyFailed(Swift.Int32)
+    case loggerSinkFailed(Swift.Int32)
+  }
+  public enum Level : Swift.String {
+    case trace, debug, info, warn, error
+    public init?(rawValue: Swift.String)
+    public typealias RawValue = Swift.String
+    public var rawValue: Swift.String {
+      get
+    }
+  }
+  public enum Filter {
+    case off, error, warn, info, debug, trace
+    public static func == (a: PactSwiftMockServer.Logging.Filter, b: PactSwiftMockServer.Logging.Filter) -> Swift.Bool
+    public func hash(into hasher: inout Swift.Hasher)
+    public var hashValue: Swift.Int {
+      get
+    }
+  }
+  public enum Sink {
+    public struct Config {
+      public init(_ sink: PactSwiftMockServer.Logging.Sink, filter: PactSwiftMockServer.Logging.Filter)
+    }
+    case standardOut
+    case standardError
+    case file(Swift.String)
+    case buffer
+  }
+  @_Concurrency.MainActor public static var isInitialized: Swift.Bool {
+    get
+  }
+  @_Concurrency.MainActor public static func initialize(_ logSinks: [PactSwiftMockServer.Logging.Sink.Config] = .defaultSinks) throws
+  public static var buffer: Swift.String {
+    get
+  }
+  public static func log(_ level: PactSwiftMockServer.Logging.Level, message: Swift.String)
+  public static var lastInternalErrorMessage: Swift.String? {
+    get
+  }
+}
+extension Swift.Array where Element == PactSwiftMockServer.Logging.Sink.Config {
+  public static let defaultSinks: [PactSwiftMockServer.Logging.Sink.Config]
+}
+extension PactSwiftMockServer.Logging.Error : Foundation.LocalizedError {
+  public var failureReason: Swift.String? {
+    get
+  }
+}
+extension PactSwiftMockServer.Interaction.HTTPMethod : Swift.Equatable {}
+extension PactSwiftMockServer.Interaction.HTTPMethod : Swift.Hashable {}
+extension PactSwiftMockServer.Interaction.HTTPMethod : Swift.RawRepresentable {}
+extension PactSwiftMockServer.MockServer.TransferProtocol : Swift.Equatable {}
+extension PactSwiftMockServer.MockServer.TransferProtocol : Swift.Hashable {}
+extension PactSwiftMockServer.MockServer.TransferProtocol : Swift.RawRepresentable {}
+extension PactSwiftMockServer.Pact.Specification : Swift.Equatable {}
+extension PactSwiftMockServer.Pact.Specification : Swift.Hashable {}
+extension PactSwiftMockServer.Logging.Level : Swift.Equatable {}
+extension PactSwiftMockServer.Logging.Level : Swift.Hashable {}
+extension PactSwiftMockServer.Logging.Level : Swift.RawRepresentable {}
+extension PactSwiftMockServer.Logging.Filter : Swift.Equatable {}
+extension PactSwiftMockServer.Logging.Filter : Swift.Hashable {}

@@ -92,6 +92,15 @@ rustup component add rust-src --toolchain nightly-aarch64-apple-darwin
 # Build libpact_ffi binaries                 #
 ##############################################
 
+# Set min deployment targets avoiding 'ld: warning's:
+# avoiding "Object file (__/libpact_ffi.a[arm64][232](b0401a448be314bb-zdict.o)) was built for newer 'macOS' version (14.2) than being linked (12.0)"
+unset MACOSX_DEPLOYMENT_TARGET
+export MACOSX_DEPLOYMENT_TARGET=12.0
+
+# avoiding "Object file (__/libpact_ffi.a[arm64][232](b0401a448be314bb-zdict.o)) was built for newer 'iOS-simulator' version (17.2) than being linked (13.0)"
+unset IPHONEOS_DEPLOYMENT_TARGET
+export IPHONEOS_DEPLOYMENT_TARGET=13.0
+
 echo "🏗  Building libpact_ffi.a for x86_64 iOS Simulator"
 echo "cargo build --target=x86_64-apple-ios --release"
 cargo build --target=x86_64-apple-ios --release

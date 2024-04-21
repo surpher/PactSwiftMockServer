@@ -8,3 +8,6 @@ PRODUCT_BUNDLE_IDENTIFIER = au.com.pact-foundation.PactSwiftMockServerTests
 CODE_SIGN_IDENTITY[sdk=macosx*] = -
 
 LD_RUNPATH_SEARCH_PATHS = $(inherited) @executable_path/Frameworks @loader_path/Frameworks
+
+DEAD_CODE_STRIPPING = YES
+ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES

@@ -528,8 +528,9 @@
 		AD1597EA2648DE0E007CFAA5 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				BuildIndependentTargetsInParallel = YES;
 				LastSwiftUpdateCheck = 1250;
-				LastUpgradeCheck = 1250;
+				LastUpgradeCheck = 1520;
 				TargetAttributes = {
 					AD1597F22648DE0E007CFAA5 = {
 						CreatedOnToolsVersion = 12.5;
@@ -643,7 +644,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# Run SwiftLint before even attempting to compile\n\"${PROJECT_DIR}\"/Support/build_file_list_and_swiftlint PactSwiftMockServer ./.swiftlint.yml\n";
+			shellScript = "PATH={$PATH}:/opt/local/bin:/opt/homebrew/bin/:/usr/local/bin\n\"${SRCROOT}\"/Support/build_file_list_and_swiftlint PactSwiftMockServer ./.swiftlint.yml\n";
 		};
 		ADE254FD26CDE3C700FA21A9 /* SwiftLint */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -662,7 +663,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# Run SwiftLint before even attempting to compile\n\"${PROJECT_DIR}\"/Support/build_file_list_and_swiftlint PactSwiftMockServer ./.swiftlint.yml\n";
+			shellScript = "PATH={$PATH}:/opt/local/bin:/opt/homebrew/bin/:/usr/local/bin\n\"${SRCROOT}\"/Support/build_file_list_and_swiftlint PactSwiftMockServer ./.swiftlint.yml\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -800,16 +801,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = ADBEF2F42648FB0600486C4A /* Target-iOS-Debug.xcconfig */;
 			buildSettings = {
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/Resources/iOS-simulator",
-				);
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
-				SUPPORTS_MACCATALYST = NO;
-				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
-				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
-				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
 		};
@@ -817,16 +808,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = ADBEF2F82648FB0600486C4A /* Target-iOS-Release.xcconfig */;
 			buildSettings = {
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/Resources/iOS-simulator",
-				);
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
-				SUPPORTS_MACCATALYST = NO;
-				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
-				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
-				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
 		};
@@ -890,7 +871,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = ADBEF2EB2648FB0600486C4A /* Target-iOS-Tests-Debug.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 			};
 			name = Debug;
 		};
@@ -898,7 +878,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = ADBEF2F62648FB0600486C4A /* Target-iOS-Tests-Release.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 			};
 			name = Release;
 		};

@@ -109,6 +109,10 @@ Carthage/
 /PactSwiftMockServer.xcodeproj/xcuserdata/marko.xcuserdatad/xcschemes/xcschememanagement.plist
 .tmp
 
+# Swiftlint
+.xcfilelist
+*.xcfilelist
+
 ####################
 # Binaries        ##
 ####################

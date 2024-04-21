@@ -77,7 +77,8 @@ public enum Logging {
 	/// Initialize the logger with no sinks.
 	///
 	/// This initialized logger does nothing until ``Logging/apply()`` has been called.
-	@MainActor @discardableResult
+	@MainActor 
+	@discardableResult
 	private static func initialize() -> Bool {
 		guard isInitialized == false else {
 			return false
@@ -89,8 +90,7 @@ public enum Logging {
 	}
 
 	/// Returns a value indicating whether the PactSwift ``Logging`` has been initialized.
-	@MainActor
-	public private(set) static var isInitialized: Bool = false
+	@MainActor public private(set) static var isInitialized = false
 
 	/// Initialize the Pact logging infrastructure.
 	///

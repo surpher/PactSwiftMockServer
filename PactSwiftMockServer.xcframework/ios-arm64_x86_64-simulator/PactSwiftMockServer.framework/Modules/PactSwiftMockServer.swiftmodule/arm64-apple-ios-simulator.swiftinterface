@@ -1,5 +1,5 @@
 // swift-interface-format-version: 1.0
-// swift-compiler-version: Apple Swift version 5.7.2 (swiftlang-5.7.2.135.5 clang-1400.0.29.51)
+// swift-compiler-version: Apple Swift version 5.9.2 (swiftlang-5.9.2.2.56 clang-1500.1.0.2.5)
 // swift-module-flags: -target arm64-apple-ios16.0-simulator -enable-objc-interop -enable-library-evolution -swift-version 5 -enforce-exclusivity=checked -O -module-name PactSwiftMockServer
 // swift-module-flags-ignorable: -enable-bare-slash-regex
 import Foundation
@@ -7,6 +7,7 @@ import Foundation
 import Swift
 import _Concurrency
 import _StringProcessing
+import _SwiftConcurrencyShims
 public enum ProviderVerificationError : Swift.Error, Swift.Equatable {
   case verificationFailed
   case nullPointer
@@ -54,7 +55,7 @@ public struct PactVerificationFailure : Swift.Sendable {
   }
 }
 extension PactSwiftMockServer.PactVerificationFailure : Swift.Decodable {
-  public init(from decoder: Swift.Decoder) throws
+  public init(from decoder: any Swift.Decoder) throws
 }
 extension PactSwiftMockServer.PactVerificationFailure.Request : Swift.CustomStringConvertible {
   public var description: Swift.String {
@@ -67,13 +68,13 @@ extension PactSwiftMockServer.PactVerificationFailure : Swift.CustomStringConver
   }
 }
 extension PactSwiftMockServer.PactVerificationFailure.Request : Swift.Decodable {
-  public init(from decoder: Swift.Decoder) throws
+  public init(from decoder: any Swift.Decoder) throws
 }
 extension PactSwiftMockServer.PactVerificationFailure.Mismatch : Swift.Decodable, Swift.CustomStringConvertible {
   public var description: Swift.String {
     get
   }
-  public init(from decoder: Swift.Decoder) throws
+  public init(from decoder: any Swift.Decoder) throws
 }
 extension PactSwiftMockServer.PactVerificationFailure.Mismatch.MismatchType : Swift.RawRepresentable, Swift.Decodable {
   public init(rawValue: Swift.String)
@@ -93,10 +94,10 @@ extension PactSwiftMockServer.PactVerificationFailure.FailureType : Swift.RawRep
   public typealias RawValue = Swift.String
 }
 extension PactSwiftMockServer.PactVerificationFailure.Mismatch.Expected : Swift.Decodable {
-  public init(from decoder: Swift.Decoder) throws
+  public init(from decoder: any Swift.Decoder) throws
 }
 extension PactSwiftMockServer.PactVerificationFailure.Mismatch.Actual : Swift.Decodable {
-  public init(from decoder: Swift.Decoder) throws
+  public init(from decoder: any Swift.Decoder) throws
 }
 @_hasMissingDesignatedInitializers final public class Interaction {
   public enum Error {

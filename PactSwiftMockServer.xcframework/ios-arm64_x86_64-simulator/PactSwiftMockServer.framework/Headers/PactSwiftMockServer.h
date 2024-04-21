@@ -14,4 +14,4 @@ FOUNDATION_EXPORT double PactSwiftMockServerVersionNumber;
 FOUNDATION_EXPORT const unsigned char PactSwiftMockServerVersionString[];
 
 // In this header, you should import all the public headers of your framework using statements like #import <PactSwiftMockServer/PublicHeader.h>
-#import "pact_ffi.h"
+#import <PactSwiftMockServer/pact_ffi.h>

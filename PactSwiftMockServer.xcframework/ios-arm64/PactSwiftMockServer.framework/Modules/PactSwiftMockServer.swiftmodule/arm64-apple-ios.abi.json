@@ -8391,48 +8391,39 @@
           },
           {
             "kind": "Conformance",
-            "name": "DataProtocol",
-            "printedName": "DataProtocol",
+            "name": "_ObjectiveCBridgeable",
+            "printedName": "_ObjectiveCBridgeable",
             "children": [
               {
                 "kind": "TypeWitness",
-                "name": "Regions",
-                "printedName": "Regions",
+                "name": "_ObjectiveCType",
+                "printedName": "_ObjectiveCType",
                 "children": [
                   {
                     "kind": "TypeNominal",
-                    "name": "CollectionOfOne",
-                    "printedName": "Swift.CollectionOfOne<[Swift.UInt8]>",
-                    "children": [
-                      {
-                        "kind": "TypeNominal",
-                        "name": "Array",
-                        "printedName": "[Swift.UInt8]",
-                        "children": [
-                          {
-                            "kind": "TypeNominal",
-                            "name": "UInt8",
-                            "printedName": "Swift.UInt8",
-                            "usr": "s:s5UInt8V"
-                          }
-                        ],
-                        "usr": "s:Sa"
-                      }
-                    ],
-                    "usr": "s:s15CollectionOfOneV"
+                    "name": "NSArray",
+                    "printedName": "Foundation.NSArray",
+                    "usr": "c:objc(cs)NSArray"
                   }
                 ]
               }
             ],
-            "usr": "s:10Foundation12DataProtocolP",
-            "mangledName": "$s10Foundation12DataProtocolP"
+            "usr": "s:s21_ObjectiveCBridgeableP",
+            "mangledName": "$ss21_ObjectiveCBridgeableP"
           },
           {
             "kind": "Conformance",
-            "name": "MutableDataProtocol",
-            "printedName": "MutableDataProtocol",
-            "usr": "s:10Foundation19MutableDataProtocolP",
-            "mangledName": "$s10Foundation19MutableDataProtocolP"
+            "name": "CVarArg",
+            "printedName": "CVarArg",
+            "usr": "s:s7CVarArgP",
+            "mangledName": "$ss7CVarArgP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "ContiguousBytes",
+            "printedName": "ContiguousBytes",
+            "usr": "s:10Foundation15ContiguousBytesP",
+            "mangledName": "$s10Foundation15ContiguousBytesP"
           },
           {
             "kind": "Conformance",
@@ -8478,39 +8469,48 @@
           },
           {
             "kind": "Conformance",
-            "name": "_ObjectiveCBridgeable",
-            "printedName": "_ObjectiveCBridgeable",
+            "name": "DataProtocol",
+            "printedName": "DataProtocol",
             "children": [
               {
                 "kind": "TypeWitness",
-                "name": "_ObjectiveCType",
-                "printedName": "_ObjectiveCType",
+                "name": "Regions",
+                "printedName": "Regions",
                 "children": [
                   {
                     "kind": "TypeNominal",
-                    "name": "NSArray",
-                    "printedName": "Foundation.NSArray",
-                    "usr": "c:objc(cs)NSArray"
+                    "name": "CollectionOfOne",
+                    "printedName": "Swift.CollectionOfOne<[Swift.UInt8]>",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Array",
+                        "printedName": "[Swift.UInt8]",
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "UInt8",
+                            "printedName": "Swift.UInt8",
+                            "usr": "s:s5UInt8V"
+                          }
+                        ],
+                        "usr": "s:Sa"
+                      }
+                    ],
+                    "usr": "s:s15CollectionOfOneV"
                   }
                 ]
               }
             ],
-            "usr": "s:s21_ObjectiveCBridgeableP",
-            "mangledName": "$ss21_ObjectiveCBridgeableP"
+            "usr": "s:10Foundation12DataProtocolP",
+            "mangledName": "$s10Foundation12DataProtocolP"
           },
           {
             "kind": "Conformance",
-            "name": "CVarArg",
-            "printedName": "CVarArg",
-            "usr": "s:s7CVarArgP",
-            "mangledName": "$ss7CVarArgP"
-          },
-          {
-            "kind": "Conformance",
-            "name": "ContiguousBytes",
-            "printedName": "ContiguousBytes",
-            "usr": "s:10Foundation15ContiguousBytesP",
-            "mangledName": "$s10Foundation15ContiguousBytesP"
+            "name": "MutableDataProtocol",
+            "printedName": "MutableDataProtocol",
+            "usr": "s:10Foundation19MutableDataProtocolP",
+            "mangledName": "$s10Foundation19MutableDataProtocolP"
           }
         ]
       }
@@ -8519,130 +8519,1670 @@
   },
   "ConstValues": [
     {
-      "filePath": "\/Users\/oliver\/Developer\/Coles\/PactSwiftMockServer\/Sources\/Model\/Interaction.swift",
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/Model\/ProviderVerificationError.swift",
+      "kind": "IntegerLiteral",
+      "offset": 1460,
+      "length": 1,
+      "value": "1"
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/Model\/ProviderVerificationError.swift",
+      "kind": "IntegerLiteral",
+      "offset": 1497,
+      "length": 1,
+      "value": "2"
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/Model\/ProviderVerificationError.swift",
+      "kind": "IntegerLiteral",
+      "offset": 1527,
+      "length": 1,
+      "value": "3"
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/Model\/ProviderVerificationError.swift",
+      "kind": "IntegerLiteral",
+      "offset": 1560,
+      "length": 1,
+      "value": "4"
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/Model\/ProviderVerificationError.swift",
+      "kind": "StringLiteral",
+      "offset": 1744,
+      "length": 57,
+      "value": "\"The verification process failed, see output for errors.\""
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/Model\/ProviderVerificationError.swift",
+      "kind": "StringLiteral",
+      "offset": 1842,
+      "length": 30,
+      "value": "\"A null pointer was received.\""
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/Model\/ProviderVerificationError.swift",
+      "kind": "StringLiteral",
+      "offset": 1916,
+      "length": 22,
+      "value": "\"The method panicked.\""
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/Model\/ProviderVerificationError.swift",
+      "kind": "StringLiteral",
+      "offset": 1984,
+      "length": 62,
+      "value": "\"Invalid arguments were provided to the verification process.\""
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/Model\/ProviderVerificationError.swift",
+      "kind": "StringLiteral",
+      "offset": 2143,
+      "length": 16,
+      "value": "\"Unknown error!\""
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/Model\/ProviderVerificationError.swift",
+      "kind": "StringLiteral",
+      "offset": 2306,
+      "length": 30,
+      "value": "\"Provider Verification Error:\""
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/Model\/ProviderVerificationError.swift",
+      "kind": "StringLiteral",
+      "offset": 2365,
+      "length": 3,
+      "value": "\" \""
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/Model\/Interaction.swift",
+      "kind": "StringLiteral",
+      "offset": 2232,
+      "length": 12,
+      "value": "\"text\/plain\""
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/Model\/Interaction.swift",
+      "kind": "StringLiteral",
+      "offset": 4228,
+      "length": 12,
+      "value": "\"text\/plain\""
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/Model\/Interaction.swift",
+      "kind": "BooleanLiteral",
+      "offset": 5488,
+      "length": 5,
+      "value": "false"
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/Model\/Interaction.swift",
+      "kind": "StringLiteral",
+      "offset": 5495,
+      "length": 34,
+      "value": "\"The test name must not be empty!\""
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/Model\/Interaction.swift",
+      "kind": "IntegerLiteral",
+      "offset": 5631,
+      "length": 1,
+      "value": "0"
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/Model\/Interaction.swift",
+      "kind": "IntegerLiteral",
+      "offset": 5667,
+      "length": 1,
+      "value": "1"
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/Model\/Interaction.swift",
+      "kind": "IntegerLiteral",
+      "offset": 5828,
+      "length": 1,
+      "value": "2"
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/Model\/Interaction.swift",
+      "kind": "IntegerLiteral",
+      "offset": 5894,
+      "length": 1,
+      "value": "3"
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/Model\/Interaction.swift",
+      "kind": "IntegerLiteral",
+      "offset": 6014,
+      "length": 1,
+      "value": "4"
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/Model\/Interaction.swift",
       "kind": "StringLiteral",
       "offset": 7321,
       "length": 3,
       "value": "\"\/\""
     },
     {
-      "filePath": "\/Users\/oliver\/Developer\/Coles\/PactSwiftMockServer\/Sources\/Model\/Logging.swift",
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/Model\/Interaction.swift",
+      "kind": "StringLiteral",
+      "offset": 8991,
+      "length": 44,
+      "value": "\"ProviderState descriptions must be unique!\""
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/Model\/Interaction.swift",
+      "kind": "StringLiteral",
+      "offset": 9880,
+      "length": 21,
+      "value": "\"Can not be modified\""
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/Model\/Interaction.swift",
+      "kind": "StringLiteral",
+      "offset": 9912,
+      "length": 56,
+      "value": "\"Error message when the interaction can not be modified\""
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/Model\/Interaction.swift",
+      "kind": "StringLiteral",
+      "offset": 10021,
+      "length": 28,
+      "value": "\"Invalid Interaction handle\""
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/Model\/Interaction.swift",
+      "kind": "StringLiteral",
+      "offset": 10060,
+      "length": 54,
+      "value": "\"Error message when the interaction handle is invalid\""
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/Model\/Interaction.swift",
+      "kind": "StringLiteral",
+      "offset": 10193,
+      "length": 39,
+      "value": "\"Unsupported for specification version\""
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/Model\/Interaction.swift",
+      "kind": "StringLiteral",
+      "offset": 10247,
+      "length": 84,
+      "value": "\"Error message when the action is not supported by the specification version in use\""
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/Model\/Interaction.swift",
+      "kind": "StringLiteral",
+      "offset": 10436,
+      "length": 33,
+      "value": "\"Unknown result (error code: %d)\""
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/Model\/Interaction.swift",
+      "kind": "StringLiteral",
+      "offset": 10480,
+      "length": 50,
+      "value": "\"Error message when an unknown result is returned\""
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/Model\/Interaction.swift",
+      "kind": "StringLiteral",
+      "offset": 10646,
+      "length": 30,
+      "value": "\"Function paniced (error: %@)\""
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/Model\/Interaction.swift",
+      "kind": "StringLiteral",
+      "offset": 10687,
+      "length": 43,
+      "value": "\"Error message when a rust function panics\""
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/Model\/Interaction.swift",
+      "kind": "StringLiteral",
+      "offset": 10753,
+      "length": 2,
+      "value": "\"\""
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/Model\/Interaction.swift",
+      "kind": "IntegerLiteral",
+      "offset": 10861,
+      "length": 1,
+      "value": "0"
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/Model\/Interaction.swift",
+      "kind": "IntegerLiteral",
+      "offset": 10921,
+      "length": 1,
+      "value": "1"
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/Model\/Logging.swift",
       "kind": "StringLiteral",
       "offset": 1664,
       "length": 7,
       "value": "\"TRACE\""
     },
     {
-      "filePath": "\/Users\/oliver\/Developer\/Coles\/PactSwiftMockServer\/Sources\/Model\/Logging.swift",
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/Model\/Logging.swift",
       "kind": "StringLiteral",
       "offset": 1681,
       "length": 7,
       "value": "\"DEBUG\""
     },
     {
-      "filePath": "\/Users\/oliver\/Developer\/Coles\/PactSwiftMockServer\/Sources\/Model\/Logging.swift",
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/Model\/Logging.swift",
       "kind": "StringLiteral",
       "offset": 1697,
       "length": 6,
       "value": "\"INFO\""
     },
     {
-      "filePath": "\/Users\/oliver\/Developer\/Coles\/PactSwiftMockServer\/Sources\/Model\/Logging.swift",
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/Model\/Logging.swift",
       "kind": "StringLiteral",
       "offset": 1712,
       "length": 6,
       "value": "\"WARN\""
     },
     {
-      "filePath": "\/Users\/oliver\/Developer\/Coles\/PactSwiftMockServer\/Sources\/Model\/Logging.swift",
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/Model\/Logging.swift",
       "kind": "StringLiteral",
       "offset": 1728,
       "length": 7,
       "value": "\"ERROR\""
     },
     {
-      "filePath": "\/Users\/oliver\/Developer\/Coles\/PactSwiftMockServer\/Sources\/Model\/Logging.swift",
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/Model\/Logging.swift",
       "kind": "StringLiteral",
       "offset": 1664,
       "length": 7,
       "value": "\"TRACE\""
     },
     {
-      "filePath": "\/Users\/oliver\/Developer\/Coles\/PactSwiftMockServer\/Sources\/Model\/Logging.swift",
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/Model\/Logging.swift",
       "kind": "StringLiteral",
       "offset": 1681,
       "length": 7,
       "value": "\"DEBUG\""
     },
     {
-      "filePath": "\/Users\/oliver\/Developer\/Coles\/PactSwiftMockServer\/Sources\/Model\/Logging.swift",
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/Model\/Logging.swift",
       "kind": "StringLiteral",
       "offset": 1697,
       "length": 6,
       "value": "\"INFO\""
     },
     {
-      "filePath": "\/Users\/oliver\/Developer\/Coles\/PactSwiftMockServer\/Sources\/Model\/Logging.swift",
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/Model\/Logging.swift",
       "kind": "StringLiteral",
       "offset": 1712,
       "length": 6,
       "value": "\"WARN\""
     },
     {
-      "filePath": "\/Users\/oliver\/Developer\/Coles\/PactSwiftMockServer\/Sources\/Model\/Logging.swift",
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/Model\/Logging.swift",
       "kind": "StringLiteral",
       "offset": 1728,
       "length": 7,
       "value": "\"ERROR\""
     },
     {
-      "filePath": "\/Users\/oliver\/Developer\/Coles\/PactSwiftMockServer\/Sources\/Model\/Logging.swift",
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/Model\/Logging.swift",
+      "kind": "IntegerLiteral",
+      "offset": 2659,
+      "length": 1,
+      "value": "0"
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/Model\/Logging.swift",
       "kind": "BooleanLiteral",
-      "offset": 3202,
+      "offset": 2951,
       "length": 5,
       "value": "false"
     },
     {
-      "filePath": "\/Users\/oliver\/Developer\/Coles\/PactSwiftMockServer\/Sources\/MockServer.swift",
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/Model\/Logging.swift",
+      "kind": "BooleanLiteral",
+      "offset": 2974,
+      "length": 5,
+      "value": "false"
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/Model\/Logging.swift",
+      "kind": "BooleanLiteral",
+      "offset": 3027,
+      "length": 4,
+      "value": "true"
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/Model\/Logging.swift",
+      "kind": "BooleanLiteral",
+      "offset": 3041,
+      "length": 4,
+      "value": "true"
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/Model\/Logging.swift",
+      "kind": "BooleanLiteral",
+      "offset": 3197,
+      "length": 5,
+      "value": "false"
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/Model\/Logging.swift",
+      "kind": "IntegerLiteral",
+      "offset": 4408,
+      "length": 1,
+      "value": "0"
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/Model\/Logging.swift",
+      "kind": "StringLiteral",
+      "offset": 4846,
+      "length": 2,
+      "value": "\"\""
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/Model\/Logging.swift",
+      "kind": "StringLiteral",
+      "offset": 5272,
+      "length": 12,
+      "value": "\"pact_swift\""
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/Model\/Logging.swift",
+      "kind": "IntegerLiteral",
+      "offset": 5566,
+      "length": 5,
+      "value": "1024"
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/Model\/Logging.swift",
+      "kind": "StringLiteral",
+      "offset": 5711,
+      "length": 39,
+      "value": "\"Failed to allocated temporary buffer!\""
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/Model\/Logging.swift",
+      "kind": "IntegerLiteral",
+      "offset": 5876,
+      "length": 1,
+      "value": "0"
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/Model\/Logging.swift",
+      "kind": "IntegerLiteral",
+      "offset": 5917,
+      "length": 2,
+      "value": "-1"
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/Model\/Logging.swift",
+      "kind": "StringLiteral",
+      "offset": 5981,
+      "length": 63,
+      "value": "\"Failed to allocate temporary buffer. This is very unexpected.\""
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/Model\/Logging.swift",
+      "kind": "IntegerLiteral",
+      "offset": 6091,
+      "length": 2,
+      "value": "-2"
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/Model\/Logging.swift",
+      "kind": "StringLiteral",
+      "offset": 6197,
+      "length": 80,
+      "value": "\"Log message buffer capacity \""
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/Model\/Logging.swift",
+      "kind": "StringLiteral",
+      "offset": 6241,
+      "length": 2,
+      "value": "\" is insufficient for error message!\""
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/Model\/Logging.swift",
+      "kind": "IntegerLiteral",
+      "offset": 6287,
+      "length": 2,
+      "value": "-3"
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/Model\/Logging.swift",
+      "kind": "StringLiteral",
+      "offset": 6370,
+      "length": 63,
+      "value": "\"Writing error message to buffer failed for an unknown reason.\""
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/Model\/Logging.swift",
+      "kind": "IntegerLiteral",
+      "offset": 6443,
+      "length": 2,
+      "value": "-4"
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/Model\/Logging.swift",
+      "kind": "StringLiteral",
+      "offset": 6525,
+      "length": 38,
+      "value": "\"Error message had an interior NULL!?\""
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/Model\/Logging.swift",
+      "kind": "IntegerLiteral",
+      "offset": 6599,
+      "length": 2,
+      "value": "-4"
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/Model\/Logging.swift",
+      "kind": "StringLiteral",
+      "offset": 6636,
+      "length": 31,
+      "value": "\"Unknown error code: \""
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/Model\/Logging.swift",
+      "kind": "StringLiteral",
+      "offset": 6666,
+      "length": 2,
+      "value": "\"\""
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/Model\/Logging.swift",
+      "kind": "StringLiteral",
+      "offset": 7191,
+      "length": 8,
+      "value": "\"stdout\""
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/Model\/Logging.swift",
+      "kind": "StringLiteral",
+      "offset": 7233,
+      "length": 8,
+      "value": "\"stderr\""
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/Model\/Logging.swift",
+      "kind": "StringLiteral",
+      "offset": 7268,
+      "length": 8,
+      "value": "\"buffer\""
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/Model\/Logging.swift",
+      "kind": "StringLiteral",
+      "offset": 7311,
+      "length": 14,
+      "value": "\"file \""
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/Model\/Logging.swift",
+      "kind": "StringLiteral",
+      "offset": 7324,
+      "length": 1,
+      "value": "\"\""
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/Model\/Logging.swift",
+      "kind": "StringLiteral",
+      "offset": 7720,
+      "length": 48,
+      "value": "\"Can not configure logger sink (error code: %d)\""
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/Model\/Logging.swift",
+      "kind": "StringLiteral",
+      "offset": 7784,
+      "length": 60,
+      "value": "\"Format for error failure reason when configure logger sink\""
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/Model\/Logging.swift",
+      "kind": "StringLiteral",
+      "offset": 7975,
+      "length": 53,
+      "value": "\"Can not apply logger configuration (error code: %d)\""
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/Model\/Logging.swift",
+      "kind": "StringLiteral",
+      "offset": 8044,
+      "length": 64,
+      "value": "\"Format for error failure reason when can't apply logger config\""
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/Toolbox\/SocketBinder.swift",
+      "kind": "IntegerLiteral",
+      "offset": 2204,
+      "length": 5,
+      "value": "2000"
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/Toolbox\/SocketBinder.swift",
+      "kind": "IntegerLiteral",
+      "offset": 2213,
+      "length": 5,
+      "value": "4000"
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/Toolbox\/SocketBinder.swift",
+      "kind": "IntegerLiteral",
+      "offset": 2479,
+      "length": 1,
+      "value": "0"
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/Toolbox\/SocketBinder.swift",
+      "kind": "IntegerLiteral",
+      "offset": 2514,
+      "length": 2,
+      "value": "-1"
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/Toolbox\/SocketBinder.swift",
+      "kind": "BooleanLiteral",
+      "offset": 2535,
+      "length": 5,
+      "value": "false"
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/Toolbox\/SocketBinder.swift",
+      "kind": "StringLiteral",
+      "offset": 2542,
+      "length": 51,
+      "value": "\"SocketCreationFailed: \""
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/Toolbox\/SocketBinder.swift",
+      "kind": "StringLiteral",
+      "offset": 2592,
+      "length": 2,
+      "value": "\"\""
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/Toolbox\/SocketBinder.swift",
+      "kind": "StringLiteral",
+      "offset": 2898,
+      "length": 9,
+      "value": "\"0.0.0.0\""
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/Toolbox\/SocketBinder.swift",
+      "kind": "IntegerLiteral",
+      "offset": 3121,
+      "length": 2,
+      "value": "-1"
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/Toolbox\/SocketBinder.swift",
+      "kind": "BooleanLiteral",
+      "offset": 3220,
+      "length": 5,
+      "value": "false"
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/Toolbox\/SocketBinder.swift",
+      "kind": "StringLiteral",
+      "offset": 3227,
+      "length": 33,
+      "value": "\"\""
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/Toolbox\/SocketBinder.swift",
+      "kind": "StringLiteral",
+      "offset": 3235,
+      "length": 1,
+      "value": "\", BindFailed, \""
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/Toolbox\/SocketBinder.swift",
+      "kind": "StringLiteral",
+      "offset": 3259,
+      "length": 2,
+      "value": "\"\""
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/Toolbox\/SocketBinder.swift",
+      "kind": "IntegerLiteral",
+      "offset": 3316,
+      "length": 2,
+      "value": "-1"
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/Toolbox\/SocketBinder.swift",
+      "kind": "BooleanLiteral",
+      "offset": 3415,
+      "length": 5,
+      "value": "false"
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/Toolbox\/SocketBinder.swift",
+      "kind": "StringLiteral",
+      "offset": 3422,
+      "length": 35,
+      "value": "\"\""
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/Toolbox\/SocketBinder.swift",
+      "kind": "StringLiteral",
+      "offset": 3430,
+      "length": 1,
+      "value": "\", ListenFailed, \""
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/Toolbox\/SocketBinder.swift",
+      "kind": "StringLiteral",
+      "offset": 3456,
+      "length": 2,
+      "value": "\"\""
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/Toolbox\/SocketBinder.swift",
+      "kind": "BooleanLiteral",
+      "offset": 3514,
+      "length": 4,
+      "value": "true"
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/Toolbox\/SocketBinder.swift",
+      "kind": "StringLiteral",
+      "offset": 3520,
+      "length": 25,
+      "value": "\"\""
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/Toolbox\/SocketBinder.swift",
+      "kind": "StringLiteral",
+      "offset": 3528,
+      "length": 2,
+      "value": "\" is free for use\""
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/MockServer.swift",
       "kind": "IntegerLiteral",
       "offset": 1220,
       "length": 6,
       "value": "1"
     },
     {
-      "filePath": "\/Users\/oliver\/Developer\/Coles\/PactSwiftMockServer\/Sources\/MockServer.swift",
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/MockServer.swift",
       "kind": "IntegerLiteral",
       "offset": 1220,
       "length": 6,
       "value": "1"
     },
     {
-      "filePath": "\/Users\/oliver\/Developer\/Coles\/PactSwiftMockServer\/Sources\/MockServer.swift",
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/MockServer.swift",
       "kind": "IntegerLiteral",
       "offset": 1220,
       "length": 6,
       "value": "1"
     },
     {
-      "filePath": "\/Users\/oliver\/Developer\/Coles\/PactSwiftMockServer\/Sources\/MockServer.swift",
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/MockServer.swift",
       "kind": "StringLiteral",
       "offset": 1533,
       "length": 11,
       "value": "\"127.0.0.1\""
     },
     {
-      "filePath": "\/Users\/oliver\/Developer\/Coles\/PactSwiftMockServer\/Sources\/MockServer.swift",
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/MockServer.swift",
       "kind": "IntegerLiteral",
       "offset": 1704,
       "length": 1,
       "value": "0"
     },
     {
-      "filePath": "\/Users\/oliver\/Developer\/Coles\/PactSwiftMockServer\/Sources\/Model\/Pact.swift",
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/MockServer.swift",
+      "kind": "BooleanLiteral",
+      "offset": 1766,
+      "length": 4,
+      "value": "true"
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/MockServer.swift",
+      "kind": "BooleanLiteral",
+      "offset": 1773,
+      "length": 5,
+      "value": "false"
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/MockServer.swift",
+      "kind": "StringLiteral",
+      "offset": 2406,
+      "length": 53,
+      "value": "\"Starting mock server on \""
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/MockServer.swift",
+      "kind": "StringLiteral",
+      "offset": 2447,
+      "length": 1,
+      "value": "\":\""
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/MockServer.swift",
+      "kind": "StringLiteral",
+      "offset": 2458,
+      "length": 2,
+      "value": "\"\""
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/MockServer.swift",
+      "kind": "StringLiteral",
+      "offset": 2572,
+      "length": 7,
+      "value": "\"https\""
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/MockServer.swift",
+      "kind": "StringLiteral",
+      "offset": 2582,
+      "length": 6,
+      "value": "\"http\""
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/MockServer.swift",
+      "kind": "IntegerLiteral",
+      "offset": 2610,
+      "length": 1,
+      "value": "0"
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/MockServer.swift",
+      "kind": "StringLiteral",
+      "offset": 2683,
+      "length": 39,
+      "value": "\"Mock server started on port \""
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/MockServer.swift",
+      "kind": "StringLiteral",
+      "offset": 2721,
+      "length": 2,
+      "value": "\"\""
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/MockServer.swift",
+      "kind": "IntegerLiteral",
+      "offset": 3067,
+      "length": 1,
+      "value": "0"
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/MockServer.swift",
+      "kind": "StringLiteral",
+      "offset": 3103,
+      "length": 43,
+      "value": "\"Shutting down mock server on port \""
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/MockServer.swift",
+      "kind": "StringLiteral",
+      "offset": 3145,
+      "length": 2,
+      "value": "\"\""
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/MockServer.swift",
+      "kind": "BooleanLiteral",
+      "offset": 3191,
+      "length": 5,
+      "value": "false"
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/MockServer.swift",
+      "kind": "StringLiteral",
+      "offset": 3232,
+      "length": 34,
+      "value": "\"Failed to shut down mock server!\""
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/MockServer.swift",
+      "kind": "IntegerLiteral",
+      "offset": 3433,
+      "length": 1,
+      "value": "0"
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/MockServer.swift",
+      "kind": "BooleanLiteral",
+      "offset": 3452,
+      "length": 5,
+      "value": "false"
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/MockServer.swift",
+      "kind": "IntegerLiteral",
+      "offset": 3645,
+      "length": 1,
+      "value": "0"
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/MockServer.swift",
+      "kind": "IntegerLiteral",
+      "offset": 4020,
+      "length": 1,
+      "value": "0"
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/MockServer.swift",
+      "kind": "StringLiteral",
+      "offset": 4085,
+      "length": 44,
+      "value": "\"ERROR: Unable to retrieve mock server logs\""
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/MockServer.swift",
+      "kind": "StringLiteral",
+      "offset": 4325,
+      "length": 20,
+      "value": "\"Invalid IP address\""
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/MockServer.swift",
+      "kind": "StringLiteral",
+      "offset": 4356,
+      "length": 42,
+      "value": "\"Error message when IP address is invalid\""
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/MockServer.swift",
+      "kind": "StringLiteral",
+      "offset": 4453,
+      "length": 19,
+      "value": "\"Invalid Pact JSON\""
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/MockServer.swift",
+      "kind": "StringLiteral",
+      "offset": 4483,
+      "length": 41,
+      "value": "\"Error message when Pact JSON is invalid\""
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/MockServer.swift",
+      "kind": "StringLiteral",
+      "offset": 4577,
+      "length": 42,
+      "value": "\"Invalid handle when starting mock server\""
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/MockServer.swift",
+      "kind": "StringLiteral",
+      "offset": 4630,
+      "length": 38,
+      "value": "\"Error message when handle is invalid\""
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/MockServer.swift",
+      "kind": "StringLiteral",
+      "offset": 4721,
+      "length": 29,
+      "value": "\"Unable to start mock server\""
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/MockServer.swift",
+      "kind": "StringLiteral",
+      "offset": 4761,
+      "length": 48,
+      "value": "\"Error message when unable to start mock server\""
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/MockServer.swift",
+      "kind": "StringLiteral",
+      "offset": 4857,
+      "length": 37,
+      "value": "\"The Pact reference library panicked\""
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/MockServer.swift",
+      "kind": "StringLiteral",
+      "offset": 4905,
+      "length": 54,
+      "value": "\"Error message when the Pact reference library panics\""
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/MockServer.swift",
+      "kind": "StringLiteral",
+      "offset": 5015,
+      "length": 73,
+      "value": "\"Could not create the TLS configuration with the self-signed certificate\""
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/MockServer.swift",
+      "kind": "StringLiteral",
+      "offset": 5099,
+      "length": 44,
+      "value": "\"Error message when TLS configuration fails\""
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/MockServer.swift",
+      "kind": "StringLiteral",
+      "offset": 5233,
+      "length": 31,
+      "value": "\"Unknown mock server error: %d\""
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/MockServer.swift",
+      "kind": "StringLiteral",
+      "offset": 5275,
+      "length": 34,
+      "value": "\"Format for unknown error message\""
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/MockServer.swift",
+      "kind": "IntegerLiteral",
+      "offset": 5434,
+      "length": 2,
+      "value": "-1"
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/MockServer.swift",
+      "kind": "IntegerLiteral",
+      "offset": 5470,
+      "length": 2,
+      "value": "-2"
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/MockServer.swift",
+      "kind": "IntegerLiteral",
+      "offset": 5508,
+      "length": 2,
+      "value": "-3"
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/MockServer.swift",
+      "kind": "IntegerLiteral",
+      "offset": 5544,
+      "length": 2,
+      "value": "-4"
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/MockServer.swift",
+      "kind": "IntegerLiteral",
+      "offset": 5575,
+      "length": 2,
+      "value": "-5"
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/MockServer.swift",
+      "kind": "IntegerLiteral",
+      "offset": 5612,
+      "length": 2,
+      "value": "-6"
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/MockServer.swift",
+      "kind": "IntegerLiteral",
+      "offset": 5816,
+      "length": 2,
+      "value": "-1"
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/MockServer.swift",
+      "kind": "IntegerLiteral",
+      "offset": 5854,
+      "length": 2,
+      "value": "-2"
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/MockServer.swift",
+      "kind": "IntegerLiteral",
+      "offset": 5890,
+      "length": 2,
+      "value": "-3"
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/MockServer.swift",
+      "kind": "IntegerLiteral",
+      "offset": 5921,
+      "length": 2,
+      "value": "-4"
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/MockServer.swift",
+      "kind": "IntegerLiteral",
+      "offset": 5958,
+      "length": 2,
+      "value": "-5"
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/MockServer.swift",
+      "kind": "IntegerLiteral",
+      "offset": 5997,
+      "length": 2,
+      "value": "-6"
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/MockServer.swift",
+      "kind": "StringLiteral",
+      "offset": 6464,
+      "length": 6,
+      "value": "\"http\""
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/MockServer.swift",
+      "kind": "StringLiteral",
+      "offset": 6494,
+      "length": 7,
+      "value": "\"https\""
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/Verifier.swift",
+      "kind": "StringLiteral",
+      "offset": 1647,
+      "length": 30,
+      "value": "\"VerificationOptions: \""
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/Verifier.swift",
+      "kind": "StringLiteral",
+      "offset": 1676,
+      "length": 2,
+      "value": "\"\""
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/Verifier.swift",
+      "kind": "IntegerLiteral",
+      "offset": 1810,
+      "length": 1,
+      "value": "0"
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/Verifier.swift",
+      "kind": "BooleanLiteral",
+      "offset": 1955,
+      "length": 4,
+      "value": "true"
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/PactBuilder.swift",
+      "kind": "BooleanLiteral",
+      "offset": 3200,
+      "length": 5,
+      "value": "false"
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/PactBuilder.swift",
+      "kind": "StringLiteral",
+      "offset": 3410,
+      "length": 31,
+      "value": "\"Pact Failure (see below):\n%@\""
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/PactBuilder.swift",
+      "kind": "StringLiteral",
+      "offset": 3452,
+      "length": 2,
+      "value": "\"\""
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/PactBuilder.swift",
+      "kind": "StringLiteral",
+      "offset": 3505,
+      "length": 9,
+      "value": "\"\n---\n\""
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/Model\/Pact.swift",
+      "kind": "StringLiteral",
+      "offset": 1511,
+      "length": 30,
+      "value": "\"\""
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/Model\/Pact.swift",
+      "kind": "StringLiteral",
+      "offset": 1523,
+      "length": 1,
+      "value": "\"-\""
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/Model\/Pact.swift",
+      "kind": "StringLiteral",
+      "offset": 1535,
+      "length": 1,
+      "value": "\".json\""
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/Model\/Pact.swift",
+      "kind": "IntegerLiteral",
+      "offset": 1824,
+      "length": 1,
+      "value": "0"
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/Model\/Pact.swift",
+      "kind": "StringLiteral",
+      "offset": 1869,
+      "length": 176,
+      "value": "\"Error freeing Pact handle (code: \""
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/Model\/Pact.swift",
+      "kind": "StringLiteral",
+      "offset": 1922,
+      "length": 1,
+      "value": "\")\n1 - The handle is not valid or does not refer to a valid Pact. Could be that it was previously deleted.\""
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/Model\/Pact.swift",
       "kind": "BooleanLiteral",
       "offset": 3982,
       "length": 5,
       "value": "false"
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/Model\/Pact.swift",
+      "kind": "StringLiteral",
+      "offset": 4106,
+      "length": 67,
+      "value": "\"Attempting to write pact to file in directory '\""
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/Model\/Pact.swift",
+      "kind": "StringLiteral",
+      "offset": 4171,
+      "length": 3,
+      "value": "\"'\""
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/Model\/Pact.swift",
+      "kind": "IntegerLiteral",
+      "offset": 4296,
+      "length": 1,
+      "value": "0"
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/Model\/Pact.swift",
+      "kind": "StringLiteral",
+      "offset": 4379,
+      "length": 47,
+      "value": "\"Wrote pact to '\""
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/Model\/Pact.swift",
+      "kind": "StringLiteral",
+      "offset": 4412,
+      "length": 1,
+      "value": "\"\/\""
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/Model\/Pact.swift",
+      "kind": "StringLiteral",
+      "offset": 4424,
+      "length": 3,
+      "value": "\"'\""
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/Model\/Pact.swift",
+      "kind": "StringLiteral",
+      "offset": 4581,
+      "length": 26,
+      "value": "\"Pact can not be modified\""
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/Model\/Pact.swift",
+      "kind": "StringLiteral",
+      "offset": 4618,
+      "length": 56,
+      "value": "\"A error failure reason when a Pact can not be modified\""
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/Model\/Pact.swift",
+      "kind": "StringLiteral",
+      "offset": 4783,
+      "length": 45,
+      "value": "\"Can not write to Pact file (error code: %d)\""
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/Model\/Pact.swift",
+      "kind": "StringLiteral",
+      "offset": 4844,
+      "length": 63,
+      "value": "\"Format for error failure reason when can't write to Pact file\""
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/Model\/PactVerificationFailure.swift",
+      "kind": "Array",
+      "offset": 2469,
+      "length": 2,
+      "value": "[]"
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/Model\/PactVerificationFailure.swift",
+      "kind": "StringLiteral",
+      "offset": 2583,
+      "length": 126,
+      "value": "\"Request:\n  \""
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/Model\/PactVerificationFailure.swift",
+      "kind": "StringLiteral",
+      "offset": 2611,
+      "length": 1,
+      "value": "\" \""
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/Model\/PactVerificationFailure.swift",
+      "kind": "StringLiteral",
+      "offset": 2619,
+      "length": 1,
+      "value": "\"\n  \""
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/Model\/PactVerificationFailure.swift",
+      "kind": "StringLiteral",
+      "offset": 2650,
+      "length": 12,
+      "value": "\"\""
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/Model\/PactVerificationFailure.swift",
+      "kind": "StringLiteral",
+      "offset": 2655,
+      "length": 1,
+      "value": "\": \""
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/Model\/PactVerificationFailure.swift",
+      "kind": "StringLiteral",
+      "offset": 2661,
+      "length": 30,
+      "value": "\"\""
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/Model\/PactVerificationFailure.swift",
+      "kind": "Array",
+      "offset": 2668,
+      "length": 2,
+      "value": "[]"
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/Model\/PactVerificationFailure.swift",
+      "kind": "StringLiteral",
+      "offset": 2690,
+      "length": 6,
+      "value": "\"\n  \""
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/Model\/PactVerificationFailure.swift",
+      "kind": "StringLiteral",
+      "offset": 2698,
+      "length": 2,
+      "value": "\"\n--\""
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/Model\/PactVerificationFailure.swift",
+      "kind": "StringLiteral",
+      "offset": 2815,
+      "length": 151,
+      "value": "\"Failure: \""
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/Model\/PactVerificationFailure.swift",
+      "kind": "StringLiteral",
+      "offset": 2849,
+      "length": 19,
+      "value": "\" \"\""
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/Model\/PactVerificationFailure.swift",
+      "kind": "StringLiteral",
+      "offset": 2860,
+      "length": 1,
+      "value": "\" \""
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/Model\/PactVerificationFailure.swift",
+      "kind": "StringLiteral",
+      "offset": 2868,
+      "length": 1,
+      "value": "\"\"\n\""
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/Model\/PactVerificationFailure.swift",
+      "kind": "StringLiteral",
+      "offset": 2898,
+      "length": 2,
+      "value": "\"\""
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/Model\/PactVerificationFailure.swift",
+      "kind": "StringLiteral",
+      "offset": 2901,
+      "length": 1,
+      "value": "\"\n\""
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/Model\/PactVerificationFailure.swift",
+      "kind": "StringLiteral",
+      "offset": 2954,
+      "length": 4,
+      "value": "\"\n\""
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/Model\/PactVerificationFailure.swift",
+      "kind": "StringLiteral",
+      "offset": 2960,
+      "length": 447,
+      "value": "\"\""
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/Model\/PactVerificationFailure.swift",
+      "kind": "Array",
+      "offset": 3171,
+      "length": 2,
+      "value": "[]"
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/Model\/PactVerificationFailure.swift",
+      "kind": "StringLiteral",
+      "offset": 3190,
+      "length": 38,
+      "value": "\"Expected: \""
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/Model\/PactVerificationFailure.swift",
+      "kind": "StringLiteral",
+      "offset": 3227,
+      "length": 2,
+      "value": "\"\""
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/Model\/PactVerificationFailure.swift",
+      "kind": "StringLiteral",
+      "offset": 3288,
+      "length": 19,
+      "value": "\"Actual: \""
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/Model\/PactVerificationFailure.swift",
+      "kind": "StringLiteral",
+      "offset": 3306,
+      "length": 2,
+      "value": "\"\""
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/Model\/PactVerificationFailure.swift",
+      "kind": "StringLiteral",
+      "offset": 3363,
+      "length": 25,
+      "value": "\"Parameter: \""
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/Model\/PactVerificationFailure.swift",
+      "kind": "StringLiteral",
+      "offset": 3387,
+      "length": 2,
+      "value": "\"\""
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/Model\/PactVerificationFailure.swift",
+      "kind": "StringLiteral",
+      "offset": 3407,
+      "length": 89,
+      "value": "\"\""
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/Model\/PactVerificationFailure.swift",
+      "kind": "StringLiteral",
+      "offset": 3430,
+      "length": 1,
+      "value": "\": \""
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/Model\/PactVerificationFailure.swift",
+      "kind": "StringLiteral",
+      "offset": 3446,
+      "length": 2,
+      "value": "\"\""
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/Model\/PactVerificationFailure.swift",
+      "kind": "StringLiteral",
+      "offset": 3449,
+      "length": 1,
+      "value": "\"\n  \""
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/Model\/PactVerificationFailure.swift",
+      "kind": "StringLiteral",
+      "offset": 3481,
+      "length": 6,
+      "value": "\"\n  \""
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/Model\/PactVerificationFailure.swift",
+      "kind": "StringLiteral",
+      "offset": 3489,
+      "length": 1636,
+      "value": "\"\""
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/Model\/PactVerificationFailure.swift",
+      "kind": "StringLiteral",
+      "offset": 3652,
+      "length": 15,
+      "value": "\"QueryMismatch\""
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/Model\/PactVerificationFailure.swift",
+      "kind": "StringLiteral",
+      "offset": 3690,
+      "length": 18,
+      "value": "\"BodyTypeMismatch\""
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/Model\/PactVerificationFailure.swift",
+      "kind": "StringLiteral",
+      "offset": 3734,
+      "length": 14,
+      "value": "\"BodyMismatch\""
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/Model\/PactVerificationFailure.swift",
+      "kind": "StringLiteral",
+      "offset": 3770,
+      "length": 16,
+      "value": "\"HeaderMismatch\""
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/Model\/PactVerificationFailure.swift",
+      "kind": "StringLiteral",
+      "offset": 3921,
+      "length": 15,
+      "value": "\"QueryMismatch\""
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/Model\/PactVerificationFailure.swift",
+      "kind": "StringLiteral",
+      "offset": 3965,
+      "length": 18,
+      "value": "\"BodyTypeMismatch\""
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/Model\/PactVerificationFailure.swift",
+      "kind": "StringLiteral",
+      "offset": 4008,
+      "length": 14,
+      "value": "\"BodyMismatch\""
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/Model\/PactVerificationFailure.swift",
+      "kind": "StringLiteral",
+      "offset": 4050,
+      "length": 16,
+      "value": "\"HeaderMismatch\""
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/Model\/PactVerificationFailure.swift",
+      "kind": "StringLiteral",
+      "offset": 4285,
+      "length": 17,
+      "value": "\"missing-request\""
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/Model\/PactVerificationFailure.swift",
+      "kind": "StringLiteral",
+      "offset": 4330,
+      "length": 19,
+      "value": "\"request-not-found\""
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/Model\/PactVerificationFailure.swift",
+      "kind": "StringLiteral",
+      "offset": 4385,
+      "length": 18,
+      "value": "\"request-mismatch\""
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/Model\/PactVerificationFailure.swift",
+      "kind": "StringLiteral",
+      "offset": 4439,
+      "length": 26,
+      "value": "\"mock-server-parsing-fail\""
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/Model\/PactVerificationFailure.swift",
+      "kind": "StringLiteral",
+      "offset": 4622,
+      "length": 17,
+      "value": "\"missing-request\""
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/Model\/PactVerificationFailure.swift",
+      "kind": "StringLiteral",
+      "offset": 4675,
+      "length": 18,
+      "value": "\"request-mismatch\""
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/Model\/PactVerificationFailure.swift",
+      "kind": "StringLiteral",
+      "offset": 4729,
+      "length": 19,
+      "value": "\"request-not-found\""
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/Model\/PactVerificationFailure.swift",
+      "kind": "StringLiteral",
+      "offset": 4790,
+      "length": 26,
+      "value": "\"mock-server-parsing-fail\""
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/Model\/PactVerificationFailure.swift",
+      "kind": "StringLiteral",
+      "offset": 4947,
+      "length": 17,
+      "value": "\"Missing request\""
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/Model\/PactVerificationFailure.swift",
+      "kind": "StringLiteral",
+      "offset": 5000,
+      "length": 20,
+      "value": "\"Unexpected request\""
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/Model\/PactVerificationFailure.swift",
+      "kind": "StringLiteral",
+      "offset": 5056,
+      "length": 24,
+      "value": "\"Request does not match\""
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/Model\/PactVerificationFailure.swift",
+      "kind": "StringLiteral",
+      "offset": 5126,
+      "length": 172,
+      "value": "\"Failed to parse Mock Server error response!\nPlease report this as an issue. Provide this test as an example to help us debug and improve this framework.\""
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/Model\/PactVerificationFailure.swift",
+      "kind": "StringLiteral",
+      "offset": 5341,
+      "length": 184,
+      "value": "\"Unknown type \""
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/Model\/PactVerificationFailure.swift",
+      "kind": "StringLiteral",
+      "offset": 5370,
+      "length": 1,
+      "value": "\"! Not entirely sure what happened!\nPlease report this as an issue. Provide this test as an example to help us debug and improve this framework.\""
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/Model\/PactVerificationFailure.swift",
+      "kind": "Array",
+      "offset": 5905,
+      "length": 2,
+      "value": "[]"
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/Model\/PactVerificationFailure.swift",
+      "kind": "StringLiteral",
+      "offset": 6018,
+      "length": 7,
+      "value": "\"\""
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/Model\/PactVerificationFailure.swift",
+      "kind": "StringLiteral",
+      "offset": 6024,
+      "length": 23,
+      "value": "\"\""
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/Model\/PactVerificationFailure.swift",
+      "kind": "StringLiteral",
+      "offset": 6046,
+      "length": 3,
+      "value": "\",\""
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/Model\/PactVerificationFailure.swift",
+      "kind": "Array",
+      "offset": 6303,
+      "length": 2,
+      "value": "[]"
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/Model\/PactVerificationFailure.swift",
+      "kind": "StringLiteral",
+      "offset": 6410,
+      "length": 7,
+      "value": "\"\""
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/Model\/PactVerificationFailure.swift",
+      "kind": "StringLiteral",
+      "offset": 6416,
+      "length": 23,
+      "value": "\"\""
+    },
+    {
+      "filePath": "\/Users\/marko\/Developer\/pact-foundation\/PactSwiftMockServer\/Sources\/Model\/PactVerificationFailure.swift",
+      "kind": "StringLiteral",
+      "offset": 6438,
+      "length": 3,
+      "value": "\",\""
     }
   ]
 }

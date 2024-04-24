@@ -23,142 +23,32 @@ env:
   BINARIES_PATH: Resources
 
 jobs:
-  build:
-    name: "Build libpact_ffi binaries"
-    runs-on: macos-14
-    timeout-minutes: 60
-    strategy:
-      fail-fast: true
-
-    concurrency:
-      group: build-macos14-${{ github.ref }}
-      cancel-in-progress: true
-
+  sharedInputs:
+    name: "Shared envs"
+    runs-on: ubuntu-latest
+    outputs:
+      rust-target-path: ${{ env.RUST_TARGET_PATH }}
+      binaries-path: ${{ env.BINARIES_PATH }}
     steps:
-      - name: "♻️ Checkout repository"
-        uses: actions/checkout@v2
-        with:
-          submodules: recursive
+      - run: echo "Just a hacky workaround for passing envs to jobs expecting them... ¯\\_(ツ)_/¯"
 
-      - name: "♼ Cache rust binaries"
-        uses: actions/cache@v3
-        with:
-          path: |
-            ${{ env.RUST_TARGET_PATH }}
-            ${{ env.BINARIES_PATH }}
-          key: build-${{ runner.os }}-rust-${{ hashFiles('**/libpact_ffi.version') }}
-          restore-keys: |
-            build-${{ runner.os }}-rust-
-
-      - name: "🔍  Check if binaries exist in ${{ env.BINARIES_PATH }}"
-        id: check_files
-        uses: andstor/file-existence-action@v3
-        with:
-          files: "Resources/**/libpact_ffi.a"
-
-      - name: "🎁  Build binaries (if not cached)"
-        if: steps.check_files.outputs.files_exists == 'false'
-        run: |
-          Support/build_rust_dependencies
+  buildFFI:
+    needs: [sharedInputs]
+    uses: ./.github/workflows/build_rust_binaries.yml
+    with:
+      rust-target-path: ${{ needs.sharedInputs.outputs.rust-target-path }}
+      binaries-path: ${{ needs.sharedInputs.outputs.binaries-path }}
 
   testMacOS14:
-    name: "Test on macOS 14"
-    runs-on: macos-14
-    needs: [build]
-
-    concurrency:
-      group: test-${{ github.ref }}-${{ matrix.scheme }}
-      cancel-in-progress: true
-
-    strategy:
-      fail-fast: true
-      matrix:
-        include:
-          - scheme: "PactSwiftMockServer-iOS"
-            destination: "platform=iOS Simulator,name=iPhone 15 Pro"
-          - scheme: "PactSwiftMockServer-macOS"
-            destination: "arch=x86_64"
-
-    env:
-      SCHEME: ${{ matrix.scheme }}
-      DESTINATION: ${{ matrix.destination }}
-
-    steps:
-      - name: "♻️ Checkout repository"
-        uses: actions/checkout@v2
-        with:
-          submodules: recursive
-
-      - name: "♼ Cache rust binaries"
-        uses: actions/cache@v3
-        with:
-          path: |
-            ${{ env.RUST_TARGET_PATH }}
-            ${{ env.BINARIES_PATH }}
-          key: build14-${{ runner.os }}-rust-${{ hashFiles('**/libpact_ffi.version') }}
-          restore-keys: |
-            build14-${{ runner.os }}-rust-
-
-      - name: "🏗  Use Xcode 15.3"
-        run: sudo xcode-select -switch /Applications/Xcode_15.3.app
-
-      - name: "🛠  Prepare Tools"
-        run: |
-          sh Support/prepare_build_tools
-
-      - name: "⚗️ Run tests (Xcode)"
-        run: |
-          sh Support/build_test
+    needs: [sharedInputs, buildFFI]
+    uses: ./.github/workflows/test_macos14_x86_64.yml
+    with:
+      rust-target-path: ${{ needs.sharedInputs.outputs.rust-target-path }}
+      binaries-path: ${{ needs.sharedInputs.outputs.binaries-path }}
 
   testMacOS13:
-    name: "Test on macOS 13"
-    runs-on: macos-13
-    needs: [build]
-
-    strategy:
-      fail-fast: true
-      matrix:
-        include:
-          - scheme: "PactSwiftMockServer-iOS"
-            destination: "platform=iOS Simulator,name=iPhone 14 Pro"
-          - scheme: "PactSwiftMockServer-macOS"
-            destination: "arch=x86_64"
-
-    env:
-      SCHEME: ${{ matrix.scheme }}
-      DESTINATION: ${{ matrix.destination }}
-
-    concurrency:
-      group: test-${{ github.ref }}-${{ matrix.scheme }}
-      cancel-in-progress: true
-
-    steps:
-      - name: "♻️ Checkout repository"
-        uses: actions/checkout@v2
-        with:
-          submodules: recursive
-
-      - name: "♼ Cache rust binaries"
-        uses: actions/cache@v3
-        with:
-          path: |
-            ${{ env.RUST_TARGET_PATH }}
-            ${{ env.BINARIES_PATH }}
-          key: build13-${{ runner.os }}-rust-${{ hashFiles('**/libpact_ffi.version') }}
-          restore-keys: |
-            build13-${{ runner.os }}-rust-
-
-      - name: "🏗  Use Xcode 15.2"
-        run: sudo xcode-select -switch /Applications/Xcode_15.2.app
-
-      - name: "🛠  Prepare Tools"
-        run: |
-          sh Support/prepare_build_tools
-
-      - name: "⚗️ Run tests (Xcode)"
-        run: |
-          sh Support/build_test
-
-      - name: "⬆️  Upload code coverage"
-        run: |
-          bash <(curl -s https://codecov.io/bash) -J 'PactSwiftMockServer'
+    needs: [sharedInputs, buildFFI]
+    uses: ./.github/workflows/test_macos13_x86_64.yml
+    with:
+      rust-target-path: ${{ needs.sharedInputs.outputs.rust-target-path }}
+      binaries-path: ${{ needs.sharedInputs.outputs.binaries-path }}

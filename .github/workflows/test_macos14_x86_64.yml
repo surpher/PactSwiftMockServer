@@ -1,0 +1,60 @@
+name: Test on macOS 14 (intel)
+
+on:
+  workflow_call:
+    inputs:
+      rust-target-path:
+        required: true
+        type: string
+      binaries-path:
+        required: true
+        type: string
+
+jobs:
+  testMacOS14:
+    name: "Testing on macOS 14 (x86_64)"
+    runs-on: macos-14
+
+    concurrency:
+      group: test-macos14_x86_64-${{ github.ref }}-${{ matrix.scheme }}
+      cancel-in-progress: true
+
+    strategy:
+      fail-fast: true
+      matrix:
+        include:
+          - scheme: "PactSwiftMockServer-iOS"
+            destination: "platform=iOS Simulator,name=iPhone 15 Pro"
+          - scheme: "PactSwiftMockServer-macOS"
+            destination: "arch=x86_64"
+
+    env:
+      SCHEME: ${{ matrix.scheme }}
+      DESTINATION: ${{ matrix.destination }}
+
+    steps:
+      - name: "♻️ Checkout repository"
+        uses: actions/checkout@v2
+        with:
+          submodules: recursive
+
+      - name: "♼ Cache rust binaries"
+        uses: actions/cache@v3
+        with:
+          path: |
+            ${{ inputs.rust-target-path }}
+            ${{ inputs.binaries-path }}
+          key: build14-${{ runner.os }}-rust-${{ hashFiles('**/libpact_ffi.version') }}
+          restore-keys: |
+            build14-${{ runner.os }}-rust-
+
+      - name: "🏗  Use Xcode 15.3"
+        run: sudo xcode-select -switch /Applications/Xcode_15.3.app
+
+      - name: "🛠  Prepare Tools"
+        run: |
+          sh Support/prepare_build_tools
+
+      - name: "⚗️ Run tests (Xcode)"
+        run: |
+          sh Support/build_test

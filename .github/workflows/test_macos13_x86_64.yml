@@ -1,0 +1,64 @@
+name: Test on macOS 13 (intel)
+
+on:
+  workflow_call:
+    inputs:
+      rust-target-path:
+        required: true
+        type: string
+      binaries-path:
+        required: true
+        type: string
+
+jobs:
+  testMacOS13:
+    name: "Testing on macOS 13 (x86_64)"
+    runs-on: macos-13
+
+    strategy:
+      fail-fast: true
+      matrix:
+        include:
+          - scheme: "PactSwiftMockServer-iOS"
+            destination: "platform=iOS Simulator,name=iPhone 14 Pro"
+          - scheme: "PactSwiftMockServer-macOS"
+            destination: "arch=x86_64"
+
+    env:
+      SCHEME: ${{ matrix.scheme }}
+      DESTINATION: ${{ matrix.destination }}
+
+    concurrency:
+      group: test-macos13_x86_64-${{ github.ref }}-${{ matrix.scheme }}
+      cancel-in-progress: true
+
+    steps:
+      - name: "♻️ Checkout repository"
+        uses: actions/checkout@v2
+        with:
+          submodules: recursive
+
+      - name: "♼ (un)Cache rust binaries"
+        uses: actions/cache@v3
+        with:
+          path: |
+            ${{ inputs.rust-target-path }}
+            ${{ inputs.binaries-path }}
+          key: build13-${{ runner.os }}-rust-${{ hashFiles('**/libpact_ffi.version') }}
+          restore-keys: |
+            build13-${{ runner.os }}-rust-
+
+      - name: "🏗  Use Xcode 15.2"
+        run: sudo xcode-select -switch /Applications/Xcode_15.2.app
+
+      - name: "🛠  Prepare Tools"
+        run: |
+          sh Support/prepare_build_tools
+
+      - name: "⚗️ Run tests (Xcode)"
+        run: |
+          sh Support/build_test
+
+      - name: "⬆️  Upload code coverage"
+        run: |
+          bash <(curl -s https://codecov.io/bash) -J 'PactSwiftMockServer'

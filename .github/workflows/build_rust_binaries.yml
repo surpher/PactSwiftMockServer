@@ -1,0 +1,50 @@
+name: Build Rust binaries
+
+on:
+  workflow_call:
+    inputs:
+      rust-target-path:
+        required: true
+        type: string
+      binaries-path:
+        required: true
+        type: string
+
+jobs:
+  buildRustBinaries:
+    name: "Build libpact_ffi binaries"
+    runs-on: macos-14
+    timeout-minutes: 60
+    strategy:
+      fail-fast: true
+
+    concurrency:
+      group: build-macos14-binaries-${{ github.ref }}
+      cancel-in-progress: true
+
+    steps:
+      - name: "♻️ Checkout repository"
+        uses: actions/checkout@v2
+        with:
+          submodules: recursive
+
+      - name: "♼ Cache rust binaries"
+        uses: actions/cache@v3
+        with:
+          path: |
+            ${{ inputs.rust-target-path }}
+            ${{ inputs.binaries-path }}
+          key: build-${{ runner.os }}-rust-${{ hashFiles('**/libpact_ffi.version') }}
+          restore-keys: |
+            build-${{ runner.os }}-rust-
+
+      - name: "🔍  Check if binaries exist in ${{ inputs.binaries-path }}"
+        id: check_files
+        uses: andstor/file-existence-action@v3
+        with:
+          files: "Resources/**/libpact_ffi.a"
+
+      - name: "🎁  Build FFI binaries (skipping if cached)"
+        if: steps.check_files.outputs.files_exists == 'false'
+        run: |
+          Support/build_rust_dependencies

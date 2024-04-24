@@ -2,7 +2,7 @@
 
 #  PactSwiftMockService
 #
-#  Created by Marko Justinek on 19/8/21.
+#  Created by Marko Justinek on 24/4/24.
 #  Copyright © 2021 Marko Justinek. All rights reserved.
 #  Permission to use, copy, modify, and/or distribute this software for any
 #  purpose with or without fee is hereby granted, provided that the above
@@ -17,14 +17,15 @@
 #  IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #
 
-set -o pipefail
+set -euo pipefail
 
-# Set the nightly toolchain
-echo "⚠️  Installing a nightly toolchain..."
-rustup install nightly
-rustup toolchain install nightly
-
-rustup component add rustfmt --toolchain nightly
-
-echo "⚠️  Setting nightly toolchain as default..."
-rustup default nightly-x86_64-apple-darwin
+function executeCommand {
+  if [ $# -eq 0 ]; then
+    echo -e "No command provided"
+    exit 1
+  else
+    COMMAND="$1"
+    printf "🤖 Executing:\n   '%s'\n" "$COMMAND"
+    eval "$COMMAND"
+  fi
+}

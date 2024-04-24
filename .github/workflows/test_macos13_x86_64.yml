@@ -1,4 +1,4 @@
-name: Test on macOS 13 (intel)
+name: "On macOS 13 (intel)"
 
 on:
   workflow_call:
@@ -18,7 +18,7 @@ on:
 
 jobs:
   testMacOS13:
-    name: "Testing on macOS 13 (x86_64)"
+    name: "⚗️  macOS 13"
     runs-on: macos-13
 
     strategy:
@@ -61,6 +61,6 @@ jobs:
         run: |
           sh Support/prepare_build_tools
 
-      - name: "⚗️ Run tests (Xcode)"
+      - name: "⚗️  Run tests"
         run: |
           sh Support/build_test

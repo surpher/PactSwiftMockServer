@@ -18,6 +18,7 @@
 #
 
 brew install cbindgen
+brew install doxygen
 
 if [[ "$CI" == false ]]; then
   brew tap thii/xcbeautify https://github.com/thii/xcbeautify.git

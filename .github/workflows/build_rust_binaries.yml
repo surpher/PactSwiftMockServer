@@ -1,4 +1,4 @@
-name: Build Rust binaries
+name: "Build"
 
 on:
   workflow_call:
@@ -18,14 +18,14 @@ on:
 
 jobs:
   buildRustBinaries:
-    name: "Build libpact_ffi binaries"
-    runs-on: macos-14
+    name: "🏗️ Build libpact_ffi.a"
+    runs-on: macos-latest
     timeout-minutes: 60
     strategy:
       fail-fast: true
 
     concurrency:
-      group: build-macos14-binaries-${{ github.ref }}
+      group: build-latest-binaries-${{ github.ref }}
       cancel-in-progress: true
 
     steps:
@@ -44,7 +44,7 @@ jobs:
           restore-keys: |
             ${{ inputs.cache-restore-key }}-${{ runner.os }}
 
-      - name: "🔍  Check if binaries exist in ${{ inputs.binaries-path }}"
+      - name: "🔍  Check binaries in ${{ inputs.binaries-path }}"
         id: check_files
         uses: andstor/file-existence-action@v3
         with:
@@ -57,4 +57,4 @@ jobs:
       - name: "🎁  Build FFI binaries (skipping if cached)"
         if: steps.check_files.outputs.files_exists == 'false'
         run: |
-          Support/build_rust_dependencies
+          sh Support/build_rust_dependencies

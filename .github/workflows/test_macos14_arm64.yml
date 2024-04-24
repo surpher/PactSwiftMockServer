@@ -1,4 +1,4 @@
-name: Test on macOS 14 (silicon)
+name: "On macOS 14 (latest)"
 
 on:
   workflow_call:
@@ -18,8 +18,8 @@ on:
 
 jobs:
   testMacOS14:
-    name: "Testing on macOS 14 (arm64)"
-    runs-on: macos-14-arm64
+    name: "⚗️  macOS 14 (latest)"
+    runs-on: macos-latest
 
     strategy:
       fail-fast: true
@@ -35,7 +35,7 @@ jobs:
       DESTINATION: ${{ matrix.destination }}
 
     concurrency:
-      group: test-macos14_arm64-${{ github.ref }}-${{ matrix.scheme }}
+      group: test-macos14-latest-${{ github.ref }}-${{ matrix.scheme }}
       cancel-in-progress: true
 
     steps:
@@ -61,6 +61,10 @@ jobs:
         run: |
           sh Support/prepare_build_tools
 
-      - name: "⚗️ Run tests (Xcode)"
+      - name: "⚗️  Run tests"
         run: |
           sh Support/build_test
+
+      - name: "⬆️  Upload code coverage"
+        run: |
+          bash <(curl -s https://codecov.io/bash) -J 'PactSwiftMockServer'

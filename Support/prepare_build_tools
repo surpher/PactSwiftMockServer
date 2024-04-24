@@ -17,9 +17,10 @@
 #  IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #
 
-brew tap thii/xcbeautify https://github.com/thii/xcbeautify.git
-brew install xcbeautify
+brew install cbindgen
 
 if [[ "$CI" == false ]]; then
-	brew install swiftlint cbindgen
+  brew tap thii/xcbeautify https://github.com/thii/xcbeautify.git
+  brew install xcbeautify
+	brew install swiftlint
 fi

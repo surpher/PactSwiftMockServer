@@ -124,3 +124,6 @@ Resources/**/*.a
 /Resources/iOS-device/**
 /CHANGELOG.md.next
 /CHANGELOG.md.backup
+
+# VSCode
+.vscode/

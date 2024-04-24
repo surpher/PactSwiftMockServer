@@ -9,6 +9,12 @@ on:
       binaries-path:
         required: true
         type: string
+      cache-key:
+        required: true
+        type: string
+      cache-restore-key:
+        required: true
+        type: string
 
 jobs:
   testMacOS13:
@@ -34,19 +40,19 @@ jobs:
 
     steps:
       - name: "♻️ Checkout repository"
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           submodules: recursive
 
-      - name: "♼ (un)Cache rust binaries"
-        uses: actions/cache@v3
+      - name: "♼ Cache rust binaries"
+        uses: actions/cache@v4
         with:
           path: |
             ${{ inputs.rust-target-path }}
             ${{ inputs.binaries-path }}
-          key: build13-${{ runner.os }}-rust-${{ hashFiles('**/libpact_ffi.version') }}
+          key: ${{ inputs.cache-restore-key }}-${{ runner.os }}-${{ hashFiles('**/libpact_ffi.version') }}
           restore-keys: |
-            build13-${{ runner.os }}-rust-
+            ${{ inputs.cache-restore-key }}-${{ runner.os }}
 
       - name: "🏗  Use Xcode 15.2"
         run: sudo xcode-select -switch /Applications/Xcode_15.2.app
@@ -58,7 +64,3 @@ jobs:
       - name: "⚗️ Run tests (Xcode)"
         run: |
           sh Support/build_test
-
-      - name: "⬆️  Upload code coverage"
-        run: |
-          bash <(curl -s https://codecov.io/bash) -J 'PactSwiftMockServer'

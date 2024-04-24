@@ -1,4 +1,4 @@
-name: Build and Test
+name: "Build and Test"
 
 on:
   pull_request:
@@ -21,6 +21,8 @@ on:
 env:
   RUST_TARGET_PATH: pact-reference/rust/target
   BINARIES_PATH: Resources
+  CACHE_KEY: build-ffi-rust
+  CACHE_RESTORE_KEY: build-ffi-rust
 
 jobs:
   sharedInputs:
@@ -29,16 +31,21 @@ jobs:
     outputs:
       rust-target-path: ${{ env.RUST_TARGET_PATH }}
       binaries-path: ${{ env.BINARIES_PATH }}
+      cache-key: ${{ env.CACHE_KEY }}
+      cache-restore-key: ${{ env.CACHE_RESTORE_KEY }}
+
     steps:
-      - run: echo "Just a hacky workaround for passing envs to jobs expecting them... ¯\\_(ツ)_/¯"
+      - run: echo "Just a hacky workaround for passing envs to jobs expecting them... ¯\_(ツ)_/¯"
 
   buildFFI:
-    name: Build FFI binaries
+    name: "Build FFI binaries"
     needs: [sharedInputs]
     uses: ./.github/workflows/build_rust_binaries.yml
     with:
       rust-target-path: ${{ needs.sharedInputs.outputs.rust-target-path }}
       binaries-path: ${{ needs.sharedInputs.outputs.binaries-path }}
+      cache-key: ${{ needs.sharedInputs.outputs.cache-key }}
+      cache-restore-key: ${{ needs.sharedInputs.outputs.cache-restore-key }}
 
   testMacOS14:
     name: "Test on macOS 14"
@@ -47,6 +54,8 @@ jobs:
     with:
       rust-target-path: ${{ needs.sharedInputs.outputs.rust-target-path }}
       binaries-path: ${{ needs.sharedInputs.outputs.binaries-path }}
+      cache-key: ${{ needs.sharedInputs.outputs.cache-key }}
+      cache-restore-key: ${{ needs.sharedInputs.outputs.cache-restore-key }}
 
   testMacOS13:
     name: "Test on macOS 13"
@@ -55,3 +64,5 @@ jobs:
     with:
       rust-target-path: ${{ needs.sharedInputs.outputs.rust-target-path }}
       binaries-path: ${{ needs.sharedInputs.outputs.binaries-path }}
+      cache-key: ${{ needs.sharedInputs.outputs.cache-key }}
+      cache-restore-key: ${{ needs.sharedInputs.outputs.cache-restore-key }}

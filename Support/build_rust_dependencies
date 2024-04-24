@@ -101,6 +101,7 @@ export MACOSX_DEPLOYMENT_TARGET=12.0
 unset IPHONEOS_DEPLOYMENT_TARGET
 export IPHONEOS_DEPLOYMENT_TARGET=13.0
 
+# Build for all supported architectures
 echo "🏗  Building libpact_ffi.a for x86_64 iOS Simulator"
 echo "cargo build --target=x86_64-apple-ios --release"
 cargo build --target=x86_64-apple-ios --release
@@ -109,19 +110,16 @@ echo "🏗  Building libpact_ffi.a for x86_64 Darwin"
 echo "cargo build --target=x86_64-apple-darwin --release"
 cargo build --target=x86_64-apple-darwin --release
 
-# Build for all architectures if running locally (building for PactSwiftMockServer release)
-if [[ "$CI" == false ]]; then
-	echo "🏗  Building libpact_ffi.a for arm64 iOS Simulator"
-	cargo +nightly build -Z build-std --target aarch64-apple-ios-sim --release
+echo "🏗  Building libpact_ffi.a for arm64 iOS Simulator"
+cargo +nightly build -Z build-std --target aarch64-apple-ios-sim --release
 
-	echo "🏗  Building libpact_ffi.a for arm64 iOS device"
-	echo "cargo build --target=aarch64-apple-ios --release"
-	cargo build --target=aarch64-apple-ios --release
+echo "🏗  Building libpact_ffi.a for arm64 iOS device"
+echo "cargo build --target=aarch64-apple-ios --release"
+cargo build --target=aarch64-apple-ios --release
 
-	echo "🏗  Building libpact_ffi.a for arm64 Darwin"
-	echo "cargo build --target=aarch64-apple-darwin --release"
-	cargo build --target=aarch64-apple-darwin --release
-fi
+echo "🏗  Building libpact_ffi.a for arm64 Darwin"
+echo "cargo build --target=aarch64-apple-darwin --release"
+cargo build --target=aarch64-apple-darwin --release
 
 echo "✅  libpact_ffi.a binaries built"
 

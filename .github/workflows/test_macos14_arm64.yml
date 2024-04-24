@@ -9,15 +9,17 @@ on:
       binaries-path:
         required: true
         type: string
+      cache-key:
+        required: true
+        type: string
+      cache-restore-key:
+        required: true
+        type: string
 
 jobs:
   testMacOS14:
     name: "Testing on macOS 14 (arm64)"
     runs-on: macos-14-arm64
-
-    concurrency:
-      group: test-macos14_arm64-${{ github.ref }}-${{ matrix.scheme }}
-      cancel-in-progress: true
 
     strategy:
       fail-fast: true
@@ -32,21 +34,25 @@ jobs:
       SCHEME: ${{ matrix.scheme }}
       DESTINATION: ${{ matrix.destination }}
 
+    concurrency:
+      group: test-macos14_arm64-${{ github.ref }}-${{ matrix.scheme }}
+      cancel-in-progress: true
+
     steps:
       - name: "♻️ Checkout repository"
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           submodules: recursive
 
       - name: "♼ Cache rust binaries"
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: |
             ${{ inputs.rust-target-path }}
             ${{ inputs.binaries-path }}
-          key: build14-${{ runner.os }}-rust-${{ hashFiles('**/libpact_ffi.version') }}
+          key: ${{ inputs.cache-restore-key }}-${{ runner.os }}-${{ hashFiles('**/libpact_ffi.version') }}
           restore-keys: |
-            build14-${{ runner.os }}-rust-
+            ${{ inputs.cache-restore-key }}-${{ runner.os }}
 
       - name: "🏗  Use Xcode 15.3"
         run: sudo xcode-select -switch /Applications/Xcode_15.3.app

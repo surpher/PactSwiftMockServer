@@ -33,6 +33,7 @@ jobs:
       - run: echo "Just a hacky workaround for passing envs to jobs expecting them... ¯\\_(ツ)_/¯"
 
   buildFFI:
+    name: Build FFI binaries
     needs: [sharedInputs]
     uses: ./.github/workflows/build_rust_binaries.yml
     with:
@@ -40,6 +41,7 @@ jobs:
       binaries-path: ${{ needs.sharedInputs.outputs.binaries-path }}
 
   testMacOS14:
+    name: "Test on macOS 14"
     needs: [sharedInputs, buildFFI]
     uses: ./.github/workflows/test_macos14_x86_64.yml
     with:
@@ -47,6 +49,7 @@ jobs:
       binaries-path: ${{ needs.sharedInputs.outputs.binaries-path }}
 
   testMacOS13:
+    name: "Test on macOS 13"
     needs: [sharedInputs, buildFFI]
     uses: ./.github/workflows/test_macos13_x86_64.yml
     with:

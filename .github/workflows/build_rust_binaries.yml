@@ -44,6 +44,10 @@ jobs:
         with:
           files: "Resources/**/libpact_ffi.a"
 
+      - name: "🛠  Prepare Tools"
+        run: |
+          sh Support/prepare_build_tools
+
       - name: "🎁  Build FFI binaries (skipping if cached)"
         if: steps.check_files.outputs.files_exists == 'false'
         run: |

@@ -25,13 +25,13 @@ env:
 jobs:
   build:
     name: "Build libpact_ffi binaries"
-    runs-on: macos-14-arm64
+    runs-on: macos-14
     timeout-minutes: 60
     strategy:
       fail-fast: true
 
     concurrency:
-      group: build-macos14-arm64-${{ github.ref }}
+      group: build-macos14-${{ github.ref }}
       cancel-in-progress: true
 
     steps:
@@ -52,18 +52,18 @@ jobs:
 
       - name: "🔍  Check if binaries exist in ${{ env.BINARIES_PATH }}"
         id: check_files
-        uses: andstor/file-existence-action@v1
+        uses: andstor/file-existence-action@v3
         with:
           files: "Resources/**/libpact_ffi.a"
 
       - name: "🎁  Build binaries (if not cached)"
-        if: steps.check_files.outputs.files_exist == 'false'
+        if: steps.check_files.outputs.files_exists == 'false'
         run: |
           Support/build_rust_dependencies
 
   testMacOS14:
-    name: "Test macOS 14 arm64"
-    runs-on: macos-14-arm64
+    name: "Test on macOS 14"
+    runs-on: macos-14
     needs: [build]
 
     concurrency:
@@ -77,7 +77,7 @@ jobs:
           - scheme: "PactSwiftMockServer-iOS"
             destination: "platform=iOS Simulator,name=iPhone 15 Pro"
           - scheme: "PactSwiftMockServer-macOS"
-            destination: "arch=arm64"
+            destination: "arch=x86_64"
 
     env:
       SCHEME: ${{ matrix.scheme }}
@@ -111,7 +111,7 @@ jobs:
           sh Support/build_test
 
   testMacOS13:
-    name: "Test macOS 13"
+    name: "Test on macOS 13"
     runs-on: macos-13
     needs: [build]
 

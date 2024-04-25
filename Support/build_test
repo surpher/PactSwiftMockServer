@@ -19,12 +19,15 @@
 
 set -euo pipefail
 
+SOURCE_DIR="${BASH_SOURCE[0]%/*}"
+
+# "import"
+source "$SOURCE_DIR/utils.sh"
+
+# Properties
 SCHEME=${SCHEME:-"PactSwiftMockServer-macOS"}
 DESTINATION=${DESTINATION:-"arch=arm64"}
+DERIVED_DATA_PATH=".build/DerivedData"
 
-set -o pipefail && xcodebuild clean test \
-	-project PactSwiftMockServer.xcodeproj \
-	-scheme "$SCHEME" \
-	-destination "$DESTINATION" \
-	GCC_INSTRUMENT_PROGRAM_FLOW_ARCS=YES \
-	GCC_GENERATE_TEST_COVERAGE_FILES=YES | xcbeautify
+# Run tests
+executeCommand "xcodebuild clean test -project \"PactSwiftMockServer.xcodeproj\" -scheme \"$SCHEME\" -destination \"$DESTINATION\" -enableCodeCoverage YES -derivedDataPath \"$DERIVED_DATA_PATH\" GCC_INSTRUMENT_PROGRAM_FLOW_ARCS=YES | xcbeautify"

@@ -1,34 +1,33 @@
 codecov:
-  notify:
-    require_ci_to_pass: yes
+  notify: {}
+  require_ci_to_pass: true
+
+comment:
+  behavior: default
+  layout: header, diff
+  require_changes: false
 
 coverage:
   precision: 2
+  range:
+  - 75.0
+  - 100.0
   round: down
-  range: "75...100"
-
   status:
-    project: yes
-    patch: yes
-    changes: no
+    changes: false
+    patch: true
+    project: true
 
-  ignore:
-    - "Tests/**/*"
-    - "Tests"
-    - "Resources/**/*"
-    - "Resources"
-    - "Support/**/*"
-    - "Support"
+ignore:
+- (?s:Resources/.*/[^\/]+)\Z
+- ^Resources.*
+- (?s:Support/.*/[^\/]+)\Z
+- ^Support.*
 
 parsers:
   gcov:
     branch_detection:
-      conditional: yes
-      loop: yes
-      method: no
-      macro: no
-
-comment:
-  layout: "header, diff"
-  behavior: default
-  require_changes: no
+      conditional: true
+      loop: true
+      macro: false
+      method: false

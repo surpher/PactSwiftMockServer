@@ -57,14 +57,13 @@ jobs:
       - name: "🏗  Use Xcode 15.3"
         run: sudo xcode-select -switch /Applications/Xcode_15.3.app
 
-      - name: "🛠  Prepare Tools"
-        run: |
-          sh Support/prepare_build_tools
-
       - name: "⚗️  Run tests"
         run: |
+          sh Support/prepare_build_tools
           sh Support/build_test
 
-      - name: "⬆️  Upload code coverage"
-        run: |
-          bash <(curl -s https://codecov.io/bash) -J 'PactSwiftMockServer'
+      - name: "⬆️  Upload coverage reports"
+        uses: codecov/codecov-action@v3
+        with:
+          override_branch: ${{ github.ref_name }}
+          token: ${{ secrets.CODECOV_TOKEN }}

@@ -18,7 +18,7 @@ on:
 
 jobs:
   testMacOS13:
-    name: "⚗️  macOS 13"
+    name: "⚗️  macOS 13 (Intel)"
     runs-on: macos-13
 
     strategy:

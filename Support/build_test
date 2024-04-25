@@ -25,9 +25,61 @@ SOURCE_DIR="${BASH_SOURCE[0]%/*}"
 source "$SOURCE_DIR/utils.sh"
 
 # Properties
-SCHEME=${SCHEME:-"PactSwiftMockServer-macOS"}
-DESTINATION=${DESTINATION:-"arch=$(uname -m)"}
 DERIVED_DATA_PATH=".build/DerivedData"
+DESTINATIONS=()
+SCHEMES=()
+
+###############
+# "private"
+
+function __buildTestHelp {
+  echo -e "Builds sheme on destinations and runs tests
+
+Usage:
+    build_test [--scheme VAL1 --target VAL2]
+
+Note:
+    Must be provided as pairs with --scheme argument first of the two!
+
+Options:
+    --scheme    Scheme to build and run tests for
+    --target    Target to build for and test with
+"
+}
+
+SCHEME_TARGET_PAIRS=()
+
+if [ $# -eq 0 ]; then
+  # CI is setup with a matrix defining SCHEME and DESTINATION env vars
+  SCHEME="${SCHEME:-"PactSwiftMockServer-macOS"}"
+  DEFAULT_DESTINATION="arch=$(uname -m)"
+  DESTINATION="${DESTINATION:-$DEFAULT_DESTINATION}"
+
+  SCHEME_TARGET_PAIRS=("$SCHEME:::$DESTINATION")
+
+else
+  while [ $# -gt 0 ]; do
+    case "$1" in
+      --scheme)
+        SCHEME_TARGET_PAIRS+=("$2:::$4")
+        shift 4
+        ;;
+
+      -h|--help)
+        __buildTestHelp
+        exit
+        ;;
+
+      *)
+        echo -e "***************************\n* Error: Invalid argument.*\n***************************\n"
+        exit 1
+    esac
+  done
+fi
 
 # Run tests
-executeCommand "xcodebuild clean test -project \"PactSwiftMockServer.xcodeproj\" -scheme \"$SCHEME\" -destination \"$DESTINATION\" -enableCodeCoverage YES -derivedDataPath \"$DERIVED_DATA_PATH\" GCC_INSTRUMENT_PROGRAM_FLOW_ARCS=YES | xcbeautify"
+for INDEX in "${SCHEME_TARGET_PAIRS[@]}"; do
+  SCHEME="${INDEX%%:::*}"
+  TARGET="${INDEX##*::}"
+  executeCommand "xcodebuild clean test -project \"PactSwiftMockServer.xcodeproj\" -scheme \"$SCHEME\" -destination \"$TARGET\" -enableCodeCoverage YES -derivedDataPath \"$DERIVED_DATA_PATH\" GCC_INSTRUMENT_PROGRAM_FLOW_ARCS=YES | xcbeautify"
+done

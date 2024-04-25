@@ -26,7 +26,7 @@ source "$SOURCE_DIR/utils.sh"
 
 # Properties
 SCHEME=${SCHEME:-"PactSwiftMockServer-macOS"}
-DESTINATION=${DESTINATION:-"arch=arm64"}
+DESTINATION=${DESTINATION:-"arch=$(uname -m)"}
 DERIVED_DATA_PATH=".build/DerivedData"
 
 # Run tests

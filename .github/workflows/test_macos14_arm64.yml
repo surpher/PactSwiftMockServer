@@ -64,10 +64,9 @@ jobs:
 
       - name: "⬆️  Upload coverage reports"
         uses: codecov/codecov-action@v4
-        env:
-          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
         with:
-          override_branch: ${{ github.ref_name }}
-          verbose: true
+          fail_ci_if_error: true
           flags: unittests
           name: PactSwiftMockServer
+          token: ${{ secrets.CODECOV_TOKEN }}
+          verbose: true

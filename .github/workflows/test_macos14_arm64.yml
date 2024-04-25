@@ -63,7 +63,11 @@ jobs:
           sh Support/build_test
 
       - name: "⬆️  Upload coverage reports"
-        uses: codecov/codecov-action@v3
+        uses: codecov/codecov-action@v4
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
         with:
           override_branch: ${{ github.ref_name }}
-          token: ${{ secrets.CODECOV_TOKEN }}
+          verbose: true
+          flags: unittests
+          name: PactSwiftMockServer

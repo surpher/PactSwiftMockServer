@@ -25,9 +25,8 @@ SOURCE_DIR="${BASH_SOURCE[0]%/*}"
 source "$SOURCE_DIR/utils.sh"
 
 # Properties
-DERIVED_DATA_PATH=".build/DerivedData"
-DESTINATIONS=()
-SCHEMES=()
+SCHEME_TARGET_PAIRS=()
+BUILD_PATH=".build"
 
 ###############
 # "private"
@@ -46,8 +45,6 @@ Options:
     --target    Target to build for and test with
 "
 }
-
-SCHEME_TARGET_PAIRS=()
 
 if [ $# -eq 0 ]; then
   # CI is setup with a matrix defining SCHEME and DESTINATION env vars
@@ -77,9 +74,15 @@ else
   done
 fi
 
+# Remove build data by previous runs
+echo "ℹ️  Cleanning up build data of previous runs in '$BUILD_PATH'"
+executeCommand "rm -fr $BUILD_PATH"
+
 # Run tests
 for INDEX in "${SCHEME_TARGET_PAIRS[@]}"; do
   SCHEME="${INDEX%%:::*}"
   TARGET="${INDEX##*::}"
-  executeCommand "xcodebuild clean test -project \"PactSwiftMockServer.xcodeproj\" -scheme \"$SCHEME\" -destination \"$TARGET\" -enableCodeCoverage YES -derivedDataPath \"$DERIVED_DATA_PATH\" GCC_INSTRUMENT_PROGRAM_FLOW_ARCS=YES | xcbeautify"
+
+  echo "🧪  Running tests"
+  executeCommand "xcodebuild clean test -project \"PactSwiftMockServer.xcodeproj\" -scheme \"$SCHEME\" -destination \"$TARGET\" -enableCodeCoverage YES -derivedDataPath \"$BUILD_PATH/DerivedData\" GCC_INSTRUMENT_PROGRAM_FLOW_ARCS=YES | xcbeautify"
 done

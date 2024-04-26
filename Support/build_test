@@ -26,7 +26,7 @@ source "$SOURCE_DIR/utils.sh"
 
 # Properties
 SCHEME_TARGET_PAIRS=()
-BUILD_PATH=".build"
+BUILD_PATH="$SOURCE_DIR/../.build"
 
 ###############
 # "private"
@@ -74,15 +74,18 @@ else
   done
 fi
 
-# Remove build data by previous runs
-echo "ℹ️  Cleanning up build data of previous runs in '$BUILD_PATH'"
-executeCommand "rm -fr $BUILD_PATH"
-
 # Run tests
 for INDEX in "${SCHEME_TARGET_PAIRS[@]}"; do
   SCHEME="${INDEX%%:::*}"
   TARGET="${INDEX##*::}"
+  RESULT_BUNDLE_PATH="$BUILD_PATH/artifacts/$SCHEME-TestResultBundle.xcresult"
+
+  if [ $(folderExists "$RESULT_BUNDLE_PATH") == true ]; then
+    # Remove build data by previous runs
+    echo "ℹ️  Reoving results bundle from previous runs..."
+    executeCommand "rm -fr $RESULT_BUNDLE_PATH"
+  fi
 
   echo "🧪  Running tests"
-  executeCommand "xcodebuild clean test -project \"PactSwiftMockServer.xcodeproj\" -scheme \"$SCHEME\" -destination \"$TARGET\" -enableCodeCoverage YES -derivedDataPath \"$BUILD_PATH/DerivedData\" GCC_INSTRUMENT_PROGRAM_FLOW_ARCS=YES | xcbeautify"
+  executeCommand "xcodebuild -project \"PactSwiftMockServer.xcodeproj\" -scheme \"$SCHEME\" -destination \"$TARGET\" -enableCodeCoverage YES -derivedDataPath \"$BUILD_PATH/DerivedData\" -resultBundlePath \"$RESULT_BUNDLE_PATH\" GCC_INSTRUMENT_PROGRAM_FLOW_ARCS=YES build test | xcbeautify"
 done

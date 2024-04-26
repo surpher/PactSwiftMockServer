@@ -15,6 +15,10 @@ on:
       cache-restore-key:
         required: true
         type: string
+    secrets:
+      codecov_token:
+        required: true
+  workflow_dispatch:
 
 jobs:
   testMacOS14:
@@ -64,9 +68,10 @@ jobs:
 
       - name: "⬆️  Upload coverage reports"
         uses: codecov/codecov-action@v4
-        env:
-          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
         with:
+          token: ${{ secrets.codecov_token }}
+          file: ".build/artifacts/${{ env.SCHEME }}-TestResultBundle.xcresult"
+          directory: ".build/artifacts"
           fail_ci_if_error: true
           flags: unittests
           name: PactSwiftMockServer

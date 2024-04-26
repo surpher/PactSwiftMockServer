@@ -51,6 +51,8 @@ jobs:
     name: "🤖 Unit tests"
     needs: [sharedInputs, buildFFI]
     uses: ./.github/workflows/test_macos14_arm64.yml
+    secrets:
+      codecov_token: ${{ secrets.CODECOV_TOKEN }}
     with:
       rust-target-path: ${{ needs.sharedInputs.outputs.rust-target-path }}
       binaries-path: ${{ needs.sharedInputs.outputs.binaries-path }}

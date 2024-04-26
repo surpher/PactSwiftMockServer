@@ -29,3 +29,19 @@ function executeCommand {
     eval "$COMMAND"
   fi
 }
+
+function folderExists {
+  if [ ! -d "$1" ]; then
+    echo false
+  else
+    echo true
+  fi
+}
+
+function fileExists {
+  if [ ! -f "$1" ]; then
+    echo false
+  else
+    echo true
+  fi
+}

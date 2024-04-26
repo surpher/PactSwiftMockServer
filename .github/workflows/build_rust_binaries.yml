@@ -51,6 +51,7 @@ jobs:
           files: "Resources/**/libpact_ffi.a"
 
       - name: "🛠  Prepare Tools"
+        if: steps.check_files.outputs.files_exists == 'false'
         run: |
           sh Support/prepare_build_tools
 

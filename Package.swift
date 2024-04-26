@@ -1,5 +1,4 @@
 // swift-tools-version:5.7
-
 import PackageDescription
 
 let package = Package(
@@ -7,9 +6,9 @@ let package = Package(
 	name: "PactSwiftMockServer",
 
 	platforms: [
-		.macOS(.v10_12),
-		.iOS(.v12),
-		.tvOS(.v12)
+		.macOS(.v13),
+		.iOS(.v16),
+		.tvOS(.v16)
 	],
 
 	products: [
@@ -25,20 +24,20 @@ let package = Package(
 	],
 
 	dependencies: [
-		.package(name: "PactMockServer", url: "https://github.com/surpher/PactMockServer.git", .exact("0.1.2")),
+		.package(url: "https://github.com/surpher/PactMockServer.git", exact: "0.1.2"),
 	],
 
 	// MARK: - Targets
 
 	targets: [
 
-		// Vending a XCFramwork binary for Apple's platforms
+		// Vending a XCFramework for Apple platforms
 		.binaryTarget(
 			name: "PactSwiftMockServer",
 			path: "PactSwiftMockServer.xcframework"
 		),
 
-		// Vending the framework for Linux platform
+		// Vending source for Linux platform
 		.target(
 			name: "PactSwiftMockServerLinux",
 			dependencies: [
@@ -50,5 +49,4 @@ let package = Package(
 	],
 
 	swiftLanguageVersions: [.v5]
-
 )

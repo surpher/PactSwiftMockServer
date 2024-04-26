@@ -23,237 +23,202 @@ import PactMockServer
 
 public class MockServer {
 
+	public enum Error: Equatable {
+		case unknown(Int32)
+		case invalidHandle
+		case invalidPactJSON
+		case unableToStart
+		case panicked
+		case invalidAddress
+		case tlsConfigFailure
+	}
+
+	/// Network transfer protocol
+	public enum TransferProtocol: Int {
+		case standard
+		case secure
+	}
+
 	// MARK: - Properties
 
 	/// The URL on which MockServer is running.
-	public var baseUrl: String {
-		"\(transferProtocol.protocol)://\(socketAddress):\(port)"
+	public var baseUrl: URL {
+		var components = URLComponents()
+		components.scheme = transferProtocol.protocol
+		components.port = Int(port)
+		components.host = socketAddress
+
+		return components.url!
 	}
 
 	private let socketAddress = "127.0.0.1"
+	private let pact: Pact
+	private let transferProtocol: TransferProtocol
 
 	// `port` is a var to support Linux platforms
-	private var port: Int32 = 0
-	private var transferProtocol: TransferProtocol = .standard
-	private var tls: Bool {
+	public private(set) var port: Int32 = 0
+	private var useTLS: Bool {
 		transferProtocol == .secure ? true : false
 	}
 
-	private let directoryURL: URL?
-	private let merge: Bool
-
 	// MARK: - Lifecycle
 
-	/// Initializes a MockServer on a random port
+	/// Creates a MockServer on a random port.
 	///
+	/// - Throws: ``MockServer/Error`` on error.
 	/// - Parameters:
-	///   - directory: The directory URL to write the Pact contract into
-	///   - merge: Whether to merge interactions with an existing Pact contract.
-	///
-	public init(
-		directory: URL? = nil,
-		merge: Bool = true
-	) {
-		self.port = Self.randomPort
-		self.merge = merge
-		self.directoryURL = directory
+	///   - pact: The ``Pact`` to create the server with.
+	///   - transferProtocol: The protocol to use when communicating with the mock server; defaults to `.standard`.
+	///   - port: The port on which to run mock server; use `nil` for a random port.
+	public init(pact: Pact, transferProtocol: TransferProtocol = .standard, port: Int32? = nil) throws {
+		self.transferProtocol = transferProtocol
+		self.pact = pact
+
+		let tryPort = port ?? Self.randomPort
+		Logging.log(.debug, message: "Starting mock server on \(socketAddress):\(tryPort)")
+
+		let result = pactffi_create_mock_server_for_transport(pact.handle, socketAddress, UInt16(tryPort), useTLS ? "https" : "http", nil)
+		if result <= 0 {
+			throw Error(rawValue: result)
+		}
+
+		Logging.log(.debug, message: "Mock server started on port \(result)")
+		self.port = result
+	}
+
+	/// Fetch the CA Certificate used to generate the self-signed certificate for the TLS mock server.
+	public var tlsCACertificate: String? {
+		guard let cert = pactffi_get_tls_ca_certificate() else {
+			return nil
+		}
+		defer { pactffi_string_delete(cert) }
+		
+		return String(cString: cert)
 	}
 
 	deinit {
-		shutdownMockServer()
+		if port != 0 {
+			Logging.log(.debug, message: "Shutting down mock server on port \(port)")
+			if pactffi_cleanup_mock_server(port) == false {
+				Logging.log(.debug, message: "Failed to shut down mock server!")
+			}
+		}
 	}
 
 	// MARK: - Interface
-
-	/// Spins up a mock server with expected interactions defined in the provided Pact
-	///
-	/// - Parameters:
-	///   - pact: The pact contract
-	///   - protocol: HTTP protocol
-	///   - completion: A completion block called when setup completes
-	///
-	public func setup(pact: Data, protocol: TransferProtocol = .standard, completion: (Result<Int, MockServerError>) -> Void) {
-		Logger.log(message: "Setting up pact mock server for consumer verification", data: pact)
-		transferProtocol = `protocol`
-
-		Logger.log(message: "Starting up mock server for pact interaction test")
-		port = createMockServer(pact: pact)
-
-		guard port > 1_200 else {
-			return completion(.failure(MockServerError(code: Int(port))))
+	
+	/// - Returns: `true` when all expected requests have successfully matched.
+	public var requestsMatched: Bool {
+		guard port > 0 else {
+			return false
 		}
 
-		Logger.log(message: "Mock server started on port \(port)")
-		return completion(.success(Int(port)))
+		return pactffi_mock_server_matched(port)
 	}
 
-	/// Verifies all interactions passed to mock server
-	///
-	/// - Parameters:
-	///   - completion: A completion block called when setup completes
-	///
-	/// By default pact files are written to `/tmp/pacts`.
-	/// Use `PACT_OUTPUT_DIR` environment variable with absolute path to your custom path in schema `run` configuration.
-	///
-	public func verify(completion: (Result<Bool, VerificationError>) -> Void) {
-		guard requestsMatched else {
-			completion(.failure(.reason(mismatchDescription)))
-			shutdownMockServer()
-			return
+	/// Get a JSON string representing the mismatches following interaction testing.
+	public var mismatchesJSON: String? {
+		guard port > 0, let cString = pactffi_mock_server_mismatches(port) else {
+			return nil
 		}
-		completion(.success(true))
-		shutdownMockServer()
+
+		return String(cString: cString)
 	}
 
-	/// Finalises Pact tests by writing the pact contract file to disk
+	/// Get a string representing the mock server logs following interaction testing
 	///
-	/// - Parameters:
-	///   - pact: The Pact contract to write
-	///   - completion: A completion block called when setup completes
-	///
-	public func finalize(pact: Data, completion: ((Result<String, MockServerError>) -> Void)?) {
-		Logger.log(message: "Starting up mock server to finalize writing pact with data:", data: pact)
-		let randomPort = Self.randomPort
-
-		Logger.log(message: "Starting mock server on port \(randomPort)")
-		port = createMockServer(pact: pact, port: randomPort)
-
-		guard port > 1_200 else {
-			completion?(.failure(MockServerError(code: Int(port))))
-			return
+	/// - Note: This needs the memory `buffer` log sink to be setup before the mock server is started.
+	/// - Returns: Log string.
+	public var logs: String {
+		guard port > 0, let cString = pactffi_mock_server_logs(port) else {
+			return "ERROR: Unable to retrieve mock server logs"
 		}
 
-		Logger.log(message: "Mock server started on port \(port). Attempting to write pact file with data:", data: pact)
-		writePactContractFile(port: port) {
-			switch $0 {
-			case .success(let message):
-				completion?(.success(message))
-			case .failure(let error):
-				completion?(.failure(error))
-			}
-		}
-
-		shutdownMockServer()
+		return String(cString: cString)
 	}
-
 }
-// MARK: - Static methods
 
-public extension MockServer {
-
-	/// Generates an example string based on provided regex pattern
-	///
-	/// Only supports basic regex patterns.
-	///
-	/// - Parameters:
-	///   - regex: The pattern to use
-	///
-	static func generate_value(regex: String) -> String? {
-		guard let stringPointer = pactffi_generate_regex_value(regex).ok._0 else {
-			return nil
+extension MockServer.Error: LocalizedError {
+	public var failureReason: String? {
+		switch self {
+		case .invalidAddress:
+			return NSLocalizedString("Invalid IP address", comment: "Error message when IP address is invalid")
+		case .invalidPactJSON:
+			return NSLocalizedString("Invalid Pact JSON", comment: "Error message when Pact JSON is invalid")
+		case .invalidHandle:
+			return NSLocalizedString("Invalid handle when starting mock server", comment: "Error message when handle is invalid")
+		case .unableToStart:
+			return NSLocalizedString("Unable to start mock server", comment: "Error message when unable to start mock server")
+		case .panicked:
+			return NSLocalizedString("The Pact reference library panicked", comment: "Error message when the Pact reference library panics")
+		case .tlsConfigFailure:
+			return NSLocalizedString("Could not create the TLS configuration with the self-signed certificate", comment: "Error message when TLS configuration fails")
+		case .unknown(let code):
+			return String.localizedStringWithFormat(NSLocalizedString("Unknown mock server error: %d", comment: "Format for unknown error message"), code)
 		}
-		let generatedString = String(cString: stringPointer)
-		pactffi_free_string(stringPointer)
-
-		return generatedString
 	}
+}
 
-	/// Generates an example datetime string based on provided format
-	///
-	/// Returns `nil` if the provided format is invalid
-	///
-	/// - Parameters:
-	///   - format: The format of date to generate
-	///
-	static func generate_date(format: String) -> String? {
-		guard let stringPointer = pactffi_generate_datetime_string(format).ok._0 else {
-			return nil
+extension MockServer.Error: RawRepresentable {
+	public init(rawValue: Int32) {
+		switch rawValue {
+		case -1:
+			self = .invalidHandle
+		case -2:
+			self = .invalidPactJSON
+		case -3:
+			self = .unableToStart
+		case -4:
+			self = .panicked
+		case -5:
+			self = .invalidAddress
+		case -6:
+			self = .tlsConfigFailure
+		default:
+			self = .unknown(rawValue)
 		}
-
-		let generatedDatetime = String(cString: stringPointer)
-		pactffi_free_string(stringPointer)
-
-		return generatedDatetime
 	}
-
-	/// Finds an unsued port on Darwin. Returns ``0`` on Linux.
-	private static var randomPort: Int32 {
-		#if os(Linux)
-		return 0
-		#else
-		// Darwin doesn't seem to use a random available port if ``0`` is sent to pactffi_create_mock_server(_:_:_:)
-		return SocketBinder.unusedPort()
-		#endif
+	
+	public var rawValue: Int32 {
+		switch self {
+		case .unknown(let value):
+			return value
+		case .invalidHandle:
+			return -1
+		case .invalidPactJSON:
+			return -2
+		case .unableToStart:
+			return -3
+		case .panicked:
+			return -4
+		case .invalidAddress:
+			return -5
+		case .tlsConfigFailure:
+			return -6
+		}
 	}
-
 }
 
 // MARK: - Private
 
 private extension MockServer {
-
-	/// `true` when all expected requests have successfully matched
-	var requestsMatched: Bool {
-		pactffi_mock_server_matched(port)
-	}
-
-	/// Descripton of mismatching requests
-	var mismatchDescription: String {
-		guard let mismatches = pactffi_mock_server_mismatches(port) else {
-			return "No response! There might be something fishy going on with your Mock Server..."
-		}
-
-		let errorDescription = VerificationErrorHandler(mismatches: String(cString: mismatches)).description
-		return errorDescription
-	}
-
-	/// Creates a mock server with pact data on a given port.
+	/// Finds an unsued port on Darwin. Returns ``0`` on Linux.
 	///
-	/// - Parameters:
-	///   - pact: Pact data
-	///   - port: The port on which to run mock server
-	///
-	/// If value for ``port`` is not provider, the ``port`` from ``MockServer`` instance is used.
-	///
-	func createMockServer(pact: Data, port: Int32? = nil) -> Int32 {
-		pactffi_create_mock_server(String(data: pact, encoding: .utf8), "\(socketAddress):\(port ?? self.port)", tls)
+	static var randomPort: Int32 {
+#if os(Linux)
+		return 0
+#else
+		// Darwin doesn't seem to use a random available port if ``0`` is sent to pactffi_create_mock_server(_:_:_:)
+		return SocketBinder.unusedPort()
+#endif
 	}
+}
 
-	/// Writes the Pact file to disk
-	func writePactContractFile(port: Int32? = nil, completion: (Result<String, MockServerError>) -> Void) {
-		guard PactFileManager.isPactDirectoryAvailable() else {
-			completion(.failure(.failedToWriteFile))
-			return
-		}
-
-		Logger.log(message: "Writing pact contract in \(self.pactDir) using mock server on port: \(port ?? self.port). Overwrite flag set to \(self.merge).")
-		let writeResult = pactffi_write_pact_file(port ?? self.port, self.pactDir, !self.merge)
-
-		guard writeResult == 0 else {
-			completion(.failure(MockServerError(code: Int(writeResult))))
-			return
-		}
-
-		completion(.success("Pact written to \(self.pactDir)"))
-	}
-
-	/// Shuts down the mock server and releases the socket address
-	func shutdownMockServer(on port: Int32? = nil) {
-		let port = port ?? self.port
-		if port > 0 {
-			Logger.log(message: "Shutting down mock server on port \(port)")
-			pactffi_cleanup_mock_server(port)
+private extension MockServer.TransferProtocol {
+	var `protocol`: String {
+		switch self {
+		case .standard: return "http"
+		case .secure: return "https"
 		}
 	}
-
-	/// Defines the directory to write the Pact contract file into as String
-	var pactDir: String {
-		if let directory = directoryURL, directory.isFileURL {
-			return directory.path
-		} else {
-			Logger.log(message: "None or invalid directory URL provided.")
-			return PactFileManager.pactDirectoryPath
-		}
-	}
-
 }

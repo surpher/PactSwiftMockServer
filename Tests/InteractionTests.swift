@@ -1,6 +1,6 @@
 //
-//  Created by Marko Justinek on 27/4/20.
-//  Copyright © 2020 Marko Justinek. All rights reserved.
+//  Created by Oliver Jones on 16/12/2022.
+//  Copyright © 2022 Oliver Jones. All rights reserved.
 //
 //  Permission to use, copy, modify, and/or distribute this software for any
 //  purpose with or without fee is hereby granted, provided that the above
@@ -15,22 +15,28 @@
 //  IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 //
 
-import Foundation
+import XCTest
+@testable import PactSwiftMockServer
 
-enum MismatchErrorType: String {
+@MainActor
+class InteractionTests: XCTestCase {
 
-	case query
-	case body
-	case headers
-	case unknown
-
-	init(rawValue: String) {
-		switch rawValue {
-		case "QueryMismatch": self = .query
-		case "BodyTypeMismatch": self = .body
-		case "BodyMismatch": self = .body
-		default: self = .unknown
-		}
+	@MainActor
+	class override func setUp() {
+		super.setUp()
+		try! Logging.initialize()
 	}
 
+	func testInteractionInitialization() throws {
+		let pact = try Pact(consumer: "consumer", provider: "provider")
+			.withSpecification(.v3)
+		
+		try Interaction(pactHandle: pact.handle, description: "An interaction")
+			.given("Some provider state")
+			.withRequest(method: .GET, path: "/test")
+			.willRespond(with: 200)
+		
+		// Nothing to assert as long as it doesn't crash. There is no externally visible state.
+	}
+	
 }

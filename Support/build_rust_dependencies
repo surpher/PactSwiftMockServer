@@ -19,6 +19,8 @@
 
 set -euo pipefail
 
+SOURCE_DIR="${BASH_SOURCE[0]%/*}"
+
 ########################
 #
 # Pre-requisites:
@@ -26,10 +28,13 @@ set -euo pipefail
 #
 #######################
 
-WORKSPACE=${GITHUB_WORKSPACE:-$PWD}
+WORKSPACE="${GITHUB_WORKSPACE:-$PWD}"
 LIBPACT_FFI_DIR="${WORKSPACE}/pact-reference/rust/pact_ffi"
 LIBPACT_FFI_VERSION=$(awk 'NR==1 {print; exit}' libpact_ffi.version)
-CI=${CI:-"false"}
+
+# "import"
+source "$SOURCE_DIR/utils.sh"
+source "$SOURCE_DIR/prepare_rust_tools.sh"
 
 #######################
 # Pre-requisite       #
@@ -51,7 +56,7 @@ elif command -v ~/.cargo/bin/cargo &> /dev/null; then
 	echo "👍  cargo installed in ~/.cargo/bin/"
 else
 	echo "🚨  Rust/Cargo not installed"
-	echo "ERROR: cargo is required and is was found on this machine.\nInstall Rust using either homebrew or follow instructions at https://www.rust-lang.org/tools/install"
+	echo -e "ERROR: 'cargo' is a required dependency.\nInstall Rust using either homebrew or follow instructions at https://www.rust-lang.org/tools/install"
  	exit 1
 fi
 
@@ -61,59 +66,68 @@ fi
 
 # Update pact-reference submodule
 echo "🔃 Updating pact-reference submodule"
-git submodule update --init
+executeCommand "git submodule update --init"
 
 echo "ℹ️  Changing location to ${LIBPACT_FFI_DIR}"
-cd $LIBPACT_FFI_DIR
+executeCommand "cd $LIBPACT_FFI_DIR"
 
 echo "ℹ️  Checking out ${LIBPACT_FFI_VERSION}"
-git fetch --all --tags
-git checkout tags/$LIBPACT_FFI_VERSION
+executeCommand "git fetch --all --tags"
+executeCommand "git checkout tags/$LIBPACT_FFI_VERSION"
 
-#######################
-# Setup               #
-#######################
+###############################
+# Setup rust environment      #
+###############################
 
-# Set the rust toolchain
-sh $WORKSPACE/Support/prepare_rust_tools
+# Set the rust toolchain (prepare_rust_tools.sh)
+# pact-reference/rust/pact_ffi/CMakeLists.txt uses nightly!
+rustup_installNightlyToolchain
 
-# Add all the required triples
-rustup target add \
-	x86_64-apple-ios \
-	aarch64-apple-ios \
-	x86_64-apple-darwin \
-	aarch64-apple-darwin
+# Set default rust toolchain for current machine's architecture
+rustup_setDefaultToolchain
 
-# Add the nightly toolchain for aarch64-apple-ios-sim (while aarch64-apple-ios-sim is still Tier 3)
-rustup component add rust-src --toolchain nightly-x86_64-apple-darwin
+# Add the required triples for supported architectures
+rustup_addTargets
 
 ##############################################
 # Build libpact_ffi binaries                 #
 ##############################################
 
+# Set min deployment targets avoiding 'ld: warning's:
+# avoiding "Object file (__/libpact_ffi.a[arm64][232](b0401a448be314bb-zdict.o)) was built for newer 'macOS' version (14.2) than being linked (12.0)"
+unset MACOSX_DEPLOYMENT_TARGET
+export MACOSX_DEPLOYMENT_TARGET=12.0
+
+# avoiding "Object file (__/libpact_ffi.a[arm64][232](b0401a448be314bb-zdict.o)) was built for newer 'iOS-simulator' version (17.2) than being linked (13.0)"
+unset IPHONEOS_DEPLOYMENT_TARGET
+export IPHONEOS_DEPLOYMENT_TARGET=13.0
+
+# Build for x86_64 architectures
 echo "🏗  Building libpact_ffi.a for x86_64 iOS Simulator"
-echo "cargo build --target=x86_64-apple-ios --release"
-cargo build --target=x86_64-apple-ios --release
+executeCommand "cargo build --target=x86_64-apple-ios --release"
 
 echo "🏗  Building libpact_ffi.a for x86_64 Darwin"
-echo "cargo build --target=x86_64-apple-darwin --release"
-cargo build --target=x86_64-apple-darwin --release
+executeCommand "cargo build --target=x86_64-apple-darwin --release"
 
-# Build for all architectures if running locally (building for PactSwiftMockServer release)
-if [[ "$CI" == false ]]; then
-	echo "🏗  Building libpact_ffi.a for arm64 iOS Simulator"
-	cargo +nightly build -Z build-std --target aarch64-apple-ios-sim --release
+# Build for arm64 architectures
+echo "🏗  Building libpact_ffi.a for arm64 iOS Simulator"
+executeCommand "cargo build --target aarch64-apple-ios-sim --release"
 
-	echo "🏗  Building libpact_ffi.a for arm64 iOS device"
-	echo "cargo build --target=aarch64-apple-ios --release"
-	cargo build --target=aarch64-apple-ios --release
+echo "🏗  Building libpact_ffi.a for arm64 Darwin"
+executeCommand "cargo build --target=aarch64-apple-darwin --release"
 
-	echo "🏗  Building libpact_ffi.a for arm64 Darwin"
-	echo "cargo build --target=aarch64-apple-darwin --release"
-	cargo build --target=aarch64-apple-darwin --release
-fi
+echo "🏗  Building libpact_ffi.a for arm64 iOS device"
+executeCommand "cargo build --target=aarch64-apple-ios --release"
 
 echo "✅  libpact_ffi.a binaries built"
+
+echo "🏗  Building pact_ffi.h..."
+executeCommand "mkdir -p build && cd build"
+
+executeCommand "cmake .. && cmake --build ."
+executeCommand "cbindgen .. -o ../include/pact_ffi.h"
+
+executeCommand "cd .."
 
 #######################
 # Pact Mock Server    #
@@ -122,41 +136,29 @@ echo "✅  libpact_ffi.a binaries built"
 # Copy the compiled binaries into PactSwiftMockServer project
 echo "🏗  Copying binaries from ${PWD} to ${WORKSPACE}/Resources"
 
-if [[ "$CI" == false ]]; then
-	# When running locally lipo together all binaries for all supported architectures for PactSwiftMockServer release
+# Copy binary for an iOS device
+echo "🚚  Copying arm64-ios (iOS device) binary..."
+executeCommand "cp ../target/aarch64-apple-ios/release/libpact_ffi.a $WORKSPACE/Resources/iOS-device/libpact_ffi.a"
+echo "👍  Copied arm64-ios binary."
 
-	# Copy binary for an iOS device
-	echo "🚚  Copying arm64-ios (iOS device) binary..."
-	cp ../target/aarch64-apple-ios/release/libpact_ffi.a $WORKSPACE/Resources/iOS-device/libpact_ffi.a
-	echo "👍  Copied arm64-ios binary."
+# Create a fat binary for iOS Simulators and copy to workspace
+echo "🚚  Creating a fat binary for iOS Simulator (x86_64 and arm64)..."
+executeCommand "lipo -create \
+  ../target/x86_64-apple-ios/release/libpact_ffi.a \
+  ../target/aarch64-apple-ios-sim/release/libpact_ffi.a \
+  -output $WORKSPACE/Resources/iOS-simulator/libpact_ffi.a"
+echo "👍  Copied x86_64-ios and arm64-ios-sim fattie."
 
-	# Create a fat binary for iOS Simulators and copy to workspace
-	echo "🚚  Creating a fat binary for iOS Simulator (x86_64 and arm64)..."
-	lipo -create \
-		../target/x86_64-apple-ios/release/libpact_ffi.a \
-		../target/aarch64-apple-ios-sim/release/libpact_ffi.a \
-		-output $WORKSPACE/Resources/iOS-simulator/libpact_ffi.a
-	echo "👍  Copied x86_64-ios and arm64-ios-sim fattie."
+# Create a fat darwin binary and copy to workspace
+echo "🚚  Copying x86_64-darwin and arm64-darwin into a fat binary..."
+executeCommand "lipo -create \
+  ../target/x86_64-apple-darwin/release/libpact_ffi.a \
+  ../target/aarch64-apple-darwin/release/libpact_ffi.a \
+  -output $WORKSPACE/Resources/x86_64-darwin/libpact_ffi.a"
+echo "👍  Copied x86_64-darwin and arm64-darwin fattie."
 
-	# Create a fat darwin binary and copy to workspace
-	echo "🚚  Copying x86_64-darwin and arm64-darwin into a fat binary..."
-	lipo -create \
-		../target/x86_64-apple-darwin/release/libpact_ffi.a \
-		../target/aarch64-apple-darwin/release/libpact_ffi.a \
-		-output $WORKSPACE/Resources/x86_64-darwin/libpact_ffi.a
-	echo "👍  Copied x86_64-darwin and arm64-darwin fattie."
-
-else
-	# When running on CI only copy x86_64 to speed up the build
-	echo "🚚  Copying the iOS Simulator for x86_64 binary..."
-	cp ../target/x86_64-apple-ios/release/libpact_ffi.a $WORKSPACE/Resources/iOS-simulator/libpact_ffi.a
-	echo "👍  Copied x86_64-ios binary."
-
-	# Create a fat darwin binary and drop it in PactSwiftMockServer project
-	echo "🚚  Copying the x86_64-darwin binary..."
-	cp ../target/x86_64-apple-darwin/release/libpact_ffi.a $WORKSPACE/Resources/x86_64-darwin/libpact_ffi.a
-	echo "👍  Copied x86_64-darwin binary."
-fi
+echo "🏗  Copying pact_ffi.h from ${PWD}/include to ${WORKSPACE}/Sources"
+executeCommand "cp include/pact_ffi.h ${WORKSPACE}/Sources"
 
 #######################
 # Cleanup             #

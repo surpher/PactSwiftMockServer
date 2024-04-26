@@ -1,6 +1,6 @@
 //
-//  Created by Marko Justinek on 19/8/21.
-//  Copyright © 2021 Marko Justinek. All rights reserved.
+//  Created by Oliver Jones on 16/12/2022.
+//  Copyright © 2022 Oliver Jones. All rights reserved.
 //
 //  Permission to use, copy, modify, and/or distribute this software for any
 //  purpose with or without fee is hereby granted, provided that the above
@@ -15,9 +15,19 @@
 //  IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 //
 
-import Foundation
+import XCTest
+@testable import PactSwiftMockServer
 
-/// Configures a mapped list of message states to functions that are used to setup a given provider state prior to the message verification step.
-public struct StateHandler {
-
+class PactTests: XCTestCase {
+	
+	func testPactInitialization() throws {
+		let pact = try Pact(consumer: "consumer", provider: "provider")
+			.withSpecification(.v3)
+			.withMetadata(namespace: "test", name: "name", value: "value")
+		
+		XCTAssertEqual(pact.consumer, "consumer")
+		XCTAssertEqual(pact.provider, "provider")
+		XCTAssertEqual(pact.filename, "consumer-provider.json")
+	}
+	
 }

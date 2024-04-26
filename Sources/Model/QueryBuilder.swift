@@ -1,6 +1,6 @@
 //
-//  Created by Marko Justinek on 10/5/21.
-//  Copyright © 2020 Marko Justinek. All rights reserved.
+//  Created by Oliver Jones on 9/1/2023.
+//  Copyright © 2023 Oliver Jones. All rights reserved.
 //
 //  Permission to use, copy, modify, and/or distribute this software for any
 //  purpose with or without fee is hereby granted, provided that the above
@@ -17,36 +17,14 @@
 
 import Foundation
 
-#if !os(Linux)
-
-// MARK: - Apple platforms
-
-/// Network transfer protocol
-@objc public enum TransferProtocol: Int {
-	case standard
-	case secure
-}
-
-#else
-
-// MARK: - Linux platform
-
-/// Network transfer protocol
-public enum TransferProtocol: Int {
-	case standard
-	case secure
-}
-#endif
-
-// MARK: - Extension
-
-extension TransferProtocol {
-
-	var `protocol`: String {
-		switch self {
-		case .standard: return "http"
-		case .secure: return "https"
-		}
-	}
-
+public protocol QueryBuilder {
+	/// Configures a query parameter for the Interaction.
+	///
+	/// Throws the interaction or Pact can't be modified (i.e. the mock server for it has already started)
+	/// - Parameters:
+	///  - name: The query parameter name.
+	///  - values: The query parameter values.
+	///
+	@discardableResult
+	func queryParam(name: String, values: [String]) throws -> Self
 }

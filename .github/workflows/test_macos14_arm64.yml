@@ -1,0 +1,79 @@
+name: "On macOS 14 (latest)"
+
+on:
+  workflow_call:
+    inputs:
+      rust-target-path:
+        required: true
+        type: string
+      binaries-path:
+        required: true
+        type: string
+      cache-key:
+        required: true
+        type: string
+      cache-restore-key:
+        required: true
+        type: string
+      submit-coverage-report:
+        required: true
+        type: boolean
+    secrets:
+      codecov_token:
+        required: true
+  workflow_dispatch:
+
+jobs:
+  testMacOS14:
+    name: "⚗️  macOS 14 (latest)"
+    runs-on: macos-latest
+
+    strategy:
+      fail-fast: true
+      matrix:
+        include:
+          - scheme: "PactSwiftMockServer-iOS"
+            destination: "platform=iOS Simulator,name=iPhone 15 Pro"
+            submit_code_coverage: true
+          - scheme: "PactSwiftMockServer-macOS"
+            destination: "arch=arm64"
+            submit_code_coverage: true
+
+    env:
+      SCHEME: ${{ matrix.scheme }}
+      DESTINATION: ${{ matrix.destination }}
+
+    concurrency:
+      group: test-macos14-latest-${{ github.ref }}-${{ matrix.scheme }}
+      cancel-in-progress: true
+
+    steps:
+      - name: "♻️ Checkout repository"
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: "♼ Cache rust binaries"
+        uses: actions/cache@v4
+        with:
+          path: |
+            ${{ inputs.rust-target-path }}
+            ${{ inputs.binaries-path }}
+          key: ${{ inputs.cache-restore-key }}-${{ runner.os }}-${{ hashFiles('**/libpact_ffi.version') }}
+          restore-keys: |
+            ${{ inputs.cache-restore-key }}-${{ runner.os }}
+
+      - name: "🏗  Use Xcode 15.3"
+        run: sudo xcode-select -switch /Applications/Xcode_15.3.app
+
+      - name: "⚗️  Run tests"
+        run: |
+          sh Support/prepare_build_tools
+          sh Support/build_test
+
+      - name: "⬆️  Upload coverage reports"
+        if: ${{ matrix.submit_code_coverage && inputs.submit-coverage-report }}
+        uses: codecov/codecov-action@v4
+        with:
+          token: ${{ secrets.codecov_token }}
+          verbose: true

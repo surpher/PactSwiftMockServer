@@ -1,0 +1,66 @@
+name: "On macOS 13 (intel)"
+
+on:
+  workflow_call:
+    inputs:
+      rust-target-path:
+        required: true
+        type: string
+      binaries-path:
+        required: true
+        type: string
+      cache-key:
+        required: true
+        type: string
+      cache-restore-key:
+        required: true
+        type: string
+
+jobs:
+  testMacOS13:
+    name: "⚗️  macOS 13 (Intel)"
+    runs-on: macos-13
+
+    strategy:
+      fail-fast: true
+      matrix:
+        include:
+          - scheme: "PactSwiftMockServer-iOS"
+            destination: "platform=iOS Simulator,name=iPhone 14 Pro"
+          - scheme: "PactSwiftMockServer-macOS"
+            destination: "arch=x86_64"
+
+    env:
+      SCHEME: ${{ matrix.scheme }}
+      DESTINATION: ${{ matrix.destination }}
+
+    concurrency:
+      group: test-macos13_x86_64-${{ github.ref }}-${{ matrix.scheme }}
+      cancel-in-progress: true
+
+    steps:
+      - name: "♻️ Checkout repository"
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: "♼ Cache rust binaries"
+        uses: actions/cache@v4
+        with:
+          path: |
+            ${{ inputs.rust-target-path }}
+            ${{ inputs.binaries-path }}
+          key: ${{ inputs.cache-restore-key }}-${{ runner.os }}-${{ hashFiles('**/libpact_ffi.version') }}
+          restore-keys: |
+            ${{ inputs.cache-restore-key }}-${{ runner.os }}
+
+      - name: "🏗  Use Xcode 15.2"
+        run: sudo xcode-select -switch /Applications/Xcode_15.2.app
+
+      - name: "🛠  Prepare Tools"
+        run: |
+          sh Support/prepare_build_tools
+
+      - name: "⚗️  Run tests"
+        run: |
+          sh Support/build_test

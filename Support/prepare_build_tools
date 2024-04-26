@@ -17,9 +17,27 @@
 #  IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #
 
-brew tap thii/xcbeautify https://github.com/thii/xcbeautify.git
-brew install xcbeautify
+set -euo pipefail
+
+SOURCE_DIR="${BASH_SOURCE[0]%/*}"
+
+# "import"
+source "$SOURCE_DIR/utils.sh"
+
+brew install cbindgen
+brew install doxygen
 
 if [[ "$CI" == false ]]; then
+  brew tap thii/xcbeautify https://github.com/thii/xcbeautify.git
+  brew install xcbeautify
 	brew install swiftlint
 fi
+
+function installRustTools {
+  executeCommand "brew install cbindgen doxygen"
+}
+
+function installXcodeTools {
+  executeCommand "brew tap thii/xcbeautify https://github.com/thii/xcbeautify.git"
+  executeCommand "brew install xcbeautify swiftlint"
+}

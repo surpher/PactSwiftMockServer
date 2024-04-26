@@ -15,6 +15,9 @@ on:
       cache-restore-key:
         required: true
         type: string
+      submit-coverage-report:
+        required: true
+        type: boolean
     secrets:
       codecov_token:
         required: true
@@ -31,8 +34,10 @@ jobs:
         include:
           - scheme: "PactSwiftMockServer-iOS"
             destination: "platform=iOS Simulator,name=iPhone 15 Pro"
+            submit_code_coverage: true
           - scheme: "PactSwiftMockServer-macOS"
             destination: "arch=arm64"
+            submit_code_coverage: true
 
     env:
       SCHEME: ${{ matrix.scheme }}
@@ -67,12 +72,8 @@ jobs:
           sh Support/build_test
 
       - name: "⬆️  Upload coverage reports"
+        if: ${{ matrix.submit_code_coverage && inputs.submit-coverage-report }}
         uses: codecov/codecov-action@v4
         with:
           token: ${{ secrets.codecov_token }}
-          file: ".build/artifacts/${{ env.SCHEME }}-TestResultBundle.xcresult"
-          directory: ".build/artifacts"
-          fail_ci_if_error: true
-          flags: unittests
-          name: PactSwiftMockServer
           verbose: true

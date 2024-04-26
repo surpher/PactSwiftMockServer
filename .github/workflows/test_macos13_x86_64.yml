@@ -1,4 +1,4 @@
-name: "On macOS 13 (intel)"
+name: "Test on macOS 13 (intel)"
 
 on:
   workflow_call:

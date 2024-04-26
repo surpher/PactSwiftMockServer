@@ -1,4 +1,4 @@
-name: "On macOS 14 (latest)"
+name: "Test on macOS 14 (latest)"
 
 on:
   workflow_call:
@@ -15,9 +15,6 @@ on:
       cache-restore-key:
         required: true
         type: string
-      submit-coverage-report:
-        required: true
-        type: boolean
     secrets:
       codecov_token:
         required: true
@@ -37,7 +34,6 @@ jobs:
             submit_code_coverage: true
           - scheme: "PactSwiftMockServer-macOS"
             destination: "arch=arm64"
-            submit_code_coverage: true
 
     env:
       SCHEME: ${{ matrix.scheme }}
@@ -72,7 +68,7 @@ jobs:
           sh Support/build_test
 
       - name: "⬆️  Upload coverage reports"
-        if: ${{ matrix.submit_code_coverage && inputs.submit-coverage-report }}
+        if: ${{ matrix.submit_code_coverage }}
         uses: codecov/codecov-action@v4
         with:
           token: ${{ secrets.codecov_token }}

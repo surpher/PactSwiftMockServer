@@ -1,18 +1,17 @@
 name: "Build and Test"
 
 on:
+  pull_request:
+    branches:
+      - main
+    types:
+      - opened
+      - closed
+      - synchronize
+
   push:
     branches:
-      - 'chore/**'
-      - 'docs/**'
-      - 'feat/**'
-      - 'feature/**'
-      - 'fix/**'
-      - 'refactor/**'
-      - 'releases/**'
-      - 'style/**'
-      - 'test/**'
-      - 'tech/**'
+      - 'ci-test/**'
 
 env:
   RUST_TARGET_PATH: pact-reference/rust/target
@@ -54,7 +53,6 @@ jobs:
       binaries-path: ${{ needs.sharedInputs.outputs.binaries-path }}
       cache-key: ${{ needs.sharedInputs.outputs.cache-key }}
       cache-restore-key: ${{ needs.sharedInputs.outputs.cache-restore-key }}
-      submit-coverage-report: false
 
   testMacOS13:
     name: "🤖 Unit tests"

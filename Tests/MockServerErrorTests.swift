@@ -17,7 +17,11 @@
 
 import XCTest
 
-@testable import PactSwiftMockServer
+#if os(Linux)
+    @testable import PactSwiftMockServerLinux
+#else
+    @testable import PactSwiftMockServer
+#endif
 
 class MockServerErrorTests: XCTestCase {
 

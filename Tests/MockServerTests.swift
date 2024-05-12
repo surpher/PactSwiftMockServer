@@ -17,7 +17,15 @@
 
 import XCTest
 
-@testable import PactSwiftMockServer
+#if os(Linux)
+    @testable import PactSwiftMockServerLinux
+#else
+    @testable import PactSwiftMockServer
+#endif
+
+#if canImport(FoundationNetworking)
+import FoundationNetworking
+#endif
 
 class MockServerTests: XCTestCase {
 
@@ -81,6 +89,7 @@ class MockServerTests: XCTestCase {
 		}
 	}
 
+    #if os(OSX) || os(macOS) || os(iOS) || os(tvOS)
 	func testMocServer_SanityTestTLS() {
 		let session = URLSession(configuration: .ephemeral, delegate: self, delegateQueue: .main)
 		let dataTaskExpectation = expectation(description: "dataTask")
@@ -161,6 +170,8 @@ class MockServerTests: XCTestCase {
 		}
 	}
 
+    #endif
+
 	func testGeneratesStringFromRegex() {
 		XCTAssertEqual(MockServer.generate_value(regex: #"\d{4}"#)?.count, 4)
 
@@ -203,6 +214,7 @@ extension MockServerTests {
 
 }
 
+#if os(OSX) || os(macOS) || os(iOS) || os(tvOS)
 extension MockServerTests: URLSessionDelegate {
 
 	func urlSession(_ session: URLSession, didReceive challenge: URLAuthenticationChallenge, completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void) {
@@ -221,6 +233,7 @@ extension MockServerTests: URLSessionDelegate {
 	}
 
 }
+#endif
 
 private extension String {
 

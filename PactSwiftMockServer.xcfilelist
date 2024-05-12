@@ -1,0 +1,16 @@
+$(SRCROOT)/Sources/Verifier.swift
+$(SRCROOT)/Sources/MockServer.swift
+$(SRCROOT)/Sources/Toolbox/SocketBinder.swift
+$(SRCROOT)/Sources/Toolbox/Logger.swift
+$(SRCROOT)/Sources/Toolbox/PactFileManager.swift
+$(SRCROOT)/Sources/Model/TransferProtocol.swift
+$(SRCROOT)/Sources/Model/VerificationErrorHandler.swift
+$(SRCROOT)/Sources/Model/ProviderVerificationError.swift
+$(SRCROOT)/Sources/Model/MismatchErrorType.swift
+$(SRCROOT)/Sources/Model/VerificationErrorType.swift
+$(SRCROOT)/Sources/Model/PactError.swift
+$(SRCROOT)/Sources/Model/StateHandler.swift
+$(SRCROOT)/Sources/Model/MismatchError.swift
+$(SRCROOT)/Sources/Model/MockServerError.swift
+$(SRCROOT)/Sources/Model/VerificationError.swift
+$(SRCROOT)/Sources/Model/RequestError.swift

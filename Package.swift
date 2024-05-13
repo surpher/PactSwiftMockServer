@@ -7,7 +7,7 @@ let package = Package(
     name: "PactSwiftMockServer",
 
     platforms: [
-        .macOS(.v10_12),
+        .macOS(.v10_15),
         .iOS(.v12),
         .tvOS(.v12)
     ],
@@ -28,8 +28,8 @@ let package = Package(
 
     targets: [
 
-        // PactSwift is configured to use `https://github.com/surpher/PactSwiftServer.git`
-        // as a dependency. It must point to a zipped up XCFramework!
+        // PactSwift is configured to use `https://github.com/surpher/PactSwiftServer.git` as a dependency.
+        // It must point to a zipped up XCFramework not here! https://github.com/surpher/PactSwift/discussions/122
 
         // Vending the framework for Linux platform
         .target(

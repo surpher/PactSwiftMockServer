@@ -1,0 +1,117 @@
+#!/usr/bin/env bash
+
+#  PactSwiftMockService
+#
+#  Created by Marko Justinek on 19/8/21.
+#  Copyright © 2021 Marko Justinek. All rights reserved.
+#  Permission to use, copy, modify, and/or distribute this software for any
+#  purpose with or without fee is hereby granted, provided that the above
+#  copyright notice and this permission notice appear in all copies.
+#
+#  THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+#  WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+#  MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY
+#  SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+#  WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+#  ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR
+#  IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+#
+
+set -ue
+set -o pipefail
+
+# Scirpt that prepares PactSwift.xcframework
+
+# Properties
+IPHONEOS_DEPLOYMENT_TARGET=16.0
+MACOSX_DEPLOYMENT_TARGET=13.0
+
+TMP_DIR="./.tmp/build-xcframework"
+PRODUCT_NAME="PactSwiftMockServer"
+
+# Only use xcbeautify if it can be found in path.
+XCBEAUTIFY=$(command -v xcbeautify || command -v cat)
+
+########################
+# Pre-build checks     #
+########################
+
+# Check whether the Xcode 12.x is being used to generate the XCFramework
+# Otherwise a _concurrency fatal issue will be raised if PactSwiftMockSerer is
+# used in a project built with Xcode 12.x
+
+echo "⚠️ Checking for the right Xcode tools..."
+xcode-select -p && xcode-select -v
+
+echo "🚨 Are you running this using Xcode 14.x tools!? It should be 14.x!"
+select yn in "Yes" "No"; do
+    case $yn in
+        Yes) break;;
+        No) exit 1;;
+    esac
+done
+
+# Setup
+
+echo "ℹ️  Looking for ${PRODUCT_NAME}.xcodeproj"
+if [ ! -d "${PRODUCT_NAME}.xcodeproj" ]; then
+    echo "🚨 Run this in the same folder as \"${PRODUCT_NAME}.xcodeproj\"."
+    exit 1
+fi
+
+echo "ℹ️  Removing existing XCFramework"
+rm -fr "./${PRODUCT_NAME}.xcframework"
+echo "👍  Removed existing XCFramework"
+
+echo "ℹ️  Preparing ${TMP_DIR} folder"
+mkdir -p $TMP_DIR
+rm -fr $TMP_DIR
+
+# iOS
+
+echo "🏗  Building for iOS..."
+xcodebuild archive \
+    -sdk iphoneos IPHONEOS_DEPLOYMENT_TARGET=${IPHONEOS_DEPLOYMENT_TARGET} \
+    -arch arm64 \
+    -scheme "${PRODUCT_NAME}-iphoneos" \
+    -archivePath "${TMP_DIR}/iphoneos/${PRODUCT_NAME}.xcarchive" \
+    BUILD_LIBRARY_FOR_DISTRIBUTION=YES \
+    SKIP_INSTALL=NO | ${XCBEAUTIFY}
+
+echo "👍  Framework for arm64 device built"
+
+echo "🏗  Building for iOS Simulator..."
+xcodebuild archive \
+    -sdk iphonesimulator IPHONEOS_DEPLOYMENT_TARGET=${IPHONEOS_DEPLOYMENT_TARGET} \
+    -arch x86_64 -arch arm64 \
+    -scheme "${PRODUCT_NAME}-iOS" \
+    -archivePath "${TMP_DIR}/iphonesimulator/${PRODUCT_NAME}.xcarchive" \
+    BUILD_LIBRARY_FOR_DISTRIBUTION=YES \
+    SKIP_INSTALL=NO | ${XCBEAUTIFY}
+echo "👍  Framework for iOS Simulator built for x86_64 and arm64 architecture"
+
+# macOS
+
+echo "🏗  Building for macOS..."
+xcodebuild archive \
+    -sdk macosx MACOSX_DEPLOYMENT_TARGET=${MACOSX_DEPLOYMENT_TARGET} \
+    -arch x86_64 -arch arm64 \
+    -scheme "${PRODUCT_NAME}-macOS" \
+    -archivePath "${TMP_DIR}/macos/${PRODUCT_NAME}.xcarchive" \
+    BUILD_LIBRARY_FOR_DISTRIBUTION=YES \
+    SKIP_INSTALL=NO | ${XCBEAUTIFY}
+echo "👍  Framework for macOS built for x86_64 and arm64 architectures"
+
+# XCFramework
+
+echo "🏗  Building XCFramework..."
+xcodebuild -create-xcframework -output ./$PRODUCT_NAME.xcframework \
+    -framework $TMP_DIR/iphoneos/$PRODUCT_NAME.xcarchive/Products/Library/Frameworks/$PRODUCT_NAME.framework \
+    -framework $TMP_DIR/iphonesimulator/$PRODUCT_NAME.xcarchive/Products/Library/Frameworks/$PRODUCT_NAME.framework \
+    -framework $TMP_DIR/macos/$PRODUCT_NAME.xcarchive/Products/Library/Frameworks/$PRODUCT_NAME.framework
+
+# Cleanup
+echo "ℹ️  Removing $TMP_DIR folder..."
+rm -fr $TMP_DIR
+
+echo "🎉 Done!"

@@ -34,8 +34,8 @@ LIBPACT_FFI_DIR="${WORKSPACE}/pact-reference/rust/pact_ffi"
 LIBPACT_FFI_VERSION=$(awk 'NR==1 {print; exit}' libpact_ffi.version)
 
 # "import"
-source "$SOURCE_DIR/utils.sh"
-source "$SOURCE_DIR/configure_rust_tools"
+source "$SOURCE_DIR/../utils.sh"
+source "$SOURCE_DIR/../Config/configure_rust_tools.sh"
 
 #######################
 # Pre-requisite       #

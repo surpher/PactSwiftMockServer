@@ -1,0 +1,366 @@
+#!/usr/bin/env bash
+# shellcheck disable=SC1091
+
+#  PactSwiftMockService
+#
+#  Created by Marko Justinek on 19/8/21.
+#  Copyright © 2021 Marko Justinek. All rights reserved.
+#  Permission to use, copy, modify, and/or distribute this software for any
+#  purpose with or without fee is hereby granted, provided that the above
+#  copyright notice and this permission notice appear in all copies.
+#
+#  THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+#  WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+#  MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY
+#  SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+#  WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+#  ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR
+#  IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+#
+# release
+#
+# Runs the required steps to prepare and tag new version of PactSwift.
+#
+# Before you run this project make sure you commit the changes of the following scripts:
+# 1. build_rust_dependencies
+# 2. build_xcframework
+#
+# Notes:
+# - Updates PactSwiftMockServer version number in PactSwiftVersion.swift file
+# - Updates Marketing version number in Project-Shared.xcconfig file
+# - Updates CHANGELOG.md
+# - Commits the updates on a new 'rc/__TAG__' branch
+# - Creates a tag on the last commit
+# - Pushes the updates and tags to 'surpher/PactSwiftServer' repo
+#
+# 🚨🚨🚨 WARNING 🚨🚨🚨
+# This is still a fragile script... because I just can't find decent time to DRY it up and set it up correctly.
+# If you end up editing it, just be ready for a world of pain. Or not. Either way, you have been warned.
+#
+
+set -eu
+set -o pipefail
+
+function show_help {
+  echo "Usage: $0 -v {major|minor|patch} [-d description] [--dry-run]"
+  echo
+  echo "FLAGS"
+  echo "  -v, --version         Version number to bump. Possible values are major, minor or patch."
+  echo "  -d, --description     Release description."
+  echo "      --dry-run         Dry run won't tag or push the changes."
+  echo
+  echo "Example: ./Support/release -v minor 'Bugfix Release' --dry-run"
+  echo
+  exit 2
+}
+
+if [[ "${CI:-false}" == true ]] ; then
+  die "🚨 Running on CI is not supported! Yet."
+else
+  echo "👮‍♀️ Running on a local machine..."
+  RELEASE_SOURCE_DIR="${BASH_SOURCE[0]%/*}"
+fi
+
+if [ $# -lt 2 ]; then
+  show_help
+fi
+
+# "import"
+source "$RELEASE_SOURCE_DIR/utils.sh"
+source "$RELEASE_SOURCE_DIR/CI/version_numbers"
+
+SHOULD_BUILD_RUST_BIN=${SHOULD_BUILD_RUST_BIN:-true}
+
+CONFIGURATION_FILE="Configurations/Project-Shared.xcconfig"
+RELEASE_NOTES="CHANGELOG.md"
+TAG_MESSAGE_FILE="TAG_MESSAGE_FILE.md"
+XCFRAMEWORK_NAME="PactSwiftMockServer.xcframework"
+
+CURRENT_BRANCH=$(git branch --show-current)
+RELEASE_VERSION_PART=""
+RELEASE_DESCRIPTION=""
+DRY_RUN=false
+
+REMOTE_NAME="releases"
+RELEASE_REPO_NAME="PactSwiftServer"
+DEFAULT_REPO_NAME="PactSwiftMockServer"
+REPO_OWNER="surpher"
+REMOTE_REPO_BASE="git@github.com:$REPO_OWNER"
+
+LATEST_TAG=$(latest_tag)
+
+####################
+# Utilities
+####################
+
+function die {
+  echo "🚨 [ERROR] $*"
+  echo
+  exit 1
+}
+
+function git_clean_orphan {
+  echo -e "🛀 Cleaning up the branch..."
+  EXCEPT_FILES="${RELEASE_NOTES} ${XCFRAMEWORK_NAME}"
+  EXCEPT_FILES="${EXCEPT_FILES// /|}"
+  git ls-files | grep -v -E "$EXCEPT_FILES" | xargs git rm -f
+}
+
+function git_add_remote {
+  local remote_name="$1"
+  local remote_url="$2"
+
+  # Check if the remote already exists
+  if git remote get-url "$remote_name" &>/dev/null; then
+    echo "👍 Remote '$remote_name' already exists."
+  else
+    git remote add "$remote_name" "$remote_url"
+    echo "👍 Remote '$remote_name' added with URL: $remote_url"
+  fi
+  git fetch "$remote_name"
+}
+
+function git_check_remote_branch {
+  local remote_name="$1"
+  local branch_name="$2"
+  git ls-remote --exit-code --heads "$remote_name" "$branch_name" >/dev/null 2>&1
+  return $?
+}
+
+function git_checkout_new_release_candidate_branch {
+  local REMOTE_NAME="$1"
+  local VERSION_BRANCH="$2"
+
+  git fetch "$REMOTE_NAME"
+  git checkout --orphan "$VERSION_BRANCH"
+}
+
+function github_open_draft_pull_request {
+  local version_tag="$1"
+  local version_branch="$2"
+  local dry_run=; dry_run=$([ "$DRY_RUN" = true ] && echo "--dry-run" || echo "")
+
+  local GIT_COMMANDS=(
+    "gh config set prompt disabled"
+    "gh repo set-default $REPO_OWNER/$RELEASE_REPO_NAME"
+    "cat ${TAG_MESSAGE_FILE} | gh pr create --draft --base main --head \"$version_branch\" $dry_run --title \"RC: $version_tag\" --body-file -"
+    "gh repo set-default $REPO_OWNER/$DEFAULT_REPO_NAME"
+    "gh config set prompt enabled"
+  )
+
+  if command -v gh &> /dev/null; then
+    echo "🗃️ Opening a draft pull request..."
+    if [ "$DRY_RUN" = false ]; then
+      for git_command in "${GIT_COMMANDS[@]}"; do
+        echo "$git_command"
+        eval "$git_command"
+      done
+    else
+      echo "🍸 Dry run..."
+      for git_command in "${GIT_COMMANDS[@]}"; do
+        echo "$git_command"
+      done
+    fi
+  else
+    echo "🤷 'gh' not installed."
+    echo "Open https://github.com/$REPO_OWNER/$RELEASE_REPO_NAME/pulls and open one manually..."
+  fi
+}
+
+function update_version_file {
+  local MARKETING_VERSION="MARKETING_VERSION = $*"
+  sed -i '' "2s/.*/$MARKETING_VERSION/" "$CONFIGURATION_FILE"
+}
+
+function git_create_and_push_new_version {
+  local REMOTE_NAME="$1"
+  local REMOTE_BRANCH="$2"
+  local RELEASE_NAME="$3"
+
+  local GIT_COMMANDS=(
+    "git add ${RELEASE_NOTES} ${XCFRAMEWORK_NAME}"
+    "git commit -S -m \"$RELEASE_NAME\""
+    "git stash -u"
+    "git merge $REMOTE_NAME/main --allow-unrelated-histories -X theirs -S --no-edit"
+    "git stash pop"
+    "git tag $VERSION_TAG -F ${TAG_MESSAGE_FILE}"
+    "git push $REMOTE_NAME $REMOTE_BRANCH"
+  )
+
+  git_clean_orphan
+
+  if [ "$DRY_RUN" = false ]; then
+    for command in "${GIT_COMMANDS[@]}"; do
+      echo "⚙ $command"
+      eval "$command"
+    done
+  else
+    echo "🍸 DRY RUN..."
+    for command in "${GIT_COMMANDS[@]}"; do
+      echo "👻 $command"
+    done
+  fi
+}
+
+function cleanup {
+  local git_clean="git clean -f -d -x"
+  echo "🧹 Cleanning up..."
+  echo "$git_clean"
+  eval "$git_clean"
+
+  echo "⏮️ Checking out $CURRENT_BRANCH..."
+  git checkout "$CURRENT_BRANCH"
+}
+
+function generate_changelog {
+  echo "📝 Generating release notes in $RELEASE_NOTES..."
+
+  # Prepare the title for this release
+  echo "## ${VERSION_TAG}" > "${TAG_MESSAGE_FILE}"
+  echo >> "${TAG_MESSAGE_FILE}"
+
+  # Get the commits from last contribution for tag message
+  echo -e "🪵 Logging '${LATEST_TAG}..HEAD'..."
+  git log --pretty='* %h - %s (%an)' "${LATEST_TAG}"..HEAD >> "${TAG_MESSAGE_FILE}"
+
+  RELEASE_NOTES_TITLE=$(head -n 1 "$RELEASE_NOTES")
+  RELEASE_NOTES_EXISTING=$(tail -n +2 "$RELEASE_NOTES")
+
+  # Inject the new commits between title and last release
+  {
+    echo "$RELEASE_NOTES_TITLE"
+    echo
+    cat "${TAG_MESSAGE_FILE}"
+    echo "$RELEASE_NOTES_EXISTING"
+  } > "$RELEASE_NOTES"
+}
+
+function git_commit_changelog_and_xcconfig {
+  local marketing_version="${MARKETING_VERSION:-1}"
+  echo "🩹 Committing $RELEASE_NOTES to git..."
+  git add "${RELEASE_NOTES}" "${CONFIGURATION_FILE}"
+  git commit -m "$marketing_version: Release notes"
+}
+
+function git_reset_changelog {
+  echo "🔙 Resetting last commit"
+  git reset --soft HEAD~1
+  git status
+}
+
+function git_push_changelog {
+  echo "🛫  Pushing changes to $CURRENT_BRANCH"
+  git push origin "$CURRENT_BRANCH"
+}
+
+##################
+# Pre-checks
+##################
+while getopts ":v:d:-:" opt; do
+  case ${opt} in
+    v)
+      RELEASE_VERSION_PART=$OPTARG
+      ;;
+    d)
+      RELEASE_DESCRIPTION=$OPTARG
+      ;;
+    -)
+      case "${OPTARG}" in
+        dry-run)
+          DRY_RUN=true
+          shift 2
+          ;;
+        description)
+          RELEASE_DESCRIPTION=$1
+          shift 2
+          ;;
+        *)
+          echo "Invalid option: --${OPTARG}" >&2
+          show_help
+          ;;
+      esac
+      ;;
+    \?)
+      echo "Invalid option: -$OPTARG" >&2
+      show_help
+      ;;
+    :)
+      echo "Option -$OPTARG requires an argument." >&2
+      show_help
+      ;;
+  esac
+done
+
+# Check if the version part is provided and valid
+if [[ -z $RELEASE_VERSION_PART || ! "$RELEASE_VERSION_PART" =~ ^(major|minor|patch)$ ]]; then
+  show_help
+fi
+
+##################
+# Generate RC
+##################
+VERSION_TAG=$(generate_version_number "$RELEASE_VERSION_PART" "$RELEASE_DESCRIPTION")
+VERSION_BRANCH="rc/${VERSION_TAG// /_}"
+MARKETING_VERSION=${VERSION_TAG#v}
+MARKETING_VERSION=${MARKETING_VERSION%% -*}
+
+# Configure remote for release candidate and release version to push to
+echo "🌎 Adding '$REMOTE_NAME' remote..."
+git_add_remote "$REMOTE_NAME" "$REMOTE_REPO_BASE/$RELEASE_REPO_NAME.git"
+
+# Generate release notes
+echo "📝 Generate changelog"
+generate_changelog
+
+# Bump up the MARKETING_VERSION in xcconfig
+echo -e "👊 Bumping up MARKETING_VERSION in xcconfig to $MARKETING_VERSION..."
+update_version_file "$MARKETING_VERSION"
+
+# Commit changes to changelog
+echo "💮 Commit changelog and xcconfig..."
+git_commit_changelog_and_xcconfig "$MARKETING_VERSION"
+
+# Build libpact_ffi dependencies
+if [ "$SHOULD_BUILD_RUST_BIN" = true ]; then
+  echo "🏗️ Building libpact_ffi binaries..."
+  eval "$RELEASE_SOURCE_DIR/CI/build_rust_dependencies"
+fi
+
+# Building the XCFramework
+echo "🏗️ Building the XCFramework..."
+eval "$RELEASE_SOURCE_DIR/CI/build_xcframework"
+
+# Check out the RC branch to make changes on
+echo -e "🖖 Checking out RC branch $YELLOW$VERSION_BRANCH$NOCOLOR..."
+git_checkout_new_release_candidate_branch "$REMOTE_NAME" "$VERSION_BRANCH"
+
+# Push RC changes
+echo -e "🚢 Releasing version v$MARKETING_VERSION..."
+git_create_and_push_new_version "$REMOTE_NAME" "$VERSION_BRANCH" "$VERSION_TAG"
+
+echo -e "🧑‍💻 Open pull request for $MARKETING_VERSION..."
+github_open_draft_pull_request "$MARKETING_VERSION" "$VERSION_BRANCH"
+
+##################
+# Cleanup
+##################
+if [ "$DRY_RUN" = true ]; then
+  cmd="git checkout --force $CURRENT_BRANCH"
+  echo "🍸 Dry run done"
+  read -r -p "Clean up what has been generated during dry run? [Y/n]" -n 1 USER_INPUT
+  echo
+  if [[ $USER_INPUT =~ ^[Yy]$ ]]; then
+    eval "$cmd"
+    git_reset_changelog
+  else
+    echo "🙌 Leaving everything that's been generated during dry run as is..."
+    echo -e "  Run $LIGHTBLUE$cmd$NOCOLOR to drop changes on this branch"
+    echo -e "  Run ${LIGHTBLUE}git reset --soft HEAD~1$NOCOLOR to revert version and CHANGELOG.md changes"
+    exit 0
+  fi
+else
+  cleanup
+  git_push_changelog
+fi
+
+echo "🏁 Done."

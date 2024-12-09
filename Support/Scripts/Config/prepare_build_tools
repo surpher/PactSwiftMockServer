@@ -20,10 +20,8 @@
 
 set -euo pipefail
 
-SOURCE_DIR="${BASH_SOURCE[0]%/*}"
-
 # "import"
-source "$SOURCE_DIR/utils.sh"
+sourc "${BASH_SOURCE[0]%/*}/../utils.sh"
 
 brew update
 

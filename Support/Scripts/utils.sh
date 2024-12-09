@@ -53,7 +53,7 @@ MIN_XCODE_VERSION="16.1"
 XCODE_VERSION_MIN_SUGGESTED="16.1"
 XCODE_VERSION_MIN_SUPPORTED="16.0"
 
-function check_xcode_version_number {
+function __check_xcode_version_number {
   local major=${1:-0}
   local minor=${2:-0}
 
@@ -70,7 +70,7 @@ function check_xcode() {
   if ! xcode_version="$(xcodebuild -version | sed -n '1s/^Xcode \([0-9.]*\)$/\1/p')"; then
     echo 'Failed to get Xcode version' 1>&2
     exit 1
-  elif check_xcode_version_number ${xcode_version//./ }; then # not double quoting to pass two parameters
+  elif __check_xcode_version_number ${xcode_version//./ }; then # not double quoting to pass two parameters
     echo "Xcode version '$xcode_version' not supported, version $MIN_XCODE_VERSION or above is required" 1>&2;
     exit 1
   fi

@@ -20,11 +20,6 @@
 
 set -o pipefail
 
-SOURCE_DIR="${BASH_SOURCE[0]%/*}"
-
-# "import"
-source "$SOURCE_DIR/utils.sh"
-
 echo "ℹ️  List installed apple triples"
 executeCommand "rustup target list | grep apple"
 

@@ -15,8 +15,9 @@
 //  IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 //
 
+@testable import PactSwiftMockServer
+
 import XCTest
-import PactSwiftMockServer
 
 class MockServerErrorTests: XCTestCase {
 

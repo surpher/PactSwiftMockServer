@@ -8,7 +8,7 @@ let package = Package(
 	platforms: [
 		.macOS(.v13),
 		.iOS(.v16),
-		.tvOS(.v16)
+		.tvOS(.v16),
 	],
 
 	products: [
@@ -19,8 +19,8 @@ let package = Package(
 
 		.library(
 			name: "PactSwiftMockServerLinux",
-			targets: ["PactSwiftMockServerLinux"]
-		)
+			targets: ["PactSwiftMockServerLinux"],
+		),
 	],
 
 	dependencies: [

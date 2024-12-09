@@ -15,16 +15,19 @@
 //  IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 //
 
-import XCTest
 @testable import PactSwiftMockServer
 
+import XCTest
+
 class GenerateTests: XCTestCase {
-	
+
+	private let generatedStringCount = 13
+
 	func testGeneratesStringFromRegex() {
 		XCTAssertEqual(Generate.value(regex: #"\d{4}"#)?.count, 4)
 		
 		let generatedString = Generate.value(regex: #"\d{4}-\d{2}:\d{2}abc"#)
-		XCTAssertEqual(generatedString?.count, 13)
+		XCTAssertEqual(generatedString?.count, generatedStringCount)
 		XCTAssertEqual(generatedString?.suffix(3), "abc")
 		XCTAssertNil(generatedString?.prefix(4).rangeOfCharacter(from: CharacterSet.decimalDigits.inverted), "Expected first four characters to be digits")
 		XCTAssertEqual(generatedString?.indexOf(char: "-"), 4)

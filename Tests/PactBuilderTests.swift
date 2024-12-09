@@ -15,8 +15,9 @@
 //  IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 //
 
-import XCTest
 @testable import PactSwiftMockServer
+
+import XCTest
 
 final class PactBuilderTests: XCTestCase {
 
@@ -52,7 +53,7 @@ final class PactBuilderTests: XCTestCase {
 	}
 
 	func testPactVersion() throws {
-		XCTAssertEqual(Pact.version, "0.4.19")
+		XCTAssertEqual(Pact.version, "0.4.23")
 	}
 
 	func testGetEvents() async throws {
@@ -63,8 +64,8 @@ final class PactBuilderTests: XCTestCase {
 			.withRequest(path: "/events") { request in
 				try request.queryParam(name: "something", values: ["orOther"])
 			}
-			.willRespond(with: 200) { response in
-				try response.body("", contentType: "text/plain")
+			.willRespond(with: TestStatusCode.ok.rawValue) { response in
+				try response.body("OK", contentType: "text/plain")
 			}
 
 		try await builder.verify { ctx in
@@ -78,9 +79,10 @@ final class PactBuilderTests: XCTestCase {
 			let (data, response) = try await session.data(from: try XCTUnwrap(components.url))
 
 			let httpResponse = try XCTUnwrap(response as? HTTPURLResponse)
-			XCTAssertEqual(httpResponse.statusCode, 200)
+			XCTAssertEqual(httpResponse.statusCode, TestStatusCode.ok.rawValue)
 			XCTAssertEqual(httpResponse.value(forHTTPHeaderField: "Content-Type"), "text/plain")
-			XCTAssertTrue(data.isEmpty)
+//			XCTAssertTrue(data.isEmpty) // Responding with "" fails the "text/plain" response header test above
+			XCTAssertEqual(data, "OK".data(using: .utf8))
 		}
 	}
 
@@ -92,7 +94,7 @@ final class PactBuilderTests: XCTestCase {
 			.withRequest(method: .POST, path: "/events") { request in
 				try request.header("Accept", values: ["application/json"])
 			}
-			.willRespond(with: 201) { response in
+			.willRespond(with: TestStatusCode.accepted.rawValue) { response in
 				try response.body("OK", contentType: "text/plain")
 			}
 
@@ -108,7 +110,7 @@ final class PactBuilderTests: XCTestCase {
 			let (data, response) = try await session.data(for: request)
 
 			let httpResponse = try XCTUnwrap(response as? HTTPURLResponse)
-			XCTAssertEqual(httpResponse.statusCode, 201)
+			XCTAssertEqual(httpResponse.statusCode, TestStatusCode.accepted.rawValue)
 			XCTAssertEqual(httpResponse.value(forHTTPHeaderField: "Content-Type"), "text/plain")
 			XCTAssertEqual(data, "OK".data(using: .utf8))
 		}

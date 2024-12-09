@@ -77,7 +77,7 @@ public enum Logging {
 	/// Initialize the logger with no sinks.
 	///
 	/// This initialized logger does nothing until ``Logging/apply()`` has been called.
-	@MainActor 
+	@MainActor
 	@discardableResult
 	private static func initialize() -> Bool {
 		guard isInitialized == false else {
@@ -163,7 +163,7 @@ public enum Logging {
 
 	/// Get the last error message from the underlying `pact_ffi` library.
 	public static var lastInternalErrorMessage: String? {
-		withUnsafeTemporaryAllocation(of: CChar.self, capacity: 1_024) { buffer in // swiftlint:disable:this numbers_smell
+		withUnsafeTemporaryAllocation(of: CChar.self, capacity: 1_024) { buffer in
 			guard let baseAddress = buffer.baseAddress else {
 				Logging.log(.error, message: "Failed to allocated temporary buffer!")
 				return nil

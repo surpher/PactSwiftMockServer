@@ -57,6 +57,8 @@
 		AD957F3A28A23B8400860AD1 /* SocketBinder.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD957F3928A23B8400860AD1 /* SocketBinder.swift */; };
 		AD957F3B28A23B8400860AD1 /* SocketBinder.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD957F3928A23B8400860AD1 /* SocketBinder.swift */; };
 		AD957F3C28A23B8400860AD1 /* SocketBinder.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD957F3928A23B8400860AD1 /* SocketBinder.swift */; };
+		ADB659BE2D069CDC0049A39C /* TestStatusCode.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADB659BD2D069CD60049A39C /* TestStatusCode.swift */; };
+		ADB659BF2D069CDC0049A39C /* TestStatusCode.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADB659BD2D069CD60049A39C /* TestStatusCode.swift */; };
 		ADB97FDA26493D5900C54CA9 /* MockServerErrorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADB97FD926493D5900C54CA9 /* MockServerErrorTests.swift */; };
 		ADB97FDB26493D5900C54CA9 /* MockServerErrorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADB97FD926493D5900C54CA9 /* MockServerErrorTests.swift */; };
 		ADBEF3012648FCF200486C4A /* PactVerificationFailure.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADBEF2FC2648FCF200486C4A /* PactVerificationFailure.swift */; };
@@ -136,6 +138,7 @@
 		AD93364C269C2EC30004EBD8 /* pact_ffi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pact_ffi.h; sourceTree = "<group>"; };
 		AD9336A5269C33EB0004EBD8 /* libpact_ffi.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libpact_ffi.a; sourceTree = "<group>"; };
 		AD957F3928A23B8400860AD1 /* SocketBinder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SocketBinder.swift; sourceTree = "<group>"; };
+		ADB659BD2D069CD60049A39C /* TestStatusCode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestStatusCode.swift; sourceTree = "<group>"; };
 		ADB97FD926493D5900C54CA9 /* MockServerErrorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockServerErrorTests.swift; sourceTree = "<group>"; };
 		ADBEF2EA2648FB0600486C4A /* Target-macOS-Tests-Shared.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "Target-macOS-Tests-Shared.xcconfig"; sourceTree = "<group>"; };
 		ADBEF2EB2648FB0600486C4A /* Target-iOS-Tests-Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "Target-iOS-Tests-Debug.xcconfig"; sourceTree = "<group>"; };
@@ -314,6 +317,7 @@
 		AD1598342648E522007CFAA5 /* Tests */ = {
 			isa = PBXGroup;
 			children = (
+				ADB659BC2D069CD10049A39C /* Utils */,
 				ADB97FD926493D5900C54CA9 /* MockServerErrorTests.swift */,
 				AD1598512648F2E1007CFAA5 /* MockServerTests.swift */,
 				ADC6C61226D0AFBD00844000 /* VerifierTests.swift */,
@@ -373,6 +377,14 @@
 			path = Toolbox;
 			sourceTree = "<group>";
 		};
+		ADB659BC2D069CD10049A39C /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				ADB659BD2D069CD60049A39C /* TestStatusCode.swift */,
+			);
+			path = Utils;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -412,7 +424,7 @@
 			buildPhases = (
 				AD1597EE2648DE0E007CFAA5 /* Headers */,
 				AD1597EF2648DE0E007CFAA5 /* Sources */,
-				ADE254FC26CDE3A100FA21A9 /* SwiftLint */,
+				ADE254FC26CDE3A100FA21A9 /* Lint Project */,
 				AD1597F02648DE0E007CFAA5 /* Frameworks */,
 				AD1597F12648DE0E007CFAA5 /* Resources */,
 			);
@@ -451,7 +463,7 @@
 			buildPhases = (
 				AD1598132648DF73007CFAA5 /* Headers */,
 				AD1598142648DF73007CFAA5 /* Sources */,
-				ADE254FD26CDE3C700FA21A9 /* SwiftLint */,
+				ADE254FD26CDE3C700FA21A9 /* Lint Project */,
 				AD1598152648DF73007CFAA5 /* Frameworks */,
 				AD1598162648DF73007CFAA5 /* Resources */,
 			);
@@ -490,6 +502,7 @@
 			buildPhases = (
 				AD38D2F2264A33E800124396 /* Headers */,
 				AD38D2F3264A33E800124396 /* Sources */,
+				ADB659BB2D069BA60049A39C /* Lint Project */,
 				AD38D2F4264A33E800124396 /* Frameworks */,
 				AD38D2F5264A33E800124396 /* Resources */,
 			);
@@ -627,7 +640,7 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		ADE254FC26CDE3A100FA21A9 /* SwiftLint */ = {
+		ADB659BB2D069BA60049A39C /* Lint Project */ = {
 			isa = PBXShellScriptBuildPhase;
 			alwaysOutOfDate = 1;
 			buildActionMask = 2147483647;
@@ -637,16 +650,16 @@
 			);
 			inputPaths = (
 			);
-			name = SwiftLint;
+			name = "Lint Project";
 			outputFileListPaths = (
 			);
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "PATH={$PATH}:/opt/local/bin:/opt/homebrew/bin/:/usr/local/bin\n\"${SRCROOT}\"/Support/build_file_list_and_swiftlint PactSwiftMockServer ./.swiftlint.yml\n";
+			shellScript = "\"${SRCROOT}\"/Support/Scripts/BuildPhase/lint_project\n";
 		};
-		ADE254FD26CDE3C700FA21A9 /* SwiftLint */ = {
+		ADE254FC26CDE3A100FA21A9 /* Lint Project */ = {
 			isa = PBXShellScriptBuildPhase;
 			alwaysOutOfDate = 1;
 			buildActionMask = 2147483647;
@@ -656,14 +669,33 @@
 			);
 			inputPaths = (
 			);
-			name = SwiftLint;
+			name = "Lint Project";
 			outputFileListPaths = (
 			);
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "PATH={$PATH}:/opt/local/bin:/opt/homebrew/bin/:/usr/local/bin\n\"${SRCROOT}\"/Support/build_file_list_and_swiftlint PactSwiftMockServer ./.swiftlint.yml\n";
+			shellScript = "\"${SRCROOT}\"/Support/Scripts/BuildPhase/lint_project\n";
+		};
+		ADE254FD26CDE3C700FA21A9 /* Lint Project */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Lint Project";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}\"/Support/Scripts/BuildPhase/lint_project\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -698,6 +730,7 @@
 				A7840F83294C2ECA00CF22EF /* InteractionTests.swift in Sources */,
 				A7840F86294C2ED800CF22EF /* PactTests.swift in Sources */,
 				AD1598522648F2E1007CFAA5 /* MockServerTests.swift in Sources */,
+				ADB659BF2D069CDC0049A39C /* TestStatusCode.swift in Sources */,
 				A7840F78294AF20500CF22EF /* GenerateTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -732,6 +765,7 @@
 				A7840F84294C2ECA00CF22EF /* InteractionTests.swift in Sources */,
 				A7840F87294C2ED800CF22EF /* PactTests.swift in Sources */,
 				AD1598532648F2E1007CFAA5 /* MockServerTests.swift in Sources */,
+				ADB659BE2D069CDC0049A39C /* TestStatusCode.swift in Sources */,
 				A7840F79294AF20500CF22EF /* GenerateTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

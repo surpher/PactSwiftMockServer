@@ -15,8 +15,9 @@
 //  IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 //
 
-import XCTest
 @testable import PactSwiftMockServer
+
+import XCTest
 
 @MainActor
 class InteractionTests: XCTestCase {
@@ -34,7 +35,7 @@ class InteractionTests: XCTestCase {
 		try Interaction(pactHandle: pact.handle, description: "An interaction")
 			.given("Some provider state")
 			.withRequest(method: .GET, path: "/test")
-			.willRespond(with: 200)
+			.willRespond(with: TestStatusCode.ok.rawValue)
 		
 		// Nothing to assert as long as it doesn't crash. There is no externally visible state.
 	}

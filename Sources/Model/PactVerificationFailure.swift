@@ -73,7 +73,7 @@ extension PactVerificationFailure: Decodable {
 		case request
 		case mismatches
 	}
-	
+
 	public init(from decoder: Decoder) throws {
 		let container = try decoder.container(keyedBy: CodingKeys.self)
 		type = try container.decode(FailureType.self, forKey: .type)

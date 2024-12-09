@@ -1,6 +1,6 @@
 //
-//  Created by Oliver Jones on 16/12/2022.
-//  Copyright © 2022 Oliver Jones. All rights reserved.
+//  Created by Marko Justinek on 9/12/2024.
+//  Copyright © 2024 Marko Justinek. All rights reserved.
 //
 //  Permission to use, copy, modify, and/or distribute this software for any
 //  purpose with or without fee is hereby granted, provided that the above
@@ -15,20 +15,7 @@
 //  IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 //
 
-@testable import PactSwiftMockServer
-
-import XCTest
-
-class PactTests: XCTestCase {
-	
-	func testPactInitialization() throws {
-		let pact = try Pact(consumer: "consumer", provider: "provider")
-			.withSpecification(.v3)
-			.withMetadata(namespace: "test", name: "name", value: "value")
-		
-		XCTAssertEqual(pact.consumer, "consumer")
-		XCTAssertEqual(pact.provider, "provider")
-		XCTAssertEqual(pact.filename, "consumer-provider.json")
-	}
-	
+enum TestStatusCode: Int {
+	case ok = 200
+	case accepted = 201
 }

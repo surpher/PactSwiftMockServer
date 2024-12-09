@@ -92,7 +92,7 @@ public class MockServer {
 			return nil
 		}
 		defer { pactffi_string_delete(cert) }
-		
+
 		return String(cString: cert)
 	}
 
@@ -106,7 +106,7 @@ public class MockServer {
 	}
 
 	// MARK: - Interface
-	
+
 	/// - Returns: `true` when all expected requests have successfully matched.
 	public var requestsMatched: Bool {
 		guard port > 0 else {
@@ -178,7 +178,7 @@ extension MockServer.Error: RawRepresentable {
 			self = .unknown(rawValue)
 		}
 	}
-	
+
 	public var rawValue: Int32 {
 		switch self {
 		case .unknown(let value):

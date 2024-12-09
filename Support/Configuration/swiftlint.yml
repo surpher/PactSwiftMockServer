@@ -61,8 +61,8 @@ attributes:
 
 line_length:
   warning: 180
-  ignores_function_declarations: true
-  ignores_comments: false
+  ignores_function_declarations: false
+  ignores_comments: true
 
 modifier_order:
   preferred_modifier_order: [acl, override]

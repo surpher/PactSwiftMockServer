@@ -26,7 +26,7 @@ set -o pipefail
 IPHONEOS_DEPLOYMENT_TARGET=16.0
 MACOSX_DEPLOYMENT_TARGET=13.0
 
-TMP_DIR="./.tmp/build-xcframework"
+TMP_DIR="../../.tmp/build-xcframework"
 PRODUCT_NAME="PactSwiftMockServer"
 
 # Only use xcbeautify if it can be found in path.
@@ -43,7 +43,7 @@ XCBEAUTIFY=$(command -v xcbeautify || command -v cat)
 echo "⚠️ Checking for the right Xcode tools..."
 xcode-select -p && xcode-select -v
 
-echo "🚨 Are you running this using Xcode 14.x tools!? It should be 14.x!"
+echo "🚨 Are you running this using Xcode 16.x tools!?"
 select yn in "Yes" "No"; do
     case $yn in
         Yes) break;;

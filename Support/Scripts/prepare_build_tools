@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# shellcheck disable=SC1091
 
 #  PactSwiftMockService
 #
@@ -16,24 +17,34 @@
 #  ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR
 #  IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #
-# upgrade
-#
-# 🚨🚨🚨 --- HOL' UP A MINUTE --- 🚨🚨🚨
-#
-# Make sure `pact-reference` and `PactSwiftMockServer` are siblings on the file system!
-# Upgrades libpact_mock_server binaries and builds a fresh XCFramework
-#
 
 set -euo pipefail
 
-# TODO: - This is Work in Progress
+SOURCE_DIR="${BASH_SOURCE[0]%/*}"
 
-echo "🏗  Running ./Support/build_rust_dependencies"
-echo "⚠️  Skipped..."
-#./build_rust_depednecies
+# "import"
+source "$SOURCE_DIR/utils.sh"
 
-echo "🏗  Runing ./Support/build_xcframework"
-echo "⚠️  Skipped..."
-#./build_xcframework
+brew update
 
-echo "⚠️  Build and test the project, check `git status`, commit and push if all seems okay."
+function brew_install {
+  local tool="$1"
+  if ! command -v "$tool" &> /dev/null; then
+      echo -e "👎 $YELLOW$tool$NOCOLOR is not installed."
+      echo -e "🍺 Installing $YELLOW$tool$NOCOLOR via Homebrew..."
+      executeCommand "brew install $tool"
+  else
+      echo -e "👍 $LIGHT_BLUE$tool$NOCOLOR is already installed."
+  fi
+}
+
+PACTSWIFTMOCKSERVER_TOOLS=(
+  cbindgen
+  doxygen
+  xcbeautify
+  swiftlint
+)
+
+for tool in "${PACTSWIFTMOCKSERVER_TOOLS[@]}"; do
+  brew_install "$tool"
+done

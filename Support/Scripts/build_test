@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# shellcheck disable=SC1091
 
 #  PactSwiftMockService
 #
@@ -40,15 +41,16 @@ Note:
     Must be provided as pairs with --scheme argument first of the two!
 
 Options:
-    --scheme    Scheme to build and run tests for
-    --target    Target to build for and test with
+        --scheme    Scheme to build and run tests for
+        --target    Target to build for and test with
+    -h, --help      Shows this message
 "
 }
 
 if [ $# -eq 0 ]; then
   # CI is setup with a matrix defining SCHEME and DESTINATION env vars
   SCHEME="${SCHEME:-"PactSwiftMockServer-macOS"}"
-  DEFAULT_DESTINATION="arch=$(uname -m)"
+  DEFAULT_DESTINATION="platform=macOS,arch=$(uname -m)"
   DESTINATION="${DESTINATION:-$DEFAULT_DESTINATION}"
 
   SCHEME_TARGET_PAIRS=("$SCHEME:::$DESTINATION")
@@ -67,7 +69,8 @@ else
         ;;
 
       *)
-        echo -e "***************************\n* Error: Invalid argument.*\n***************************\n"
+        echo "error: ${RED}Invalid argument '$1'$NOCOLOR"
+        __buildTestHelp
         exit 1
     esac
   done

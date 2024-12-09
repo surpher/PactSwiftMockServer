@@ -1,0 +1,76 @@
+#!/usr/bin/env bash
+
+#  PactSwiftMockService
+#
+#  Created by Marko Justinek on 09/12/24.
+#  Copyright © 2024 Marko Justinek. All rights reserved.
+#  Permission to use, copy, modify, and/or distribute this software for any
+#  purpose with or without fee is hereby granted, provided that the above
+#  copyright notice and this permission notice appear in all copies.
+#
+#  THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+#  WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+#  MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY
+#  SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+#  WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+#  ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR
+#  IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+#
+
+# Check if a version part is provided
+if [[ -z "$1" ]]; then
+  echo "Usage: $0 {major|minor|patch}"
+  exit 1
+fi
+
+# Get the latest tag from the repository
+VERSION=$(git describe --abbrev=0 --tags 2>/dev/null)
+
+# Default to v0.0.0 if no tags are found
+if [ -z "$VERSION" ]; then
+  VERSION="v0.0.0"
+fi
+
+# Remove 'v' prefix for easier manipulation
+VERSION=${VERSION#v}
+
+# Split the version into major, minor, and patch components
+IFS='.' read -r VNUM1 VNUM2 VNUM3 <<< "$VERSION"
+
+# Determine which part of the version to increment based on the argument
+case $1 in
+  major)
+    echo "ℹ️  Updating major version"
+    VNUM1=$((VNUM1 + 1))
+    VNUM2=0
+    VNUM3=0
+    ;;
+  minor)
+    echo "ℹ️  Updating minor version"
+    VNUM2=$((VNUM2 + 1))
+    VNUM3=0
+    ;;
+  patch)
+    echo "ℹ️  Updating patch version"
+    VNUM3=$((VNUM3 + 1))
+    ;;
+  *)
+    echo "Invalid argument: $1. Use 'major', 'minor', or 'patch'."
+    exit 1
+    ;;
+esac
+
+# Construct the new tag
+NEW_TAG="v$VNUM1.$VNUM2.$VNUM3"
+
+# Check if the current commit already has a tag
+GIT_COMMIT=$(git rev-parse HEAD)
+NEEDS_TAG=$(git describe --contains "$GIT_COMMIT" 2>/dev/null)
+
+# Only create a new tag if it doesn't already exist for this commit
+if [ -z "$NEEDS_TAG" ]; then
+  echo "🏷️  Tagging with $NEW_TAG"
+  git tag "$NEW_TAG"
+else
+  echo "Current commit already has a tag: $NEEDS_TAG"
+fi

@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# shellcheck disable=SC1091
 
 #  PactSwiftMockService
 #
@@ -34,7 +35,7 @@ LIBPACT_FFI_VERSION=$(awk 'NR==1 {print; exit}' libpact_ffi.version)
 
 # "import"
 source "$SOURCE_DIR/utils.sh"
-source "$SOURCE_DIR/prepare_rust_tools.sh"
+source "$SOURCE_DIR/configure_rust_tools"
 
 #######################
 # Pre-requisite       #

@@ -2,8 +2,8 @@
 
 #  PactSwiftMockService
 #
-#  Created by Marko Justinek on 24/4/24.
-#  Copyright © 2021 Marko Justinek. All rights reserved.
+#  Created by Marko Justinek on 09/12/24.
+#  Copyright © 2024 Marko Justinek. All rights reserved.
 #  Permission to use, copy, modify, and/or distribute this software for any
 #  purpose with or without fee is hereby granted, provided that the above
 #  copyright notice and this permission notice appear in all copies.
@@ -17,31 +17,28 @@
 #  IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #
 
-set -euo pipefail
+set -eu
+set -o pipefail
 
-function executeCommand {
-  if [ $# -eq 0 ]; then
-    echo -e "No command provided"
-    exit 1
+SUPPORT_DIR="${BASH_SOURCE[0]%/*}/../.."
+SRCROOT=${SRCROOT:-"."}
+PATH="$PATH:/opt/local/bin:/opt/homebrew/bin/:/usr/local/bin"
+
+function lint {
+  if [ "${CI:-false}" == "true" ]; then
+    echo "Skipping Xcode build phase SwiftLint as there is now a CI workflow for it."
   else
-    COMMAND="$1"
-    printf "🤖 Executing:\n   '%s'\n" "$COMMAND"
-    eval "$COMMAND"
+    # Note that the config file path needs to be specified relative to the $SRCROOT
+    swiftlint lint \
+      --no-cache \
+      --config "${SUPPORT_DIR}/Configuration/swiftlint.yml" \
+      --strict \
+      "${SRCROOT}/Sources"
   fi
 }
 
-function folderExists {
-  if [ ! -d "$1" ]; then
-    echo false
-  else
-    echo true
-  fi
-}
-
-function fileExists {
-  if [ ! -f "$1" ]; then
-    echo false
-  else
-    echo true
-  fi
-}
+if command -v "swiftlint"; then
+  lint
+else
+  echo "warning: swiftlint not installed! See https://github.com/realm/SwiftLint?tab=readme-ov-file#installation"
+fi

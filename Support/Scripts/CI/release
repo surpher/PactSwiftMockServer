@@ -1,0 +1,273 @@
+#!/usr/bin/env bash
+# shellcheck disable=SC1091
+
+#  PactSwiftMockService
+#
+#  Created by Marko Justinek on 19/8/21.
+#  Copyright © 2021 Marko Justinek. All rights reserved.
+#  Permission to use, copy, modify, and/or distribute this software for any
+#  purpose with or without fee is hereby granted, provided that the above
+#  copyright notice and this permission notice appear in all copies.
+#
+#  THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+#  WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+#  MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY
+#  SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+#  WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+#  ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR
+#  IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+#
+# release
+#
+# Runs the required steps to prepare and tag new version of PactSwift.
+# Usage: `./Scripts/release 1.0.0 'Bugfix Release' [-d]`
+#
+# Before you run this project make sure you commit the changes of the following scripts:
+# 1. build_rust_dependencies
+# 2. build_xcframework
+#
+# Notes:
+# - Updates PactSwiftMockServer version number in PactSwiftVersion.swift file
+# - Updates Marketing version number in Project-Shared.xcconfig file
+# - Updates CHANGELOG.md
+# - Commits the updates on a new 'rc/__TAG__' branch
+# - Creates a tag on the last commit
+# - Pushes the updates and tags to 'surpher/PactSwiftServer' repo
+#
+# 🚨🚨🚨 WARNING 🚨🚨🚨
+# This is still a fragile script... because I just can't find decent time to DRY it up and set it up correctly.
+# If you end up editing it, just be ready for a world of pain. Or not. Either way, you have been warned.
+#
+
+# set -x
+set -o pipefail
+
+# "import"
+source "$SOURCE_DIR/../utils.sh"
+
+####################
+# Utilities        #
+####################
+
+function help {
+    echo "Usage: release VERSION RELEASE_NAME [DRY_RUN]"
+    echo
+    echo "VERSION should be the version to release and should not include the 'v' prefix"
+    echo "RELEASE_NAME should be the type of release 'Bugfix Release / Maintenance Release'"
+    echo
+    echo "FLAGS"
+    echo "  -d  Dry run, won't push the changes"
+    echo
+    echo "  Example: ./Support/release 1.0.0 'Bugfix Release' -d"
+    echo
+    exit 2
+}
+
+function die {
+    echo "🚨  [ERROR] $*"
+    echo
+    exit 1
+}
+
+function handleInput {
+	if [[ ! $1 =~ ^[Yy]$ ]]
+	then
+		echo "⚠️  Release aborted!"
+		exit 1
+	fi
+}
+
+##############################
+# Overridable Environment   #
+##############################
+
+if [[ "$CI" == true ]] ; then
+	die "🚨  Running on CI is not supported! Requires user input while running the release script."
+else
+	echo "👮‍♀️  Running on local machine..."
+	SCRIPTS_DIR="${BASH_SOURCE[0]%/*}"
+fi
+
+##############################
+# Pre-release checks         #
+##############################
+
+# Get the latest release tag
+LATEST_TAG=$(git describe --match "v[0-9].*" --abbrev=0 HEAD --tags)
+
+read -r -p "Have you ran build_rust_dependencies and build_xcframework scripts? And did you commit the newly built XCFrameworks? [Y/n] " -n 1 USER_INPUT
+handleInput "$USER_INPUT"
+echo
+
+echo "ℹ️  The last release tag number is: ${LATEST_TAG}"
+
+read -r -p "Did you provide the correctly incremented number for the new release tag? [Y/n] " -n 1 USER_INPUT
+handleInput "$USER_INPUT"
+echo
+
+read -r -p "Have you updated all the documentation files? [Y/n] " -n 1 USER_INPUT
+handleInput "$USER_INPUT"
+echo
+
+echo "ℹ️  The following commits will be recorded with the tag:"
+git log --pretty='* %h - %s (%an)' "${LATEST_TAG}"..HEAD
+echo
+
+read -r -p "Have you prepared a draft release on GitHub.com? [Y/n] " -n 1 USER_INPUT
+echo
+handleInput "$USER_INPUT"
+
+read -r -p "You named the release name with something meaningful like \"Bugfix\" or \"Feature \". Right? [Y/n] " -n 1 USER_INPUT
+echo
+handleInput "$USER_INPUT"
+
+####################
+# Variables        #
+####################
+
+CONFIGURATION_FILE="${SCRIPTS_DIR}/../Configurations/Project-Shared.xcconfig"
+RELEASE_NOTES="${SCRIPTS_DIR}/../CHANGELOG.md"
+# REMOTE_BRANCH=${REMOTE_BRANCH:-"main"}
+VERSION=$1
+RELEASE_NAME=$2
+DRY_RUN=$3
+VERSION_TAG="v$VERSION"
+
+####################
+# Setup            #
+####################
+
+if [ $# -lt 2 ]; then
+    help
+fi
+
+function update_version_file {
+	MARKETING_VERSION="MARKETING_VERSION = $*"
+	sed -i '' "2s/.*/$MARKETING_VERSION/" "$CONFIGURATION_FILE"
+}
+
+function create_and_push_new_version {
+  local REMOTE_NAME="$1"
+  local REMOTE_BRANCH="$2"
+
+	update_version_file "$VERSION"
+
+	echo "${RELEASE_NAME}" > TAG_MESSAGE_FILE.md
+  local GIT_LOG="git log --pretty='* %h - %s (%an)' ${LATEST_TAG}..HEAD >> TAG_MESSAGE_FILE.md"
+  local GIT_ADD="git add $CONFIGURATION_FILE $RELEASE_NOTES PactSwiftMockServer.xcframework"
+  local GIT_COMMIT="git commit -m \"$RELEASE_NAME\""
+  local GIT_TAG="git tag $VERSION_TAG -F TAG_MESSAGE_FILE.md"
+  local GIT_PUSH="git push $REMOTE_NAME $REMOTE_BRANCH"
+
+  if [ -z "$DRY_RUN" ]; then
+    eval "$GIT_LOG"
+    eval "$GIT_ADD"
+    eval "$GIT_COMMIT"
+    eval "$GIT_TAG" || die "Failed to tag current commit!"
+    eval "$GIT_PUSH" || die "Failed to push the release commit with tag '$VERSION_TAG' to '$REMOTE_NAME/$REMOTE_BRANCH'!"
+  else
+    echo "$TAG_FILE"
+    eval "$GIT_ADD"
+    eval "$GIT_COMMIT"
+    eval "$GIT_TAG"
+    eval "$GIT_PUSH"
+  fi
+}
+
+function checkout_new_release_candidate_branch {
+    local REMOTE_NAME="$1"
+    local VERSION_TAG="$2"
+    local REMOTE_MAIN_BRANCH=
+
+    # Check remote master/main
+    if check_remote_branch "$REMOTE_NAME" "master"; then
+        REMOTE_MAIN_BRANCH="master"
+    elif check_remote_branch "$REMOTE_NAME" "main"; then
+        REMOTE_MAIN_BRANCH="main"
+    else
+        echo -e "🚨 Remote $RED$REMOTE_NAME$NOCOLOR' does not have 'master' or 'main' branch!"
+    fi
+
+    echo "ℹ️ - Checking out ${YELLOW}rc/$VERSION_TAG$NOCOLOR branch with '$REMOTE_NAME/$REMOTE_MAIN_BRANCH' as starting point..."
+    git checkout -b "rc/$VERSION_TAG" "$REMOTE_NAME/$REMOTE_MAIN_BRANCH"
+}
+
+####################
+# Release flow     #
+####################
+
+####################
+# Setup
+
+REMOTE_NAME="releases"
+REPO_NAME="PactSwiftServer"
+REMOTE_REPO_BASE="git@github.com:surpher"
+
+echo "👮‍♀️  Verifying if version tag is reasonable..."
+
+if ! echo "$VERSION_TAG" | grep -q "^vv"; then
+    die "Tag ($VERSION) is in an incorrect format. You should remove the 'v' prefix."
+fi
+
+if ! echo "$VERSION_TAG" | grep -q -E "^v[0-9]+\.[0-9]+\.[0-9]+(-\w+(\.\d)?)?$"; then
+    die "Tag $VERSION is in an incorrect format. It should be in 'v{MAJOR}.{MINOR}.{PATCH}(-{PRERELEASE_NAME}.{PRERELEASE_VERSION})' form."
+fi
+
+echo "👮‍♀️  Verifying version ($VERSION) is unique..."
+if ! git describe --exact-match "$VERSION_TAG" > /dev/null 2>&1; then
+    die "Tag ($VERSION) already exists! Aborting."
+else
+    echo "👍 Tag is unique"
+fi
+
+# Configure remote for release candidate and release version to push to
+echo "🌎  Adding '$REMOTE_NAME' remote..."
+git remote add "$REMOTE_NAME" "$REMOTE_REPO_BASE/$REPO_NAME"
+
+# Check out the RC branch to make changes on
+echo -e "🖖  Checking out RC branch ${YELLOW}rc/$VERSION_TAG$NOCOLOR..."
+checkout_new_release_candidate_branch "$REMOTE_NAME/$REPO_NAME" "$VERSION_TAG"
+
+####################
+# Generate RC
+
+echo "📝  Generating release notes in $RELEASE_NOTES..."
+# backup the existing CHANGELOG.md to CHANGELOG.backup
+cp "$RELEASE_NOTES" "${RELEASE_NOTES}.backup"
+
+# Prepare the title for this release
+echo "# ${VERSION} - ${RELEASE_NAME}" > "${RELEASE_NOTES}.next"
+
+# Get the commits from last contribution
+git log --pretty='* %h - %s (%an)' "${LATEST_TAG}"..HEAD >> "${RELEASE_NOTES}.next"
+
+# Stage the updated CHANGELOG.md
+git add "$RELEASE_NOTES" || { die "Failed to add $RELEASE_NOTES to INDEX"; }
+
+# Read the notes for this release and append them to the old CHANGELOG.md
+< "$RELEASE_NOTES.next"  tr ' ' _ | nl
+while IFS= read -r i; do echo "${i%?}"; done < "$RELEASE_NOTES"
+
+# Building the XCFramework
+echo "🏗️  Building the XCFramework..."
+"${SCRIPTS_DIR}"/build_xcframework
+
+####################
+# Push RC changes
+
+echo "🚢  Releasing version $VERSION (tag: $VERSION_TAG)..."
+
+# if [ -z "$DRY_RUN" ]; then
+  create_and_push_new_version "$REMOTE_NAME" "$VERSION_TAG"
+# else
+	# echo "-> Dry run completed."
+# fi
+
+####################
+# Cleanup          #
+####################
+
+rm "${RELEASE_NOTES}".next
+rm "${RELEASE_NOTES}".backup
+rm TAG_MESSAGE_FILE.md
+rm -fr "*.xcframework"

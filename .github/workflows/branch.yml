@@ -3,16 +3,7 @@ name: "Build and Test"
 on:
   push:
     branches:
-      - 'chore/**'
-      - 'docs/**'
-      - 'feat/**'
-      - 'feature/**'
-      - 'fix/**'
-      - 'refactor/**'
-      - 'releases/**'
-      - 'style/**'
-      - 'test/**'
-      - 'tech/**'
+      - 'run-on-ci/**'
 
 env:
   RUST_TARGET_PATH: pact-reference/rust/target

@@ -96,7 +96,7 @@ function execute_cmd {
 
 function git_clean_orphan {
   echo -e "🛀 Cleaning up the branch..."
-  EXCEPT_FILES="${CHANGE_LOG} ${XCFRAMEWORK_NAME}"
+  EXCEPT_FILES="${CHANGE_LOG} ${XCFRAMEWORK_LOCATION}/${XCFRAMEWORK_NAME}"
   EXCEPT_FILES="${EXCEPT_FILES// /|}"
   git ls-files | grep -v -E "$EXCEPT_FILES" | xargs git rm -f
 }
@@ -168,6 +168,7 @@ function git_create_and_push_new_version {
   local version_tag=$VERSION_TAG
   local change_log=$CHANGE_LOG
   local xcframework=$XCFRAMEWORK_NAME
+  local xcframework_dir="$XCFRAMEWORK_LOCATION"
 
   # Generate a release changelog for github_open_draft_pull_request function to use
   generate_release_changelog
@@ -177,7 +178,7 @@ function git_create_and_push_new_version {
   ################################################################################################
 
   local git_commands=(
-    "git add ${change_log} ${xcframework}"
+    "git add ${change_log} ${xcframework_dir}/${xcframework}"
     "git commit -S -m \"$release_name\""
     "git stash -u"
     "git merge $remote_name/main --allow-unrelated-histories -X theirs -S --no-edit"

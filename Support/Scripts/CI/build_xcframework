@@ -30,8 +30,9 @@ MACOSX_DEPLOYMENT_TARGET=13.0
 BUILD_XCFRAMEWORK_SOURCE_DIR="${BASH_SOURCE[0]%/*}"
 
 TMP_DIR="${BUILD_XCFRAMEWORK_SOURCE_DIR}/../../../.tmp/build-xcframework"
-PRODUCT_NAME="PactSwiftMockServer"
+
 source "${BUILD_XCFRAMEWORK_SOURCE_DIR}/../utils.sh"
+source "${BUILD_XCFRAMEWORK_SOURCE_DIR}/../Config/config.sh"
 
 # Only use xcbeautify if it can be found in path.
 XCBEAUTIFY=$(command -v xcbeautify || command -v cat)
@@ -47,15 +48,15 @@ XCBEAUTIFY=$(command -v xcbeautify || command -v cat)
 check_xcode
 
 # Setup
-echo "ℹ️  Looking for $PRODUCT_NAME.xcodeproj"
-if [ ! -d "$PRODUCT_NAME.xcodeproj" ]; then
-    echo "🚨 Run this in the same folder as \"$PRODUCT_NAME.xcodeproj\"!"
+echo "ℹ️  Looking for $XCPRODUCT_NAME.xcodeproj"
+if [ ! -d "$XCPRODUCT_NAME.xcodeproj" ]; then
+    echo "🚨 Run this in the same folder as \"$XCPRODUCT_NAME.xcodeproj\"!"
     echo "Your current location is: $(pwd)"
     exit 1
 fi
 
 echo "ℹ️  Removing deprecated XCFramework..."
-rm -fr "./$PRODUCT_NAME.xcframework"
+rm -fr "./$XCFRAMEWORK_NAME"
 echo "👍  Removed deprecated XCFramework"
 
 echo "ℹ️  Setting up $TMP_DIR folder"
@@ -68,8 +69,8 @@ echo "🏗  Building for iOS..."
 xcodebuild archive \
     -sdk iphoneos IPHONEOS_DEPLOYMENT_TARGET=$IPHONEOS_DEPLOYMENT_TARGET \
     -arch arm64 \
-    -scheme "$PRODUCT_NAME-iphoneos" \
-    -archivePath "$TMP_DIR/iphoneos/$PRODUCT_NAME.xcarchive" \
+    -scheme "$XCPRODUCT_NAME-iphoneos" \
+    -archivePath "$TMP_DIR/iphoneos/$XCPRODUCT_NAME.xcarchive" \
     BUILD_LIBRARY_FOR_DISTRIBUTION=YES \
     SKIP_INSTALL=NO | $XCBEAUTIFY
 echo "👍  Framework for physical arm64 device built"
@@ -79,8 +80,8 @@ xcodebuild archive \
     -sdk iphonesimulator IPHONEOS_DEPLOYMENT_TARGET=$IPHONEOS_DEPLOYMENT_TARGET \
     -arch x86_64 \
     -arch arm64 \
-    -scheme "$PRODUCT_NAME-iOS" \
-    -archivePath "$TMP_DIR/iphonesimulator/$PRODUCT_NAME.xcarchive" \
+    -scheme "$XCPRODUCT_NAME-iOS" \
+    -archivePath "$TMP_DIR/iphonesimulator/$XCPRODUCT_NAME.xcarchive" \
     BUILD_LIBRARY_FOR_DISTRIBUTION=YES \
     SKIP_INSTALL=NO | $XCBEAUTIFY
 echo "👍  Framework for iOS Simulator built for x86_64 and arm64 architecture"
@@ -92,8 +93,8 @@ xcodebuild archive \
     -sdk macosx MACOSX_DEPLOYMENT_TARGET=$MACOSX_DEPLOYMENT_TARGET \
     -arch x86_64 \
     -arch arm64 \
-    -scheme "$PRODUCT_NAME-macOS" \
-    -archivePath "$TMP_DIR/macos/$PRODUCT_NAME.xcarchive" \
+    -scheme "$XCPRODUCT_NAME-macOS" \
+    -archivePath "$TMP_DIR/macos/$XCPRODUCT_NAME.xcarchive" \
     BUILD_LIBRARY_FOR_DISTRIBUTION=YES \
     SKIP_INSTALL=NO | $XCBEAUTIFY
 echo "👍  Framework for macOS built for x86_64 and arm64 architectures"
@@ -101,10 +102,14 @@ echo "👍  Framework for macOS built for x86_64 and arm64 architectures"
 # XCFramework
 
 echo "🏗  Building XCFramework..."
-xcodebuild -create-xcframework -output ./$PRODUCT_NAME.xcframework \
-    -framework "$TMP_DIR"/iphoneos/$PRODUCT_NAME.xcarchive/Products/Library/Frameworks/"$PRODUCT_NAME".framework \
-    -framework "$TMP_DIR"/iphonesimulator/$PRODUCT_NAME.xcarchive/Products/Library/Frameworks/"$PRODUCT_NAME".framework \
-    -framework "$TMP_DIR"/macos/$PRODUCT_NAME.xcarchive/Products/Library/Frameworks/"$PRODUCT_NAME".framework
+xcodebuild -create-xcframework -output "$XCFRAMEWORK_LOCATION/$XCFRAMEWORK_NAME" \
+    -framework "$TMP_DIR"/iphoneos/"$XCPRODUCT_NAME".xcarchive/Products/Library/Frameworks/"$XCPRODUCT_NAME".framework \
+    -framework "$TMP_DIR"/iphonesimulator/"$XCPRODUCT_NAME".xcarchive/Products/Library/Frameworks/"$XCPRODUCT_NAME".framework \
+    -framework "$TMP_DIR"/macos/"$XCPRODUCT_NAME".xcarchive/Products/Library/Frameworks/"$XCPRODUCT_NAME".framework
+
+echo "🔍 XCFramework..."
+executeCommand "ls -la $XCFRAMEWORK_LOCATION"
+executeCommand "ls -la $XCFRAMEWORK_LOCATION/$XCFRAMEWORK_NAME"
 
 # Cleanup
 echo "ℹ️  Removing $TMP_DIR folder..."

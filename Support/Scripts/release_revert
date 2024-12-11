@@ -120,7 +120,7 @@ function close_pull_request_delete_branch {
 function is_branch_in_local {
   local branch=$1
   local existed_in_local=
-  existed_in_local=$(git branch --list ${branch})$(git branch --list ${branch})
+  existed_in_local=$(git branch --list "${branch}")$(git branch --list "${branch}")
 
   if [[ -z ${existed_in_local} ]]; then
       echo "Branch does not exist locally."
@@ -155,15 +155,30 @@ function delete_local_branch {
 }
 
 # Remove the tag
+# Tag on PactSwiftServer does not exist until PR is merged and GHA tags the release commit.
 function remove_asssociated_tags {
-  local tags=
   local tag_to_delete="$1"
-  tags=$(git tag --list | grep "$tag_to_delete")
+  local local_tags=
+  local_tags=$(git tag --list | grep "$tag_to_delete")
+  local remote_tags=
+  remote_tags=$(git ls-remote --tags origin | grep -q "refs/tags/$tag_to_delete")
 
-  if [ -n "$tags" ]; then
-      for tag in $tags; do
+  if [ -n "$remote_tags" ]; then
+    echo -e "Tag $tag_to_delete exists on origin. Deleting..."
+    execute_cmd "git push --delete origin $tag_to_delete"
+
+    if [ "$REVERT_DRY_RUN" = true ]; then
+      echo -e "${CYAN}DRY RUN:$NOCOLOR Tag $LIGHT_BLUE$tag would be deleted on origin$NOCOLOR"
+    else
+      echo "Deleted tag '$tag' on origin"
+    fi
+  else
+    echo -e "Tag $YELLOW$tag_to_delete$NOCOLOR not found on origin"
+  fi
+
+  if [ -n "$local_tags" ]; then
+      for tag in $local_tags; do
           execute_cmd "git tag -d \"$tag\""
-          execute_cmd "git push origin --delete \"$tag\""
           if [ $? -ne 0 ]; then
               die "Failed to delete tag '$tag'."
           fi

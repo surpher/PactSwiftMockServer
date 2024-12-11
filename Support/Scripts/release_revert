@@ -1,0 +1,228 @@
+#!/usr/bin/env bash
+# shellcheck disable=SC1091
+
+set -eu
+set -o pipefail
+
+RELEASE_SOURCE_DIR="${BASH_SOURCE[0]%/*}"
+
+# "import"
+source "$RELEASE_SOURCE_DIR/utils.sh"
+source "$RELEASE_SOURCE_DIR/CI/version_numbers.sh"
+source "$RELEASE_SOURCE_DIR/Config/config.sh"
+
+function show_help {
+  echo "Reverts the attempt of releasing a new XCFramework."
+  echo
+  echo "Usage:"
+  echo "  $0 --pr-number <NUMBER> --tag <TAG> --branch-name <BRANCH_NAME> [--dry-run]"
+  echo
+  echo "Options:"
+  echo "  -p, --pr-number     The name of the open pull request at https://github.com/surpher/PactSwiftServer/pulls"
+  echo "  -t, --tag           The tag associated with attempted release"
+  echo "  -b, --branch-name   The name of the local branch associated with attempted release"
+  echo "      --dry-run       Prints the commands that would have been executed"
+  echo "  -h, --help          Prints this message"
+  exit 2
+}
+
+# Check if we can even do it...
+is_tool_installed gh
+
+# Parameters
+REVERT_DRY_RUN=${REVERT_DRY_RUN:-false}
+TO_DELETE_BRANCH=
+TO_DELETE_PR_NUMBER=
+TO_DELETE_TAG=
+
+# Scirpt inputs
+while getopts ":p:t:b:h:-:" opt; do
+  case ${opt} in
+    p)
+      TO_DELETE_PR_NUMBER=$OPTARG
+      ;;
+    t)
+      TO_DELETE_TAG=$OPTARG
+      ;;
+    b)
+      TO_DELETE_BRANCH=$OPTARG
+      ;;
+    h)
+      show_help
+      ;;
+    -)
+      case "${OPTARG}" in
+        dry-run)
+          REVERT_DRY_RUN=true
+          shift
+          ;;
+        pr-number)
+          TO_DELETE_PR_NUMBER=$2
+          shift 2
+          ;;
+        tag)
+          TO_DELETE_TAG=$2
+          shift 2
+          ;;
+        branch-name)
+          TO_DELETE_BRANCH=$2
+          shift 2
+          ;;
+        help)
+          show_help
+          ;;
+        *)
+          echo "Invalid option: --${OPTARG}" >&2
+          show_help
+          ;;
+      esac
+      ;;
+    \?)
+      echo "Invalid option: -$OPTARG" >&2
+      show_help
+      ;;
+    :)
+      echo "Option -$OPTARG requires an argument." >&2
+      show_help
+      ;;
+  esac
+done
+
+##########################
+# Utility funcs
+##########################
+
+# Execute command depending on dry run option
+function execute_cmd {
+  local is_dry_run=$REVERT_DRY_RUN
+  if [ "$is_dry_run" = true ]; then
+    echo -e "${CYAN}DRY RUN:$NOCOLOR $*"
+  else
+    executeCommand "$@"
+  fi
+}
+
+# Close the pull request and delete the associated branch
+function close_pull_request_delete_branch {
+  local pr_number="$1"
+  execute_cmd "gh config set prompt disabled"
+  execute_cmd "gh repo set-default $REPO_OWNER/$RELEASE_REPO_NAME"
+  execute_cmd "gh pr close $pr_number --delete-branch"
+  execute_cmd "gh repo set-default $REPO_OWNER/$DEFAULT_REPO_NAME"
+  execute_cmd "gh config set prompt enabled"
+
+  # Check if closing PR and deleting branch was successful
+  if [ $? -ne 0 ]; then
+      die "Failed to close pull request #$pr_number or delete the associated branch."
+  fi
+}
+
+function is_branch_in_local {
+  local branch=$1
+  local existed_in_local=
+  existed_in_local=$(git branch --list ${branch})$(git branch --list ${branch})
+
+  if [[ -z ${existed_in_local} ]]; then
+      echo "Branch does not exist locally."
+      return 0
+  else
+      echo "Branch exists locally."
+      return 1
+  fi
+}
+
+# Remove local branch
+function delete_local_branch {
+  local local_branch="$1"
+
+  if is_branch_in_local "$local_branch"; then
+    execute_cmd "git branch -d $local_branch"
+
+    if [ $? -ne 0 ]; then
+        git branch -D "$local_branch"
+        if [ $? -ne 0 ]; then
+            echo -e "${YELLOW}Failed to delete local branch '$local_branch'$NOCOLOR"
+        fi
+        if [ "$REVERT_DRY_RUN" = true ]; then
+          echo -e "${CYAN}DRY RUN:$NOCOLOR $LIGHT_BLUE$local_branch would be force deleted$NOCOLOR"
+        else
+          echo "Branch '$local_branch' deleted"
+        fi
+    fi
+  else
+      echo "Branch '$local_branch' does not exist locally."
+  fi
+}
+
+# Remove the tag
+function remove_asssociated_tags {
+  local tags=
+  local tag_to_delete="$1"
+  tags=$(git tag --list | grep "$tag_to_delete")
+
+  if [ -n "$tags" ]; then
+      for tag in $tags; do
+          execute_cmd "git tag -d \"$tag\""
+          execute_cmd "git push origin --delete \"$tag\""
+          if [ $? -ne 0 ]; then
+              die "Failed to delete tag '$tag'."
+          fi
+          if [ "$REVERT_DRY_RUN" = true ]; then
+            echo -e "${CYAN}DRY RUN:$NOCOLOR Tag $LIGHT_BLUE$tag would be deleted$NOCOLOR"
+          else
+            echo "Deleted tag '$tag'"
+          fi
+      done
+  else
+      echo "No tags found matching '#$tag_to_delete'"
+  fi
+}
+
+# Reset the last commit here to revert the updated CHANGELOG
+function git_reset_last_commit {
+  local reset_type="soft"
+  local value=$1
+
+  if [[ "$value" == "soft" ]]; then
+      reset_type="soft"
+  elif [[ "$value" == "hard" ]]; then
+      reset_type="hard"
+  else
+      die "Invalid value. Use either 'soft' or 'hard'."
+  fi
+
+  execute_cmd "git reset --$reset_type HEAD~1"
+}
+
+###################
+# Script execution
+###################
+
+# Closing the opened PR
+close_pull_request_delete_branch "$TO_DELETE_PR_NUMBER"
+
+# Removing tags
+remove_asssociated_tags "$TO_DELETE_TAG"
+
+# Deleting local branch
+delete_local_branch "$TO_DELETE_BRANCH"
+
+# Reset last commit
+git_reset_last_commit "soft"
+
+# We're done(ish)
+if [ "$REVERT_DRY_RUN" = true ]; then
+  # A list of results
+  REVERTED_RESULTS=(
+    "👍 Done:"
+    "  - closed pull request $LIGHT_BLUE#$TO_DELETE_PR_NUMBER$NOCOLOR,"
+    "  - deleted the associated branch,"
+    "  - removed any associated tags,"
+    "  - deleted local branch $LIGHT_BLUE$TO_DELETE_BRANCH$NOCOLOR."
+  )
+
+  for message in "${REVERTED_RESULTS[@]}"; do
+    echo -e "${CYAN}DRY RUN:$NOCOLOR $message"
+  done
+fi
+exit 0

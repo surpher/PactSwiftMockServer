@@ -67,41 +67,36 @@ fi
 
 # "import"
 source "$RELEASE_SOURCE_DIR/utils.sh"
-source "$RELEASE_SOURCE_DIR/CI/version_numbers"
+source "$RELEASE_SOURCE_DIR/CI/version_numbers.sh"
+source "$RELEASE_SOURCE_DIR/Config/config.sh"
 
 SHOULD_BUILD_RUST_BIN=${SHOULD_BUILD_RUST_BIN:-true}
 
-CONFIGURATION_FILE="Configurations/Project-Shared.xcconfig"
-RELEASE_NOTES="CHANGELOG.md"
-TAG_MESSAGE_FILE="TAG_MESSAGE_FILE.md"
-XCFRAMEWORK_NAME="PactSwiftMockServer.xcframework"
+DRY_RUN=false
 
 CURRENT_BRANCH=$(git branch --show-current)
 RELEASE_VERSION_PART=""
 RELEASE_DESCRIPTION=""
-DRY_RUN=false
-
-REMOTE_NAME="releases"
-RELEASE_REPO_NAME="PactSwiftServer"
-DEFAULT_REPO_NAME="PactSwiftMockServer"
-REPO_OWNER="surpher"
-REMOTE_REPO_BASE="git@github.com:$REPO_OWNER"
-
 LATEST_TAG=$(latest_tag)
+CHANGE_LOG=${CHANGE_LOG:-}
+REMOTE_NAME=${REMOTE_NAME:-}
 
 ####################
 # Utilities
 ####################
 
-function die {
-  echo "🚨 [ERROR] $*"
-  echo
-  exit 1
+function execute_cmd {
+  local is_dry_run=$DRY_RUN
+  if [ "$is_dry_run" = true ]; then
+    echo -e "${CYAN}DRY RUN:$NOCOLOR $*"
+  else
+    executeCommand "$@"
+  fi
 }
 
 function git_clean_orphan {
   echo -e "🛀 Cleaning up the branch..."
-  EXCEPT_FILES="${RELEASE_NOTES} ${XCFRAMEWORK_NAME}"
+  EXCEPT_FILES="${CHANGE_LOG} ${XCFRAMEWORK_NAME}"
   EXCEPT_FILES="${EXCEPT_FILES// /|}"
   git ls-files | grep -v -E "$EXCEPT_FILES" | xargs git rm -f
 }
@@ -128,11 +123,11 @@ function git_check_remote_branch {
 }
 
 function git_checkout_new_release_candidate_branch {
-  local REMOTE_NAME="$1"
-  local VERSION_BRANCH="$2"
+  local remote_name="$1"
+  local release_version_branch="$2"
 
-  git fetch "$REMOTE_NAME"
-  git checkout --orphan "$VERSION_BRANCH"
+  git fetch "$remote_name"
+  git checkout --orphan "$release_version_branch"
 }
 
 function github_open_draft_pull_request {
@@ -150,70 +145,85 @@ function github_open_draft_pull_request {
 
   if command -v gh &> /dev/null; then
     echo "🗃️ Opening a draft pull request..."
-    if [ "$DRY_RUN" = false ]; then
-      for git_command in "${GIT_COMMANDS[@]}"; do
-        echo "$git_command"
-        eval "$git_command"
-      done
-    else
-      echo "🍸 Dry run..."
-      for git_command in "${GIT_COMMANDS[@]}"; do
-        echo "$git_command"
-      done
-    fi
+    for git_command in "${GIT_COMMANDS[@]}"; do
+      execute_cmd "$git_command"
+    done
   else
     echo "🤷 'gh' not installed."
-    echo "Open https://github.com/$REPO_OWNER/$RELEASE_REPO_NAME/pulls and open one manually..."
+    echo "  Open https://github.com/$REPO_OWNER/$RELEASE_REPO_NAME/pulls and open one manually..."
+    echo "  See https://cli.github.com/ for more information..."
   fi
 }
 
 function update_version_file {
-  local MARKETING_VERSION="MARKETING_VERSION = $*"
-  sed -i '' "2s/.*/$MARKETING_VERSION/" "$CONFIGURATION_FILE"
+  local marketing_version="MARKETING_VERSION = $*"
+  local config_file=$CONFIGURATION_FILE
+  sed -i '' "2s/.*/$marketing_version/" "$config_file"
 }
 
 function git_create_and_push_new_version {
-  local REMOTE_NAME="$1"
-  local REMOTE_BRANCH="$2"
-  local RELEASE_NAME="$3"
+  local remote_name="$1"
+  local remote_branch="$2"
+  local release_name="$3"
+  local version_tag=$VERSION_TAG
+  local change_log=$CHANGE_LOG
+  local xcframework=$XCFRAMEWORK_NAME
 
-  local GIT_COMMANDS=(
-    "git add ${RELEASE_NOTES} ${XCFRAMEWORK_NAME}"
-    "git commit -S -m \"$RELEASE_NAME\""
+  # Generate a release changelog for github_open_draft_pull_request function to use
+  generate_release_changelog
+
+  # [NOTE]: ######################################################################################
+  # The github workflow in surpher/PactSwiftServer repo tags the release when the PR is merged!
+  ################################################################################################
+
+  local git_commands=(
+    "git add ${change_log} ${xcframework}"
+    "git commit -S -m \"$release_name\""
     "git stash -u"
-    "git merge $REMOTE_NAME/main --allow-unrelated-histories -X theirs -S --no-edit"
+    "git merge $remote_name/main --allow-unrelated-histories -X theirs -S --no-edit"
     "git stash pop"
-    "git tag $VERSION_TAG -F ${TAG_MESSAGE_FILE}"
-    "git push $REMOTE_NAME $REMOTE_BRANCH"
+    "git push $remote_name $remote_branch"
   )
 
   git_clean_orphan
 
-  if [ "$DRY_RUN" = false ]; then
-    for command in "${GIT_COMMANDS[@]}"; do
-      echo "⚙ $command"
-      eval "$command"
-    done
-  else
-    echo "🍸 DRY RUN..."
-    for command in "${GIT_COMMANDS[@]}"; do
-      echo "👻 $command"
-    done
-  fi
+  for command in "${git_commands[@]}"; do
+    execute_cmd "$command"
+  done
 }
 
 function cleanup {
   local git_clean="git clean -f -d -x"
-  echo "🧹 Cleanning up..."
-  echo "$git_clean"
-  eval "$git_clean"
+  local current_branch=$CURRENT_BRANCH
+  local release_version_branch=$VERSION_BRANCH
 
-  echo "⏮️ Checking out $CURRENT_BRANCH..."
-  git checkout "$CURRENT_BRANCH"
+  echo "🧹 Cleanning up..."
+  execute_cmd "$git_clean"
+
+  echo "⏮️ Checking out $current_branch..."
+  git checkout --force "$current_branch"
+
+  echo -e "🧹 Removing $YELLOW$release_version_branch$NOCOLOR"
+  git branch -D "$release_version_branch"
 }
 
-function generate_changelog {
-  echo "📝 Generating release notes in $RELEASE_NOTES..."
+function generate_release_changelog {
+  echo "📝 Generating release notes..."
+  local release_notes_title=
+  release_notes_title=$(head -n 1 "$CHANGE_LOG")
+  local release_notes_existing=
+  release_notes_existing=$(tail -n +2 "$CHANGE_LOG")
+
+  {
+    echo "$release_notes_title"
+    echo
+    cat "${TAG_MESSAGE_FILE}"
+    echo "$release_notes_existing"
+  } > "$CHANGE_LOG"
+}
+
+function update_pactswiftmockserver_changelog {
+  echo "📝 Generating release notes in $CHANGE_LOG..."
 
   # Prepare the title for this release
   echo "## ${VERSION_TAG}" > "${TAG_MESSAGE_FILE}"
@@ -223,28 +233,30 @@ function generate_changelog {
   echo -e "🪵 Logging '${LATEST_TAG}..HEAD'..."
   git log --pretty='* %h - %s (%an)' "${LATEST_TAG}"..HEAD >> "${TAG_MESSAGE_FILE}"
 
-  RELEASE_NOTES_TITLE=$(head -n 1 "$RELEASE_NOTES")
-  RELEASE_NOTES_EXISTING=$(tail -n +2 "$RELEASE_NOTES")
+  local release_notes_title=
+  release_notes_title=$(head -n 1 "$CHANGE_LOG")
+  local release_notes_existing=
+  release_notes_existing=$(tail -n +2 "$CHANGE_LOG")
 
   # Inject the new commits between title and last release
   {
-    echo "$RELEASE_NOTES_TITLE"
+    echo "$release_notes_title"
     echo
     cat "${TAG_MESSAGE_FILE}"
-    echo "$RELEASE_NOTES_EXISTING"
-  } > "$RELEASE_NOTES"
+    echo "$release_notes_existing"
+  } > "$CHANGE_LOG"
 }
 
 function git_commit_changelog_and_xcconfig {
   local marketing_version="${MARKETING_VERSION:-1}"
-  echo "🩹 Committing $RELEASE_NOTES to git..."
-  git add "${RELEASE_NOTES}" "${CONFIGURATION_FILE}"
+  echo "🩹 Committing $CHANGE_LOG to git..."
+  git add "${CHANGE_LOG}" "${CONFIGURATION_FILE}"
   git commit -m "$marketing_version: Release notes"
 }
 
 function git_reset_changelog {
-  echo "🔙 Resetting last commit"
-  git reset --soft HEAD~1
+  echo "🔙 Dropping last commit..."
+  git reset --hard HEAD~1
   git status
 }
 
@@ -256,7 +268,7 @@ function git_push_changelog {
 ##################
 # Pre-checks
 ##################
-while getopts ":v:d:-:" opt; do
+while getopts ":v:d:h:-:" opt; do
   case ${opt} in
     v)
       RELEASE_VERSION_PART=$OPTARG
@@ -264,15 +276,21 @@ while getopts ":v:d:-:" opt; do
     d)
       RELEASE_DESCRIPTION=$OPTARG
       ;;
+    h)
+      show_help
+      ;;
     -)
       case "${OPTARG}" in
         dry-run)
           DRY_RUN=true
-          shift 2
+          shift
           ;;
         description)
           RELEASE_DESCRIPTION=$1
           shift 2
+          ;;
+        help)
+          show_help
           ;;
         *)
           echo "Invalid option: --${OPTARG}" >&2
@@ -309,10 +327,10 @@ echo "🌎 Adding '$REMOTE_NAME' remote..."
 git_add_remote "$REMOTE_NAME" "$REMOTE_REPO_BASE/$RELEASE_REPO_NAME.git"
 
 # Generate release notes
-echo "📝 Generate changelog"
-generate_changelog
+echo "📝 Update changelog for PactSwiftMockServer"
+update_pactswiftmockserver_changelog
 
-# Bump up the MARKETING_VERSION in xcconfig
+# Bump up the MARKETING_VERSION in xcconfig so XCFramework uses the right version
 echo -e "👊 Bumping up MARKETING_VERSION in xcconfig to $MARKETING_VERSION..."
 update_version_file "$MARKETING_VERSION"
 
@@ -345,12 +363,12 @@ github_open_draft_pull_request "$MARKETING_VERSION" "$VERSION_BRANCH"
 # Cleanup
 ##################
 if [ "$DRY_RUN" = true ]; then
-  cmd="git checkout --force $CURRENT_BRANCH"
+  cmd="git clean -f -d -x && git checkout --force $CURRENT_BRANCH"
   echo "🍸 Dry run done"
   read -r -p "Clean up what has been generated during dry run? [Y/n]" -n 1 USER_INPUT
   echo
   if [[ $USER_INPUT =~ ^[Yy]$ ]]; then
-    eval "$cmd"
+    execute_cmd "$cmd"
     git_reset_changelog
   else
     echo "🙌 Leaving everything that's been generated during dry run as is..."

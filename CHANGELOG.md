@@ -1,5 +1,8 @@
 # CHANGELOG
 
+> [!NOTE]
+> Changes from here on align with the tagged version at surpher/PactSwiftServer
+
 ## 1.0.0 - v1.0.0
 
 * d08c413 - chore: Change to use updated package API

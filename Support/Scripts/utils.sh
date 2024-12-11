@@ -18,15 +18,32 @@
 #  IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #
 
-set -euo pipefail
+set -eu
+set -o pipefail
+
+PACT_SWIFT_MOCK_SERVER_CONFIG="${BASH_SOURCE[0]%/*}/Config/config.sh"
+
+function die {
+  echo -e "🚨 ${RED}error:${NOCOLOR} $*"
+  exit 1
+}
+
+function is_tool_installed {
+  local tool=$1
+  # shellcheck disable=SC2086
+  if ! command -v $1 >/dev/null 2>&1; then
+    die "'$YELLOW$1$NOCOLOR' not installed!
+    💡 See https://cli.github.com/ to install it."
+  fi
+  return 0
+}
 
 function executeCommand {
   if [ $# -eq 0 ]; then
-    echo -e "No command provided"
-    exit 1
+    die "No command provided"
   else
-    COMMAND="$1"
-    printf "🤖 Executing:\n   '%s'\n" "$COMMAND"
+    local COMMAND="$1"
+    printf "🤖 ${LIGHT_BLUE}Executing:${NOCOLOR}\n   '%s'\n" "$COMMAND"
     eval "$COMMAND"
   fi
 }
@@ -48,11 +65,6 @@ function fileExists {
 }
 
 # Xcode version number
-# Only care about major and minor
-MIN_XCODE_VERSION="16.1"
-XCODE_VERSION_MIN_SUGGESTED="16.1"
-XCODE_VERSION_MIN_SUPPORTED="16.0"
-
 function __check_xcode_version_number {
   local major=${1:-0}
   local minor=${2:-0}

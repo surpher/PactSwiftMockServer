@@ -152,6 +152,7 @@ function git_commit_changelog_to_xcframework_submodule {
 function git_update_main_repo_with_submodule_reference {
   local version_tag="$1"
   local version_branch="$2"
+
   git add "$SUBMODULE_XCFRAMEWORK"
   git commit -m "Update submodule reference - $version_tag"
   git push --set-upstream origin "$version_branch"
@@ -184,9 +185,6 @@ function github_create_pull_request_for_new_version {
   local pr_message="Release: $version_tag ($REPO_OWNER/$RELEASE_REPO_NAME/releases/tag/$version_tag)"
   local dry_run=; dry_run=$([ "$DRY_RUN" = true ] && echo "--dry-run" || echo "")
   local open_pr_cmd="gh pr create --draft --base main --head \"$version_branch\" $dry_run --title \"$version_tag\" --body \"$pr_message\" --repo $REPO_OWNER/$XCPRODUCT_NAME"
-
-  echo "🧼 Cleaning up and removing the branch..."
-  execute_cmd "git clean -fdx"
 
   echo "🗃️ Opening a draft pull request..."
   execute_cmd "$open_pr_cmd"
@@ -277,9 +275,6 @@ function cleanup {
 
   echo -e "🧹 Removing $YELLOW$release_version_branch$NOCOLOR..."
   git branch -D "$release_version_branch"
-
-  echo -e "🧹 Removing ${YELLOW}orphan-$release_version_branch$NOCOLOR..."
-  git branch -D "orphan-$release_version_branch"
 
   echo -e "🌏 Removing remote named $YELLOW$REMOTE_NAME$NOCOLOR..."
   git remote remove "$REMOTE_NAME"
@@ -406,7 +401,7 @@ pause_execution_and_cleanup $SHOULD_PAUSE_SCRIPT_EXECUTION
 
 # Update main repo with submodule reference
 echo -e "🔄 Updating main repo with submodule reference..."
-git_update_main_repo_with_submodule_reference "$VERSION_TAG"
+git_update_main_repo_with_submodule_reference "$VERSION_TAG" "$VERSION_BRANCH"
 pause_execution_and_cleanup $SHOULD_PAUSE_SCRIPT_EXECUTION
 
 # Create a new release
@@ -415,13 +410,8 @@ github_create_release_for "$VERSION_TAG" "$RELEASE_OPTIONS"
 pause_execution_and_cleanup $SHOULD_PAUSE_SCRIPT_EXECUTION
 
 ####################################
-# Tagging and PR in main repository
+# Open a PR in main repository
 ####################################
-
-# Commit the changes and creating a PR
-echo -e "🏷️ Re-tagging $YELLOW$VERSION_TAG$NOCOLOR..."
-github_retag_release_and_push "$VERSION_TAG" "$VERSION_BRANCH"
-pause_execution_and_cleanup $SHOULD_PAUSE_SCRIPT_EXECUTION
 
 # Create a pull request for the new version
 echo -e "📦 Creating a pull request for $YELLOW$VERSION_TAG$NOCOLOR"

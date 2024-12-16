@@ -3,50 +3,51 @@ import PackageDescription
 
 let package = Package(
 
-	name: "PactSwiftMockServer",
+  name: "PactSwiftMockServer",
 
-	platforms: [
-		.macOS(.v13),
-		.iOS(.v16),
-		.tvOS(.v16),
-	],
+  platforms: [
+    .macOS(.v13),
+    .iOS(.v16),
+    .tvOS(.v16),
+  ],
 
-	products: [
-		.library(
-			name: "PactSwiftMockServer",
-			targets: ["PactSwiftMockServer"]
-		),
+  products: [
+    .library(
+      name: "PactSwiftMockServer",
+      targets: ["PactSwiftMockServer"]
+    ),
 
-		.library(
-			name: "PactSwiftMockServerLinux",
-			targets: ["PactSwiftMockServerLinux"],
-		),
-	],
+    .library(
+      name: "PactSwiftMockServerLinux",
+      targets: ["PactSwiftMockServerLinux"]
+    ),
+  ],
 
-	dependencies: [
-		.package(url: "https://github.com/surpher/PactMockServer.git", exact: "0.1.2"),
-	],
+  dependencies: [
 
-	// MARK: - Targets
+  ],
 
-	targets: [
+  // MARK: - Targets
 
-		// Vending a XCFramework for Apple platforms
-		.binaryTarget(
-			name: "PactSwiftMockServer",
-			path: "PactSwiftMockServer.xcframework"
-		),
+  targets: [
 
-		// Vending source for Linux platform
-		.target(
-			name: "PactSwiftMockServerLinux",
-			dependencies: [
-				"PactMockServer",
-			],
-			path: "./Sources"
-		),
+    // Vending a XCFramework for Apple platforms
+    .binaryTarget(
+      name: "PactSwiftMockServer",
+      url: "https://github.com/surpher/PactSwiftMockServerXCFramework/releases/download/vX.Y.Z/PactSwiftMockServer-vX.Y.Z.xcframework.zip",
+      checksum: "__foo_bar_baz__"
+    ),
 
-	],
+    // Vending source for Linux platform
+    .target(
+      name: "PactSwiftMockServerLinux",
+      dependencies: [
+        "PactMockServer",
+      ],
+      path: "./Sources"
+    ),
 
-	swiftLanguageVersions: [.v5]
+  ],
+
+  swiftLanguageVersions: [.v5]
 )

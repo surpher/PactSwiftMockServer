@@ -20,7 +20,7 @@
 
 set -o pipefail
 
-echo "ℹ️  List installed apple triples"
+echo "ℹ️ List installed apple triples"
 executeCommand "rustup target list | grep apple"
 
 # Config
@@ -58,7 +58,7 @@ function __isARM64 {
 # pact-reference/rust/pact_ffi/CMakeLists.txt uses nightly!
 # If using stable, `cbindgen` command fails ¯\_(ツ)_/¯
 function rustup_installNightlyToolchain {
-  echo "⚠️  Installing nightly toolchain"
+  echo "⚠️ Installing nightly toolchain"
   executeCommand "rustup install nightly"
   executeCommand "rustup toolchain install nightly"
 
@@ -69,7 +69,7 @@ function rustup_installNightlyToolchain {
 
 # Set default toolchain for the machine building libpact_ffi.a binaries
 function rustup_setDefaultToolchain {
-  echo "ℹ️  Installing necessary rust toolchain for host machine's architecture"
+  echo "ℹ️ Installing necessary rust toolchain for host machine's architecture"
   DEFAULT_TOOLCHAIN=
   if [ "$(__isARM64)" == "true" ]; then
     DEFAULT_TOOLCHAIN=$TOOLCHAIN_AARCH64
@@ -81,9 +81,9 @@ function rustup_setDefaultToolchain {
 
 # Add target architectures PactSwift supports
 function rustup_addTargets {
-  echo "ℹ️  Add necessary targets"
+  echo "ℹ️ Add necessary targets"
   for TARGET in "${TARGETS[@]}"; do
-    echo "ℹ️  Adding target '$TARGET'"
+    echo "ℹ️ Adding target '$TARGET'"
     executeCommand "rustup target add $TARGET"
   done
 }

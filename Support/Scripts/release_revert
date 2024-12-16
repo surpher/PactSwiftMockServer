@@ -2,32 +2,28 @@
 # shellcheck disable=SC1091
 
 set -eu
-set -o pipefail
 
 RELEASE_SOURCE_DIR="${BASH_SOURCE[0]%/*}"
 
 # "import"
 source "$RELEASE_SOURCE_DIR/utils.sh"
-source "$RELEASE_SOURCE_DIR/CI/version_numbers.sh"
 source "$RELEASE_SOURCE_DIR/Config/config.sh"
 
 function show_help {
   echo "Reverts the attempt of releasing a new XCFramework."
   echo
   echo "Usage:"
-  echo "  $0 --pr-number <NUMBER> --tag <TAG> --branch-name <BRANCH_NAME> [--dry-run]"
+  echo "  $0 --tag <TAG> [--dry-run]"
   echo
   echo "Options:"
-  echo "  -p, --pr-number     The name of the open pull request at https://github.com/surpher/PactSwiftServer/pulls"
   echo "  -t, --tag           The tag associated with attempted release"
-  echo "  -b, --branch-name   The name of the local branch associated with attempted release"
   echo "      --dry-run       Prints the commands that would have been executed"
   echo "  -h, --help          Prints this message"
-  exit 2
+  exit 0
 }
 
 # Check if we can even do it...
-is_tool_installed gh
+is_tool_installed gh "See https://cli.github.com/ for more information..."
 
 # Parameters
 REVERT_DRY_RUN=${REVERT_DRY_RUN:-false}
@@ -36,53 +32,21 @@ TO_DELETE_PR_NUMBER=
 TO_DELETE_TAG=
 
 # Scirpt inputs
-while getopts ":p:t:b:h:-:" opt; do
-  case ${opt} in
-    p)
-      TO_DELETE_PR_NUMBER=$OPTARG
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    -t|--tag)
+      TO_DELETE_TAG=$2
+      shift 2
       ;;
-    t)
-      TO_DELETE_TAG=$OPTARG
+    --dry-run)
+      REVERT_DRY_RUN=true
+      shift
       ;;
-    b)
-      TO_DELETE_BRANCH=$OPTARG
-      ;;
-    h)
+    -h|--help)
       show_help
       ;;
-    -)
-      case "${OPTARG}" in
-        dry-run)
-          REVERT_DRY_RUN=true
-          shift
-          ;;
-        pr-number)
-          TO_DELETE_PR_NUMBER=$2
-          shift 2
-          ;;
-        tag)
-          TO_DELETE_TAG=$2
-          shift 2
-          ;;
-        branch-name)
-          TO_DELETE_BRANCH=$2
-          shift 2
-          ;;
-        help)
-          show_help
-          ;;
-        *)
-          echo "Invalid option: --${OPTARG}" >&2
-          show_help
-          ;;
-      esac
-      ;;
-    \?)
-      echo "Invalid option: -$OPTARG" >&2
-      show_help
-      ;;
-    :)
-      echo "Option -$OPTARG requires an argument." >&2
+    *)
+      echo "Invalid option: $1" >&2
       show_help
       ;;
   esac
@@ -103,18 +67,9 @@ function execute_cmd {
 }
 
 # Close the pull request and delete the associated branch
-function close_pull_request_delete_branch {
-  local pr_number="$1"
-  execute_cmd "gh config set prompt disabled"
-  execute_cmd "gh repo set-default $REPO_OWNER/$RELEASE_REPO_NAME"
-  execute_cmd "gh pr close $pr_number --delete-branch"
-  execute_cmd "gh repo set-default $REPO_OWNER/$DEFAULT_REPO_NAME"
-  execute_cmd "gh config set prompt enabled"
-
-  # Check if closing PR and deleting branch was successful
-  if [ $? -ne 0 ]; then
-      die "Failed to close pull request #$pr_number or delete the associated branch."
-  fi
+function github_delete_release {
+  local tag_to_delete="$1"
+  execute_cmd "gh release delete $tag_to_delete --cleanup-tag --yes --repo $REPO_OWNER/$RELEASE_REPO_NAME"
 }
 
 function is_branch_in_local {
@@ -134,6 +89,8 @@ function is_branch_in_local {
 # Remove local branch
 function delete_local_branch {
   local local_branch="$1"
+
+  echo -e "Deleting local branch $YELLOW$local_branch$NOCOLOR"
 
   if is_branch_in_local "$local_branch"; then
     execute_cmd "git branch -d $local_branch"
@@ -158,36 +115,41 @@ function delete_local_branch {
 # Tag on PactSwiftServer does not exist until PR is merged and GHA tags the release commit.
 function remove_asssociated_tags {
   local tag_to_delete="$1"
-  local local_tags=
-  local_tags=$(git tag --list | grep "$tag_to_delete")
-  local remote_tags=
-  remote_tags=$(git ls-remote --tags origin | grep -q "refs/tags/$tag_to_delete")
 
-  if [ -n "$remote_tags" ]; then
-    echo -e "Tag $tag_to_delete exists on origin. Deleting..."
+  echo -e "🚮 Removing tags..."
+
+  local remote_tags
+  remote_tags=$(git ls-remote --tags origin | grep -q "refs/tags/$tag_to_delete")
+  local local_tags
+  local_tags=$(git tag --list | grep "$tag_to_delete")
+
+  if [[ -n "$remote_tags" ]]; then
+    echo -e "  remote tags: $YELLOW$remote_tags$NOCOLOR"
+    echo -e "Tag $YELLOW$tag_to_delete$NOCOLOR exists on origin. Deleting..."
     execute_cmd "git push --delete origin $tag_to_delete"
 
     if [ "$REVERT_DRY_RUN" = true ]; then
       echo -e "${CYAN}DRY RUN:$NOCOLOR Tag $LIGHT_BLUE$tag would be deleted on origin$NOCOLOR"
     else
-      echo "Deleted tag '$tag' on origin"
+      echo "Deleted tag '$tag' at origin"
     fi
   else
     echo -e "Tag $YELLOW$tag_to_delete$NOCOLOR not found on origin"
   fi
 
-  if [ -n "$local_tags" ]; then
-      for tag in $local_tags; do
-          execute_cmd "git tag -d \"$tag\""
-          if [ $? -ne 0 ]; then
-              die "Failed to delete tag '$tag'."
-          fi
-          if [ "$REVERT_DRY_RUN" = true ]; then
-            echo -e "${CYAN}DRY RUN:$NOCOLOR Tag $LIGHT_BLUE$tag would be deleted$NOCOLOR"
-          else
-            echo "Deleted tag '$tag'"
-          fi
-      done
+  if [[ -n "$local_tags" ]]; then
+    echo -e "  local tags: $YELLOW$local_tags$NOCOLOR"
+    for tag in $local_tags; do
+      execute_cmd "git tag -d \"$tag\""
+      if [ $? -ne 0 ]; then
+        die "Failed to delete tag '$tag'."
+      fi
+      if [ "$REVERT_DRY_RUN" = true ]; then
+        echo -e "${CYAN}DRY RUN:$NOCOLOR Tag $LIGHT_BLUE$tag would be deleted$NOCOLOR"
+      else
+        echo "Deleted tag '$tag'"
+      fi
+    done
   else
       echo "No tags found matching '#$tag_to_delete'"
   fi
@@ -195,7 +157,7 @@ function remove_asssociated_tags {
 
 # Reset the last commit here to revert the updated CHANGELOG
 function git_reset_last_commit {
-  local reset_type="soft"
+  local reset_type="hard"
   local value=$1
 
   if [[ "$value" == "soft" ]]; then
@@ -213,17 +175,25 @@ function git_reset_last_commit {
 # Script execution
 ###################
 
-# Closing the opened PR
-close_pull_request_delete_branch "$TO_DELETE_PR_NUMBER"
+# Deleting the release
+{
+  github_delete_release "$TO_DELETE_TAG"
+}
 
 # Removing tags
+echo -e "Removing tags associated with $YELLOW$TO_DELETE_TAG$NOCOLOR..."
 remove_asssociated_tags "$TO_DELETE_TAG"
 
 # Deleting local branch
-delete_local_branch "$TO_DELETE_BRANCH"
+echo -e "Deleting branche associated with ${YELLOW}pr/$TO_DELETE_TAG$NOCOLOR..."
+delete_local_branch "pr/$TO_DELETE_TAG"
+
+echo -e "Removing branch with ${YELLOW}orphan-pr/$TO_DELETE_TAG$NOCOLOR..."
+delete_local_branch "orphan-pr/$TO_DELETE_TAG"
 
 # Reset last commit
-git_reset_last_commit "soft"
+echo -e "Resetting last commit to revert the updated CHANGELOG..."
+git_reset_last_commit "hard"
 
 # We're done(ish)
 if [ "$REVERT_DRY_RUN" = true ]; then
@@ -240,4 +210,3 @@ if [ "$REVERT_DRY_RUN" = true ]; then
     echo -e "${CYAN}DRY RUN:$NOCOLOR $message"
   done
 fi
-exit 0

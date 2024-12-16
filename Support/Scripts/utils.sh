@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# shellcheck disable=SC2034
+# shellcheck disable=SC2034,SC2086
 
 #  PactSwiftMockService
 #
@@ -28,12 +28,27 @@ function die {
   exit 1
 }
 
+function pause_execution {
+  local command=${1:-}
+
+  read -r -p "❓ Continue? [Y/n]" -n 1 EXECUTION_PAUSE_INPUT
+  echo
+
+  if [[ $EXECUTION_PAUSE_INPUT =~ ^[Yy]$ ]]; then
+    echo -e "⏯️ ${GREEN}Continuing...$NOCOLOR"
+  else
+    echo -e "🛑 ${YELLOW}Stopping...$NOCOLOR"
+    executeCommand "$command"
+    exit 0
+  fi
+}
+
 function is_tool_installed {
   local tool=$1
-  # shellcheck disable=SC2086
+  local message=${2:-}
   if ! command -v $1 >/dev/null 2>&1; then
     die "'$YELLOW$1$NOCOLOR' not installed!
-    💡 See https://cli.github.com/ to install it."
+  $message"
   fi
   return 0
 }

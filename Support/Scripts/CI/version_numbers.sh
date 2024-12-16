@@ -87,13 +87,3 @@ function generate_version_number {
     return 1
   fi
 }
-
-# Sets the tag on the current commit and pushes it
-function bump_version_tag {
-  local remote="$1"
-  local version_tag="$2"
-
-  echo "🏷️  Tagging version $version_tag and pushing to $remote..."
-  git tag "$version_tag"
-  git push "$remote" --tags
-}

@@ -17,21 +17,11 @@
 #  ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR
 #  IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #
-# release
-#
 # Runs the required steps to prepare and tag new version of PactSwift.
 #
 # Before you run this project make sure you commit the changes of the following scripts:
 # 1. build_rust_dependencies
 # 2. build_xcframework
-#
-# Notes:
-# - Updates PactSwiftMockServer version number in PactSwiftVersion.swift file
-# - Updates Marketing version number in Project-Shared.xcconfig file
-# - Updates CHANGELOG.md
-# - Commits the updates on a new 'rc/__TAG__' branch
-# - Creates a tag on the last commit
-# - Pushes the updates and tags to 'surpher/PactSwiftServer' repo
 #
 # 🚨🚨🚨 WARNING 🚨🚨🚨
 # This is still a fragile script... because I just can't find decent time to DRY it up and set it up correctly.
@@ -42,16 +32,21 @@ set -eu
 set -o pipefail
 
 function show_help {
-  echo "Usage: $0 -v {major|minor|patch} [-d description] [--dry-run]"
+  echo "Usage: $0 -v {major|minor|patch} [-d description] [--dry-run] [-i | --interactive] [--draft] [--pre-release]"
   echo
-  echo "FLAGS"
-  echo "  -v, --version         Version number to bump. Possible values are major, minor or patch."
+  echo "OPTIONS"
+  echo "  -v, --version         Version number to bump. Possible values are 'major', 'minor' or 'patch'."
   echo "  -d, --description     Release description."
   echo "      --dry-run         Dry run won't tag or push the changes."
+  echo "  -i, --interactive     Pauses after every step to allow for manual intervention."
+  echo "      --draft           Creates a draft release."
+  echo "      --pre-release     Creates a pre-release."
   echo
-  echo "Example: ./Support/release -v minor 'Bugfix Release' --dry-run"
+  echo "  -h, --help            Display this message"
   echo
-  exit 2
+  echo "Example: ./Support/release -v minor"
+  echo
+  exit 0
 }
 
 if [[ "${CI:-false}" == true ]] ; then
@@ -80,11 +75,14 @@ RELEASE_DESCRIPTION=""
 LATEST_TAG=$(latest_tag)
 CHANGE_LOG=${CHANGE_LOG:-}
 REMOTE_NAME=${REMOTE_NAME:-}
+SHOULD_PAUSE_SCRIPT_EXECUTION=false
+RELEASE_OPTIONS=""
 
 ####################
 # Utilities
 ####################
 
+# Execute only if not dry run
 function execute_cmd {
   local is_dry_run=$DRY_RUN
   if [ "$is_dry_run" = true ]; then
@@ -92,13 +90,6 @@ function execute_cmd {
   else
     executeCommand "$@"
   fi
-}
-
-function git_clean_orphan {
-  echo -e "🛀 Cleaning up the branch..."
-  EXCEPT_FILES="${CHANGE_LOG} ${XCFRAMEWORK_LOCATION}/${XCFRAMEWORK_NAME}"
-  EXCEPT_FILES="${EXCEPT_FILES// /|}"
-  git ls-files | grep -v -E "$EXCEPT_FILES" | xargs git rm -f
 }
 
 function git_add_remote {
@@ -115,127 +106,51 @@ function git_add_remote {
   git fetch "$remote_name"
 }
 
-function git_check_remote_branch {
-  local remote_name="$1"
-  local branch_name="$2"
-  git ls-remote --exit-code --heads "$remote_name" "$branch_name" >/dev/null 2>&1
-  return $?
-}
-
 function git_checkout_new_release_candidate_branch {
-  local remote_name="$1"
-  local release_version_branch="$2"
+  local release_version_branch="$1"
+  echo -e "Checking out new branch $YELLOW$release_version_branch$NOCOLOR..."
 
-  git fetch "$remote_name"
-  git checkout --orphan "$release_version_branch"
+  git checkout -b "$release_version_branch"
 }
 
-function github_open_draft_pull_request {
-  local version_tag="$1"
-  local version_branch="$2"
-  local dry_run=; dry_run=$([ "$DRY_RUN" = true ] && echo "--dry-run" || echo "")
+function configure_gh_environment {
+  execute_cmd "gh config set prompt disabled"
+  execute_cmd "gh repo set-default $REPO_OWNER/$RELEASE_REPO_NAME"
+}
 
-  local GIT_COMMANDS=(
-    "gh config set prompt disabled"
-    "gh repo set-default $REPO_OWNER/$RELEASE_REPO_NAME"
-    "cat ${TAG_MESSAGE_FILE} | gh pr create --draft --base main --head \"$version_branch\" $dry_run --title \"RC: $version_tag\" --body-file -"
-    "gh repo set-default $REPO_OWNER/$DEFAULT_REPO_NAME"
-    "gh config set prompt enabled"
-  )
-
-  if command -v gh &> /dev/null; then
-    echo "🗃️ Opening a draft pull request..."
-    for git_command in "${GIT_COMMANDS[@]}"; do
-      execute_cmd "$git_command"
-    done
-  else
-    echo "🤷 'gh' not installed."
-    echo "  Open https://github.com/$REPO_OWNER/$RELEASE_REPO_NAME/pulls and open one manually..."
-    echo "  See https://cli.github.com/ for more information..."
-  fi
+function reset_gh_environment {
+  execute_cmd "gh repo set-default $REPO_OWNER/$DEFAULT_REPO_NAME"
+  execute_cmd "gh config set prompt enabled"
 }
 
 function update_version_file {
-  local marketing_version="MARKETING_VERSION = $*"
+  local marketing_version="MARKETING_VERSION = $1"
   local config_file=$CONFIGURATION_FILE
   sed -i '' "2s/.*/$marketing_version/" "$config_file"
-}
-
-function git_create_and_push_new_version {
-  local remote_name="$1"
-  local remote_branch="$2"
-  local release_name="$3"
-  local version_tag=$VERSION_TAG
-  local change_log=$CHANGE_LOG
-  local xcframework=$XCFRAMEWORK_NAME
-  local xcframework_dir="$XCFRAMEWORK_LOCATION"
-
-  # Generate a release changelog for github_open_draft_pull_request function to use
-  generate_release_changelog
-
-  # [NOTE]: ######################################################################################
-  # The github workflow in surpher/PactSwiftServer repo tags the release when the PR is merged!
-  ################################################################################################
-
-  local git_commands=(
-    "git add ${change_log} ${xcframework_dir}/${xcframework}"
-    "git commit -S -m \"$release_name\""
-    "git stash -u"
-    "git merge $remote_name/main --allow-unrelated-histories -X theirs -S --no-edit"
-    "git stash pop"
-    "git push $remote_name $remote_branch"
-  )
-
-  git_clean_orphan
-
-  for command in "${git_commands[@]}"; do
-    execute_cmd "$command"
-  done
-}
-
-function cleanup {
-  local git_clean="git clean -f -d -x"
-  local current_branch=$CURRENT_BRANCH
-  local release_version_branch=$VERSION_BRANCH
-
-  echo "🧹 Cleanning up..."
-  execute_cmd "$git_clean"
-
-  echo "⏮️ Checking out $current_branch..."
-  git checkout --force "$current_branch"
-
-  echo -e "🧹 Removing $YELLOW$release_version_branch$NOCOLOR"
-  git branch -D "$release_version_branch"
-}
-
-function generate_release_changelog {
-  echo "📝 Generating release notes..."
-  local release_notes_title=
-  release_notes_title=$(head -n 1 "$CHANGE_LOG")
-  local release_notes_existing=
-  release_notes_existing=$(tail -n +2 "$CHANGE_LOG")
-
-  {
-    echo "$release_notes_title"
-    echo
-    cat "${TAG_MESSAGE_FILE}"
-    echo "$release_notes_existing"
-  } > "$CHANGE_LOG"
 }
 
 function update_pactswiftmockserver_changelog {
   echo "📝 Generating release notes in $CHANGE_LOG..."
 
   # Prepare the title for this release
-  echo "## ${VERSION_TAG}" > "${TAG_MESSAGE_FILE}"
+  cat "$LIBPACT_FFI_VERSION_FILE" > "${TAG_MESSAGE_FILE}"
   echo >> "${TAG_MESSAGE_FILE}"
 
   # Get the commits from last contribution for tag message
-  echo -e "🪵 Logging '${LATEST_TAG}..HEAD'..."
+  echo -e "🪵 Git logging '${LATEST_TAG}..HEAD'..."
   git log --pretty='* %h - %s (%an)' "${LATEST_TAG}"..HEAD >> "${TAG_MESSAGE_FILE}"
 
+  {
+    echo -e "🧾 ${LIGHT_BLUE}Changes:$NOCOLOR"
+    while IFS= read -r line; do
+      echo "$line"
+    done < "$TAG_MESSAGE_FILE"
+  }
+
+  # CHANGELOG.md for PactSwiftMockServer
   local release_notes_title=
   release_notes_title=$(head -n 1 "$CHANGE_LOG")
+
   local release_notes_existing=
   release_notes_existing=$(tail -n +2 "$CHANGE_LOG")
 
@@ -243,71 +158,197 @@ function update_pactswiftmockserver_changelog {
   {
     echo "$release_notes_title"
     echo
+    echo "## ${VERSION_TAG}"
+    echo ""
     cat "${TAG_MESSAGE_FILE}"
     echo "$release_notes_existing"
   } > "$CHANGE_LOG"
 }
 
-function git_commit_changelog_and_xcconfig {
-  local marketing_version="${MARKETING_VERSION:-1}"
-  echo "🩹 Committing $CHANGE_LOG to git..."
-  git add "${CHANGE_LOG}" "${CONFIGURATION_FILE}"
-  git commit -m "$marketing_version: Release notes"
+function update_swift_package_manifest_file {
+  local package_file="Package.swift"
+  local version_tag=$VERSION_TAG
+  local new_checksum=
+  new_checksum=$(swift package compute-checksum "$VERSIONED_XCFRAMEWORK_NAME.zip")
+
+  # Replace ___VERSION_TAG___ with the value of $v_tag
+  local new_version_url=${XCFRAMEWORK_URL_TEMPLATE//___VERSION_TAG___/$version_tag}
+
+  # Replace URL and checksum using sed
+  sed -i '' \
+    -e "s|url: \".*\"|url: \"$new_version_url\"|" \
+    -e "s|checksum: \".*\"|checksum: \"$new_checksum\"|" \
+    "$package_file"
+
+  echo "ℹ️ $YELLOW$package_file$NOCOLOR updated..."
+  echo -e "  New URL: $LIGHT_BLUE$new_version_url$NOCOLOR"
+  echo -e "  NEW checksum: $LIGHT_BLUE$new_checksum$NOCOLOR"
+  echo -e "📦 New $YELLOW$package_file$NOCOLOR content..."
+  echo
+
+  while IFS= read -r package_swift; do
+    echo "$package_swift"
+  done < "$package_file"
 }
 
-function git_reset_changelog {
-  echo "🔙 Dropping last commit..."
-  git reset --hard HEAD~1
-  git status
+function github_create_release_for {
+  is_tool_installed gh "See https://cli.github.com/ for more information..."
+
+  local release_tag="$1"
+  local release_options="${2:-}"
+
+  # shellcheck disable=SC2153
+  local command="gh release create \"$release_tag\" \
+    --title $release_tag \
+    --notes-file $TAG_MESSAGE_FILE \
+    $release_options"
+  execute_cmd "$command"
+
+  local upload_assets="gh release upload \"$release_tag\" $VERSIONED_XCFRAMEWORK_NAME.zip $VERSIONED_XCFRAMEWORK_CHECKSUM --clobber"
+  execute_cmd "$upload_assets"
+}
+
+function github_tag_orphaned_branch_and_push {
+  local release_tag="$1"
+  local release_branch="$2"
+  local branch_name="orphan-$release_branch"
+
+  execute_cmd "git checkout --orphan $branch_name"
+  execute_cmd "git add CHANGELOG.md"
+  execute_cmd "git commit -m 'Release: $release_tag'"
+  execute_cmd "git tag -a \"$release_tag\" -m \"Release: $release_tag\""
+  execute_cmd "git push $REMOTE_NAME $release_tag"
+  execute_cmd "git checkout $release_branch"
+}
+
+function git_commit_changelog_and_xcconfig {
+  local release_tag="${VERSION_TAG:-$1}"
+
+  echo -e "🩹 Committing $YELLOW$CHANGE_LOG$NOCOLOR, $YELLOW$CONFIGURATION_FILE$NOCOLOR and ${YELLOW}Package.swift$NOCOLOR to git..."
+  git add "$CHANGE_LOG" "$CONFIGURATION_FILE" Package.swift
+  git commit -m "Release: $release_tag"
 }
 
 function git_push_changelog {
-  echo "🛫  Pushing changes to $CURRENT_BRANCH"
+  echo "🛫 Pushing changes to $CURRENT_BRANCH"
   git push origin "$CURRENT_BRANCH"
+}
+
+function pause_execution_and_cleanup {
+  local should_pause=$1
+  #local command="git clean -fdx && git checkout $CURRENT_BRANCH && git reset --hard HEAD~1"
+  if [ "$should_pause" = true ]; then
+    # pause_execution "$command"
+    pause_execution
+  fi
+}
+
+# IS THIS USED AT ALL?
+function git_clean_and_reset {
+  local command="git clean -fdx && git checkout $CURRENT_BRANCH && git reset --hard HEAD~1"
+  execute_cmd "$command"
+}
+
+function cleanup {
+  local git_clean="git clean -fdx"
+  local current_branch=$CURRENT_BRANCH
+  local release_version_branch=$VERSION_BRANCH
+
+  echo "🧹 Cleanning up..."
+  execute_cmd "$git_clean"
+
+  echo -e "⏮️ Checking out $YELLOW$current_branch$NOCOLOR..."
+  git checkout --force "$current_branch"
+
+  echo -e "🧹 Removing $YELLOW$release_version_branch$NOCOLOR..."
+  git branch -D "$release_version_branch"
+
+  echo -e "🧹 Removing ${YELLOW}orphan-$release_version_branch$NOCOLOR..."
+  git branch -D "orphan-$release_version_branch"
+
+  echo -e "🌏 Removing remote named $YELLOW$REMOTE_NAME$NOCOLOR..."
+  git remote remove "$REMOTE_NAME"
+
+  echo -e "🚮 Removing untracked files and directories..."
+  execute_cmd "$git_clean"
+}
+
+function github_retag_release_and_push {
+  local release_version="$1"
+  local release_version_branch="$2"
+  echo -e "Re-tagging the $YELLOW$release_version$NOCOLOR release..."
+
+  # Remove the tag! PactSwiftMockServer should create own tag when PR is merged.
+  execute_cmd "git tag -d \"$release_version\""
+  execute_cmd "git push -u origin $release_version_branch"
+}
+
+function github_create_pull_request_for_new_version {
+  local version_tag="$1"
+  local version_branch="$2"
+  local pr_message="Release: $version_tag ($REPO_OWNER/$RELEASE_REPO_NAME/releases/tag/$version_tag)"
+  local dry_run=; dry_run=$([ "$DRY_RUN" = true ] && echo "--dry-run" || echo "")
+  local open_pr_cmd="gh pr create --draft --base main --head \"$version_branch\" $dry_run --title \"$version_tag\" --body \"$pr_message\""
+
+  echo "🧼 Cleaning up removing the branch..."
+  execute_cmd "git clean -fdx"
+
+  echo "🗃️ Opening a draft pull request..."
+  execute_cmd "$open_pr_cmd"
 }
 
 ##################
 # Pre-checks
 ##################
-while getopts ":v:d:h:-:" opt; do
-  case ${opt} in
-    v)
-      RELEASE_VERSION_PART=$OPTARG
-      ;;
-    d)
-      RELEASE_DESCRIPTION=$OPTARG
-      ;;
-    h)
-      show_help
-      ;;
-    -)
-      case "${OPTARG}" in
-        dry-run)
-          DRY_RUN=true
-          shift
-          ;;
-        description)
-          RELEASE_DESCRIPTION=$1
-          shift 2
-          ;;
-        help)
-          show_help
-          ;;
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+        -v|--version)
+            # Check if -v|--version is followed by a valid version type
+            if [[ -z $2 || $2 =~ ^- ]]; then
+                die "Error: Missing argument for '$2'."
+            fi
+            if [[ "$2" == "major" || "$2" == "minor" || "$2" == "patch" ]]; then
+                RELEASE_VERSION_PART="$2"
+                shift 2
+            else
+                echo -e "${RED}error:$NOCOLOR Invalid argument '$2' for '$1'."
+                echo -e "  Must be either ${YELLOW}major$NOCOLOR, ${YELLOW}minor$NOCOLOR, or ${YELLOW}patch$NOCOLOR."
+            fi
+            ;;
+        -d|--description)
+            # Check if -d|--description is followed by a description value
+            if [[ -z $2 || $2 =~ ^- ]]; then
+                die "Error: Missing argument for $2"
+            fi
+            RELEASE_DESCRIPTION="$2"
+            shift 2
+            ;;
+        --dry-run)
+            DRY_RUN=true
+            shift
+            ;;
+        -i|--interactive)
+            SHOULD_PAUSE_SCRIPT_EXECUTION=true
+            shift
+            ;;
+        --draft)
+            RELEASE_OPTIONS="$RELEASE_OPTIONS --draft"
+            shift
+            ;;
+        --pre-release)
+            RELEASE_OPTIONS="$RELEASE_OPTIONS --prerelease"
+            shift
+            ;;
+        -h|--help)
+            show_help
+            ;;
+        -*)
+            die "Error: Unknown option $1"
+            ;;
         *)
-          echo "Invalid option: --${OPTARG}" >&2
-          show_help
-          ;;
-      esac
-      ;;
-    \?)
-      echo "Invalid option: -$OPTARG" >&2
-      show_help
-      ;;
-    :)
-      echo "Option -$OPTARG requires an argument." >&2
-      show_help
-      ;;
-  esac
+            die "Invalid option: $1"
+            ;;
+    esac
 done
 
 # Check if the version part is provided and valid
@@ -322,64 +363,113 @@ VERSION_TAG=$(generate_version_number "$RELEASE_VERSION_PART" "$RELEASE_DESCRIPT
 VERSION_BRANCH="rc/${VERSION_TAG// /_}"
 MARKETING_VERSION=${VERSION_TAG#v}
 MARKETING_VERSION=${MARKETING_VERSION%% -*}
-
-# Configure remote for release candidate and release version to push to
-echo "🌎 Adding '$REMOTE_NAME' remote..."
-git_add_remote "$REMOTE_NAME" "$REMOTE_REPO_BASE/$RELEASE_REPO_NAME.git"
-
-# Generate release notes
-echo "📝 Update changelog for PactSwiftMockServer"
-update_pactswiftmockserver_changelog
+VERSIONED_XCFRAMEWORK_NAME="$XCFRAMEWORK_NAME-$VERSION_TAG.$XCFRAMEWORK_EXTENSION"
+VERSIONED_XCFRAMEWORK_CHECKSUM="$XCFRAMEWORK_NAME-$VERSION_TAG.$XCFRAMEWORK_EXTENSION.$XCFRAMEWORK_CHECKSUM_EXTENSION"
 
 # Bump up the MARKETING_VERSION in xcconfig so XCFramework uses the right version
-echo -e "👊 Bumping up MARKETING_VERSION in xcconfig to $MARKETING_VERSION..."
+echo -e "👊 Bumping up ${BLUE}MARKETING_VERSION$NOCOLOR in xcconfig to $YELLOW$MARKETING_VERSION$NOCOLOR..."
 update_version_file "$MARKETING_VERSION"
 
-# Commit changes to changelog
-echo "💮 Commit changelog and xcconfig..."
-git_commit_changelog_and_xcconfig "$MARKETING_VERSION"
+pause_execution_and_cleanup $SHOULD_PAUSE_SCRIPT_EXECUTION
 
-# Build libpact_ffi dependencies
+# Configure remote for release candidate and release version to push to
+echo -e "🌎 Adding $YELLOW$RELEASE_REPO_NAME.git$NOCOLOR as $YELLOW$REMOTE_NAME$NOCOLOR git remote..."
+git_add_remote "$REMOTE_NAME" "$REMOTE_REPO_BASE/$RELEASE_REPO_NAME.git"
+
+pause_execution_and_cleanup $SHOULD_PAUSE_SCRIPT_EXECUTION
+
+# Generate release notes
+echo -e "📝 Update changelog for ${LIGHT_BLUE}PactSwiftMockServer$NOCOLOR"
+update_pactswiftmockserver_changelog
+
+pause_execution_and_cleanup $SHOULD_PAUSE_SCRIPT_EXECUTION
+
+# Create a temporary branch for the release
+echo -e "⤴️ Creating a new branch $YELLOW$VERSION_BRANCH$NOCOLOR..."
+git_checkout_new_release_candidate_branch "$VERSION_BRANCH"
+
+pause_execution_and_cleanup $SHOULD_PAUSE_SCRIPT_EXECUTION
+
+# Build libpact_ffi dependencies (if needed)
 if [ "$SHOULD_BUILD_RUST_BIN" = true ]; then
   echo "🏗️ Building libpact_ffi binaries..."
   eval "$RELEASE_SOURCE_DIR/CI/build_rust_dependencies"
+
+  pause_execution_and_cleanup $SHOULD_PAUSE_SCRIPT_EXECUTION
 fi
 
 # Building the XCFramework
-echo "🏗️ Building the XCFramework..."
-eval "$RELEASE_SOURCE_DIR/CI/build_xcframework"
+echo "🏗️ Building new XCFramework..."
+eval "$RELEASE_SOURCE_DIR/CI/build_xcframework" "$VERSION_TAG"
 
-# Check out the RC branch to make changes on
-echo -e "🖖 Checking out RC branch $YELLOW$VERSION_BRANCH$NOCOLOR..."
-git_checkout_new_release_candidate_branch "$REMOTE_NAME" "$VERSION_BRANCH"
+pause_execution_and_cleanup $SHOULD_PAUSE_SCRIPT_EXECUTION
 
-# Push RC changes
-echo -e "🚢 Releasing version v$MARKETING_VERSION..."
-git_create_and_push_new_version "$REMOTE_NAME" "$VERSION_BRANCH" "$VERSION_TAG"
+# Update Package.swift with the new version
+echo -e "#️⃣ Update ${YELLOW}Package.swift$NOCOLOR with the new version $LIGHT_BLUE$VERSION_TAG$NOCOLOR..."
+update_swift_package_manifest_file
 
-echo -e "🧑‍💻 Open pull request for $MARKETING_VERSION..."
-github_open_draft_pull_request "$MARKETING_VERSION" "$VERSION_BRANCH"
+pause_execution_and_cleanup $SHOULD_PAUSE_SCRIPT_EXECUTION
+
+# We have the xcframework.zip's checksum now, commit changes to PactSwiftMockServer changelog
+echo "💮 Commit changelog and xcconfig..."
+git_commit_changelog_and_xcconfig "$MARKETING_VERSION"
+
+pause_execution_and_cleanup $SHOULD_PAUSE_SCRIPT_EXECUTION
+
+# Configure 'gh' environment
+echo -e "🔧 Configuring ${YELLOW}gh$NOCOLOR environment..."
+configure_gh_environment
+
+pause_execution_and_cleanup $SHOULD_PAUSE_SCRIPT_EXECUTION
+
+# Push CHANGELOG.md to the RELEASE_REMOTE
+echo -e "🚀 Pushing ${LIGHT_BLUE}CHANGELOG.md$NOCOLOR to $LIGHT_BLUE$REMOTE_NAME$NOCOLOR..."
+github_tag_orphaned_branch_and_push "$VERSION_TAG" "$VERSION_BRANCH"
+
+pause_execution_and_cleanup $SHOULD_PAUSE_SCRIPT_EXECUTION
+
+# Create a new release
+echo -e "🚀 Creating a new release for $YELLOW$VERSION_TAG$NOCOLOR..."
+github_create_release_for "$VERSION_TAG" "$RELEASE_OPTIONS"
+
+pause_execution_and_cleanup $SHOULD_PAUSE_SCRIPT_EXECUTION
+
+# Reset 'gh' environment
+echo "🛠️ Resetting 'gh' environment..."
+reset_gh_environment
+
+pause_execution_and_cleanup $SHOULD_PAUSE_SCRIPT_EXECUTION
 
 ##################
 # Cleanup
 ##################
+
 if [ "$DRY_RUN" = true ]; then
-  cmd="git clean -f -d -x && git checkout --force $CURRENT_BRANCH"
-  echo "🍸 Dry run done"
+  echo "🍸 Dry run done..."
   read -r -p "Clean up what has been generated during dry run? [Y/n]" -n 1 USER_INPUT
   echo
   if [[ $USER_INPUT =~ ^[Yy]$ ]]; then
-    execute_cmd "$cmd"
-    git_reset_changelog
+    cleanup
   else
     echo "🙌 Leaving everything that's been generated during dry run as is..."
-    echo -e "  Run $LIGHTBLUE$cmd$NOCOLOR to drop changes on this branch"
-    echo -e "  Run ${LIGHTBLUE}git reset --soft HEAD~1$NOCOLOR to revert version and CHANGELOG.md changes"
     exit 0
   fi
 else
-  cleanup
-  git_push_changelog
+  {
+    # Commit the changes and creating a PR
+    echo -e "🏷️ Re-tagging $YELLOW$VERSION_TAG$NOCOLOR..."
+    github_retag_release_and_push "$VERSION_TAG" "$VERSION_BRANCH"
+
+    pause_execution_and_cleanup $SHOULD_PAUSE_SCRIPT_EXECUTION
+
+    # Create a pull request for the new version
+    echo -e "📦 Creating a pull request for $YELLOW$VERSION_TAG$NOCOLOR"
+    github_create_pull_request_for_new_version "$VERSION_TAG" "$VERSION_BRANCH"
+
+    pause_execution_and_cleanup $SHOULD_PAUSE_SCRIPT_EXECUTION
+
+    cleanup
+  }
 fi
 
-echo "🏁 Done."
+echo -e "🏁 ${GREEN}DONE$NOCOLOR!"

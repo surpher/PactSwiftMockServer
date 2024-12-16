@@ -23,10 +23,10 @@ XCFRAMEWORK_NAME="$XCPRODUCT_NAME" # The name of the XCFramework as it will be s
 XCFRAMEWORK_EXTENSION="xcframework" # The extension of the XCFramework
 XCFRAMEWORK_CHECKSUM_EXTENSION="zip.checksum" # The extension of the checksum file
 
-REMOTE_NAME="releases" # The name of the locally set git remote
-RELEASE_REPO_NAME="PactSwiftMockServerXCFramework" # The repo name to which a new release is being pushed
-DEFAULT_REPO_NAME="PactSwiftMockServer" # The repo name where the source code is
+SUBMODULE_XCFRAMEWORK="XCFramework" # The name of the submodule that contains and hosts the XCFramework release
+
 REPO_OWNER="surpher" # Project owner on GitHub
+RELEASE_REPO_NAME="PactSwiftMockServerXCFramework" # The repo name to which a new release is being pushed
 REMOTE_REPO_BASE="git@github.com:$REPO_OWNER" # The SSH URI to the project owner's space
 
 XCFRAMEWORK_URL_TEMPLATE="https://github.com/${REPO_OWNER}/${RELEASE_REPO_NAME}/releases/download/___VERSION_TAG___/PactSwiftMockServer-___VERSION_TAG___.xcframework.zip" # The template for the URL to the XCFramework

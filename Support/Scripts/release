@@ -92,19 +92,18 @@ function execute_cmd {
   fi
 }
 
-function git_add_remote {
-  local remote_name="$1"
-  local remote_url="$2"
-
-  # Check if the remote already exists
-  if git remote get-url "$remote_name" &>/dev/null; then
-    echo "👍 Remote '$remote_name' already exists."
-  else
-    git remote add "$remote_name" "$remote_url"
-    echo "👍 Remote '$remote_name' added with URL: $remote_url"
+function pause_execution_and_cleanup {
+  local should_pause=$1
+  #local command="git clean -fdx && git checkout $CURRENT_BRANCH && git reset --hard HEAD~1"
+  if [ "$should_pause" = true ]; then
+    # pause_execution "$command"
+    pause_execution
   fi
-  git fetch "$remote_name"
 }
+
+##################
+# Git functions
+##################
 
 function git_checkout_new_release_candidate_branch {
   local release_version_branch="$1"
@@ -113,15 +112,89 @@ function git_checkout_new_release_candidate_branch {
   git checkout -b "$release_version_branch"
 }
 
-function configure_gh_environment {
-  execute_cmd "gh config set prompt disabled"
-  execute_cmd "gh repo set-default $REPO_OWNER/$RELEASE_REPO_NAME"
+function git_commit_changelog_and_xcconfig {
+  local release_tag="${VERSION_TAG:-$1}"
+
+  echo -e "🩹 Committing $YELLOW$CHANGE_LOG$NOCOLOR, $YELLOW$CONFIGURATION_FILE$NOCOLOR and ${YELLOW}Package.swift$NOCOLOR to git..."
+  git add "$CHANGE_LOG" "$CONFIGURATION_FILE" Package.swift
+  git commit -m "Release: $release_tag"
 }
 
-function reset_gh_environment {
-  execute_cmd "gh repo set-default $REPO_OWNER/$DEFAULT_REPO_NAME"
-  execute_cmd "gh config set prompt enabled"
+# function git_push_changes {
+#   echo "🛫 Pushing changes to $CURRENT_BRANCH"
+#   git push origin "$CURRENT_BRANCH"
+# }
+
+##################
+# Submodule
+
+function git_commit_changelog_to_xcframework_submodule {
+  local changelog_file="CHANGELOG.md"
+  local version_tag="$1"
+
+  {
+    echo -e "📝 Copying ${YELLOW}$changelog_file$NOCOLOR to $YELLOW$SUBMODULE_XCFRAMEWORK$NOCOLOR submodule..."
+    cp "$changelog_file" "$SUBMODULE_XCFRAMEWORK/$changelog_file"
+    cd "$SUBMODULE_XCFRAMEWORK"
+
+    # Commit new changelog
+    git add "$changelog_file"
+    git commit -m "Changelog: $version_tag"
+
+    # Tag it
+    git tag -a "$version_tag" -m "Release: $version_tag"
+    git push origin main
+    git push origin "$version_tag"
+    cd -
+  }
 }
+
+function git_update_main_repo_with_submodule_reference {
+  local version_tag="$1"
+  local version_branch="$2"
+  git add "$SUBMODULE_XCFRAMEWORK"
+  git commit -m "Update submodule reference - $version_tag"
+  git push --set-upstream origin "$version_branch"
+}
+
+##################
+# GitHub functions
+##################
+
+function github_create_release_for {
+  is_tool_installed gh "See https://cli.github.com/ for more information..."
+
+  local release_tag="$1"
+  local release_options="${2:-}"
+
+  # shellcheck disable=SC2153
+  local command="gh release create \"$release_tag\" \
+    --title $release_tag \
+    --notes-file $TAG_MESSAGE_FILE \
+    $release_options"
+  execute_cmd "$command"
+
+  local upload_assets="gh release upload \"$release_tag\" $VERSIONED_XCFRAMEWORK_NAME.zip $VERSIONED_XCFRAMEWORK_CHECKSUM --clobber --repo $REPO_OWNER/$RELEASE_REPO_NAME"
+  execute_cmd "$upload_assets"
+}
+
+function github_create_pull_request_for_new_version {
+  local version_tag="$1"
+  local version_branch="$2"
+  local pr_message="Release: $version_tag ($REPO_OWNER/$RELEASE_REPO_NAME/releases/tag/$version_tag)"
+  local dry_run=; dry_run=$([ "$DRY_RUN" = true ] && echo "--dry-run" || echo "")
+  local open_pr_cmd="gh pr create --draft --base main --head \"$version_branch\" $dry_run --title \"$version_tag\" --body \"$pr_message\" --repo $REPO_OWNER/$XCPRODUCT_NAME"
+
+  echo "🧼 Cleaning up and removing the branch..."
+  execute_cmd "git clean -fdx"
+
+  echo "🗃️ Opening a draft pull request..."
+  execute_cmd "$open_pr_cmd"
+}
+
+####################
+# File manipulation
+####################
 
 function update_version_file {
   local marketing_version="MARKETING_VERSION = $1"
@@ -191,64 +264,6 @@ function update_swift_package_manifest_file {
   done < "$package_file"
 }
 
-function github_create_release_for {
-  is_tool_installed gh "See https://cli.github.com/ for more information..."
-
-  local release_tag="$1"
-  local release_options="${2:-}"
-
-  # shellcheck disable=SC2153
-  local command="gh release create \"$release_tag\" \
-    --title $release_tag \
-    --notes-file $TAG_MESSAGE_FILE \
-    $release_options"
-  execute_cmd "$command"
-
-  local upload_assets="gh release upload \"$release_tag\" $VERSIONED_XCFRAMEWORK_NAME.zip $VERSIONED_XCFRAMEWORK_CHECKSUM --clobber"
-  execute_cmd "$upload_assets"
-}
-
-function github_tag_orphaned_branch_and_push {
-  local release_tag="$1"
-  local release_branch="$2"
-  local branch_name="orphan-$release_branch"
-
-  execute_cmd "git checkout --orphan $branch_name"
-  execute_cmd "git add CHANGELOG.md"
-  execute_cmd "git commit -m 'Release: $release_tag'"
-  execute_cmd "git tag -a \"$release_tag\" -m \"Release: $release_tag\""
-  execute_cmd "git push $REMOTE_NAME $release_tag"
-  execute_cmd "git checkout $release_branch"
-}
-
-function git_commit_changelog_and_xcconfig {
-  local release_tag="${VERSION_TAG:-$1}"
-
-  echo -e "🩹 Committing $YELLOW$CHANGE_LOG$NOCOLOR, $YELLOW$CONFIGURATION_FILE$NOCOLOR and ${YELLOW}Package.swift$NOCOLOR to git..."
-  git add "$CHANGE_LOG" "$CONFIGURATION_FILE" Package.swift
-  git commit -m "Release: $release_tag"
-}
-
-function git_push_changelog {
-  echo "🛫 Pushing changes to $CURRENT_BRANCH"
-  git push origin "$CURRENT_BRANCH"
-}
-
-function pause_execution_and_cleanup {
-  local should_pause=$1
-  #local command="git clean -fdx && git checkout $CURRENT_BRANCH && git reset --hard HEAD~1"
-  if [ "$should_pause" = true ]; then
-    # pause_execution "$command"
-    pause_execution
-  fi
-}
-
-# IS THIS USED AT ALL?
-function git_clean_and_reset {
-  local command="git clean -fdx && git checkout $CURRENT_BRANCH && git reset --hard HEAD~1"
-  execute_cmd "$command"
-}
-
 function cleanup {
   local git_clean="git clean -fdx"
   local current_branch=$CURRENT_BRANCH
@@ -271,30 +286,6 @@ function cleanup {
 
   echo -e "🚮 Removing untracked files and directories..."
   execute_cmd "$git_clean"
-}
-
-function github_retag_release_and_push {
-  local release_version="$1"
-  local release_version_branch="$2"
-  echo -e "Re-tagging the $YELLOW$release_version$NOCOLOR release..."
-
-  # Remove the tag! PactSwiftMockServer should create own tag when PR is merged.
-  execute_cmd "git tag -d \"$release_version\""
-  execute_cmd "git push -u origin $release_version_branch"
-}
-
-function github_create_pull_request_for_new_version {
-  local version_tag="$1"
-  local version_branch="$2"
-  local pr_message="Release: $version_tag ($REPO_OWNER/$RELEASE_REPO_NAME/releases/tag/$version_tag)"
-  local dry_run=; dry_run=$([ "$DRY_RUN" = true ] && echo "--dry-run" || echo "")
-  local open_pr_cmd="gh pr create --draft --base main --head \"$version_branch\" $dry_run --title \"$version_tag\" --body \"$pr_message\""
-
-  echo "🧼 Cleaning up removing the branch..."
-  execute_cmd "git clean -fdx"
-
-  echo "🗃️ Opening a draft pull request..."
-  execute_cmd "$open_pr_cmd"
 }
 
 ##################
@@ -356,9 +347,6 @@ if [[ -z $RELEASE_VERSION_PART || ! "$RELEASE_VERSION_PART" =~ ^(major|minor|pat
   show_help
 fi
 
-##################
-# Generate RC
-##################
 VERSION_TAG=$(generate_version_number "$RELEASE_VERSION_PART" "$RELEASE_DESCRIPTION")
 VERSION_BRANCH="rc/${VERSION_TAG// /_}"
 MARKETING_VERSION=${VERSION_TAG#v}
@@ -366,78 +354,78 @@ MARKETING_VERSION=${MARKETING_VERSION%% -*}
 VERSIONED_XCFRAMEWORK_NAME="$XCFRAMEWORK_NAME-$VERSION_TAG.$XCFRAMEWORK_EXTENSION"
 VERSIONED_XCFRAMEWORK_CHECKSUM="$XCFRAMEWORK_NAME-$VERSION_TAG.$XCFRAMEWORK_EXTENSION.$XCFRAMEWORK_CHECKSUM_EXTENSION"
 
+################################
+# Prepare package for release
+################################
+
 # Bump up the MARKETING_VERSION in xcconfig so XCFramework uses the right version
 echo -e "👊 Bumping up ${BLUE}MARKETING_VERSION$NOCOLOR in xcconfig to $YELLOW$MARKETING_VERSION$NOCOLOR..."
 update_version_file "$MARKETING_VERSION"
-
-pause_execution_and_cleanup $SHOULD_PAUSE_SCRIPT_EXECUTION
-
-# Configure remote for release candidate and release version to push to
-echo -e "🌎 Adding $YELLOW$RELEASE_REPO_NAME.git$NOCOLOR as $YELLOW$REMOTE_NAME$NOCOLOR git remote..."
-git_add_remote "$REMOTE_NAME" "$REMOTE_REPO_BASE/$RELEASE_REPO_NAME.git"
-
 pause_execution_and_cleanup $SHOULD_PAUSE_SCRIPT_EXECUTION
 
 # Generate release notes
 echo -e "📝 Update changelog for ${LIGHT_BLUE}PactSwiftMockServer$NOCOLOR"
 update_pactswiftmockserver_changelog
-
 pause_execution_and_cleanup $SHOULD_PAUSE_SCRIPT_EXECUTION
 
 # Create a temporary branch for the release
 echo -e "⤴️ Creating a new branch $YELLOW$VERSION_BRANCH$NOCOLOR..."
 git_checkout_new_release_candidate_branch "$VERSION_BRANCH"
-
 pause_execution_and_cleanup $SHOULD_PAUSE_SCRIPT_EXECUTION
 
 # Build libpact_ffi dependencies (if needed)
 if [ "$SHOULD_BUILD_RUST_BIN" = true ]; then
   echo "🏗️ Building libpact_ffi binaries..."
   eval "$RELEASE_SOURCE_DIR/CI/build_rust_dependencies"
-
   pause_execution_and_cleanup $SHOULD_PAUSE_SCRIPT_EXECUTION
 fi
 
 # Building the XCFramework
 echo "🏗️ Building new XCFramework..."
 eval "$RELEASE_SOURCE_DIR/CI/build_xcframework" "$VERSION_TAG"
-
 pause_execution_and_cleanup $SHOULD_PAUSE_SCRIPT_EXECUTION
 
-# Update Package.swift with the new version
+# Update Package.swift with the new version and checksum
 echo -e "#️⃣ Update ${YELLOW}Package.swift$NOCOLOR with the new version $LIGHT_BLUE$VERSION_TAG$NOCOLOR..."
 update_swift_package_manifest_file
-
 pause_execution_and_cleanup $SHOULD_PAUSE_SCRIPT_EXECUTION
 
-# We have the xcframework.zip's checksum now, commit changes to PactSwiftMockServer changelog
+# We have the references updated now now, commit changes to PactSwiftMockServer
 echo "💮 Commit changelog and xcconfig..."
 git_commit_changelog_and_xcconfig "$MARKETING_VERSION"
-
 pause_execution_and_cleanup $SHOULD_PAUSE_SCRIPT_EXECUTION
 
-# Configure 'gh' environment
-echo -e "🔧 Configuring ${YELLOW}gh$NOCOLOR environment..."
-configure_gh_environment
+##################################
+# XCFramework Submodule handling
+##################################
 
+# Copy CHANGELOG.md to the XCFramework submodule
+echo -e "🧑‍🤝‍🧑 Copying ${YELLOW}CHANGELOG.md$NOCOLOR to $YELLOW$SUBMODULE_XCFRAMEWORK$NOCOLOR submodule..."
+git_commit_changelog_to_xcframework_submodule "$VERSION_TAG"
 pause_execution_and_cleanup $SHOULD_PAUSE_SCRIPT_EXECUTION
 
-# Push CHANGELOG.md to the RELEASE_REMOTE
-echo -e "🚀 Pushing ${LIGHT_BLUE}CHANGELOG.md$NOCOLOR to $LIGHT_BLUE$REMOTE_NAME$NOCOLOR..."
-github_tag_orphaned_branch_and_push "$VERSION_TAG" "$VERSION_BRANCH"
-
+# Update main repo with submodule reference
+echo -e "🔄 Updating main repo with submodule reference..."
+git_update_main_repo_with_submodule_reference "$VERSION_TAG"
 pause_execution_and_cleanup $SHOULD_PAUSE_SCRIPT_EXECUTION
 
 # Create a new release
 echo -e "🚀 Creating a new release for $YELLOW$VERSION_TAG$NOCOLOR..."
 github_create_release_for "$VERSION_TAG" "$RELEASE_OPTIONS"
-
 pause_execution_and_cleanup $SHOULD_PAUSE_SCRIPT_EXECUTION
 
-# Reset 'gh' environment
-echo "🛠️ Resetting 'gh' environment..."
-reset_gh_environment
+####################################
+# Tagging and PR in main repository
+####################################
 
+# Commit the changes and creating a PR
+echo -e "🏷️ Re-tagging $YELLOW$VERSION_TAG$NOCOLOR..."
+github_retag_release_and_push "$VERSION_TAG" "$VERSION_BRANCH"
+pause_execution_and_cleanup $SHOULD_PAUSE_SCRIPT_EXECUTION
+
+# Create a pull request for the new version
+echo -e "📦 Creating a pull request for $YELLOW$VERSION_TAG$NOCOLOR"
+github_create_pull_request_for_new_version "$VERSION_TAG" "$VERSION_BRANCH"
 pause_execution_and_cleanup $SHOULD_PAUSE_SCRIPT_EXECUTION
 
 ##################
@@ -455,21 +443,7 @@ if [ "$DRY_RUN" = true ]; then
     exit 0
   fi
 else
-  {
-    # Commit the changes and creating a PR
-    echo -e "🏷️ Re-tagging $YELLOW$VERSION_TAG$NOCOLOR..."
-    github_retag_release_and_push "$VERSION_TAG" "$VERSION_BRANCH"
-
-    pause_execution_and_cleanup $SHOULD_PAUSE_SCRIPT_EXECUTION
-
-    # Create a pull request for the new version
-    echo -e "📦 Creating a pull request for $YELLOW$VERSION_TAG$NOCOLOR"
-    github_create_pull_request_for_new_version "$VERSION_TAG" "$VERSION_BRANCH"
-
-    pause_execution_and_cleanup $SHOULD_PAUSE_SCRIPT_EXECUTION
-
-    cleanup
-  }
+  cleanup
 fi
 
 echo -e "🏁 ${GREEN}DONE$NOCOLOR!"

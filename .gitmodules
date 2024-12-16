@@ -1,3 +1,6 @@
 [submodule "pact-reference"]
 	path = pact-reference
 	url = https://github.com/pact-foundation/pact-reference.git
+[submodule "XCFramework"]
+	path = XCFramework
+	url = git@github.com:surpher/PactSwiftMockServerXCFramework.git

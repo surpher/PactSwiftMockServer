@@ -276,9 +276,6 @@ function cleanup {
   echo -e "🧹 Removing $YELLOW$release_version_branch$NOCOLOR..."
   git branch -D "$release_version_branch"
 
-  echo -e "🌏 Removing remote named $YELLOW$REMOTE_NAME$NOCOLOR..."
-  git remote remove "$REMOTE_NAME"
-
   echo -e "🚮 Removing untracked files and directories..."
   execute_cmd "$git_clean"
 }
@@ -399,11 +396,6 @@ echo -e "🧑‍🤝‍🧑 Copying ${YELLOW}CHANGELOG.md$NOCOLOR to $YELLOW$SUB
 git_commit_changelog_to_xcframework_submodule "$VERSION_TAG"
 pause_execution_and_cleanup $SHOULD_PAUSE_SCRIPT_EXECUTION
 
-# Update main repo with submodule reference
-echo -e "🔄 Updating main repo with submodule reference..."
-git_update_main_repo_with_submodule_reference "$VERSION_TAG" "$VERSION_BRANCH"
-pause_execution_and_cleanup $SHOULD_PAUSE_SCRIPT_EXECUTION
-
 # Create a new release
 echo -e "🚀 Creating a new release for $YELLOW$VERSION_TAG$NOCOLOR..."
 github_create_release_for "$VERSION_TAG" "$RELEASE_OPTIONS"
@@ -412,6 +404,11 @@ pause_execution_and_cleanup $SHOULD_PAUSE_SCRIPT_EXECUTION
 ####################################
 # Open a PR in main repository
 ####################################
+
+# Update main repo with submodule reference
+echo -e "🔄 Updating main repo with submodule reference..."
+git_update_main_repo_with_submodule_reference "$VERSION_TAG" "$VERSION_BRANCH"
+pause_execution_and_cleanup $SHOULD_PAUSE_SCRIPT_EXECUTION
 
 # Create a pull request for the new version
 echo -e "📦 Creating a pull request for $YELLOW$VERSION_TAG$NOCOLOR"

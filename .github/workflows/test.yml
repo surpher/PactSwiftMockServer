@@ -1,6 +1,7 @@
-name: "Build and Test"
+name: "🧑‍🔬 Build and Test"
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - 'run-on-ci/**'
@@ -13,7 +14,7 @@ env:
 
 jobs:
   sharedInputs:
-    name: "🔣 Shared envs"
+    name: "👭 Shared envs"
     runs-on: ubuntu-latest
     outputs:
       rust-target-path: ${{ env.RUST_TARGET_PATH }}
@@ -27,7 +28,7 @@ jobs:
   buildFFI:
     name: "📦 Dependencies"
     needs: [sharedInputs]
-    uses: ./.github/workflows/build_rust_binaries.yml
+    uses: ./.github/workflows/tmpl_build_rust_binaries.yml
     with:
       rust-target-path: ${{ needs.sharedInputs.outputs.rust-target-path }}
       binaries-path: ${{ needs.sharedInputs.outputs.binaries-path }}
@@ -37,7 +38,7 @@ jobs:
   testMacOS14:
     name: "🤖 Unit tests"
     needs: [sharedInputs, buildFFI]
-    uses: ./.github/workflows/test_macos14_arm64.yml
+    uses: ./.github/workflows/tmpl_test_macos14_arm64.yml
     secrets:
       codecov_token: ${{ secrets.CODECOV_TOKEN }}
     with:
@@ -50,7 +51,7 @@ jobs:
   testMacOS13:
     name: "🤖 Unit tests"
     needs: [sharedInputs, buildFFI]
-    uses: ./.github/workflows/test_macos13_x86_64.yml
+    uses: ./.github/workflows/tmpl_test_macos13_x86_64.yml
     with:
       rust-target-path: ${{ needs.sharedInputs.outputs.rust-target-path }}
       binaries-path: ${{ needs.sharedInputs.outputs.binaries-path }}

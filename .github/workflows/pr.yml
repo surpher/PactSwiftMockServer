@@ -1,48 +1,59 @@
-name: "Build and Test"
+name: "🏷️ Tag on PR merge"
 
 on:
+  workflow_dispatch:
   pull_request:
+    types: [closed]
     branches:
       - main
 
-env:
-  RUST_TARGET_PATH: pact-reference/rust/target
-  BINARIES_PATH: Resources
-  CACHE_KEY: build-ffi-rust
-  CACHE_RESTORE_KEY: build-ffi-rust
-
 jobs:
-  sharedInputs:
-    name: "🔣 Shared envs"
+  run_on_merge:
+    if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
-    outputs:
-      rust-target-path: ${{ env.RUST_TARGET_PATH }}
-      binaries-path: ${{ env.BINARIES_PATH }}
-      cache-key: ${{ env.CACHE_KEY }}
-      cache-restore-key: ${{ env.CACHE_RESTORE_KEY }}
 
     steps:
-      - run: echo "Just a hacky workaround for passing envs to jobs expecting them... ¯\_(ツ)_/¯"
+      - name: "📦 Checkout"
+        uses: actions/checkout@v4
 
-  buildFFI:
-    name: "📦 Dependencies"
-    needs: [sharedInputs]
-    uses: ./.github/workflows/build_rust_binaries.yml
-    with:
-      rust-target-path: ${{ needs.sharedInputs.outputs.rust-target-path }}
-      binaries-path: ${{ needs.sharedInputs.outputs.binaries-path }}
-      cache-key: ${{ needs.sharedInputs.outputs.cache-key }}
-      cache-restore-key: ${{ needs.sharedInputs.outputs.cache-restore-key }}
+      - name: "🔍 Find the current version"
+        id: find_version
+        run: |
+          RELEASE_VERSION=$(sed -n '2p' Configurations/Project-Shared.xcconfig | cut -d '=' -f2 | tr -d ' ')
+          echo "Found version: v$RELEASE_VERSION"
+          echo "NEW_RELEASE_VERSION=v$RELEASE_VERSION" >> $GITHUB_ENV
 
-  testMacOS14:
-    name: "🤖 Unit tests"
-    needs: [sharedInputs, buildFFI]
-    uses: ./.github/workflows/test_macos14_arm64.yml
-    secrets:
-      codecov_token: ${{ secrets.CODECOV_TOKEN }}
-    with:
-      rust-target-path: ${{ needs.sharedInputs.outputs.rust-target-path }}
-      binaries-path: ${{ needs.sharedInputs.outputs.binaries-path }}
-      cache-key: ${{ needs.sharedInputs.outputs.cache-key }}
-      cache-restore-key: ${{ needs.sharedInputs.outputs.cache-restore-key }}
-      submit-coverage-report: true
+      - name: "🔑 Set up GPG"
+        id: setup_gpg
+        env:
+          GPG_KEY_ID: ${{ secrets.GPG_KEY_ID }}
+        run: |
+          echo "${{ secrets.GPG_PRIVATE_KEY }}" | gpg --batch --import
+          echo "default-key ${{ env.GPG_KEY_ID }}" > $HOME/.gnupg/gpg.conf
+          echo "pinentry-mode loopback" >> $HOME/.gnupg/gpg.conf
+
+          git config --global user.signingkey ${{ env.GPG_KEY_ID }}
+          git config --global commit.gpgsign true
+
+      - name: "🏷️ Create a signed tag"
+        id: create_tag
+        env:
+          NEW_RELEASE_VERSION: ${{ steps.find_version.outputs.NEW_RELEASE_VERSION }}
+        run: |
+          git config user.name "surpher"
+          git config user.email "${{ secrets.GPG_EMAIL }}"
+          git tag -s -a ${{ env.NEW_RELEASE_VERSION }} -m "Release ${{ env.NEW_RELEASE_VERSION }}"
+          git push origin ${{ env.NEW_RELEASE_VERSION }}
+
+      - name: "🚀 Create a release"
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.RELEASE_PAT }}
+          NEW_RELEASE_VERSION: ${{ steps.find_version.outputs.NEW_RELEASE_VERSION }}
+        with:
+          tag_name: ${{ env.NEW_RELEASE_VERSION }}
+          release_name: "Release: ${{ env.NEW_RELEASE_VERSION }}"
+          body: "Release ${{ env.NEW_RELEASE_VERSION }}"
+          draft: false
+          prerelease: false

@@ -2,17 +2,7 @@
 //  Created by Marko Justinek on 25/5/20.
 //  Copyright © 2020 Marko Justinek. All rights reserved.
 //
-//  Permission to use, copy, modify, and/or distribute this software for any
-//  purpose with or without fee is hereby granted, provided that the above
-//  copyright notice and this permission notice appear in all copies.
-//
-//  THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
-//  WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
-//  MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY
-//  SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
-//  WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
-//  ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR
-//  IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+//  See LICENSE file for licensing information.
 //
 
 @testable import PactSwiftMockServer
@@ -20,16 +10,6 @@
 import XCTest
 
 class MockServerErrorTests: XCTestCase {
-
-	public enum Error: Equatable {
-		case unknown(Int32)
-		case invalidHandle
-		case invalidPactJSON
-		case unableToStart
-		case panic
-		case invalidAddress
-		case tlsConfigFailure
-	}
 
 	func testErrorCodes() {
 		XCTAssertEqual(MockServer.Error.invalidHandle.rawValue, -1)
@@ -49,5 +29,23 @@ class MockServerErrorTests: XCTestCase {
 		XCTAssertEqual(MockServer.Error(rawValue: -5), .invalidAddress)
 		XCTAssertEqual(MockServer.Error(rawValue: -6), .tlsConfigFailure)
 		XCTAssertEqual(MockServer.Error(rawValue: -10), .unknown(-10))
+	}
+
+	func testMockServerErrorFailureReason() {
+		// Test all standard error cases
+		let testCases: [(MockServer.Error, String)] = [
+			(.invalidHandle, "Invalid handle when starting mock server"),
+			(.invalidPactJSON, "Invalid Pact JSON"),
+			(.unableToStart, "Unable to start mock server"),
+			(.panicked, "The Pact reference library panicked"),
+			(.invalidAddress, "Invalid IP address"),
+			(.tlsConfigFailure, "Could not create the TLS configuration with the self-signed certificate"),
+			(.unknown(42), "Unknown mock server error: 42")
+		]
+
+		// Test each case
+		for (error, expectedMessage) in testCases {
+			XCTAssertEqual(error.failureReason, expectedMessage)
+		}
 	}
 }

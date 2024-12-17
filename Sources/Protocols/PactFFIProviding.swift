@@ -65,4 +65,10 @@ protocol PactFFIProviding {
 
 	func withRequest(handle: InteractionHandle, method: Interaction.HTTPMethod, path: String) throws
 
+	// Utils
+
+	func generateString(regex: String) -> String?
+
+	func generateDateTimeString(format: String) -> String?
+
 }

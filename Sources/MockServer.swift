@@ -110,7 +110,7 @@ public class MockServer {
 		let tryPort = port ?? Self.randomPort
 		Logging.log(.debug, message: "Starting mock server on \(socketAddress):\(tryPort)...")
 
-		let result = try self.ffiProvider.mockServerForTransferProtocol(
+		let result = try ffiProvider.mockServerForTransferProtocol(
 			pactHandle: pact.handle,
 			socketAddress: socketAddress,
 			port: tryPort,

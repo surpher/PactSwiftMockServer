@@ -209,6 +209,34 @@ struct DefaultPactFFIProvider: PactFFIProviding {
 			throw InteractionError.canNotBeModified
 		}
 	}
+
+	func generateString(regex: String) -> String? {
+		let result = pactffi_generate_regex_value(regex.cString(using: .utf8))
+		guard
+			result.tag == StringResult_Ok,
+			let stringPointer = result.ok
+		else {
+			return nil
+		}
+
+		defer {
+			pactffi_string_delete(stringPointer)
+		}
+
+		return String(cString: stringPointer)
+	}
+
+	func generateDateTimeString(format: String) -> String? {
+		let result = pactffi_generate_datetime_string(format.cString(using: .utf8))
+		guard result.tag == StringResult_Ok, let stringPointer = result.ok else {
+			return nil
+		}
+		defer {
+			pactffi_string_delete(stringPointer)
+		}
+
+		return String(cString: stringPointer)
+	}
 }
 
 // MARK: - Private extensions

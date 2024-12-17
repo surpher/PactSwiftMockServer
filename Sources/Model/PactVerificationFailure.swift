@@ -2,22 +2,13 @@
 //  Created by Marko Justinek on 27/4/20.
 //  Copyright © 2020 Marko Justinek. All rights reserved.
 //
-//  Permission to use, copy, modify, and/or distribute this software for any
-//  purpose with or without fee is hereby granted, provided that the above
-//  copyright notice and this permission notice appear in all copies.
-//
-//  THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
-//  WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
-//  MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY
-//  SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
-//  WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
-//  ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR
-//  IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+//  See LICENSE file for licensing information.
 //
 
 import Foundation
 
 public struct PactVerificationFailure: Sendable {
+
 	public let type: FailureType
 	public let method: String
 	public let path: String
@@ -65,7 +56,21 @@ public struct PactVerificationFailure: Sendable {
 	}
 }
 
+// MARK: - Extensions
+
+extension PactVerificationFailure: CustomStringConvertible {
+
+	public var description: String {
+		"""
+		Failure: \(type.description) "\(method) \(path)"
+		\(request?.description ?? "")
+		\(mismatches.map(\.description).joined(separator: "\n"))
+		"""
+	}
+}
+
 extension PactVerificationFailure: Decodable {
+
 	enum CodingKeys: String, CodingKey {
 		case type
 		case method
@@ -84,6 +89,10 @@ extension PactVerificationFailure: Decodable {
 	}
 }
 
+// MARK: - Request
+
+extension PactVerificationFailure.Request: Decodable {}
+
 extension PactVerificationFailure.Request: CustomStringConvertible {
 	public var description: String {
 		"""
@@ -95,22 +104,10 @@ extension PactVerificationFailure.Request: CustomStringConvertible {
 	}
 }
 
-extension PactVerificationFailure: CustomStringConvertible {
-
-	public var description: String {
-
-		"""
-		Failure: \(type.description) "\(method) \(path)"
-		\(request?.description ?? "")
-		\(mismatches.map(\.description).joined(separator: "\n"))
-		"""
-	}
-
-}
-
-extension PactVerificationFailure.Request: Decodable {}
+// MARK: - Mismatch
 
 extension PactVerificationFailure.Mismatch: Decodable, CustomStringConvertible {
+
 	public var description: String {
 
 		var items: [String] = []
@@ -131,8 +128,9 @@ extension PactVerificationFailure.Mismatch: Decodable, CustomStringConvertible {
 			  \(items.joined(separator: "\n  "))
 			"""
 	}
-
 }
+
+// MARK: - MismatchType
 
 extension PactVerificationFailure.Mismatch.MismatchType: RawRepresentable, Decodable {
 
@@ -161,6 +159,10 @@ extension PactVerificationFailure.Mismatch.MismatchType: RawRepresentable, Decod
 		}
 	}
 }
+
+extension PactVerificationFailure.Mismatch.MismatchType: Equatable { }
+
+// MARK: FailureType
 
 extension PactVerificationFailure.FailureType: RawRepresentable, Decodable, CustomStringConvertible {
 
@@ -195,7 +197,6 @@ extension PactVerificationFailure.FailureType: RawRepresentable, Decodable, Cust
 	}
 
 	public var description: String {
-
 		switch self {
 		case .missing:
 			return "Missing request"
@@ -205,19 +206,42 @@ extension PactVerificationFailure.FailureType: RawRepresentable, Decodable, Cust
 			return "Request does not match"
 		case .mockServerParsingFail:
 			return
-				"""
-				Failed to parse Mock Server error response!
-				Please report this as an issue. Provide this test as an example to help us debug and improve this framework.
-				"""
+	"""
+	Failed to parse Mock Server error response!
+	Please report this as an issue. Provide this test as an example to help us debug and improve this framework.
+	"""
 		case .unknown(let value):
 			return
-				"""
-				Unknown type \(value)! Not entirely sure what happened!
-				Please report this as an issue. Provide this test as an example to help us debug and improve this framework.
-				"""
+	"""
+	Unknown type \(value)! Not entirely sure what happened!
+	Please report this as an issue. Provide this test as an example to help us debug and improve this framework.
+	"""
 		}
 	}
 }
+
+extension PactVerificationFailure.FailureType: Equatable {
+
+	// Add Equatable conformance for associated values
+	public static func == (lhs: Self, rhs: Self) -> Bool {
+		switch (lhs, rhs) {
+		case (.missing, .missing):
+			return true
+		case (.requestNotFound, .requestNotFound):
+			return true
+		case (.requestMismatch, .requestMismatch):
+			return true
+		case (.mockServerParsingFail, .mockServerParsingFail):
+			return true
+		case (.unknown(let lhsValue), .unknown(let rhsValue)):
+			return lhsValue == rhsValue
+		default:
+			return false
+		}
+	}
+}
+
+// MARK: - Expected
 
 // This is only used to handle Mock Server's bug where it returns a String or an Array<Int> depending on the request. :|
 extension PactVerificationFailure.Mismatch.Expected: Decodable {
@@ -233,8 +257,9 @@ extension PactVerificationFailure.Mismatch.Expected: Decodable {
 			expectedString = expectedIntArray.map { "\($0)" }.joined(separator: ",")
 		}
 	}
-
 }
+
+// MARK: - Actual
 
 extension PactVerificationFailure.Mismatch.Actual: Decodable {
 
@@ -248,5 +273,4 @@ extension PactVerificationFailure.Mismatch.Actual: Decodable {
 			actualString = actualIntArray.map { "\($0)" }.joined(separator: ",")
 		}
 	}
-
 }

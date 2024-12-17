@@ -2,17 +2,7 @@
 //  Created by Marko Justinek on 12/4/20.
 //  Copyright © 2020 Marko Justinek. All rights reserved.
 //
-//  Permission to use, copy, modify, and/or distribute this software for any
-//  purpose with or without fee is hereby granted, provided that the above
-//  copyright notice and this permission notice appear in all copies.
-//
-//  THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
-//  WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
-//  MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY
-//  SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
-//  WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
-//  ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR
-//  IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+//  See LICENSE file for licensing information.
 //
 
 @testable import PactSwiftMockServer
@@ -50,5 +40,43 @@ final class MockServerTests: XCTestCase {
 		let pact = Pact(consumer: "Consumer", provider: "Provider")
 		let server = try MockServer(pact: pact, transferProtocol: .secure)
 		XCTAssertNotNil(server.tlsCACertificate)
+	}
+
+	func testMockServer_NoTLSCert() throws {
+		let pact = Pact(consumer: "Consumer", provider: "Provider")
+		let mockFFIProvider = MockPactFFIProvider()
+		mockFFIProvider.returnNil(true)
+		let server = try MockServer(pact: pact, transferProtocol: .secure, port: nil, ffiProvider: mockFFIProvider)
+		XCTAssertNil(server.tlsCACertificate)
+	}
+
+	func testMockServer_Mismatches() throws {
+		let pact = Pact(consumer: "Consumer", provider: "Provider")
+		let mockFFIProvider = MockPactFFIProvider()
+		let server = try MockServer(pact: pact, transferProtocol: .secure, port: nil, ffiProvider: mockFFIProvider)
+		XCTAssertEqual(server.mismatchesJSON, MockPactFFIProvider.mockServerMismatchesString)
+	}
+
+	func testMockServer_NilMismatches() throws {
+		let pact = Pact(consumer: "Consumer", provider: "Provider")
+		let mockFFIProvider = MockPactFFIProvider()
+		mockFFIProvider.returnNil(true)
+		let server = try MockServer(pact: pact, transferProtocol: .secure, port: nil, ffiProvider: mockFFIProvider)
+		XCTAssertNil(server.mismatchesJSON)
+	}
+
+	func testMockServer_GetLogs() throws {
+		let pact = Pact(consumer: "Consumer", provider: "Provider")
+		let mockFFIProvider = MockPactFFIProvider()
+		let server = try MockServer(pact: pact, transferProtocol: .secure, port: nil, ffiProvider: mockFFIProvider)
+		XCTAssertEqual(server.logs, "mock-server-logs")
+	}
+
+	func testMockServer_NoLogs() throws {
+		let pact = Pact(consumer: "Consumer", provider: "Provider")
+		let mockFFIProvider = MockPactFFIProvider()
+		mockFFIProvider.returnNil(true)
+		let server = try MockServer(pact: pact, transferProtocol: .secure, port: nil, ffiProvider: mockFFIProvider)
+		XCTAssertEqual(server.logs, "ERROR: Unable to retrieve mock server logs")
 	}
 }

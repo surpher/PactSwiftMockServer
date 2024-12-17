@@ -39,15 +39,15 @@ public enum Logging {
 	}
 
 	/// Defines Logging Level Filters.
-	public enum Filter {
+	public enum Filter: Sendable {
 		case off, error, warn, info, debug, trace
 	}
 
 	/// The different types of log sinks that can be attached.
-	public enum Sink {
+	public enum Sink: Sendable {
 
 		/// Defines the configuration of a ``Logging/Sink``.
-		public struct Config {
+		public struct Config: Sendable {
 			var sink: Sink
 			var filter: Filter
 

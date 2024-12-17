@@ -19,13 +19,14 @@
 
 import XCTest
 
-class MockServerTests: XCTestCase {
+final class MockServerTests: XCTestCase {
 
-	@MainActor
-	class override func setUp() {
-		super.setUp()
-		try! Logging.initialize()
+	override func setUp() async throws {
+		try await super.setUp()
+		try await Logging.initialize()
 	}
+
+	// MARK: - Tests
 
 	func testMockServer_Initializes() throws {
 		let pact = Pact(consumer: "Consumer", provider: "Provider")

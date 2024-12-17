@@ -30,10 +30,9 @@ final class PactBuilderTests: XCTestCase {
 		NSTemporaryDirectory().appending("pacts/")
 	}
 
-	@MainActor
-	class override func setUp() {
-		super.setUp()
-		try! Logging.initialize()
+	override func setUp() async throws {
+		try await super.setUp()
+		try await Logging.initialize()
 	}
 
 	override func setUpWithError() throws {
@@ -53,7 +52,9 @@ final class PactBuilderTests: XCTestCase {
 	}
 
 	func testPactVersion() throws {
-		XCTAssertEqual(Pact.version, "0.4.23")
+		let pact = Pact(consumer: consumer, provider: provider)
+
+		XCTAssertEqual(pact.version, "0.4.23")
 	}
 
 	func testGetEvents() async throws {

@@ -19,14 +19,14 @@
 
 import XCTest
 
-@MainActor
-class InteractionTests: XCTestCase {
+final class InteractionTests: XCTestCase {
 
-	@MainActor
-	class override func setUp() {
-		super.setUp()
-		try! Logging.initialize()
+	override func setUp() async throws {
+		try await super.setUp()
+		try await Logging.initialize()
 	}
+
+	// MARK: - Tests
 
 	func testInteractionInitialization() throws {
 		let pact = try Pact(consumer: "consumer", provider: "provider")

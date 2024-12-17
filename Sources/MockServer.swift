@@ -2,17 +2,7 @@
 //  Created by Marko Justinek on 10/5/21.
 //  Copyright © 2020 Marko Justinek. All rights reserved.
 //
-//  Permission to use, copy, modify, and/or distribute this software for any
-//  purpose with or without fee is hereby granted, provided that the above
-//  copyright notice and this permission notice appear in all copies.
-//
-//  THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
-//  WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
-//  MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY
-//  SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
-//  WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
-//  ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR
-//  IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+//  See LICENSE file for licensing information.
 //
 
 import Foundation
@@ -37,6 +27,13 @@ public class MockServer {
 	public enum TransferProtocol: Int {
 		case standard
 		case secure
+
+		internal var `protocol`: String {
+			switch self {
+			case .standard: return "http"
+			case .secure: return "https"
+			}
+		}
 	}
 
 	// MARK: - Properties
@@ -54,12 +51,10 @@ public class MockServer {
 	private let socketAddress = "127.0.0.1"
 	private let pact: Pact
 	private let transferProtocol: TransferProtocol
+	private let ffiProvider: PactFFIProviding
 
 	// `port` is a var to support Linux platforms
 	public private(set) var port: Int32 = 0
-	private var useTLS: Bool {
-		transferProtocol == .secure ? true : false
-	}
 
 	// MARK: - Lifecycle
 
@@ -70,39 +65,60 @@ public class MockServer {
 	///   - pact: The ``Pact`` to create the server with.
 	///   - transferProtocol: The protocol to use when communicating with the mock server; defaults to `.standard`.
 	///   - port: The port on which to run mock server; use `nil` for a random port.
-	public init(pact: Pact, transferProtocol: TransferProtocol = .standard, port: Int32? = nil) throws {
-		self.transferProtocol = transferProtocol
-		self.pact = pact
-
-		let tryPort = port ?? Self.randomPort
-		Logging.log(.debug, message: "Starting mock server on \(socketAddress):\(tryPort)")
-
-		let result = pactffi_create_mock_server_for_transport(pact.handle, socketAddress, UInt16(tryPort), useTLS ? "https" : "http", nil)
-		if result <= 0 {
-			throw Error(rawValue: result)
-		}
-
-		Logging.log(.debug, message: "Mock server started on port \(result)")
-		self.port = result
+	convenience public init(pact: Pact, transferProtocol: TransferProtocol = .standard, port: Int32? = nil) throws {
+		try self.init(pact: pact, transferProtocol: transferProtocol, port: port, ffiProvider: DefaultPactFFIProvider())
 	}
 
 	/// Fetch the CA Certificate used to generate the self-signed certificate for the TLS mock server.
 	public var tlsCACertificate: String? {
-		guard let cert = pactffi_get_tls_ca_certificate() else {
+		guard let cert = ffiProvider.tlsCACertificate() else {
 			return nil
 		}
-		defer { pactffi_string_delete(cert) }
+		defer { ffiProvider.stringRelease(cert: cert) }
 
-		return String(cString: cert)
+		return cert
 	}
 
 	deinit {
 		if port != 0 {
-			Logging.log(.debug, message: "Shutting down mock server on port \(port)")
-			if pactffi_cleanup_mock_server(port) == false {
+			Logging.log(.debug, message: "Shutting down mock server on port \(port)...")
+			if ffiProvider.mockServerCleanup(port: port) == false {
 				Logging.log(.debug, message: "Failed to shut down mock server!")
 			}
 		}
+	}
+
+	// MARK: - Internal
+	/// Creates a MockServer on a random port with provided FFI provider.
+	///
+	/// - Throws: ``MockServer/Error`` on error.
+	/// - Parameters:
+	///   - pact: The ``Pact`` to create the server with.
+	///   - transferProtocol: The protocol to use when communicating with the mock server; defaults to `.standard`.
+	///   - port: The port on which to run mock server; use `nil` for a random port.
+	///   - ffiProvider: The implementation or a wrapper for Pact FFI provider.
+	internal init(
+		pact: Pact,
+		transferProtocol: TransferProtocol = .standard,
+		port: Int32? = nil,
+		ffiProvider: PactFFIProviding
+	) throws {
+		self.ffiProvider = ffiProvider
+		self.transferProtocol = transferProtocol
+		self.pact = pact
+
+		let tryPort = port ?? Self.randomPort
+		Logging.log(.debug, message: "Starting mock server on \(socketAddress):\(tryPort)...")
+
+		let result = try self.ffiProvider.mockServerForTransferProtocol(
+			pactHandle: pact.handle,
+			socketAddress: socketAddress,
+			port: tryPort,
+			transferProtocol: transferProtocol
+		)
+
+		self.port = result
+		Logging.log(.debug, message: "Mock server started on port \(result)")
 	}
 
 	// MARK: - Interface
@@ -113,16 +129,16 @@ public class MockServer {
 			return false
 		}
 
-		return pactffi_mock_server_matched(port)
+		return ffiProvider.mockServerMatched(port: port)
 	}
 
 	/// Get a JSON string representing the mismatches following interaction testing.
 	public var mismatchesJSON: String? {
-		guard port > 0, let cString = pactffi_mock_server_mismatches(port) else {
+		guard port > 0 else {
 			return nil
 		}
 
-		return String(cString: cString)
+		return ffiProvider.mockServerMismatches(port: port)
 	}
 
 	/// Get a string representing the mock server logs following interaction testing
@@ -130,15 +146,17 @@ public class MockServer {
 	/// - Note: This needs the memory `buffer` log sink to be setup before the mock server is started.
 	/// - Returns: Log string.
 	public var logs: String {
-		guard port > 0, let cString = pactffi_mock_server_logs(port) else {
-			return "ERROR: Unable to retrieve mock server logs"
+		if port > 0, let logs = ffiProvider.mockServerLogs(port: port) {
+			return logs
 		}
-
-		return String(cString: cString)
+		return "ERROR: Unable to retrieve mock server logs"
 	}
 }
 
+// MARK: - Error Extensions
+
 extension MockServer.Error: LocalizedError {
+
 	public var failureReason: String? {
 		switch self {
 		case .invalidAddress:
@@ -160,6 +178,7 @@ extension MockServer.Error: LocalizedError {
 }
 
 extension MockServer.Error: RawRepresentable {
+
 	public init(rawValue: Int32) {
 		switch rawValue {
 		case -1:
@@ -202,23 +221,14 @@ extension MockServer.Error: RawRepresentable {
 // MARK: - Private
 
 private extension MockServer {
-	/// Finds an unsued port on Darwin. Returns ``0`` on Linux.
+	/// Finds an unsued port on Darwin. Returns `0` on Linux.
 	///
 	static var randomPort: Int32 {
-#if os(Linux)
+		#if os(Linux)
 		return 0
-#else
-		// Darwin doesn't seem to use a random available port if ``0`` is sent to pactffi_create_mock_server(_:_:_:)
+		#else
+		// Darwin doesn't open a random available port if `0` value is sent to pactffi_create_mock_server(_:_:_:)
 		return SocketBinder.unusedPort()
-#endif
-	}
-}
-
-private extension MockServer.TransferProtocol {
-	var `protocol`: String {
-		switch self {
-		case .standard: return "http"
-		case .secure: return "https"
-		}
+		#endif
 	}
 }

@@ -17,7 +17,7 @@
 
 import Foundation
 
-/// Errors that can occure during provider verification
+/// Errors that can occur during provider verification
 public enum ProviderVerificationError: Error, Equatable {
 
 	/// Verification process failed

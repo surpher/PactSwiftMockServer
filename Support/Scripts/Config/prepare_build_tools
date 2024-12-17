@@ -21,7 +21,7 @@
 set -euo pipefail
 
 # "import"
-sourc "${BASH_SOURCE[0]%/*}/../utils.sh"
+source "${BASH_SOURCE[0]%/*}/../utils.sh"
 
 brew update
 
@@ -32,7 +32,7 @@ function brew_install {
       echo -e "🍺 Installing $YELLOW$tool$NOCOLOR via Homebrew..."
       executeCommand "brew install $tool"
   else
-      echo -e "👍 $LIGHT_BLUE$tool$NOCOLOR is already installed."
+      echo -e "🍻 $LIGHT_BLUE$tool$NOCOLOR is already installed."
   fi
 }
 

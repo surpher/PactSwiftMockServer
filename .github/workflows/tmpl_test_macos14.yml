@@ -1,4 +1,4 @@
-name: "On macOS 14 (latest)"
+name: "macOS 14"
 
 on:
   workflow_call:
@@ -15,21 +15,17 @@ on:
       cache-restore-key:
         required: true
         type: string
-      submit-coverage-report:
-        required: true
-        type: boolean
     secrets:
       codecov_token:
         required: true
-  workflow_dispatch:
 
 env:
-  DEVELOPER_DIR: /Applications/Xcode_15.3.app/Contents/Developer
+  DEVELOPER_DIR: /Applications/Xcode_16.0.app/Contents/Developer
 
 jobs:
   testMacOS14:
-    name: "⚗️  macOS (latest)"
-    runs-on: macos-latest
+    name: "🖥️ macOS 14"
+    runs-on: macos-14
 
     strategy:
       fail-fast: true
@@ -37,17 +33,15 @@ jobs:
         include:
           - scheme: "PactSwiftMockServer-iOS"
             destination: "platform=iOS Simulator,name=iPhone 15 Pro"
-            submit_code_coverage: true
           - scheme: "PactSwiftMockServer-macOS"
-            destination: "arch=arm64"
-            submit_code_coverage: true
+            destination: "" # Intentionally left empty
 
     env:
       SCHEME: ${{ matrix.scheme }}
       DESTINATION: ${{ matrix.destination }}
 
     concurrency:
-      group: test-macos14-latest-${{ github.ref }}-${{ matrix.scheme }}
+      group: test-macos14-${{ github.ref }}-${{ matrix.scheme }}
       cancel-in-progress: true
 
     steps:
@@ -66,14 +60,10 @@ jobs:
           restore-keys: |
             ${{ inputs.cache-restore-key }}-${{ runner.os }}
 
-      - name: "⚗️  Run tests"
+      - name: "🛠  Prepare Tools"
         run: |
           sh Support/Scripts/Config/prepare_build_tools
-          sh Support/Scrips/test
 
-      - name: "⬆️  Upload coverage reports"
-        if: ${{ matrix.submit_code_coverage && inputs.submit-coverage-report }}
-        uses: codecov/codecov-action@v4
-        with:
-          token: ${{ secrets.codecov_token }}
-          verbose: true
+      - name: "⚗️  Run tests"
+        run: |
+          sh Support/Scripts/test

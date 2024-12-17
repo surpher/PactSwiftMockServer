@@ -57,7 +57,7 @@ elif command -v ~/.cargo/bin/cargo &> /dev/null; then
 	echo "👍 cargo installed in ~/.cargo/bin/"
 else
 	echo "🚨 Rust/Cargo not installed"
-	echo -e "ERROR: 'cargo' is a required dependency.\nInstall Rust using either homebrew or follow instructions at https://www.rust-lang.org/tools/install"
+	echo -e "error: 'cargo' is a required dependency.\nInstall Rust using either homebrew or follow instructions at https://www.rust-lang.org/tools/install"
  	exit 1
 fi
 
@@ -67,7 +67,7 @@ fi
 
 # Update pact-reference submodule
 echo "🔃 Updating pact-reference submodule"
-executeCommand "git submodule update --init"
+executeCommand "git submodule update --remote --recursive"
 
 echo "ℹ️ Changing location to ${LIBPACT_FFI_DIR}"
 executeCommand "cd $LIBPACT_FFI_DIR"
@@ -120,7 +120,7 @@ executeCommand "cargo build --target=aarch64-apple-darwin --release"
 echo "🏗 Building libpact_ffi.a for arm64 iOS device"
 executeCommand "cargo build --target=aarch64-apple-ios --release"
 
-echo "✅ libpact_ffi.a binaries built"
+echo -e "✅ ${GREEN}libpact_ffi.a binaries built$NOCOLOR"
 
 echo "🏗 Building pact_ffi.h..."
 executeCommand "mkdir -p build && cd build"
@@ -140,7 +140,7 @@ echo "🏗 Copying binaries from ${PWD} to ${WORKSPACE}/Resources"
 # Copy binary for an iOS device
 echo "🚚 Copying arm64-ios (iOS device) binary..."
 executeCommand "cp ../target/aarch64-apple-ios/release/libpact_ffi.a $WORKSPACE/Resources/iOS-device/libpact_ffi.a"
-echo "👍  Copied arm64-ios binary."
+echo -e "${GREEN}👍  Copied arm64-ios binary.$NOCOLOR"
 
 # Create a fat binary for iOS Simulators and copy to workspace
 echo "🚚 Creating a fat binary for iOS Simulator (x86_64 and arm64)..."
@@ -148,7 +148,7 @@ executeCommand "lipo -create \
   ../target/x86_64-apple-ios/release/libpact_ffi.a \
   ../target/aarch64-apple-ios-sim/release/libpact_ffi.a \
   -output $WORKSPACE/Resources/iOS-simulator/libpact_ffi.a"
-echo "👍 Copied x86_64-ios and arm64-ios-sim fattie."
+echo -e "${GREEN}👍 Copied x86_64-ios and arm64-ios-sim fattie.$NOCOLOR"
 
 # Create a fat darwin binary and copy to workspace
 echo "🚚 Copying x86_64-darwin and arm64-darwin into a fat binary..."
@@ -156,7 +156,7 @@ executeCommand "lipo -create \
   ../target/x86_64-apple-darwin/release/libpact_ffi.a \
   ../target/aarch64-apple-darwin/release/libpact_ffi.a \
   -output $WORKSPACE/Resources/x86_64-darwin/libpact_ffi.a"
-echo "👍 Copied x86_64-darwin and arm64-darwin fattie."
+echo -e "👍 ${GREEN}Copied x86_64-darwin and arm64-darwin fattie.$NOCOLOR"
 
 echo "🏗 Copying pact_ffi.h from ${PWD}/include to ${WORKSPACE}/Sources"
 executeCommand "cp include/pact_ffi.h ${WORKSPACE}/Sources"

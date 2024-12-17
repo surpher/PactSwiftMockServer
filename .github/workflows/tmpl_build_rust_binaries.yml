@@ -15,11 +15,14 @@ on:
       cache-restore-key:
         required: true
         type: string
+      force-rebuild:
+        required: true
+        type: string
 
 jobs:
   buildRustBinaries:
     name: "🏗️ Build libpact_ffi.a"
-    runs-on: macos-latest
+    runs-on: macos-15
     timeout-minutes: 60
     strategy:
       fail-fast: true
@@ -34,7 +37,7 @@ jobs:
         with:
           submodules: recursive
 
-      - name: "♼ Cache rust binaries"
+      - name: "🗂️ Cache rust binaries"
         uses: actions/cache@v4
         with:
           path: |
@@ -44,17 +47,25 @@ jobs:
           restore-keys: |
             ${{ inputs.cache-restore-key }}-${{ runner.os }}
 
-      - name: "🔍  Check binaries in ${{ inputs.binaries-path }}"
+      - name: "🔍 Check binaries exist in ${{ inputs.binaries-path }}"
         id: check_files
         uses: andstor/file-existence-action@v3
         with:
           files: "Resources/**/libpact_ffi.a"
 
-      - name: "🛠  Prepare Tools"
+      - name: "🛠 Prepare Tools"
+        if: ${{ steps.check_files.outputs.files_exists == 'false' || inputs.force-rebuild == 'true' }}
         run: |
-          sh Support/Scripts/prepare_build_tools
+          sh Support/Scripts/Config/prepare_build_tools
 
-      - name: "🎁  Build FFI binaries (skipping if cached)"
-        if: steps.check_files.outputs.files_exists == 'false'
+      - name: "🎁 Build FFI binaries (skipping if cached)"
+        if: ${{ steps.check_files.outputs.files_exists == 'false' || inputs.force-rebuild == 'true' }}
         run: |
-          sh Support/Scripts/build_rust_dependencies
+          sh Support/Scripts/CI/build_rust_dependencies
+
+      - name: "🚚 Upload binaries"
+        if: ${{ steps.check_files.outputs.files_exists == 'false' || inputs.force-rebuild == 'true' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: Resources
+          path: Resources

@@ -2,6 +2,12 @@ name: "🧑‍🔬 Build and Test"
 
 on:
   workflow_dispatch:
+    inputs:
+      force-rebuild:
+        required: false
+        default: false
+        type: boolean
+        description: "Re-build Rust binaries"
   push:
     branches:
       - 'run-on-ci/**'
@@ -15,12 +21,13 @@ env:
 jobs:
   sharedInputs:
     name: "👭 Shared envs"
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     outputs:
       rust-target-path: ${{ env.RUST_TARGET_PATH }}
       binaries-path: ${{ env.BINARIES_PATH }}
       cache-key: ${{ env.CACHE_KEY }}
       cache-restore-key: ${{ env.CACHE_RESTORE_KEY }}
+      force-rebuild: ${{ inputs.force-rebuild }}
 
     steps:
       - run: echo "Just a hacky workaround for passing envs to jobs expecting them... ¯\_(ツ)_/¯"
@@ -34,11 +41,12 @@ jobs:
       binaries-path: ${{ needs.sharedInputs.outputs.binaries-path }}
       cache-key: ${{ needs.sharedInputs.outputs.cache-key }}
       cache-restore-key: ${{ needs.sharedInputs.outputs.cache-restore-key }}
+      force-rebuild: "${{ needs.sharedInputs.outputs.force-rebuild }}"
 
-  testMacOS14:
-    name: "🤖 Unit tests"
+  testMacOS15:
+    name: "🤖 Test"
     needs: [sharedInputs, buildFFI]
-    uses: ./.github/workflows/tmpl_test_macos14_arm64.yml
+    uses: ./.github/workflows/tmpl_test_macos15.yml
     secrets:
       codecov_token: ${{ secrets.CODECOV_TOKEN }}
     with:
@@ -46,12 +54,24 @@ jobs:
       binaries-path: ${{ needs.sharedInputs.outputs.binaries-path }}
       cache-key: ${{ needs.sharedInputs.outputs.cache-key }}
       cache-restore-key: ${{ needs.sharedInputs.outputs.cache-restore-key }}
-      submit-coverage-report: false
+      submit-coverage-report: true
+
+  testMacOS14:
+    name: "🤖 Test"
+    needs: [sharedInputs, buildFFI]
+    uses: ./.github/workflows/tmpl_test_macos14.yml
+    secrets:
+      codecov_token: ${{ secrets.CODECOV_TOKEN }}
+    with:
+      rust-target-path: ${{ needs.sharedInputs.outputs.rust-target-path }}
+      binaries-path: ${{ needs.sharedInputs.outputs.binaries-path }}
+      cache-key: ${{ needs.sharedInputs.outputs.cache-key }}
+      cache-restore-key: ${{ needs.sharedInputs.outputs.cache-restore-key }}
 
   testMacOS13:
-    name: "🤖 Unit tests"
+    name: "🤖 Test"
     needs: [sharedInputs, buildFFI]
-    uses: ./.github/workflows/tmpl_test_macos13_x86_64.yml
+    uses: ./.github/workflows/tmpl_test_macos13.yml
     with:
       rust-target-path: ${{ needs.sharedInputs.outputs.rust-target-path }}
       binaries-path: ${{ needs.sharedInputs.outputs.binaries-path }}

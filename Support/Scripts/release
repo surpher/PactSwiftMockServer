@@ -101,6 +101,32 @@ function pause_execution_and_cleanup {
   fi
 }
 
+function update_manifest_file_with_version_and_checksum {
+    local package_file="$1"
+    local new_version_url=
+    local new_checksum=
+
+    new_version_url=$(get_new_version_url "$VERSION_TAG")
+    new_checksum=$(get_new_checksum)
+
+    sed -i '' \
+      -e "s|url: \".*\"|url: \"$new_version_url\"|" \
+      -e "s|checksum: \".*\"|checksum: \"$new_checksum\"|" \
+      "$package_file"
+  }
+
+function get_new_checksum {
+  swift package compute-checksum "$VERSIONED_XCFRAMEWORK_NAME.zip"
+}
+
+function get_new_version_url {
+  local version_tag=$VERSION_TAG
+
+  # Replace "___VERSION_TAG___" with the value of $version_tag
+  local new_version_url=${XCFRAMEWORK_URL_TEMPLATE//___VERSION_TAG___/$version_tag}
+  echo "$new_version_url"
+}
+
 ##################
 # Git functions
 ##################
@@ -120,26 +146,29 @@ function git_commit_changelog_and_xcconfig {
   git commit -m "Release: $release_tag"
 }
 
-# function git_push_changes {
-#   echo "🛫 Pushing changes to $CURRENT_BRANCH"
-#   git push origin "$CURRENT_BRANCH"
-# }
-
 ##################
-# Submodule
+# Submodules
 
 function git_commit_changelog_to_xcframework_submodule {
   local changelog_file="CHANGELOG.md"
-  local version_tag="$1"
+  local package_file="Package.swift"
+  local version_tag=$VERSION_TAG
 
   {
     echo -e "📝 Copying ${YELLOW}$changelog_file$NOCOLOR to $YELLOW$SUBMODULE_XCFRAMEWORK$NOCOLOR submodule..."
     cp "$changelog_file" "$SUBMODULE_XCFRAMEWORK/$changelog_file"
     cd "$SUBMODULE_XCFRAMEWORK"
 
+    # Update Package.swift with the new version and checksum
+    update_manifest_file_with_version_and_checksum "$package_file"
+
     # Commit new changelog
-    git add "$changelog_file"
-    git commit -m "Changelog: $version_tag"
+    git add "$changelog_file" "$package_file"
+    git commit -m "Release: $version_tag"
+
+    while IFS= read -r package_swift; do
+      echo "$package_swift"
+    done < "$package_file"
 
     # Tag it
     git tag -a "$version_tag" -m "Release: $version_tag"
@@ -234,32 +263,6 @@ function update_pactswiftmockserver_changelog {
     cat "${TAG_MESSAGE_FILE}"
     echo "$release_notes_existing"
   } > "$CHANGE_LOG"
-}
-
-function update_swift_package_manifest_file {
-  local package_file="Package.swift"
-  local version_tag=$VERSION_TAG
-  local new_checksum=
-  new_checksum=$(swift package compute-checksum "$VERSIONED_XCFRAMEWORK_NAME.zip")
-
-  # Replace ___VERSION_TAG___ with the value of $v_tag
-  local new_version_url=${XCFRAMEWORK_URL_TEMPLATE//___VERSION_TAG___/$version_tag}
-
-  # Replace URL and checksum using sed
-  sed -i '' \
-    -e "s|url: \".*\"|url: \"$new_version_url\"|" \
-    -e "s|checksum: \".*\"|checksum: \"$new_checksum\"|" \
-    "$package_file"
-
-  echo "ℹ️ $YELLOW$package_file$NOCOLOR updated..."
-  echo -e "  New URL: $LIGHT_BLUE$new_version_url$NOCOLOR"
-  echo -e "  NEW checksum: $LIGHT_BLUE$new_checksum$NOCOLOR"
-  echo -e "📦 New $YELLOW$package_file$NOCOLOR content..."
-  echo
-
-  while IFS= read -r package_swift; do
-    echo "$package_swift"
-  done < "$package_file"
 }
 
 function cleanup {
@@ -377,11 +380,6 @@ echo "🏗️ Building new XCFramework..."
 eval "$RELEASE_SOURCE_DIR/CI/build_xcframework" "$VERSION_TAG"
 pause_execution_and_cleanup $SHOULD_PAUSE_SCRIPT_EXECUTION
 
-# Update Package.swift with the new version and checksum
-echo -e "#️⃣ Update ${YELLOW}Package.swift$NOCOLOR with the new version $LIGHT_BLUE$VERSION_TAG$NOCOLOR..."
-update_swift_package_manifest_file
-pause_execution_and_cleanup $SHOULD_PAUSE_SCRIPT_EXECUTION
-
 # We have the references updated now now, commit changes to PactSwiftMockServer
 echo "💮 Commit changelog and xcconfig..."
 git_commit_changelog_and_xcconfig "$MARKETING_VERSION"
@@ -393,7 +391,7 @@ pause_execution_and_cleanup $SHOULD_PAUSE_SCRIPT_EXECUTION
 
 # Copy CHANGELOG.md to the XCFramework submodule
 echo -e "🧑‍🤝‍🧑 Copying ${YELLOW}CHANGELOG.md$NOCOLOR to $YELLOW$SUBMODULE_XCFRAMEWORK$NOCOLOR submodule..."
-git_commit_changelog_to_xcframework_submodule "$VERSION_TAG"
+git_commit_changelog_to_xcframework_submodule "$VERSION_TAG" "$NEW_VERSION_CHECKSUM"
 pause_execution_and_cleanup $SHOULD_PAUSE_SCRIPT_EXECUTION
 
 # Create a new release

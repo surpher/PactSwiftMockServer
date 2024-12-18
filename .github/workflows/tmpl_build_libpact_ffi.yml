@@ -22,7 +22,7 @@ on:
 jobs:
   buildRustBinaries:
     name: "🏗️ Build libpact_ffi.a"
-    runs-on: macos-15
+    runs-on: macos-13
     timeout-minutes: 60
     strategy:
       fail-fast: true
@@ -67,5 +67,7 @@ jobs:
         if: ${{ steps.check_files.outputs.files_exists == 'false' || inputs.force-rebuild == 'true' }}
         uses: actions/upload-artifact@v4
         with:
-          name: Resources
-          path: Resources
+          name: Build-artifacts
+          path: |
+            Resources/
+            .build/*.log

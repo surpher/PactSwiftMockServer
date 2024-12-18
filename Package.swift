@@ -1,4 +1,4 @@
-// swift-tools-version:5.7
+// swift-tools-version:5.9
 import PackageDescription
 
 let package = Package(
@@ -6,17 +6,10 @@ let package = Package(
   name: "PactSwiftMockServer",
 
   platforms: [
-    .macOS(.v13),
-    .iOS(.v16),
-    .tvOS(.v16),
+    .linux
   ],
 
   products: [
-    .library(
-      name: "PactSwiftMockServer",
-      targets: ["PactSwiftMockServer"]
-    ),
-
     .library(
       name: "PactSwiftMockServerLinux",
       targets: ["PactSwiftMockServerLinux"]
@@ -24,19 +17,18 @@ let package = Package(
   ],
 
   dependencies: [
-
   ],
 
   // MARK: - Targets
 
   targets: [
-
-    // Vending a XCFramework for Apple platforms
-    .binaryTarget(
-      name: "PactSwiftMockServer",
-      url: "https://github.com/surpher/PactSwiftMockServerXCFramework/releases/download/v1.0.0/PactSwiftMockServer-v1.0.0.xcframework.zip",
-      checksum: "274650326299d5fb582acf8fc2178991a96f420f0d63075e1e3bc906e05a9e02"
-    ),
+    // Using XCFramework zip archive for Apple platforms...
+    // Use the following in PactSwift > Package.swift
+    // .binaryTarget(
+    //   name: "PactSwiftMockServer",
+    //   url: "https://github.com/surpher/PactSwiftMockServerXCFramework/releases/download/<___RELEASE_TAG___>/PactSwiftMockServer-<___RELEASE_TAG___>.xcframework.zip",
+    //   checksum: "<___CHECKSUM___>"
+    // ),
 
     // Vending source for Linux platform
     .target(

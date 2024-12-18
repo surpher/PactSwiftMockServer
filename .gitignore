@@ -118,10 +118,12 @@ Carthage/
 ####################
 *.a
 Resources/**/*.a
-/Resources/x86_64-iOS/libpact_ffi.a
+/Resources/darwin/libpact_ffi.a
 /Resources/x86_64-darwin/libpact_ffi.a
+/Resources/x86_64-iOS/libpact_ffi.a
 /Resources/iOS-simulator/**
 /Resources/iOS-device/**
+/Resources/darwin/**
 /CHANGELOG.md.next
 /CHANGELOG.md.backup
 

@@ -57,7 +57,10 @@ jobs:
           restore-keys: |
             ${{ inputs.cache-restore-key }}-${{ runner.os }}
 
-      - name: "⚗️  Run tests"
+      - name: "🛠  Prepare Tools"
         run: |
           sh Support/Scripts/Config/prepare_build_tools
+
+      - name: "⚗️  Run tests"
+        run: |
           sh Support/Scripts/test

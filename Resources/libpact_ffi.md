@@ -11,7 +11,7 @@ The folder structure **MUST** be as follows (case sensitive!):
 |- Resources
   |- iOS-device
   |- iOS-simulator
-  |- x86_64-darwin
+  |- darwin
 
 If there are no binaries in these folders, build them using ./Support/build_rust_dependencies script.
 

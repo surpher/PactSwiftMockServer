@@ -270,7 +270,7 @@
 			isa = PBXGroup;
 			children = (
 				AD38D310264A33F800124396 /* iOS-device */,
-				AD15980F2648DEE3007CFAA5 /* x86_64-darwin */,
+				AD15980F2648DEE3007CFAA5 /* darwin */,
 				AD15980E2648DED2007CFAA5 /* iOS-simulator */,
 			);
 			path = Resources;
@@ -284,12 +284,12 @@
 			path = "iOS-simulator";
 			sourceTree = "<group>";
 		};
-		AD15980F2648DEE3007CFAA5 /* x86_64-darwin */ = {
+		AD15980F2648DEE3007CFAA5 /* darwin */ = {
 			isa = PBXGroup;
 			children = (
 				AD933642269C2DD80004EBD8 /* libpact_ffi.a */,
 			);
-			path = "x86_64-darwin";
+			path = "darwin";
 			sourceTree = "<group>";
 		};
 		AD15982F2648E31A007CFAA5 /* Sources */ = {

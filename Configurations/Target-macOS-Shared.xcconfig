@@ -15,8 +15,8 @@ INFOPLIST_FILE = Configurations/Info-macOS.plist
 PRODUCT_BUNDLE_IDENTIFIER = au.com.pact-foundation.macOS.PactSwiftMockServer
 DYLIB_INSTALL_NAME_BASE = @rpath
 LD_RUNPATH_SEARCH_PATHS = $(inherited) @executable_path/Frameworks @loader_path/Frameworks
-LIBRARY_SEARCH_PATHS = $(inherited) $(PROJECT_DIR)/Resources/x86_64-darwin $(PLATFORM_DIR)/Developer/usr/lib
-FRAMEWORK_SEARCH_PATHS = $(inherited) $(PROJECT_DIR)/Resources/x86_64-darwin
+LIBRARY_SEARCH_PATHS = $(inherited) $(PROJECT_DIR)/Resources/darwin $(PLATFORM_DIR)/Developer/usr/lib
+FRAMEWORK_SEARCH_PATHS = $(inherited) $(PROJECT_DIR)/Resources/darwin
 
 OTHER_LDFLAGS = -weak_framework XCTEST -weak-lXCTestSwiftSupport
 

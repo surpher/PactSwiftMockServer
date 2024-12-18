@@ -35,7 +35,7 @@ jobs:
   buildFFI:
     name: "📦 Dependencies"
     needs: [sharedInputs]
-    uses: ./.github/workflows/tmpl_build_rust_binaries.yml
+    uses: ./.github/workflows/tmpl_build_libpact_ffi.yml
     with:
       rust-target-path: ${{ needs.sharedInputs.outputs.rust-target-path }}
       binaries-path: ${{ needs.sharedInputs.outputs.binaries-path }}

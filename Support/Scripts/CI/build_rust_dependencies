@@ -18,7 +18,8 @@
 #  IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #
 
-set -euo pipefail
+set -eu
+set -o pipefail
 
 SOURCE_DIR="${BASH_SOURCE[0]%/*}"
 
@@ -32,6 +33,7 @@ SOURCE_DIR="${BASH_SOURCE[0]%/*}"
 WORKSPACE="${GITHUB_WORKSPACE:-$PWD}"
 LIBPACT_FFI_DIR="${WORKSPACE}/pact-reference/rust/pact_ffi"
 LIBPACT_FFI_VERSION=$(awk 'NR==1 {print; exit}' libpact_ffi.version)
+LOGS_DIR="${WORKSPACE}/.build"
 
 # "import"
 source "$SOURCE_DIR/../utils.sh"
@@ -60,6 +62,64 @@ else
 	echo -e "error: 'cargo' is a required dependency.\nInstall Rust using either homebrew or follow instructions at https://www.rust-lang.org/tools/install"
  	exit 1
 fi
+
+function log_build_environment {
+  local output_file="$1"
+  {
+    echo "-------------------------------------"
+    echo "🔧 Build environment:"
+    echo "-------------------------------------"
+    echo "  rustc: $(rustc --version)"
+    echo
+    echo "  clang: $(clang --version)"
+    echo
+    echo "  cmake: $(cmake --version)"
+    echo
+    echo "  ld: $(ld -v)"
+    echo
+    echo "  SDK Version: $(xcrun --sdk macosx --show-sdk-path)"
+    echo
+    echo "  lipo: $(lipo -v)"
+    echo
+    echo "  Rust targets:"
+    rustup target list | sed 's/^/\t/'
+    echo
+    echo "-------------------------------------"
+  } > "$output_file"
+}
+
+function log_binary_validation {
+  local output_file="$1"
+  {
+    echo "-------------------------------------"
+    echo "🕵️‍♀️ Binary validation"
+    echo "-------------------------------------"
+    # echo "  iOS Device:"
+    # lipo -info "$WORKSPACE"/Resources/iOS-device/libpact_ffi.a
+    # echo
+    echo "  iOS Simulator:"
+    lipo -info "$WORKSPACE"/Resources/iOS-simulator/libpact_ffi.a
+    echo
+    echo "  Darwin:"
+    lipo -info "$WORKSPACE"/Resources/darwin/libpact_ffi.a
+    echo
+    echo "-------------------------------------"
+    echo "🧲 Listing symbols in binaries"
+    echo "-------------------------------------"
+    # echo " iOS Device:"
+    # nm -C "$WORKSPACE"/Resources/iOS-device/libpact_ffi.a
+    # echo
+    echo " iOS Simulator:"
+    nm -C "$WORKSPACE"/Resources/iOS-simulator/libpact_ffi.a
+    echo
+    echo " Darwin:"
+    nm -C "$WORKSPACE"/Resources/darwin/libpact_ffi.a
+    echo "-------------------------------------"
+  } > "$output_file"
+}
+
+# Print build environment
+log_build_environment "$LOGS_DIR/build_environment.log"
 
 ####################################
 # Rust codebase prep
@@ -105,20 +165,20 @@ export IPHONEOS_DEPLOYMENT_TARGET=13.0
 
 # Build for x86_64 architectures
 echo "🏗 Building libpact_ffi.a for x86_64 iOS Simulator"
-executeCommand "cargo build --target=x86_64-apple-ios --release"
+executeCommand "cargo build --target x86_64-apple-ios --release"
 
 echo "🏗 Building libpact_ffi.a for x86_64 Darwin"
-executeCommand "cargo build --target=x86_64-apple-darwin --release"
+executeCommand "cargo build --target x86_64-apple-darwin --release"
 
 # Build for arm64 architectures
 echo "🏗 Building libpact_ffi.a for arm64 iOS Simulator"
 executeCommand "cargo build --target aarch64-apple-ios-sim --release"
 
 echo "🏗 Building libpact_ffi.a for arm64 Darwin"
-executeCommand "cargo build --target=aarch64-apple-darwin --release"
+executeCommand "cargo build --target aarch64-apple-darwin --release"
 
 echo "🏗 Building libpact_ffi.a for arm64 iOS device"
-executeCommand "cargo build --target=aarch64-apple-ios --release"
+executeCommand "cargo build --target aarch64-apple-ios --release"
 
 echo -e "✅ ${GREEN}libpact_ffi.a binaries built$NOCOLOR"
 
@@ -139,8 +199,11 @@ echo "🏗 Copying binaries from ${PWD} to ${WORKSPACE}/Resources"
 
 # Copy binary for an iOS device
 echo "🚚 Copying arm64-ios (iOS device) binary..."
-executeCommand "cp ../target/aarch64-apple-ios/release/libpact_ffi.a $WORKSPACE/Resources/iOS-device/libpact_ffi.a"
+executeCommand "cp ../target/aarch64-apple-ios/release/libpact_ffi.a \
+  $WORKSPACE/Resources/iOS-device/libpact_ffi.a"
 echo -e "${GREEN}👍  Copied arm64-ios binary.$NOCOLOR"
+
+echo "warning: iOS device binary is not copied as it fails to build from Rust file..."
 
 # Create a fat binary for iOS Simulators and copy to workspace
 echo "🚚 Creating a fat binary for iOS Simulator (x86_64 and arm64)..."
@@ -151,15 +214,18 @@ executeCommand "lipo -create \
 echo -e "${GREEN}👍 Copied x86_64-ios and arm64-ios-sim fattie.$NOCOLOR"
 
 # Create a fat darwin binary and copy to workspace
-echo "🚚 Copying x86_64-darwin and arm64-darwin into a fat binary..."
+echo "🚚 Copying darwin and arm64-darwin into a fat binary..."
 executeCommand "lipo -create \
   ../target/x86_64-apple-darwin/release/libpact_ffi.a \
   ../target/aarch64-apple-darwin/release/libpact_ffi.a \
-  -output $WORKSPACE/Resources/x86_64-darwin/libpact_ffi.a"
-echo -e "👍 ${GREEN}Copied x86_64-darwin and arm64-darwin fattie.$NOCOLOR"
+  -output $WORKSPACE/Resources/darwin/libpact_ffi.a"
+echo -e "👍 ${GREEN}Copied darwin and arm64-darwin fattie.$NOCOLOR"
 
 echo "🏗 Copying pact_ffi.h from ${PWD}/include to ${WORKSPACE}/Sources"
 executeCommand "cp include/pact_ffi.h ${WORKSPACE}/Sources"
+
+# Validate the binaries
+log_binary_validation "$LOGS_DIR/binary_validation.log"
 
 #######################
 # Cleanup

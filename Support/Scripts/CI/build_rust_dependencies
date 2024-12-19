@@ -64,6 +64,7 @@ else
 fi
 
 function log_build_environment {
+  mkdir -p "$LOGS_DIR"
   local output_file="$1"
   {
     echo "-------------------------------------"
@@ -85,10 +86,11 @@ function log_build_environment {
     rustup target list | sed 's/^/\t/'
     echo
     echo "-------------------------------------"
-  } > "$output_file"
+  } >> "$output_file"
 }
 
 function log_binary_validation {
+  mkdir -p "$LOGS_DIR"
   local output_file="$1"
   {
     echo "-------------------------------------"
@@ -115,7 +117,7 @@ function log_binary_validation {
     echo " Darwin:"
     nm -C "$WORKSPACE"/Resources/darwin/libpact_ffi.a
     echo "-------------------------------------"
-  } > "$output_file"
+  } >> "$output_file"
 }
 
 # Print build environment
@@ -225,7 +227,7 @@ echo "🏗 Copying pact_ffi.h from ${PWD}/include to ${WORKSPACE}/Sources"
 executeCommand "cp include/pact_ffi.h ${WORKSPACE}/Sources"
 
 # Validate the binaries
-log_binary_validation "$LOGS_DIR/binary_validation.log"
+# log_binary_validation "$LOGS_DIR/binary_validation.log"
 
 #######################
 # Cleanup

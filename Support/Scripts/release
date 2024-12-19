@@ -49,12 +49,8 @@ function show_help {
   exit 0
 }
 
-if [[ "${CI:-false}" == true ]] ; then
-  die "🚨 Running on CI is not supported! Yet."
-else
-  echo "👮‍♀️ Running on a local machine..."
-  RELEASE_SOURCE_DIR="${BASH_SOURCE[0]%/*}"
-fi
+
+RELEASE_SOURCE_DIR="${BASH_SOURCE[0]%/*}"
 
 if [ $# -lt 2 ]; then
   show_help
@@ -116,7 +112,10 @@ function update_manifest_file_with_version_and_checksum {
   }
 
 function get_new_checksum {
-  swift package compute-checksum "$VERSIONED_XCFRAMEWORK_NAME.zip"
+  if [ -z "$NEW_VERSION_CHECKSUM" ]; then
+    NEW_VERSION_CHECKSUM=$(swift package compute-checksum "$VERSIONED_XCFRAMEWORK_NAME.zip")
+  fi
+  echo "$NEW_VERSION_CHECKSUM"
 }
 
 function get_new_version_url {
@@ -135,15 +134,15 @@ function git_checkout_new_release_candidate_branch {
   local release_version_branch="$1"
   echo -e "Checking out new branch $YELLOW$release_version_branch$NOCOLOR..."
 
-  git checkout -b "$release_version_branch"
+  execute_cmd "git checkout -b \"$release_version_branch\""
 }
 
 function git_commit_changelog_and_xcconfig {
   local release_tag="${VERSION_TAG:-$1}"
 
   echo -e "🩹 Committing $YELLOW$CHANGE_LOG$NOCOLOR, $YELLOW$CONFIGURATION_FILE$NOCOLOR and ${YELLOW}Package.swift$NOCOLOR to git..."
-  git add "$CHANGE_LOG" "$CONFIGURATION_FILE" Package.swift
-  git commit -m "Release: $release_tag"
+  execute_cmd "git add \"$CHANGE_LOG\" \"$CONFIGURATION_FILE\" Package.swift"
+  execute_cmd "git commit -m \"Release: $release_tag\" -S"
 }
 
 ##################
@@ -163,18 +162,18 @@ function git_commit_changelog_to_xcframework_submodule {
     update_manifest_file_with_version_and_checksum "$package_file"
 
     # Commit new changelog
-    git add "$changelog_file" "$package_file"
-    git commit -m "Release: $version_tag"
+    execute_cmd "git add \"$changelog_file\" \"$package_file\""
+    execute_cmd "git commit -S -m \"Release: $version_tag\""
 
     while IFS= read -r package_swift; do
       echo "$package_swift"
     done < "$package_file"
 
     # Tag it
-    git tag -a "$version_tag" -m "Release: $version_tag"
-    git push origin main
-    git push origin "$version_tag"
-    cd -
+    execute_cmd "git tag -a \"$version_tag\" -m \"Release: $version_tag\""
+    execute_cmd "git push origin main"
+    execute_cmd "git push origin \"$version_tag\""
+    execute_cmd "cd -"
   }
 }
 
@@ -182,9 +181,9 @@ function git_update_main_repo_with_submodule_reference {
   local version_tag="$1"
   local version_branch="$2"
 
-  git add "$SUBMODULE_XCFRAMEWORK"
-  git commit -m "Update submodule reference - $version_tag"
-  git push --set-upstream origin "$version_branch"
+  execute_cmd "git add \"$SUBMODULE_XCFRAMEWORK\""
+  execute_cmd "git commit -S -m \"Update submodule reference - $version_tag\""
+  execute_cmd "git push --set-upstream origin \"$version_branch\""
 }
 
 ##################
@@ -198,11 +197,11 @@ function github_create_release_for {
   local release_options="${2:-}"
 
   # shellcheck disable=SC2153
-  local command="gh release create \"$release_tag\" \
-    --title $release_tag \
-    --notes-file $TAG_MESSAGE_FILE \
-    $release_options"
+  local command="gh release create \"$release_tag\" --title \"$release_tag\" --notes-file $TAG_MESSAGE_FILE $release_options"
   execute_cmd "$command"
+
+  # Give gh a second to catch up
+  sleep 1
 
   local upload_assets="gh release upload \"$release_tag\" $VERSIONED_XCFRAMEWORK_NAME.zip $VERSIONED_XCFRAMEWORK_CHECKSUM --clobber --repo $REPO_OWNER/$RELEASE_REPO_NAME"
   execute_cmd "$upload_assets"
@@ -295,10 +294,12 @@ while [[ $# -gt 0 ]]; do
             fi
             if [[ "$2" == "major" || "$2" == "minor" || "$2" == "patch" ]]; then
                 RELEASE_VERSION_PART="$2"
+                echo -e "📈 Bumping up $YELLOW$RELEASE_VERSION_PART$NOCOLOR version..."
                 shift 2
             else
-                echo -e "${RED}error:$NOCOLOR Invalid argument '$2' for '$1'."
-                echo -e "  Must be either ${YELLOW}major$NOCOLOR, ${YELLOW}minor$NOCOLOR, or ${YELLOW}patch$NOCOLOR."
+                echo -e "${RED}error:$NOCOLOR Invalid argument $YELLOW'$2'$NOCOLOR for $YELLOW'$1'$NOCOLOR."
+                echo -e "       Must be either ${YELLOW}major$NOCOLOR, ${YELLOW}minor$NOCOLOR, or ${YELLOW}patch$NOCOLOR."
+                exit 64
             fi
             ;;
         -d|--description)
@@ -337,17 +338,13 @@ while [[ $# -gt 0 ]]; do
     esac
 done
 
-# Check if the version part is provided and valid
-if [[ -z $RELEASE_VERSION_PART || ! "$RELEASE_VERSION_PART" =~ ^(major|minor|patch)$ ]]; then
-  show_help
-fi
-
 VERSION_TAG=$(generate_version_number "$RELEASE_VERSION_PART" "$RELEASE_DESCRIPTION")
 VERSION_BRANCH="rc/${VERSION_TAG// /_}"
 MARKETING_VERSION=${VERSION_TAG#v}
 MARKETING_VERSION=${MARKETING_VERSION%% -*}
 VERSIONED_XCFRAMEWORK_NAME="$XCFRAMEWORK_NAME-$VERSION_TAG.$XCFRAMEWORK_EXTENSION"
 VERSIONED_XCFRAMEWORK_CHECKSUM="$XCFRAMEWORK_NAME-$VERSION_TAG.$XCFRAMEWORK_EXTENSION.$XCFRAMEWORK_CHECKSUM_EXTENSION"
+NEW_VERSION_CHECKSUM=""
 
 ################################
 # Prepare package for release
@@ -378,6 +375,11 @@ fi
 # Building the XCFramework
 echo "🏗️ Building new XCFramework..."
 eval "$RELEASE_SOURCE_DIR/CI/build_xcframework" "$VERSION_TAG"
+pause_execution_and_cleanup $SHOULD_PAUSE_SCRIPT_EXECUTION
+
+# Create a checksum for the new XCFramework
+echo "🔏 Creating a checksum for the new XCFramework..."
+NEW_VERSION_CHECKSUM=$(get_new_checksum)
 pause_execution_and_cleanup $SHOULD_PAUSE_SCRIPT_EXECUTION
 
 # We have the references updated now now, commit changes to PactSwiftMockServer

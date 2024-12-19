@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# shellcheck disable=SC1091
 
 #  PactSwiftMockService
 #
@@ -73,17 +74,12 @@ function generate_version_number {
   if [ -n "$description" ]; then
     new_tag="$new_tag - $description"
   fi
-  # Check if the current commit already has a tag
-  local git_commit=
-  git_commit=$(git rev-parse HEAD)
-  local needs_tag=
-  needs_tag=$(git describe --contains "$git_commit" 2>/dev/null)
 
-  if [ -z "$needs_tag" ]; then
+  # Check if new_tag alraedy exists
+  if [ -z "$(git tag --list "$new_tag")" ]; then
     echo "$new_tag"
     return 0
   else
-    echo "Current commit already has a tag: $needs_tag"
-    return 1
+    die "Tag: $new_tag already exists..."
   fi
 }

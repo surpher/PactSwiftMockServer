@@ -57,7 +57,7 @@ rm -fr "$TMP_DIR"
 mkdir -p "$TMP_DIR"
 
 # iOS
-echo "🏗 Building for iOS..."
+echo "🏗  Building for iOS..."
 xcodebuild archive \
     -sdk iphoneos IPHONEOS_DEPLOYMENT_TARGET="$IPHONEOS_DEPLOYMENT_TARGET" \
     -arch arm64 \
@@ -67,7 +67,7 @@ xcodebuild archive \
     SKIP_INSTALL=NO | $XCBEAUTIFY
 echo "👍 Framework for physical arm64 device built"
 
-echo "🏗 Building for iOS Simulator..."
+echo "🏗  Building for iOS Simulator..."
 xcodebuild archive \
     -sdk iphonesimulator IPHONEOS_DEPLOYMENT_TARGET="$IPHONEOS_DEPLOYMENT_TARGET" \
     -arch x86_64 \
@@ -79,7 +79,7 @@ xcodebuild archive \
 echo "👍 Framework for iOS Simulator built for x86_64 and arm64 architecture"
 
 # macOS
-echo "🏗 Building for macOS..."
+echo "🏗  Building for macOS..."
 xcodebuild archive \
     -sdk macosx MACOSX_DEPLOYMENT_TARGET="$MACOSX_DEPLOYMENT_TARGET" \
     -arch x86_64 \
@@ -91,7 +91,7 @@ xcodebuild archive \
 echo "👍  Framework for macOS built for x86_64 and arm64 architectures"
 
 # XCFramework
-echo "🏗 Building XCFramework..."
+echo "🏗  Building XCFramework..."
 xcodebuild -create-xcframework -output "$NEW_XCFRAMEWORK_NAME" \
     -framework "$TMP_DIR"/iphoneos/"$XCPRODUCT_NAME".xcarchive/Products/Library/Frameworks/"$XCPRODUCT_NAME".framework \
     -framework "$TMP_DIR"/iphonesimulator/"$XCPRODUCT_NAME".xcarchive/Products/Library/Frameworks/"$XCPRODUCT_NAME".framework \
@@ -104,12 +104,12 @@ zip -r -X -q "$NEW_XCFRAMEWORK_NAME".zip "$NEW_XCFRAMEWORK_NAME"
 swift package compute-checksum "$NEW_XCFRAMEWORK_NAME".zip > "$NEW_XCFRAMEWORK_NAME.zip.checksum"
 
 # Print out for DEBUG purposes
-echo "🔍 XCFramework information..."
+echo "🔍  XCFramework information..."
 executeCommand "ls -la $NEW_XCFRAMEWORK_NAME.zip"
 executeCommand "tail $NEW_XCFRAMEWORK_NAME.zip.checksum"
 
 # Cleanup
-echo "ℹ️ Removing $TMP_DIR folder..."
+echo "ℹ️  Removing $TMP_DIR folder..."
 rm -fr "$TMP_DIR"
 
 echo -e "🧳 XCFramework $GREEN$NEW_XCFRAMEWORK_NAME$NOCOLOR built!"

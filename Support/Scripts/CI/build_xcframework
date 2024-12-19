@@ -31,7 +31,8 @@ source "${BUILD_XCFRAMEWORK_SOURCE_DIR}/../Config/config.sh"
 XCBEAUTIFY=$(command -v xcbeautify || command -v cat)
 
 XCFRAMEWORK_VERSION="$1"
-NEW_XCFRAMEWORK_NAME="$XCFRAMEWORK_NAME-$XCFRAMEWORK_VERSION.$XCFRAMEWORK_EXTENSION"
+NEW_XCFRAMEWORK_ARCHIVE="$XCFRAMEWORK_NAME-$XCFRAMEWORK_VERSION"
+NEW_XCFRAMEWORK_PATH="$NEW_XCFRAMEWORK_ARCHIVE/$XCFRAMEWORK_NAME.$XCFRAMEWORK_EXTENSION"
 
 ########################
 # Pre-build checks     #
@@ -43,14 +44,10 @@ check_xcode
 # Setup
 echo "ℹ️ Looking for $XCPRODUCT_NAME.xcodeproj"
 if [ ! -d "$XCPRODUCT_NAME.xcodeproj" ]; then
-    echo "🚨 Run this in the same folder as \"$XCPRODUCT_NAME.xcodeproj\"!"
-    echo "Your current location is: $(pwd)"
-    exit 1
+    die "🚨 Run this in the same folder as \"$XCPRODUCT_NAME.xcodeproj\"!"
+else
+    echo -e "👍 Found $YELLOW$XCPRODUCT_NAME.xcodeproj$NOCOLOR..."
 fi
-
-echo "ℹ️ Removing deprecated XCFramework..."
-executeCommand "find . -type d -name \"$XCFRAMEWORK_NAME-*.$XCFRAMEWORK_EXTENSION\" -exec rm -rf {} +"
-echo "👍 Removed deprecated XCFramework"
 
 echo "ℹ️ Setting up $TMP_DIR folder"
 rm -fr "$TMP_DIR"
@@ -92,24 +89,19 @@ echo "👍  Framework for macOS built for x86_64 and arm64 architectures"
 
 # XCFramework
 echo "🏗  Building XCFramework..."
-xcodebuild -create-xcframework -output "$NEW_XCFRAMEWORK_NAME" \
+xcodebuild -create-xcframework -output "$NEW_XCFRAMEWORK_PATH" \
     -framework "$TMP_DIR"/iphoneos/"$XCPRODUCT_NAME".xcarchive/Products/Library/Frameworks/"$XCPRODUCT_NAME".framework \
     -framework "$TMP_DIR"/iphonesimulator/"$XCPRODUCT_NAME".xcarchive/Products/Library/Frameworks/"$XCPRODUCT_NAME".framework \
     -framework "$TMP_DIR"/macos/"$XCPRODUCT_NAME".xcarchive/Products/Library/Frameworks/"$XCPRODUCT_NAME".framework
 
 # Zip it up
-zip -r -X -q "$NEW_XCFRAMEWORK_NAME".zip "$NEW_XCFRAMEWORK_NAME"
+zip -r "$NEW_XCFRAMEWORK_ARCHIVE".zip "$NEW_XCFRAMEWORK_ARCHIVE"
 
 # Calculate checksum
-swift package compute-checksum "$NEW_XCFRAMEWORK_NAME".zip > "$NEW_XCFRAMEWORK_NAME.zip.checksum"
-
-# Print out for DEBUG purposes
-echo "🔍  XCFramework information..."
-executeCommand "ls -la $NEW_XCFRAMEWORK_NAME.zip"
-executeCommand "tail $NEW_XCFRAMEWORK_NAME.zip.checksum"
+swift package compute-checksum "$NEW_XCFRAMEWORK_ARCHIVE".zip > "$NEW_XCFRAMEWORK_ARCHIVE.zip.checksum"
 
 # Cleanup
 echo "ℹ️  Removing $TMP_DIR folder..."
 rm -fr "$TMP_DIR"
 
-echo -e "🧳 XCFramework $GREEN$NEW_XCFRAMEWORK_NAME$NOCOLOR built!"
+echo -e "🧳 XCFramework $GREEN$NEW_XCFRAMEWORK_ARCHIVE$NOCOLOR built!"

@@ -31,4 +31,4 @@ REMOTE_REPO_BASE="git@github.com:$REPO_OWNER" # The SSH URI to the project owner
 
 PR_HEAD_BRANCH="main" # The branch to which the changes are pushed
 
-XCFRAMEWORK_URL_TEMPLATE="https://github.com/${REPO_OWNER}/${RELEASE_REPO_NAME}/releases/download/___VERSION_TAG___/PactSwiftMockServer-___VERSION_TAG___.xcframework.zip" # The template for the URL to the XCFramework
+XCFRAMEWORK_URL_TEMPLATE="https://github.com/${REPO_OWNER}/${RELEASE_REPO_NAME}/releases/download/___VERSION_TAG___/PactSwiftMockServer-___VERSION_TAG___.zip" # The template for the URL to the XCFramework

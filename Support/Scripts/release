@@ -49,12 +49,7 @@ function show_help {
   exit 0
 }
 
-
 RELEASE_SOURCE_DIR="${BASH_SOURCE[0]%/*}"
-
-if [ $# -lt 2 ]; then
-  show_help
-fi
 
 # "import"
 source "$RELEASE_SOURCE_DIR/utils.sh"
@@ -163,7 +158,7 @@ function git_commit_changelog_to_xcframework_submodule {
 
     # Commit new changelog
     execute_cmd "git add \"$changelog_file\" \"$package_file\""
-    execute_cmd "git commit -S -m \"Release: $version_tag\""
+    execute_cmd "git commit -m \"Release: $version_tag\" -S"
 
     while IFS= read -r package_swift; do
       echo "$package_swift"
@@ -182,7 +177,7 @@ function git_update_main_repo_with_submodule_reference {
   local version_branch="$2"
 
   execute_cmd "git add \"$SUBMODULE_XCFRAMEWORK\""
-  execute_cmd "git commit -S -m \"Update submodule reference - $version_tag\""
+  execute_cmd "git commit -m \"Update submodule reference - $version_tag\" -S"
   execute_cmd "git push --set-upstream origin \"$version_branch\""
 }
 
@@ -195,15 +190,16 @@ function github_create_release_for {
 
   local release_tag="$1"
   local release_options="${2:-}"
+  local release_repo="$REPO_OWNER/$RELEASE_REPO_NAME"
 
   # shellcheck disable=SC2153
-  local command="gh release create \"$release_tag\" --title \"$release_tag\" --notes-file $TAG_MESSAGE_FILE $release_options"
+  local command="gh release create \"$release_tag\" --title \"$release_tag\" --notes-file $TAG_MESSAGE_FILE $release_options --repo $release_repo"
   execute_cmd "$command"
 
-  # Give gh a second to catch up
-  sleep 1
+  # Give it a second to create the release
+  execute_cmd "sleep 1"
 
-  local upload_assets="gh release upload \"$release_tag\" $VERSIONED_XCFRAMEWORK_NAME.zip $VERSIONED_XCFRAMEWORK_CHECKSUM --clobber --repo $REPO_OWNER/$RELEASE_REPO_NAME"
+  local upload_assets="gh release upload \"$release_tag\" $VERSIONED_XCFRAMEWORK_NAME.zip $VERSIONED_XCFRAMEWORK_CHECKSUM --clobber --repo $release_repo"
   execute_cmd "$upload_assets"
 }
 

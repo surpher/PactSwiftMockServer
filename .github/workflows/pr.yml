@@ -20,30 +20,8 @@ jobs:
         id: find_version
         run: |
           RELEASE_VERSION=$(sed -n '2p' Configurations/Project-Shared.xcconfig | cut -d '=' -f2 | tr -d ' ')
-          echo "Found version: v$RELEASE_VERSION"
+          echo "Found version: $RELEASE_VERSION"
           echo "NEW_RELEASE_VERSION=v$RELEASE_VERSION" >> $GITHUB_ENV
-
-      - name: "🔑 Set up GPG"
-        id: setup_gpg
-        env:
-          GPG_KEY_ID: ${{ secrets.GPG_KEY_ID }}
-        run: |
-          echo "${{ secrets.GPG_PRIVATE_KEY }}" | gpg --batch --import
-          echo "default-key ${{ env.GPG_KEY_ID }}" > $HOME/.gnupg/gpg.conf
-          echo "pinentry-mode loopback" >> $HOME/.gnupg/gpg.conf
-
-          git config --global user.signingkey ${{ env.GPG_KEY_ID }}
-          git config --global commit.gpgsign true
-
-      - name: "🏷️ Create a signed tag"
-        id: create_tag
-        env:
-          NEW_RELEASE_VERSION: ${{ steps.find_version.outputs.NEW_RELEASE_VERSION }}
-        run: |
-          git config user.name "surpher"
-          git config user.email "${{ secrets.GPG_EMAIL }}"
-          git tag -s -a ${{ env.NEW_RELEASE_VERSION }} -m "Release ${{ env.NEW_RELEASE_VERSION }}"
-          git push origin ${{ env.NEW_RELEASE_VERSION }}
 
       - name: "🚀 Create a release"
         id: create_release
@@ -54,6 +32,13 @@ jobs:
         with:
           tag_name: ${{ env.NEW_RELEASE_VERSION }}
           release_name: "Release: ${{ env.NEW_RELEASE_VERSION }}"
-          body: "Release ${{ env.NEW_RELEASE_VERSION }}"
+          body: |
+            Release ${{ env.NEW_RELEASE_VERSION }}
+            - PR: #${{ github.event.pull_request.number }}
+            - URL: ${{ github.event.pull_request.url }}
+            - Commits:${{ github.event.pull_request.commits_url }}
+            - Diff: ${{ github.event.pull_request.diff_url }}
+
+            See [CHANGELOG.md][https://${{ github.server_url }}/${{ github.repository }}"/blob/${{ github.event.pull_request.head.sha }}/CHANGELOG.md] for more details.
           draft: false
           prerelease: false

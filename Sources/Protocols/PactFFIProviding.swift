@@ -13,6 +13,8 @@ protocol PactFFIProviding {
 
     var version: String { get }
 
+    func specVersion(pactHandle: PactHandle) -> Pact.Specification
+
     // Mock Server
 
     func mockServerForTransferProtocol(pactHandle: PactHandle, socketAddress: String, port: Int32, transferProtocol: MockServer.TransferProtocol) throws -> Int32

@@ -11,138 +11,152 @@ import Foundation
 
 final class MockPactFFIProvider: PactFFIProviding {
 
-	private(set) var _returnNil: Bool = false
+    private(set) var _returnNil: Bool = false
+    private(set) var specVersion: Pact.Specification = .v3
 
-	func returnNil(_ bool: Bool) {
-		_returnNil = bool
-	}
+    func returnNil(_ bool: Bool) {
+        _returnNil = bool
+    }
 
-	// MARK: - Protocol conformance
+    func set(
+        returnNil: Bool? = nil,
+        specVersion: Pact.Specification? = nil
+    ) {
+        returnNil.map { self._returnNil = $0 }
+        specVersion.map { self.specVersion = $0 }
+    }
 
-	enum MockPactFFIProviderError: Error {
-		case notImplemented
-	}
+    // MARK: - Protocol conformance
 
-	var version: String {
-		"mock"
-	}
+    enum MockPactFFIProviderError: Error {
+        case notImplemented
+    }
 
-	func mockServerForTransferProtocol(pactHandle: PactHandle, socketAddress: String, port: Int32, transferProtocol: PactSwiftMockServer.MockServer.TransferProtocol) throws -> Int32 {
-		21_337
-	}
+    var version: String {
+        "mock"
+    }
 
-	func mockServerMatched(port: Int32) -> Bool {
-		false
-	}
+    func specVersion(pactHandle: PactHandle) -> Pact.Specification {
+        specVersion
+    }
 
-	func mockServerMismatches(port: Int32) -> String? {
-		_returnNil ? nil : Self.mockServerMismatchesString
-	}
+    func mockServerForTransferProtocol(pactHandle: PactHandle, socketAddress: String, port: Int32, transferProtocol: PactSwiftMockServer.MockServer.TransferProtocol) throws -> Int32 {
+        21_337
+    }
 
-	func mockServerLogs(port: Int32) -> String? {
-		_returnNil ? nil : "mock-server-logs"
-	}
+    func mockServerMatched(port: Int32) -> Bool {
+        false
+    }
 
-	func mockServerCleanup(port: Int32) -> Bool {
-		false
-	}
+    func mockServerMismatches(port: Int32) -> String? {
+        _returnNil ? nil : Self.mockServerMismatchesString
+    }
 
-	func tlsCACertificate() -> String? {
-		_returnNil ? nil : "mock-tls-ca-cert"
-	}
+    func mockServerLogs(port: Int32) -> String? {
+        _returnNil ? nil : "mock-server-logs"
+    }
 
-	func stringRelease(cert: String) {
-		// no-op
-	}
+    func mockServerCleanup(port: Int32) -> Bool {
+        false
+    }
 
-	func newPact(consumer: String, provider: String) -> PactHandle {
-		PactHandle()
-	}
+    func tlsCACertificate() -> String? {
+        _returnNil ? nil : "mock-tls-ca-cert"
+    }
 
-	func freePactHandle(_ handle: PactHandle) -> UInt32 {
-		0
-	}
+    func stringRelease(cert: String) {
+        // no-op
+    }
 
-	func withSpecification(handle: PactHandle, version: PactSwiftMockServer.Pact.Specification) throws {
-		throw MockPactFFIProviderError.notImplemented
-	}
+    func newPact(consumer: String, provider: String) -> PactHandle {
+        PactHandle()
+    }
 
-	func withMetadata(handle: PactHandle, namespace: String, key: String, value: String) throws {
-		throw MockPactFFIProviderError.notImplemented
-	}
+    func freePactHandle(_ handle: PactHandle) -> UInt32 {
+        0
+    }
 
-	func writePactFile(handle: PactHandle, to: String, overwrite: Bool) throws -> Int {
-		throw MockPactFFIProviderError.notImplemented
-	}
+    func withSpecification(handle: PactHandle, version: PactSwiftMockServer.Pact.Specification) throws {
+        throw MockPactFFIProviderError.notImplemented
+    }
 
-	func newInteraction(handle: PactHandle, description: String) -> InteractionHandle {
-		InteractionHandle()
-	}
+    func withMetadata(handle: PactHandle, namespace: String, key: String, value: String) throws {
+        throw MockPactFFIProviderError.notImplemented
+    }
 
-	func interactionTestName(handle: InteractionHandle, name: String) throws {
-		throw MockPactFFIProviderError.notImplemented
-	}
+    func writePactFile(handle: PactHandle, to: String, overwrite: Bool) throws -> Int {
+        throw MockPactFFIProviderError.notImplemented
+    }
 
-	func withQueryParameter(handle: InteractionHandle, name: String, values: [String]) throws {
-		throw MockPactFFIProviderError.notImplemented
-	}
+    func newInteraction(handle: PactHandle, description: String) -> InteractionHandle {
+        InteractionHandle()
+    }
 
-	func withHeader(handle: InteractionHandle, name: String, values: [String], interactionPart: InteractionPart) throws {
-		throw MockPactFFIProviderError.notImplemented
-	}
+    func interactionTestName(handle: InteractionHandle, name: String) throws {
+        throw MockPactFFIProviderError.notImplemented
+    }
 
-	func withBody(handle: InteractionHandle, body: String?, contentType: String?, interactionPart: InteractionPart) throws {
-		throw MockPactFFIProviderError.notImplemented
-	}
+    func withQueryParameter(handle: InteractionHandle, name: String, values: [String]) throws {
+        throw MockPactFFIProviderError.notImplemented
+    }
 
-	func withStatus(handle: InteractionHandle, status: Int) throws {
-		throw MockPactFFIProviderError.notImplemented
-	}
+    func withHeader(handle: InteractionHandle, name: String, values: [String], interactionPart: InteractionPart) throws {
+        throw MockPactFFIProviderError.notImplemented
+    }
 
-	func given(handle: InteractionHandle, description: String) throws {
-		throw MockPactFFIProviderError.notImplemented
-	}
+    func withBody(handle: InteractionHandle, body: String?, contentType: String?, interactionPart: InteractionPart) throws {
+        throw MockPactFFIProviderError.notImplemented
+    }
 
-	func given(handle: InteractionHandle, description: String, name: String, value: String) throws {
-		throw MockPactFFIProviderError.notImplemented
-	}
+    func withStatus(handle: InteractionHandle, status: Int) throws {
+        throw MockPactFFIProviderError.notImplemented
+    }
 
-	func withRequest(handle: InteractionHandle, method: PactSwiftMockServer.Interaction.HTTPMethod, path: String) throws {
-		throw MockPactFFIProviderError.notImplemented
-	}
+    func given(handle: InteractionHandle, description: String) throws {
+        throw MockPactFFIProviderError.notImplemented
+    }
 
-	func generateString(regex: String) -> String? {
-		nil
-	}
+    func given(handle: InteractionHandle, description: String, name: String, value: String) throws {
+        throw MockPactFFIProviderError.notImplemented
+    }
 
-	func generateDateTimeString(format: String) -> String? {
-		nil
-	}
+    func withRequest(handle: InteractionHandle, method: PactSwiftMockServer.Interaction.HTTPMethod, path: String) throws {
+        throw MockPactFFIProviderError.notImplemented
+    }
+
+    func generateString(regex: String) -> String? {
+        nil
+    }
+
+    func generateDateTimeString(format: String) -> String? {
+        nil
+    }
 }
 
 // MARK: - Private extensions
 
 extension MockPactFFIProvider {
 
-	static var mockServerMismatchesString: String {
-		#"""
-		[
-			{
-				"type": "HeaderMismatch",
-				"expected": "application/json; charset=utf-8",
-				"actual": "application/json",
-				"parameter": "Content-Type",
-				"mismatch": "Header value does not match"
-			},
-			{
-				"type": "BodyMismatch",
-				"expected": "{ \"id\": 1 }",
-				"actual": "{ \"id\": \"1\" }",
-				"parameter": "body",
-				"mismatch": "Type mismatch"
-			}
-		]
-		"""#
-	}
+    static var mockServerMismatchesString: String {
+        #"""
+        [
+            {
+                "type": "HeaderMismatch",
+                "expected": "application/json; charset=utf-8",
+                "actual": "application/json",
+                "parameter": "Content-Type",
+                "mismatch": "Header value does not match"
+            },
+            {
+                "type": "BodyMismatch",
+                "expected": "{ \"id\": 1 }",
+                "actual": "{ \"id\": \"1\" }",
+                "parameter": "body",
+                "mismatch": "Type mismatch"
+            }
+        ]
+        """#
+    }
 
 }
+

@@ -231,13 +231,20 @@ function update_pactswiftmockserver_changelog {
 
   # Get the commits from last contribution for tag message
   echo -e "🪵 Git logging '${LATEST_TAG}..HEAD'..."
-  git log --pretty='* %h - %s (%an)' "${LATEST_TAG}"..HEAD >> "${TAG_MESSAGE_FILE}"
+  executeCommand "git log --pretty='* %h - %s (%an)' ${LATEST_TAG}..HEAD >> $TAG_MESSAGE_FILE"
 
+  # Show the new changes
   {
-    echo -e "🧾 ${LIGHT_BLUE}Changes:$NOCOLOR"
+    echo "-----------------"
+    echo
+
+    echo -e "🧾 ${LIGHT_BLUE}Changes:$NOCOLOR\n"
     while IFS= read -r line; do
       echo "$line"
     done < "$TAG_MESSAGE_FILE"
+
+    echo
+    echo "-----------------"
   }
 
   # CHANGELOG.md for PactSwiftMockServer
@@ -256,15 +263,26 @@ function update_pactswiftmockserver_changelog {
     cat "${TAG_MESSAGE_FILE}"
     echo "$release_notes_existing"
   } > "$CHANGE_LOG"
+
+  # Show the new CHANGELOG
+  {
+    echo -e "🧾 ${LIGHT_BLUE}New CHANGELOG:$NOCOLOR\n"
+    while IFS= read -r line; do
+      echo "$line"
+    done < "$CHANGE_LOG"
+
+    echo
+    echo "-----------------"
+  }
 }
 
 function cleanup {
-  local git_clean="git clean -fdx"
+  # local git_clean="git clean -fdx"
   local current_branch=$CURRENT_BRANCH
   local release_version_branch=$VERSION_BRANCH
 
-  echo "🧹 Cleanning up..."
-  execute_cmd "$git_clean"
+  # echo "🧹 Cleanning up..."
+  # execute_cmd "$git_clean"
 
   echo -e "⏮️ Checking out $YELLOW$current_branch$NOCOLOR..."
   git checkout --force "$current_branch"
@@ -272,8 +290,8 @@ function cleanup {
   echo -e "🧹 Removing $YELLOW$release_version_branch$NOCOLOR..."
   git branch -D "$release_version_branch"
 
-  echo -e "🚮 Removing untracked files and directories..."
-  execute_cmd "$git_clean"
+  # echo -e "🚮 Removing untracked files and directories..."
+  # execute_cmd "$git_clean"
 }
 
 ##################

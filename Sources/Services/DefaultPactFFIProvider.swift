@@ -19,6 +19,10 @@ struct DefaultPactFFIProvider: PactFFIProviding {
         String(cString: pactffi_version())
     }
 
+    func specVersion(pactHandle: PactHandle) -> Pact.Specification {
+        pactffi_handle_get_pact_spec_version(pactHandle).specVersion
+    }
+
     func mockServerForTransferProtocol(
         pactHandle: PactHandle,
         socketAddress: String,
@@ -250,6 +254,20 @@ private extension PactSpecification {
         case .v2: self = PactSpecification_V2
         case .v3: self = PactSpecification_V3
         case .v4: self = PactSpecification_V4
+        }
+    }
+
+    var specVersion: Pact.Specification {
+        switch self {
+        case PactSpecification_V1: return .v1
+        case PactSpecification_V1_1: return .v1_1
+        case PactSpecification_V2: return .v2
+        case PactSpecification_V3: return .v3
+        case PactSpecification_V4: return .v4
+        default:
+            let message = "Pact specification version \(self) not supported!"
+            Logging.log(.error, message: message)
+            preconditionFailure(message)
         }
     }
 }

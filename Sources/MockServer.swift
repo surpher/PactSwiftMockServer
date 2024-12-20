@@ -1,5 +1,5 @@
 //
-//  Created by Marko Justinek on 10/5/21.
+//  Created by Marko Justinek on 10/5/2021.
 //  Copyright © 2020 Marko Justinek. All rights reserved.
 //
 //  See LICENSE file for licensing information.
@@ -125,20 +125,12 @@ public class MockServer {
 
     /// - Returns: `true` when all expected requests have successfully matched.
     public var requestsMatched: Bool {
-        guard port > 0 else {
-            return false
-        }
-
-        return ffiProvider.mockServerMatched(port: port)
+        ffiProvider.mockServerMatched(port: port)
     }
 
     /// Get a JSON string representing the mismatches following interaction testing.
     public var mismatchesJSON: String? {
-        guard port > 0 else {
-            return nil
-        }
-
-        return ffiProvider.mockServerMismatches(port: port)
+        ffiProvider.mockServerMismatches(port: port)
     }
 
     /// Get a string representing the mock server logs following interaction testing
@@ -146,10 +138,10 @@ public class MockServer {
     /// - Note: This needs the memory `buffer` log sink to be setup before the mock server is started.
     /// - Returns: Log string.
     public var logs: String {
-        if port > 0, let logs = ffiProvider.mockServerLogs(port: port) {
-            return logs
+        guard let logs = ffiProvider.mockServerLogs(port: port) else {
+            return "ERROR: Unable to retrieve mock server logs"
         }
-        return "ERROR: Unable to retrieve mock server logs"
+        return logs
     }
 }
 

@@ -14,14 +14,20 @@ import PactMockServer
 public final class Pact {
 
     public enum Specification {
-        case v1, v1_1, v2, v3, v4
+        case v1
+        case v1_1
+        case v2
+        case v3
+        case v4
     }
 
     public enum Error {
+        /// The Pact contract could not be modified.
         case canNotBeModified
 
-        /// The Pact file could not be written.  The associated error codes:
+        /// The Pact file could not be written.
         ///
+        /// The associated error codes:
         /// - 1 - The function panicked.
         /// - 2 - The pact file was not able to be written.
         /// - 3 - The pact for the given handle was not found.
@@ -33,8 +39,14 @@ public final class Pact {
         ffi_version
     }
 
+    /// The underlying Pact FFI version.
     public var ffi_version: String {
         ffiProvider.version
+    }
+
+    /// The specification version of current Pact.
+    public var specVersion: Specification {
+        ffiProvider.specVersion(pactHandle: handle)
     }
 
     public let consumer: String

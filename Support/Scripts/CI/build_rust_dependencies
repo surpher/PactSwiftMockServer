@@ -18,7 +18,7 @@
 #  IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #
 
-set -eu
+set -eux
 set -o pipefail
 
 SOURCE_DIR="${BASH_SOURCE[0]%/*}"

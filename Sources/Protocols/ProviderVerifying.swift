@@ -9,7 +9,7 @@ import Foundation
 
 public protocol ProviderVerifying {
 
-	/// Triggers the provider verification task
-	func verifyProvider(options args: String) -> Result<Bool, ProviderVerificationError>
+    /// Triggers the provider verification task
+    func verifyProvider(options args: String) -> Result<Bool, ProviderVerificationError>
 
 }

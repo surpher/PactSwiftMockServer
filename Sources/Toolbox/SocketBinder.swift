@@ -9,19 +9,19 @@ import Foundation
 
 enum SocketBinder {
 
-	static func unusedPort() -> Int32 {
-		#if os(Linux)
-		return getAvailablePort()
-		#else
-		var port = randomPort
-		var (available, _) = tcpPortAvailable(port: port)
-		while !available {
-			port = randomPort
-			(available, _) = tcpPortAvailable(port: port)
-		}
-		return Int32(port)
-		#endif
-	}
+    static func unusedPort() -> Int32 {
+        #if os(Linux)
+        return getAvailablePort()
+        #else
+        var port = randomPort
+        var (available, _) = tcpPortAvailable(port: port)
+        while !available {
+            port = randomPort
+            (available, _) = tcpPortAvailable(port: port)
+        }
+        return Int32(port)
+        #endif
+    }
 
 }
 
@@ -29,85 +29,85 @@ enum SocketBinder {
 
 private extension SocketBinder {
 
-	// MARK: - Linux
+    // MARK: - Linux
 
-	#if os(Linux)
+    #if os(Linux)
 
-	static func getAvailablePort() -> Int32 {
-		let task = Process()
-		task.executableURL = URL(fileURLWithPath: "/bin/bash")
-		task.arguments = ["-c", #"comm -23 <(seq 49152 65535) <(ss -tan | awk '{print $4}' | cut -d':' -f2 | grep "[0-9]\{1,5\}" | sort | uniq) | shuf | head -n 1"#]
+    static func getAvailablePort() -> Int32 {
+        let task = Process()
+        task.executableURL = URL(fileURLWithPath: "/bin/bash")
+        task.arguments = ["-c", #"comm -23 <(seq 49152 65535) <(ss -tan | awk '{print $4}' | cut -d':' -f2 | grep "[0-9]\{1,5\}" | sort | uniq) | shuf | head -n 1"#]
 
-		let pipe = Pipe()
-		task.standardOutput = pipe
-		task.standardError = pipe
-		do {
-			try task.run()
-		} catch {
-			fatalError(error.localizedDescription)
-		}
+        let pipe = Pipe()
+        task.standardOutput = pipe
+        task.standardError = pipe
+        do {
+            try task.run()
+        } catch {
+            fatalError(error.localizedDescription)
+        }
 
-		let data = pipe.fileHandleForReading.readDataToEndOfFile()
-		let output = String(data: data, encoding: .utf8)
-		task.waitUntilExit()
+        let data = pipe.fileHandleForReading.readDataToEndOfFile()
+        let output = String(data: data, encoding: .utf8)
+        task.waitUntilExit()
 
-		if let lines = output?.split(separator: "\n"), lines.count == 1, let port = Int32(lines[0]) {
-			return port
-		} else {
-			fatalError("Unable to find an available port! Please raise an issue at https://github.com/surpher/PactSwiftToolbox.")
-		}
-	}
+        if let lines = output?.split(separator: "\n"), lines.count == 1, let port = Int32(lines[0]) {
+            return port
+        } else {
+            fatalError("Unable to find an available port! Please raise an issue at https://github.com/surpher/PactSwiftToolbox.")
+        }
+    }
 
-	#else
+    #else
 
-	// MARK: - Darwin
+    // MARK: - Darwin
 
-	static var randomPort: in_port_t {
-		in_port_t(arc4random_uniform(2_000) + 4_000) // swiftlint:disable:this legacy_random
-	}
+    static var randomPort: in_port_t {
+        in_port_t(arc4random_uniform(2_000) + 4_000) // swiftlint:disable:this legacy_random
+    }
 
-	// The following code block referenced from: https://stackoverflow.com/a/49728137
-	static func tcpPortAvailable(port: in_port_t) -> (Bool, descr: String) {
-		let socketFileDescriptor = socket(AF_INET, SOCK_STREAM, 0)
-		guard socketFileDescriptor != -1 else {
-			return (false, "SocketCreationFailed: \(descriptionOfLastError())")
-		}
+    // The following code block referenced from: https://stackoverflow.com/a/49728137
+    static func tcpPortAvailable(port: in_port_t) -> (Bool, descr: String) {
+        let socketFileDescriptor = socket(AF_INET, SOCK_STREAM, 0)
+        guard socketFileDescriptor != -1 else {
+            return (false, "SocketCreationFailed: \(descriptionOfLastError())")
+        }
 
-		var addr = sockaddr_in()
-		let sizeOfSockkAddr = MemoryLayout<sockaddr_in>.size
-		addr.sin_len = __uint8_t(sizeOfSockkAddr)
-		addr.sin_family = sa_family_t(AF_INET)
-		addr.sin_port = Int(OSHostByteOrder()) == OSLittleEndian ? _OSSwapInt16(port) : port
-		addr.sin_addr = in_addr(s_addr: inet_addr("0.0.0.0"))
-		addr.sin_zero = (0, 0, 0, 0, 0, 0, 0, 0)
-		var bindAddress = sockaddr()
-		memcpy(&bindAddress, &addr, Int(sizeOfSockkAddr))
+        var addr = sockaddr_in()
+        let sizeOfSockkAddr = MemoryLayout<sockaddr_in>.size
+        addr.sin_len = __uint8_t(sizeOfSockkAddr)
+        addr.sin_family = sa_family_t(AF_INET)
+        addr.sin_port = Int(OSHostByteOrder()) == OSLittleEndian ? _OSSwapInt16(port) : port
+        addr.sin_addr = in_addr(s_addr: inet_addr("0.0.0.0"))
+        addr.sin_zero = (0, 0, 0, 0, 0, 0, 0, 0)
+        var bindAddress = sockaddr()
+        memcpy(&bindAddress, &addr, Int(sizeOfSockkAddr))
 
-		if Darwin.bind(socketFileDescriptor, &bindAddress, socklen_t(sizeOfSockkAddr)) == -1 {
-			let details = descriptionOfLastError()
-			release(socket: socketFileDescriptor)
-			return (false, "\(port), BindFailed, \(details)")
-		}
+        if Darwin.bind(socketFileDescriptor, &bindAddress, socklen_t(sizeOfSockkAddr)) == -1 {
+            let details = descriptionOfLastError()
+            release(socket: socketFileDescriptor)
+            return (false, "\(port), BindFailed, \(details)")
+        }
 
-		if listen(socketFileDescriptor, SOMAXCONN ) == -1 {
-			let details = descriptionOfLastError()
-			release(socket: socketFileDescriptor)
-			return (false, "\(port), ListenFailed, \(details)")
-		}
+        if listen(socketFileDescriptor, SOMAXCONN ) == -1 {
+            let details = descriptionOfLastError()
+            release(socket: socketFileDescriptor)
+            return (false, "\(port), ListenFailed, \(details)")
+        }
 
-		release(socket: socketFileDescriptor)
-		return (true, "\(port) is free for use")
-	}
+        release(socket: socketFileDescriptor)
+        return (true, "\(port) is free for use")
+    }
 
-	static func release(socket: Int32) {
-		Darwin.shutdown(socket, SHUT_RDWR)
-		close(socket)
-	}
+    static func release(socket: Int32) {
+        Darwin.shutdown(socket, SHUT_RDWR)
+        close(socket)
+    }
 
-	static func descriptionOfLastError() -> String {
-		String(cString: (UnsafePointer(strerror(errno))))
-	}
+    static func descriptionOfLastError() -> String {
+        String(cString: (UnsafePointer(strerror(errno))))
+    }
 
-	#endif
+    #endif
 
 }

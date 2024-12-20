@@ -11,46 +11,46 @@ import XCTest
 
 class VerifierTests: XCTestCase {
 
-	// MARK: - Properties
+    // MARK: - Properties
 
-	private var testSubject: Verifier!
+    private var testSubject: Verifier!
 
-	// MARK: - Lifecycle
+    // MARK: - Lifecycle
 
-	override func setUpWithError() throws {
-		try super.setUpWithError()
+    override func setUpWithError() throws {
+        try super.setUpWithError()
 
-		testSubject = Verifier()
-	}
+        testSubject = Verifier()
+    }
 
-	override func tearDownWithError() throws {
-		testSubject = nil
+    override func tearDownWithError() throws {
+        testSubject = nil
 
-		try super.tearDownWithError()
-	}
+        try super.tearDownWithError()
+    }
 
-	// MARK: - Tests
+    // MARK: - Tests
 
-	func testVerificationFails() {
-		let result = testSubject.verifyProvider(options: validArgs)
-		XCTAssertEqual(result, .failure(.verificationFailed))
-	}
+    func testVerificationFails() {
+        let result = testSubject.verifyProvider(options: validArgs)
+        XCTAssertEqual(result, .failure(.verificationFailed))
+    }
 
-	func testInvalidArguments() {
-		let result = testSubject.verifyProvider(options: invalidArgs)
-		XCTAssertEqual(result, .failure(.invalidArguments))
-	}
+    func testInvalidArguments() {
+        let result = testSubject.verifyProvider(options: invalidArgs)
+        XCTAssertEqual(result, .failure(.invalidArguments))
+    }
 
 }
 
 private extension VerifierTests {
 
-	var validArgs: String {
-		"--port\n1234\n--dir\n../NonExistingDir"
-	}
+    var validArgs: String {
+        "--port\n1234\n--dir\n../NonExistingDir"
+    }
 
-	var invalidArgs: String {
-		"--port\n1234\n--dir\n../Non\n/Existing/invalid/\npath"
-	}
+    var invalidArgs: String {
+        "--port\n1234\n--dir\n../Non\n/Existing/invalid/\npath"
+    }
 
 }

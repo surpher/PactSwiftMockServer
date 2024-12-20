@@ -297,6 +297,10 @@ function cleanup {
 ##################
 # Pre-checks
 ##################
+if [ "$#" -le 2 ]; then
+    die "Invalid number of arguments. Use --help for more information."
+fi
+
 while [[ $# -gt 0 ]]; do
     case "$1" in
         -v|--version)

@@ -13,13 +13,14 @@ function show_help {
   echo "Deletes the release version of XCFramework with given tag"
   echo
   echo "Usage:"
-  echo "  $0 --tag <TAG> [--dry-run]"
+  echo "  $0 { --tag | --release string } [-m | --message string] [--dry-run] [-h|--help]"
   echo
-  echo "Options:"
-  echo "  -t, --tag           The release tag associated with release"
-  echo "  -r, --release       The release version associated with release"
-  echo "      --dry-run       Prints the commands that would have been executed without reverting the release"
-  echo "  -h, --help          Prints this message"
+  echo "FLAGS"
+  echo "  -t, --tag string        The release tag associated with release"
+  echo "  -r, --release string    The release version associated with release (same as --tag)"
+  echo "  -m, --message string    The message to be used for closing the pull request (if opened)"
+  echo "      --dry-run           Prints the commands that would have been executed into stdout without executing them"
+  echo "  -h, --help              Prints this message"
   exit 0
 }
 
@@ -28,15 +29,22 @@ is_tool_installed gh "See https://cli.github.com/ for more information..."
 
 # Parameters
 REVERT_DRY_RUN=${REVERT_DRY_RUN:-false}
-TO_DELETE_BRANCH=
-TO_DELETE_PR_NUMBER=
 TO_DELETE_TAG=
+REASON_MSG=
 
-# Scirpt inputs
+if [ "$#" -eq 0 ]; then
+    die "Invalid number of arguments. Use '--help' for more information."
+fi
+
+# Script inputs
 while [[ $# -gt 0 ]]; do
   case "$1" in
     -t|--tag|-r|--release)
       TO_DELETE_TAG=$2
+      shift 2
+      ;;
+    -m|--message)
+      REASON_MSG=$2
       shift 2
       ;;
     --dry-run)
@@ -85,45 +93,61 @@ function close_pr_for_version {
   echo -e "   $gh_search_pr"
 
   pr_number=$(eval "$gh_search_pr")
-  execute_cmd "gh pr close $pr_number --repo $REPO_OWNER/$pact_swift_mock_server_repo"
+  execute_cmd "gh pr close $pr_number --delete-branch --comment \"${REASON_MSG:-"Reverted..."}\" --repo $REPO_OWNER/$pact_swift_mock_server_repo"
 }
 
 function is_branch_in_local {
   local branch=$1
-  local existed_in_local=
-  existed_in_local=$(git branch --list "${branch}")$(git branch --list "${branch}")
+  local exists_in_local=
+  exists_in_local=$(git branch --list "$branch")
 
-  if [[ -z ${existed_in_local} ]]; then
-      echo "Branch does not exist locally."
-      return 0
+  if [[ -z "$exists_in_local" ]]; then
+      return 1 # exists
   else
-      echo "Branch exists locally."
-      return 1
+      return 0 # does not exist
+  fi
+}
+
+function is_branch_on_remote {
+  local branch=$1
+  local exists_on_remote=
+  exists_on_remote=$(git ls-remote --heads origin "$branch")
+
+  if [[ -z "$exists_on_remote" ]]; then
+      return 1 # exists
+  else
+      return 0 # does not exist
   fi
 }
 
 # Remove local branch
-function delete_local_branch {
-  local local_branch="$1"
+function delete_branch_for_tag {
+  local local_branch="rc/$1"
 
-  echo -e "Deleting local branch $YELLOW$local_branch$NOCOLOR"
-
+  # Remove branch locally
   if is_branch_in_local "$local_branch"; then
-    execute_cmd "git branch -d $local_branch"
-
-    if [ $? -ne 0 ]; then
-        git branch -D "$local_branch"
-        if [ $? -ne 0 ]; then
-            echo -e "${YELLOW}Failed to delete local branch '$local_branch'$NOCOLOR"
-        fi
-        if [ "$REVERT_DRY_RUN" = true ]; then
-          echo -e "${CYAN}DRY RUN:$NOCOLOR $LIGHT_BLUE$local_branch would be force deleted$NOCOLOR"
-        else
-          echo "Branch '$local_branch' deleted"
-        fi
+    execute_cmd "git branch -D $local_branch"
+    echo -e "🌴 Branch $YELLOW$local_branch$NOCOLOR exists locally..."
+    if [ "$REVERT_DRY_RUN" = true ]; then
+      echo -e "🧹 Branch $YELLOW$local_branch$NOCOLOR would be force deleted locally."
+    else
+      echo -e "🧹 Branch $YELLOW$local_branch$NOCOLOR deleted."
     fi
   else
-      echo "Branch '$local_branch' does not exist..."
+      echo -e "🤷‍♂️ Branch $YELLOW$local_branch$NOCOLOR ${RED}does not$NOCOLOR exist locally..."
+  fi
+
+  # Remove branch from origin
+  if is_branch_on_remote "$local_branch"; then
+    echo -e "🏝️ Branch $YELLOW$local_branch$NOCOLOR exists on remote..."
+    execute_cmd "git push origin --delete $local_branch"
+    if [ "$REVERT_DRY_RUN" = true ]; then
+      echo -e "🧹 Branch $YELLOW$local_branch$NOCOLOR would be deleted at origin."
+    else
+      echo -e "🧹 Branch $YELLOW$local_branch$NOCOLOR deleted at origin."
+    fi
+  else
+    echo -e "🤷‍♂️ Branch $YELLOW$local_branch$NOCOLOR ${RED}does not$NOCOLOR exist at origin..."
   fi
 }
 
@@ -135,22 +159,22 @@ function remove_asssociated_tags {
   echo -e "🚮 Removing tags..."
 
   local remote_tags
-  remote_tags=$(git ls-remote --tags origin | grep -q "refs/tags/$tag_to_delete")
+  remote_tags=$(git ls-remote --tags origin | grep "refs/tags/$tag_to_delete")
   local local_tags
   local_tags=$(git tag --list | grep "$tag_to_delete")
 
   if [[ -n "$remote_tags" ]]; then
-    echo -e "  remote tags: $YELLOW$remote_tags$NOCOLOR"
-    echo -e "Tag $YELLOW$tag_to_delete$NOCOLOR exists on origin. Deleting..."
+    echo -e "  remote tag: $YELLOW$tag_to_delete$NOCOLOR"
+    echo -e "Tag $YELLOW$tag_to_delete$NOCOLOR exists at origin. Deleting..."
     execute_cmd "git push --delete origin $tag_to_delete"
 
     if [ "$REVERT_DRY_RUN" = true ]; then
-      echo -e "${CYAN}DRY RUN:$NOCOLOR Tag $LIGHT_BLUE$tag would be deleted on origin$NOCOLOR"
+      echo -e "${CYAN}DRY RUN:$NOCOLOR Tag $YELLOW$tag_to_delete$NOCOLOR would be deleted at origin."
     else
-      echo "Deleted tag '$tag' at origin"
+      echo "Tag '$tag_to_delete' deleted at origin."
     fi
   else
-    echo -e "Tag $YELLOW$tag_to_delete$NOCOLOR not found on origin"
+    echo -e "Tag $YELLOW$tag_to_delete$NOCOLOR not found at origin."
   fi
 
   if [[ -n "$local_tags" ]]; then
@@ -192,48 +216,57 @@ function git_reset_last_commit {
 ###################
 
 # Deleting the release
-{
-  echo -e "Deleting release $YELLOW$TO_DELETE_TAG$NOCOLOR..."
-  github_delete_release_version "$TO_DELETE_TAG"
-}
+echo -e "🔥 Deleting release $YELLOW$TO_DELETE_TAG$NOCOLOR..."
+github_delete_release_version "$TO_DELETE_TAG"
+
+echo "---------"
 
 # Closing the pull request
-{
-  TO_DELETE_PR_NUMBER=$(get_pr_number "$TO_DELETE_TAG")
-  echo -e "🧯 Closing pull request $LIGHT_BLUE#$TO_DELETE_PR_NUMBER$NOCOLOR..."
-  close_pr_for_version "$TO_DELETE_PR_NUMBER"
-}
+echo -e "🚪 Closing pull request $YELLOW#$TO_DELETE_TAG$NOCOLOR..."
+close_pr_for_version "$TO_DELETE_TAG"
 
-{
-  # Removing tags
-  echo -e "🧯 Removing tags associated with $YELLOW$TO_DELETE_TAG$NOCOLOR..."
-  remove_asssociated_tags "$TO_DELETE_TAG"
+echo "---------"
 
-  # Deleting local branch
-  echo -e "🧹 Deleting branch associated with ${YELLOW}pr/$TO_DELETE_TAG$NOCOLOR..."
-  delete_local_branch "pr/$TO_DELETE_TAG"
+# Removing tags
+echo -e "💥 Removing tags associated with $YELLOW$TO_DELETE_TAG$NOCOLOR..."
+remove_asssociated_tags "$TO_DELETE_TAG"
 
-  # Reset last commit
-  echo -e "🧹 Resetting last commit..."
-  git_reset_last_commit "soft"
+echo "---------"
 
-  # Stashing reset changes
-  echo -e "🪤 Stashing reverted changes..."
-  execute_cmd "git stash push -m \"Reset changes for $TO_DELETE_TAG\" -u"
-}
+# Deleting branch associated with the release
+echo -e "🧹 Deleting branch associated with ${YELLOW}pr/$TO_DELETE_TAG$NOCOLOR..."
+delete_branch_for_tag "$TO_DELETE_TAG"
+
+echo "---------"
+
+# Reset last commit
+echo -e "🧹 Resetting last commit..."
+git_reset_last_commit "soft"
+
+echo "---------"
+
+# Stashing reset changes
+echo -e "🪤 Stashing reverted changes..."
+execute_cmd "git stash push -m \"Reset changes for $TO_DELETE_TAG\" -u"
+
+echo "---------"
 
 # We're done(ish)
 if [ "$REVERT_DRY_RUN" = true ]; then
   # A list of results
   REVERTED_RESULTS=(
     "🤷 Done:"
-    "  - closed pull request $LIGHT_BLUE#$TO_DELETE_PR_NUMBER$NOCOLOR,"
-    "  - deleted the associated branch,"
-    "  - removed any associated tags,"
-    "  - deleted local branch $LIGHT_BLUE$TO_DELETE_BRANCH$NOCOLOR."
+    " - Closed pull request $LIGHT_BLUE$TO_DELETE_TAG$NOCOLOR (if it existed)."
+    " - Deleted the associated branch (if it existed)."
+    " - Removed the associated tag (if it existed)."
+    " - Deleted local branch for $LIGHT_BLUE$TO_DELETE_TAG$NOCOLOR (if it existed)."
+    " - Stashed the reset change for $LIGHT_BLUE$TO_DELETE_TAG$NOCOLOR."
   )
 
   for message in "${REVERTED_RESULTS[@]}"; do
     echo -e "${CYAN}DRY RUN:$NOCOLOR $message"
   done
 fi
+
+echo
+echo -e "👌 Done!"

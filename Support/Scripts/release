@@ -297,7 +297,7 @@ function cleanup {
 ##################
 # Pre-checks
 ##################
-if [ "$#" -le 2 ]; then
+if [ "$#" -lt 1 ]; then
     die "Invalid number of arguments. Use --help for more information."
 fi
 

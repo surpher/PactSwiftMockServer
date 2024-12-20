@@ -1,4 +1,4 @@
-name: "🏷️ Tag on PR merge"
+name: "🏷️  Tag on PR merge"
 
 on:
   workflow_dispatch:
@@ -36,7 +36,7 @@ jobs:
             Release ${{ env.NEW_RELEASE_VERSION }}
             - PR: #${{ github.event.pull_request.number }}
             - URL: ${{ github.event.pull_request.url }}
-            - Commits:${{ github.event.pull_request.commits_url }}
+            - Commits: ${{ github.event.pull_request.commits_url }}
             - Diff: ${{ github.event.pull_request.diff_url }}
 
             See [CHANGELOG.md][https://${{ github.server_url }}/${{ github.repository }}/blob/${{ github.event.pull_request.merge_commit_sha }}/CHANGELOG.md] for more details.

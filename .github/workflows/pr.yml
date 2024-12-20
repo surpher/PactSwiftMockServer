@@ -25,12 +25,12 @@ jobs:
 
       - name: "🚀 Create a release"
         id: create_release
-        uses: actions/create-release@v1
+        uses: softprops/action-gh-release@v2
         env:
           GITHUB_TOKEN: ${{ secrets.RELEASE_PAT }}
         with:
           tag_name: ${{ steps.find_version.outputs.new_release_tag }}
-          release_name: "Release: ${{ steps.find_version.outputs.new_release_tag }}"
+          name: "Release: ${{ steps.find_version.outputs.new_release_tag }}"
           body: |
             Release [${{ steps.find_version.outputs.new_release_tag }}](https://${{ github.server_url }}/surpher/PactSwiftMockServerXCFramework/releases/tag/${{ steps.find_version.outputs.new_release_tag }}).
             - PR: #${{ github.event.pull_request.number }}
@@ -41,3 +41,4 @@ jobs:
             See [CHANGELOG.md][https://${{ github.server_url }}/${{ github.repository }}/blob/${{ github.event.pull_request.merge_commit_sha }}/CHANGELOG.md] for more details.
           draft: false
           prerelease: false
+          make_latest: true

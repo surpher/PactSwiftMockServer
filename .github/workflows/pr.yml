@@ -39,6 +39,6 @@ jobs:
             - Commits:${{ github.event.pull_request.commits_url }}
             - Diff: ${{ github.event.pull_request.diff_url }}
 
-            See [CHANGELOG.md][https://${{ github.server_url }}/${{ github.repository }}"/blob/${{ github.event.pull_request.head.sha }}/CHANGELOG.md] for more details.
+            See [CHANGELOG.md][https://${{ github.server_url }}/${{ github.repository }}/blob/${{ github.event.pull_request.merge_commit_sha }}/CHANGELOG.md] for more details.
           draft: false
           prerelease: false

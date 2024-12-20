@@ -125,6 +125,7 @@ Resources/**/*.a
 /Resources/iOS-device/**
 /CHANGELOG.md.next
 /CHANGELOG.md.backup
+pact-reference/rust/target/**/*
 
 # VSCode
 .vscode/

@@ -28,7 +28,12 @@ public final class Pact {
         case canNotWritePact(Int32)
     }
 
+    @available(*, deprecated, renamed: "ffi_version")
     public var version: String {
+        ffi_version
+    }
+
+    public var ffi_version: String {
         ffiProvider.version
     }
 

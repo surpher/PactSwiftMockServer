@@ -56,7 +56,7 @@ jobs:
       - name: "🛠 Prepare Tools"
         if: ${{ steps.check_files.outputs.files_exists == 'false' || inputs.force-rebuild == 'true' }}
         run: |
-          sh Support/Scripts/Config/prepare_build_tools
+          sh Support/Scripts/CI/configure_build_tools
 
       - name: "🎁 Build FFI binaries (skipping if cached)"
         if: ${{ steps.check_files.outputs.files_exists == 'false' || inputs.force-rebuild == 'true' }}

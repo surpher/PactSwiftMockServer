@@ -62,7 +62,7 @@ jobs:
 
       - name: "🛠  Prepare Tools"
         run: |
-          sh Support/Scripts/Config/prepare_build_tools
+          sh Support/Scripts/CI/configure_build_tools
 
       - name: "⚗️  Run tests"
         run: |

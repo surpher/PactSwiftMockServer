@@ -721,7 +721,7 @@ void pactffi_logger_init(void);
  * - `-1`: Can't set logger (applying the logger failed, perhaps because one is applied already).
  * - `-2`: No logger has been initialized (call `pactffi_logger_init` before any other log function).
  * - `-3`: The sink specifier was not UTF-8 encoded.
- * - `-4`: The sink type specified is not a known type (known types: "stdout", "stderr", or "file /some/path").
+ * - `-4`: The sink type specified is not a known type (known types: "stdout", "stderr", "buffer", or "file /some/path").
  * - `-5`: No file path was specified in a file-type sink specification.
  * - `-6`: Opening a sink to the specified file path failed (check permissions).
  *
@@ -740,6 +740,12 @@ int pactffi_logger_attach_sink(const char *sink_specifier,
  *
  * This function will install a global tracing subscriber. Any attempts to modify the logger
  * after the call to `logger_apply` will fail.
+ *
+ * # Error Handling
+ *
+ * The return error codes are as follows:
+ *
+ * - `-1`: Can't set logger (applying the logger failed, perhaps because one is applied already).
  */
 int pactffi_logger_apply(void);
 
@@ -3548,11 +3554,12 @@ bool pactffi_with_specification(PactHandle pact,
 enum PactSpecification pactffi_handle_get_pact_spec_version(PactHandle pact);
 
 /**
- * Sets the additional metadata on the Pact file. Common uses are to add the client library details such as the name and version
- * Returns false if the interaction or Pact can't be modified (i.e. the mock server for it has already started)
+ * Sets the additional metadata on the Pact file. Common uses are to add the client library
+ * details such as the name and version. Returns false if the interaction or Pact can't be
+ * modified (i.e. the mock server for it has already started) or the namespace is readonly.
  *
  * * `pact` - Handle to a Pact model
- * * `namespace` - the top level metadat key to set any key values on
+ * * `namespace` - the top level metadata key to set any key values on
  * * `name` - the key to set
  * * `value` - the value to set
  */
@@ -4014,7 +4021,8 @@ bool pactffi_set_pending(InteractionHandle interaction, bool pending);
  *
  * # Safety
  *
- * The comments parameter must be a valid pointer to a NULL terminated UTF-8,
+ * The key parameter must be a valid pointer to a NULL terminated UTF-8.
+ * The value parameter must be a valid pointer to a NULL terminated UTF-8,
  * or NULL if the comment is to be cleared.
  */
 bool pactffi_set_comment(InteractionHandle interaction, const char *key, const char *value);
@@ -4037,8 +4045,7 @@ bool pactffi_set_comment(InteractionHandle interaction, const char *key, const c
  *
  * # Safety
  *
- * The comments parameter must be a valid pointer to a NULL terminated UTF-8,
- * or NULL if the comment is to be cleared.
+ * The comment parameter must be a valid pointer to a NULL terminated UTF-8.
  */
 bool pactffi_add_text_comment(InteractionHandle interaction, const char *comment);
 
@@ -4146,11 +4153,14 @@ void pactffi_message_expects_to_receive(MessageHandle message, const char *descr
 void pactffi_message_given(MessageHandle message, const char *description);
 
 /**
- * Adds a provider state to the Message with a parameter key and value.
+ * Adds a parameter key and value to a provider state to the Message. If the provider state
+ * does not exist, a new one will be created, otherwise the parameter will be merged into the
+ * existing one. The parameter value will be parsed as JSON.
  *
+ * # Parameters
  * * `description` - The provider state description. It needs to be unique.
  * * `name` - Parameter name.
- * * `value` - Parameter value.
+ * * `value` - Parameter value as JSON.
  */
 void pactffi_message_given_with_param(MessageHandle message,
                                       const char *description,

@@ -18,7 +18,7 @@
 #  IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #
 
-set -eux
+set -eu
 set -o pipefail
 
 SOURCE_DIR="${BASH_SOURCE[0]%/*}"
@@ -37,7 +37,7 @@ LOGS_DIR="${WORKSPACE}/.build"
 
 # "import"
 source "$SOURCE_DIR/../utils.sh"
-source "$SOURCE_DIR/../Config/configure_rust_tools.sh"
+source "$SOURCE_DIR/../Config/rust_config.sh"
 
 #######################
 # Pre-requisite

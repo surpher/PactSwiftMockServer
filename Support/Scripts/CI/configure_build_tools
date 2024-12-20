@@ -1,0 +1,60 @@
+#!/usr/bin/env bash
+# shellcheck disable=SC1091
+
+#  PactSwiftMockService
+#
+#  See LICENSE for licensing information.
+#
+
+set -euo pipefail
+
+# "import"
+source "${BASH_SOURCE[0]%/*}/../utils.sh"
+
+# Functions
+function brew_install {
+  local tool="$1"
+  if ! command -v "$tool" &> /dev/null; then
+      echo -e "👎 $YELLOW$tool$NOCOLOR is not installed..."
+      echo -e "🍺 Installing $YELLOW$tool$NOCOLOR via Homebrew..."
+      executeCommand "brew install $tool"
+  else
+      echo -e "🍻 $LIGHT_BLUE$tool$NOCOLOR already installed."
+  fi
+}
+
+check_rustup_installed() {
+    if command -v rustup >/dev/null 2>&1; then
+        echo -e "🍻 ${LIGHT_BLUE}rustup$NOCOLOR already installed..."
+        return 0
+    else
+        echo -e "👎 ${YELLOW}rustup$NOCOLOR is not installed."
+        return 1
+    fi
+}
+
+install_rustup() {
+    echo -e "Installing ${YELLOW}rustup$NOCOLOR..."
+    executeCommand "curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y"
+    echo -e "⚙️ ${YELLOW}rustup$NOCOLOR installation complete."
+}
+
+# Tools
+PACTSWIFTMOCKSERVER_TOOLS=(
+  cbindgen
+  doxygen
+  xcbeautify
+  swiftlint
+)
+
+# Sript
+brew update
+
+for tool in "${PACTSWIFTMOCKSERVER_TOOLS[@]}"; do
+  brew_install "$tool"
+done
+
+if ! check_rustup_installed; then
+    install_rustup
+    executeCommand "source ~/.cargo/env"
+fi

@@ -18,7 +18,13 @@
 #  IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #
 
+set -eu
 set -o pipefail
+
+CONFIGURE_RUST_TOOLS_SOURCE_DIR="${BASH_SOURCE[0]%/*}"
+
+source "$CONFIGURE_RUST_TOOLS_SOURCE_DIR/../utils.sh"
+source "$CONFIGURE_RUST_TOOLS_SOURCE_DIR/config.sh"
 
 echo "ℹ️ List installed apple triples"
 executeCommand "rustup target list | grep apple"

@@ -10,14 +10,15 @@ source "$RELEASE_SOURCE_DIR/utils.sh"
 source "$RELEASE_SOURCE_DIR/Config/config.sh"
 
 function show_help {
-  echo "Reverts the attempt of releasing a new XCFramework."
+  echo "Deletes the release version of XCFramework with given tag"
   echo
   echo "Usage:"
   echo "  $0 --tag <TAG> [--dry-run]"
   echo
   echo "Options:"
-  echo "  -t, --tag           The tag associated with attempted release"
-  echo "      --dry-run       Prints the commands that would have been executed"
+  echo "  -t, --tag           The release tag associated with release"
+  echo "  -r, --release       The release version associated with release"
+  echo "      --dry-run       Prints the commands that would have been executed without reverting the release"
   echo "  -h, --help          Prints this message"
   exit 0
 }
@@ -34,7 +35,7 @@ TO_DELETE_TAG=
 # Scirpt inputs
 while [[ $# -gt 0 ]]; do
   case "$1" in
-    -t|--tag)
+    -t|--tag|-r|--release)
       TO_DELETE_TAG=$2
       shift 2
       ;;
@@ -67,9 +68,24 @@ function execute_cmd {
 }
 
 # Close the pull request and delete the associated branch
-function github_delete_release {
+function github_delete_release_version {
   local tag_to_delete="$1"
   execute_cmd "gh release delete $tag_to_delete --cleanup-tag --yes --repo $REPO_OWNER/$RELEASE_REPO_NAME"
+}
+
+# Close the pull request and delete the associated branch
+function close_pr_for_version {
+  local version_number="$1"
+  local pr_number=
+  local gh_search_pr=
+  local pact_swift_mock_server_repo=$XCPRODUCT_NAME
+
+  gh_search_pr="gh search prs --match title \"$version_number\" --repo \"$REPO_OWNER/$pact_swift_mock_server_repo\" --jq '.[].number' --json number"
+  echo -e "🤖 Executing:"
+  echo -e "   $gh_search_pr"
+
+  pr_number=$(eval "$gh_search_pr")
+  execute_cmd "gh pr close $pr_number --repo $REPO_OWNER/$pact_swift_mock_server_repo"
 }
 
 function is_branch_in_local {
@@ -107,7 +123,7 @@ function delete_local_branch {
         fi
     fi
   else
-      echo "Branch '$local_branch' does not exist locally."
+      echo "Branch '$local_branch' does not exist..."
   fi
 }
 
@@ -177,29 +193,40 @@ function git_reset_last_commit {
 
 # Deleting the release
 {
-  github_delete_release "$TO_DELETE_TAG"
+  echo -e "Deleting release $YELLOW$TO_DELETE_TAG$NOCOLOR..."
+  github_delete_release_version "$TO_DELETE_TAG"
 }
 
-# Removing tags
-echo -e "Removing tags associated with $YELLOW$TO_DELETE_TAG$NOCOLOR..."
-remove_asssociated_tags "$TO_DELETE_TAG"
+# Closing the pull request
+{
+  TO_DELETE_PR_NUMBER=$(get_pr_number "$TO_DELETE_TAG")
+  echo -e "🧯 Closing pull request $LIGHT_BLUE#$TO_DELETE_PR_NUMBER$NOCOLOR..."
+  close_pr_for_version "$TO_DELETE_PR_NUMBER"
+}
 
-# Deleting local branch
-echo -e "Deleting branche associated with ${YELLOW}pr/$TO_DELETE_TAG$NOCOLOR..."
-delete_local_branch "pr/$TO_DELETE_TAG"
+{
+  # Removing tags
+  echo -e "🧯 Removing tags associated with $YELLOW$TO_DELETE_TAG$NOCOLOR..."
+  remove_asssociated_tags "$TO_DELETE_TAG"
 
-echo -e "Removing branch with ${YELLOW}orphan-pr/$TO_DELETE_TAG$NOCOLOR..."
-delete_local_branch "orphan-pr/$TO_DELETE_TAG"
+  # Deleting local branch
+  echo -e "🧹 Deleting branch associated with ${YELLOW}pr/$TO_DELETE_TAG$NOCOLOR..."
+  delete_local_branch "pr/$TO_DELETE_TAG"
 
-# Reset last commit
-echo -e "Resetting last commit to revert the updated CHANGELOG..."
-git_reset_last_commit "hard"
+  # Reset last commit
+  echo -e "🧹 Resetting last commit..."
+  git_reset_last_commit "soft"
+
+  # Stashing reset changes
+  echo -e "🪤 Stashing reverted changes..."
+  execute_cmd "git stash push -m \"Reset changes for $TO_DELETE_TAG\" -u"
+}
 
 # We're done(ish)
 if [ "$REVERT_DRY_RUN" = true ]; then
   # A list of results
   REVERTED_RESULTS=(
-    "👍 Done:"
+    "🤷 Done:"
     "  - closed pull request $LIGHT_BLUE#$TO_DELETE_PR_NUMBER$NOCOLOR,"
     "  - deleted the associated branch,"
     "  - removed any associated tags,"

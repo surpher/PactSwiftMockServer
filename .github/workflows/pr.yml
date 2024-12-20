@@ -9,7 +9,7 @@ on:
 
 jobs:
   run_on_merge:
-    if: github.event.pull_request.merged == true
+    if: github.event.pull_request.merged == true || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-24.04
 
     steps:
@@ -21,19 +21,18 @@ jobs:
         run: |
           RELEASE_VERSION=$(sed -n '2p' Configurations/Project-Shared.xcconfig | cut -d '=' -f2 | tr -d ' ')
           echo "Found version: $RELEASE_VERSION"
-          echo "NEW_RELEASE_VERSION=v$RELEASE_VERSION" >> $GITHUB_ENV
+          echo "new_release_tag=v$RELEASE_VERSION" >> $GITHUB_OUTPUT
 
       - name: "🚀 Create a release"
         id: create_release
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.RELEASE_PAT }}
-          NEW_RELEASE_VERSION: ${{ steps.find_version.outputs.NEW_RELEASE_VERSION }}
         with:
-          tag_name: ${{ env.NEW_RELEASE_VERSION }}
-          release_name: "Release: ${{ env.NEW_RELEASE_VERSION }}"
+          tag_name: ${{ steps.find_version.outputs.new_release_tag }}
+          release_name: "Release: ${{ steps.find_version.outputs.new_release_tag }}"
           body: |
-            Release ${{ env.NEW_RELEASE_VERSION }}
+            Release [${{ steps.find_version.outputs.new_release_tag }}](https://${{ github.server_url }}/surpher/PactSwiftMockServerXCFramework/releases/tag/${{ steps.find_version.outputs.new_release_tag }}).
             - PR: #${{ github.event.pull_request.number }}
             - URL: ${{ github.event.pull_request.url }}
             - Commits: ${{ github.event.pull_request.commits_url }}

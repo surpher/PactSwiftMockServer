@@ -206,7 +206,7 @@ function github_create_pull_request_for_new_version {
   local version_branch="$2"
   local pr_message="Release: [$version_tag](https://github.com/$REPO_OWNER/$RELEASE_REPO_NAME/releases/tag/$version_tag)"
   local dry_run=; dry_run=$([ "$DRY_RUN" = true ] && echo "--dry-run" || echo "")
-  local open_pr_cmd="gh pr create --draft --base $PR_HEAD_BRANCH --head \"$version_branch\" $dry_run --title \"$version_tag\" --body \"$pr_message\" --repo $REPO_OWNER/$XCPRODUCT_NAME"
+  local open_pr_cmd="gh pr create --base $PR_HEAD_BRANCH --head \"$version_branch\" $dry_run --title \"$version_tag\" --body \"$pr_message\" --repo $REPO_OWNER/$XCPRODUCT_NAME"
 
   echo "🗃️ Opening a draft pull request..."
   execute_cmd "$open_pr_cmd"

@@ -8,6 +8,7 @@
 import Foundation
 
 public protocol BodyBuilder {
+
     /// Adds the body for the ``Interaction``.
     ///
     /// For JSON payloads, matching rules can be embedded in the `body`. See
@@ -17,10 +18,10 @@ public protocol BodyBuilder {
     ///
     /// - Parameters:
     ///   - contentType:
-    ///       The content type of the body. Defaults to `text/plain`. Ignored if a content-type header is already set.
+    ///       The content type of the body. Defaults to `text/plain`.
     ///       If `nil`, or can't be parsed, it will set the content type as TEXT.
     ///   - body: The body contents. If `nil` will set the body contents as null.
     ///
     @discardableResult
-    func body(_ body: String?, contentType: String?) throws -> Self
+    func body(_ body: String?, contentType: String) throws -> Self
 }

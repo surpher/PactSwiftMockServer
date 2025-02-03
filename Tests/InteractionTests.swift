@@ -25,12 +25,12 @@ final class InteractionTests: XCTestCase {
         try Interaction(pactHandle: pact.handle, description: "An interaction")
             .given("Some provider state")
             .withRequest(method: .GET, path: "/test") { request in
-                try request.header("foo", values: ["bar"])
+                try request.header("foo", value: "bar")
                 try request.body(#"{"foo":"bar"}"#, contentType: "application/json")
                 try request.queryParam(name: "foo", values: ["bar", "baz"])
             }
             .willRespond(with: TestStatusCode.ok.rawValue) { response in
-                try response.header("FOO", values: ["BAR"])
+                try response.header("FOO", value: "BAR")
                 try response.body(#"hello pact"#, contentType: "text/plain")
             }
 
@@ -48,12 +48,12 @@ final class InteractionTests: XCTestCase {
                 value: String(describing: #line)
             )
             .withRequest(method: .GET, path: "/test") { request in
-                try request.header("foo", values: ["bar"])
+                try request.header("foo", value: "bar")
                 try request.body(#"{"foo":"bar"}"#, contentType: "application/json")
                 try request.queryParam(name: "foo", values: ["bar", "baz"])
             }
             .willRespond(with: TestStatusCode.ok.rawValue) { response in
-                try response.header("FOO", values: ["BAR"])
+                try response.header("FOO", value: "BAR")
                 try response.body(#"hello pact"#, contentType: "text/plain")
             }
 

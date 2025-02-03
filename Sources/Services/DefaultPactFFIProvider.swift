@@ -128,38 +128,45 @@ struct DefaultPactFFIProvider: PactFFIProviding {
         pactffi_new_interaction(handle, description.cString(using: .utf8))
     }
 
-    func withQueryParameter(handle: InteractionHandle, name: String, values: [String]) throws {
-        for (index, value) in values.enumerated() {
-            guard pactffi_with_query_parameter_v2(
-                handle,
-                name.cString(using: .utf8),
-                index,
-                value.cString(using: .utf8)
-            ) else {
-                throw Interaction.Error.canNotBeModified
-            }
+    func withQueryParameter(handle: InteractionHandle, name: String, value: String) throws {
+        guard pactffi_with_query_parameter_v2(
+            handle,
+            name.cString(using: .utf8),
+            0,
+            value.cString(using: .utf8)
+        ) else {
+            throw Interaction.Error.canNotBeModified
         }
     }
 
-    func withHeader(handle: InteractionHandle, name: String, values: [String], interactionPart: InteractionPart) throws {
-        for (index, value) in values.enumerated() {
-            guard pactffi_with_header_v2(
-                handle,
-                interactionPart,
-                name.cString(using: .utf8),
-                index,
-                value.cString(using: .utf8)
-            ) else {
-                throw Interaction.Error.canNotBeModified
-            }
+    func withQueryParameterWithoutAssociatedValue(handle: InteractionHandle, name: String) throws {
+        guard pactffi_with_query_parameter_v2(
+            handle,
+            name.cString(using: .utf8),
+            0,
+            nil
+        ) else {
+            throw Interaction.Error.canNotBeModified
         }
     }
 
-    func withBody(handle: InteractionHandle, body: String?, contentType: String?, interactionPart: InteractionPart) throws {
+    func withHeader(handle: InteractionHandle, name: String, value: String, interactionPart: InteractionPart) throws {
+        guard pactffi_with_header_v2(
+            handle,
+            interactionPart,
+            name.cString(using: .utf8),
+            0,
+            value.cString(using: .utf8)
+        ) else {
+            throw Interaction.Error.canNotBeModified
+        }
+    }
+
+    func withBody(handle: InteractionHandle, body: String?, contentType: String, interactionPart: InteractionPart) throws {
         guard pactffi_with_body(
             handle,
             interactionPart,
-            (contentType ?? "text/plain").cString(using: .utf8),
+            contentType.cString(using: .utf8),
             body?.cString(using: .utf8)
         ) else {
             throw Interaction.Error.canNotBeModified
@@ -269,5 +276,12 @@ private extension PactSpecification {
             Logging.log(.error, message: message)
             preconditionFailure(message)
         }
+    }
+}
+
+private extension Array where Element == String {
+
+    var urlSafe: String {
+        ""
     }
 }

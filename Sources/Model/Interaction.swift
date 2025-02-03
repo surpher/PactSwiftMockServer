@@ -24,132 +24,6 @@ public final class Interaction {
     public typealias RequestBuilder = (Request) throws -> Void
     public typealias ResponseBuilder = (Response) throws -> Void
 
-    // MARK: - Request
-
-    public struct Request: HeaderBuilder, BodyBuilder, QueryBuilder {
-        private let ffiProvider: PactFFIProviding
-        private let handle: InteractionHandle
-
-        init(
-            handle: InteractionHandle,
-            ffiProvider: PactFFIProviding = DefaultPactFFIProvider()
-        ) {
-            self.handle = handle
-            self.ffiProvider = ffiProvider
-        }
-
-        // MARK: - Interface
-
-        /// Configures query parameters for the Interaction.
-        ///
-        /// - Throws: ``Interaction/Error/canNotBeModified`` if the interaction or Pact can't be modified (i.e. the mock server for it has already started).
-        ///
-        /// - Parameters:
-        ///   - name: The name of the query parameter.
-        ///   - values: The values for given query parameter.
-        ///
-        @discardableResult
-        public func queryParam(name: String, values: [String]) throws -> Self {
-            try ffiProvider.withQueryParameter(handle: handle, name: name, values: values)
-
-            return self
-        }
-
-        /// Configures the request header for the Interaction.
-        ///
-        /// - Throws: ``Interaction/Error/canNotBeModified`` if the interaction or Pact can't be modified (i.e. the mock server for it has already started).
-        ///
-        /// - Parameters:
-        ///   - name: The name of the header parameter.
-        ///   - values: The values for given header.
-        ///
-        @discardableResult
-        public func header(_ name: String, values: [String]) throws -> Self {
-            try ffiProvider.withHeader(handle: handle, name: name, values: values, interactionPart: .request)
-
-            return self
-        }
-
-        /// Configures the request body for the ``Interaction``.
-        ///
-        /// For JSON payloads, matching rules can be embedded in the `body`. See
-        /// [IntegrationJson.md](https://github.com/pact-foundation/pact-reference/blob/master/rust/pact_ffi/IntegrationJson.md).
-        ///
-        /// - Throws: ``Interaction/Error/canNotBeModified`` if the interaction or Pact can't be modified (i.e. the mock server for it has already started).
-        /// - Parameters:
-        ///   - contentType:
-        ///       The content type of the body. Defaults to `text/plain`. Ignored if a content-type header is already set.
-        ///       If `nil`, or can't be parsed, it will set the content type as TEXT.
-        ///   - body: The body contents. If the `body` is `nil` it will set the body contents as null.
-        ///
-        @discardableResult
-        public func body(_ body: String? = nil, contentType: String? = nil) throws -> Self {
-            try ffiProvider.withBody(handle: handle, body: body, contentType: contentType, interactionPart: .request)
-
-            return self
-        }
-    }
-
-    // MARK: - Response
-
-    public struct Response: HeaderBuilder, BodyBuilder {
-        private let handle: InteractionHandle
-        private let ffiProvider: PactFFIProviding
-
-        init(handle: InteractionHandle, ffiProvider: PactFFIProviding = DefaultPactFFIProvider()) {
-            self.handle = handle
-            self.ffiProvider = ffiProvider
-        }
-
-        /// Configures the response status for the Interaction.
-        ///
-        /// - Throws: ``Interaction/Error/canNotBeModified`` if the interaction or Pact can't be modified (i.e. the mock server for it has already started).
-        ///
-        /// - Parameters:
-        ///   - status: the response status. Defaults to `200`.
-        ///
-        @discardableResult
-        public func status(_ status: Int) throws -> Self {
-            try ffiProvider.withStatus(handle: handle, status: status)
-
-            return self
-        }
-
-        /// Configures the response header for the Interaction.
-        ///
-        /// - Throws: ``Interaction/Error/canNotBeModified`` if the interaction or Pact can't be modified (i.e. the mock server for it has already started).
-        ///
-        /// - Parameters:
-        ///   - name: The name of the header parameter.
-        ///   - values: The values for given header.
-        ///
-        @discardableResult
-        public func header(_ name: String, values: [String]) throws -> Self {
-            try ffiProvider.withHeader(handle: handle, name: name, values: values, interactionPart: .response)
-
-            return self
-        }
-
-        /// Configures the response body for the ``Interaction``.
-        ///
-        /// For JSON payloads, matching rules can be embedded in the `body`. See
-        /// [IntegrationJson.md](https://github.com/pact-foundation/pact-reference/blob/master/rust/pact_ffi/IntegrationJson.md).
-        ///
-        /// - Throws: ``Interaction/Error/canNotBeModified`` if the interaction or Pact can't be modified (i.e. the mock server for it has already started).
-        /// - Parameters:
-        ///   - contentType:
-        ///       The content type of the body. Defaults to `text/plain`. Ignored if a content-type header is already set.
-        ///       If `nil`, or can't be parsed, it will set the content type as TEXT.
-        ///   - body: The body contents. If the `body` is `nil` it will set the body contents as null.
-        ///
-        @discardableResult
-        public func body(_ body: String? = nil, contentType: String? = nil) throws -> Self {
-            try ffiProvider.withBody(handle: handle, body: body, contentType: contentType, interactionPart: .response)
-
-            return self
-        }
-    }
-
     // MARK: - Interaction
 
     /// HTTP Method for an ``Interaction``.
@@ -243,8 +117,9 @@ public final class Interaction {
 
         return self
     }
-
 }
+
+// MARK: - Extension
 
 public extension Interaction {
 
@@ -333,11 +208,6 @@ extension Interaction.Error: LocalizedError {
             )
         }
     }
-}
-
-private extension InteractionPart {
-    static var request: Self { InteractionPart(rawValue: 0) }
-    static var response: Self { InteractionPart(rawValue: 1) }
 }
 
 extension Interaction.ProviderState: ExpressibleByStringLiteral {

@@ -22,7 +22,12 @@ final class PactBuilderTests: XCTestCase {
 
     override func setUp() async throws {
         try await super.setUp()
-        try await Logging.initialize()
+        try await Logging.initialize(
+            [
+                Logging.Sink.Config(.standardOut, filter: .debug),
+                Logging.Sink.Config(.standardError, filter: .debug),
+            ]
+        )
     }
 
     override func setUpWithError() throws {
@@ -40,6 +45,8 @@ final class PactBuilderTests: XCTestCase {
         let config = PactBuilder.Config(pactDirectory: pactDirectory)
         builder = PactBuilder(pact: pact, config: config)
     }
+
+    // MARK: - Tests
 
     func testPactVersion() throws {
         let pact = Pact(consumer: consumer, provider: provider)
@@ -83,7 +90,7 @@ final class PactBuilderTests: XCTestCase {
             .given("There are events")
             .testName(name)
             .withRequest(method: .POST, path: "/events") { request in
-                try request.header("Accept", values: ["application/json"])
+                try request.header("Accept", value: "application/json")
             }
             .willRespond(with: TestStatusCode.accepted.rawValue) { response in
                 try response.body("OK", contentType: "text/plain")
@@ -106,6 +113,8 @@ final class PactBuilderTests: XCTestCase {
             XCTAssertEqual(data, "OK".data(using: .utf8))
         }
     }
+
+    // MARK: - Verification errors
 
     func testPactFailureErrorMessage() {
         // Create test verification failures
@@ -168,4 +177,236 @@ final class PactBuilderTests: XCTestCase {
         )
     }
 
+    // MARK: - Headers
+
+    func testInteractionWithHeaderParameters() async throws {
+        let headerParam: (key: String, value: String) = ("foo", "bar")
+
+        try builder
+            .uponReceiving("A request for an interaction")
+            .given(
+                "Some state relying on header parameters",
+                withName: #function,
+                value: String(describing: #line)
+            )
+            .withRequest(method: .GET, path: "/interaction") { context in
+                try context.header(headerParam.key, value: headerParam.value)
+            }
+            .willRespond(with: 200)
+
+        try await builder.verify { context in
+            let urlRequest = try context.buildURLRequest(path: "/interaction", headers: [headerParam])
+            let (data, response) = try await URLSession(configuration: .ephemeral).data(for: urlRequest)
+
+            let httpResponse = try XCTUnwrap(response as? HTTPURLResponse)
+            print(String(data: data, encoding: .utf8)!)
+            XCTAssertEqual(httpResponse.statusCode, 200)
+        }
+    }
+
+    func testInteractionWithHeaderParametersAndMatchers() async throws {
+        // TODO: - Fix this so it can handle an array not just array of one string!
+        let headerParam: (key: String, values: [String]) = ("foo", ["bar"])
+        let matcher = PactMatcher(
+            type: "pact:matcher:type",
+            value: "bar",
+            regex: #"\[a-zA-Z]+$"#,
+            example: "bar"
+        )
+
+        try builder
+            .uponReceiving("A request for an interaction")
+            .given(
+                "Some state relying on header parameters",
+                withName: #function,
+                value: String(describing: #line)
+            )
+            .withRequest(method: .GET, path: "/interaction") { context in
+                try context.header(
+                    headerParam.key,
+                    value: headerParam.values.joined(separator: ","),
+                    matcher: matcher
+                )
+            }
+            .willRespond(with: 200)
+
+        try await builder.verify { context in
+            let urlRequest = try context.buildURLRequest(path: "/interaction", headers: [])
+            let (data, response) = try await URLSession(configuration: .ephemeral).data(for: urlRequest)
+
+            let httpResponse = try XCTUnwrap(response as? HTTPURLResponse)
+            print(String(data: data, encoding: .utf8)!)
+            XCTAssertEqual(httpResponse.statusCode, 200)
+        }
+    }
+
+    // MARK: - Query Parameters
+
+    func testInteractionWithQueryParameter() async throws {
+        let queryParam: (key: String, values: [String]) = ("item", ["value"])
+
+        try builder
+            .uponReceiving("A request for an interaction")
+            .given(
+                "Some state relying on query parameters",
+                withName: #function,
+                value: String(describing: #line)
+            )
+            .withRequest(method: .GET, path: "/interaction") { context in
+                try context.queryParam(name: queryParam.key, values: queryParam.values)
+            }
+            .willRespond(with: 200)
+
+        try await builder.verify { context in
+            let url = try context.buildRequestURL(
+                path: "/interaction",
+                queryItems: [
+                    queryParam.key: queryParam.values.joined(separator: ",")
+                ]
+            )
+            let (data, response) = try await URLSession(configuration: .ephemeral).data(from: url)
+
+            let httpResponse = try XCTUnwrap(response as? HTTPURLResponse)
+            print(String(data: data, encoding: .utf8)!)
+            XCTAssertEqual(httpResponse.statusCode, 200)
+        }
+    }
+
+    func testInteractionWithQueryParameters() async throws {
+        let queryParams: [(key: String, values: [String])] = [
+            ("foo", ["foo", "bar"]),
+            ("bar", ["baz"]),
+            ("baz", [])
+        ]
+
+        try builder
+            .uponReceiving("A request for an interaction")
+            .given(
+                "Some state relying on query parameters",
+                withName: #function,
+                value: String(describing: #line)
+            )
+            .withRequest(method: .GET, path: "/interaction") { context in
+                try queryParams.forEach {
+                    try context.queryParam(name: $0.key, values: $0.values)
+                }
+            }
+            .willRespond(with: 200)
+
+        try await builder.verify { context in
+
+            let url = try context.buildRequestURL(
+                path: "/interaction",
+                queryItems: queryParams
+                    .shuffled()
+                    .compactMap { [$0.key: $0.values.joined(separator: ",")] }
+                    .reduce(into: [String: String]()) {
+                        $0.merge($1) { (_, new) in new }
+                    }
+            )
+            let (data, response) = try await URLSession(configuration: .ephemeral).data(from: url)
+
+            let httpResponse = try XCTUnwrap(response as? HTTPURLResponse)
+            print(String(data: data, encoding: .utf8)!)
+            XCTAssertEqual(httpResponse.statusCode, 200)
+        }
+    }
+
+    func testInteractionWithQueryParameterAndMatchers() async throws {
+//        let queryParam: (key: String, values: [String]) = ("item", ["value"])
+//
+//        try builder
+//            .uponReceiving("A request for an interaction")
+//            .given(
+//                "Some state relying on query parameters",
+//                withName: #function,
+//                value: String(describing: #line)
+//            )
+//            .withRequest(method: .GET, path: "/interaction") { context in
+//                try context.queryParam(name: queryParam.key, values: queryParam.values)
+//            }
+//            .willRespond(with: 200)
+//
+//        try await builder.verify { context in
+//            let url = try context.buildRequestURL(
+//                path: "/interaction",
+//                queryItems: [
+//                    queryParam.key: queryParam.values.joined(separator: ",")
+//                ]
+//            )
+//            let (data, response) = try await URLSession(configuration: .ephemeral).data(from: url)
+//
+//            let httpResponse = try XCTUnwrap(response as? HTTPURLResponse)
+//            print(String(data: data, encoding: .utf8)!)
+//            XCTAssertEqual(httpResponse.statusCode, 200)
+//        }
+    }
+
+    // MARK: - With Body
+
+    func testInteractionWithBody() async throws {
+        struct FooBody: Encodable {
+            let foo: String
+        }
+
+        try builder
+            .uponReceiving("A request for an interaction")
+            .given(
+                "Some state expecting body",
+                withName: #function,
+                value: String(describing: #line)
+            )
+            .withRequest(method: .POST, path: "/interaction") { context in
+                try context.header("content-type", value: "application/json")
+                try context.body(#"{"foo":"bar"}"#, contentType: "application/json")
+            }
+            .willRespond(with: 200)
+
+        try await builder.verify { context in
+            let urlRequest = try context.buildURLRequest(
+                path: "/interaction",
+                body: FooBody(foo: "bar")
+            )
+            let (data, response) = try await URLSession(configuration: .ephemeral).data(for: urlRequest)
+
+            let httpResponse = try XCTUnwrap(response as? HTTPURLResponse)
+            print(String(data: data, encoding: .utf8)!)
+            XCTAssertEqual(httpResponse.statusCode, 200)
+        }
+    }
+}
+
+// MARK: - Private
+
+private extension PactBuilder.ConsumerContext {
+
+    func buildURLRequest<T: Encodable>(path: String, body: T) throws -> URLRequest {
+        var components = try XCTUnwrap(URLComponents(url: mockServerURL, resolvingAgainstBaseURL: false))
+        components.path = path
+
+        var request = URLRequest(url: try XCTUnwrap(components.url))
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.httpMethod = "POST"
+        request.httpBody = try JSONEncoder().encode(body)
+
+        return request
+    }
+
+    func buildURLRequest(path: String, headers: [(String, String)] = []) throws -> URLRequest {
+        var components = try XCTUnwrap(URLComponents(url: mockServerURL, resolvingAgainstBaseURL: false))
+        components.path = path
+        var request = URLRequest(url: try XCTUnwrap(components.url))
+        for header in headers {
+            request.addValue(header.1, forHTTPHeaderField: header.0)
+        }
+
+        return request
+    }
+
+    func buildRequestURL(path: String, queryItems: [String: String?] = [:]) throws -> URL {
+        var components = try XCTUnwrap(URLComponents(url: mockServerURL, resolvingAgainstBaseURL: false))
+        components.path = path
+        components.queryItems = queryItems.map { URLQueryItem(name: $0.key, value: $0.value) }
+        return try XCTUnwrap(components.url)
+    }
 }

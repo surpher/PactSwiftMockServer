@@ -8,6 +8,7 @@
 import Foundation
 
 public protocol QueryBuilder {
+
     /// Configures a query parameter for the Interaction.
     ///
     /// Throws the interaction or Pact can't be modified (i.e. the mock server for it has already started)

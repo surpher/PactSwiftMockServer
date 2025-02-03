@@ -84,16 +84,17 @@ public enum Logging {
 
     /// Initialize the Pact logging infrastructure.
     ///
-    /// You should call this early
-    /// in the lifetime of your Pact test case. Subsequent calls will do nothing.
+    /// You should call this early in the lifetime of your Pact test case.
+    /// Subsequent calls will do nothing.
     ///
     /// For example:
-    /// ```
+    ///
+    /// ```swift
     /// class PactTests: XCTestCase {
     ///
     ///   @MainActor
     ///   class override func setUp() {
-    ///        super.setUp()
+    ///     super.setUp()
     ///     try! Logging.initialize()
     ///   }
     ///
@@ -102,6 +103,7 @@ public enum Logging {
     /// ```
     ///
     /// - Note: By default the underlying Pact library will not log messages.
+    ///
     /// - Parameters:
     ///   - logSinks: An array of ``Logging/Sink/Config`` instances to configure the log sinks.
     @MainActor

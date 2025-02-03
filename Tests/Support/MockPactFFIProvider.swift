@@ -7,12 +7,15 @@
 
 @testable import PactSwiftMockServer
 
+import Combine
 import Foundation
 
 final class MockPactFFIProvider: PactFFIProviding {
 
     private(set) var _returnNil: Bool = false
     private(set) var specVersion: Pact.Specification = .v3
+
+    let subject = PassthroughSubject<String, Never>()
 
     func returnNil(_ bool: Bool) {
         _returnNil = bool
@@ -40,7 +43,12 @@ final class MockPactFFIProvider: PactFFIProviding {
         specVersion
     }
 
-    func mockServerForTransferProtocol(pactHandle: PactHandle, socketAddress: String, port: Int32, transferProtocol: PactSwiftMockServer.MockServer.TransferProtocol) throws -> Int32 {
+    func mockServerForTransferProtocol(
+        pactHandle: PactHandle,
+        socketAddress: String,
+        port: Int32,
+        transferProtocol: PactSwiftMockServer.MockServer.TransferProtocol
+    ) throws -> Int32 {
         21_337
     }
 
@@ -96,15 +104,19 @@ final class MockPactFFIProvider: PactFFIProviding {
         throw MockPactFFIProviderError.notImplemented
     }
 
-    func withQueryParameter(handle: InteractionHandle, name: String, values: [String]) throws {
+    func withQueryParameter(handle: InteractionHandle, name: String, value: String) throws {
+        subject.send(name + "=" + value)
+    }
+
+    func withQueryParameterWithoutAssociatedValue(handle: InteractionHandle, name: String) throws {
+        subject.send(name)
+    }
+
+    func withHeader(handle: InteractionHandle, name: String, value: String, interactionPart: InteractionPart) throws {
         throw MockPactFFIProviderError.notImplemented
     }
 
-    func withHeader(handle: InteractionHandle, name: String, values: [String], interactionPart: InteractionPart) throws {
-        throw MockPactFFIProviderError.notImplemented
-    }
-
-    func withBody(handle: InteractionHandle, body: String?, contentType: String?, interactionPart: InteractionPart) throws {
+    func withBody(handle: InteractionHandle, body: String?, contentType: String, interactionPart: InteractionPart) throws {
         throw MockPactFFIProviderError.notImplemented
     }
 
@@ -157,6 +169,4 @@ extension MockPactFFIProvider {
         ]
         """#
     }
-
 }
-

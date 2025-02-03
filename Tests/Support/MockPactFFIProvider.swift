@@ -33,6 +33,7 @@ final class MockPactFFIProvider: PactFFIProviding {
 
     enum MockPactFFIProviderError: Error {
         case notImplemented
+        case preconditionFailure(String?)
     }
 
     var version: String {
@@ -118,6 +119,13 @@ final class MockPactFFIProvider: PactFFIProviding {
 
     func withBody(handle: InteractionHandle, body: String?, contentType: String, interactionPart: InteractionPart) throws {
         throw MockPactFFIProviderError.notImplemented
+    }
+
+    func withBody(handle: InteractionHandle, body: Data, contentType: String, interactionPart: InteractionPart) throws {
+        guard let bodyString = String(data: body, encoding: .utf8) else {
+            throw MockPactFFIProviderError.preconditionFailure("Failed to cast 'body: Data' to String...")
+        }
+        subject.send(bodyString)
     }
 
     func withStatus(handle: InteractionHandle, status: Int) throws {

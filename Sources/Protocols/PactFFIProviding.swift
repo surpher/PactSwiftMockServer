@@ -17,7 +17,12 @@ protocol PactFFIProviding {
 
     // Mock Server
 
-    func mockServerForTransferProtocol(pactHandle: PactHandle, socketAddress: String, port: Int32, transferProtocol: MockServer.TransferProtocol) throws -> Int32
+    func mockServerForTransferProtocol(
+        pactHandle: PactHandle,
+        socketAddress: String,
+        port: Int32,
+        transferProtocol: MockServer.TransferProtocol
+    ) throws -> Int32
 
     func mockServerMatched(port: Int32) -> Bool
 
@@ -61,6 +66,8 @@ protocol PactFFIProviding {
 
     func withBody(handle: InteractionHandle, body: String?, contentType: String, interactionPart: InteractionPart) throws
 
+    func withBody(handle: InteractionHandle, body: Data, contentType: String, interactionPart: InteractionPart) throws
+
     func withStatus(handle: InteractionHandle, status: Int) throws
 
     func given(handle: InteractionHandle, description: String) throws
@@ -74,5 +81,4 @@ protocol PactFFIProviding {
     func generateString(regex: String) -> String?
 
     func generateDateTimeString(format: String) -> String?
-
 }

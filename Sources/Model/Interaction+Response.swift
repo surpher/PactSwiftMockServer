@@ -70,5 +70,25 @@ public extension Interaction {
 
             return self
         }
+
+        /// Adds the binary body for the ``Interaction``.
+        ///
+        /// For HTTP and async message interactions, this will overwrite the body. With asynchronous messages, the
+        /// part parameter will be ignored. With synchronous messages, the request contents will be overwritten,
+        /// while a new response will be appended to the message.
+        ///
+        /// - Parameters:
+        ///   - body: Binary body content.
+        ///   - contentType: The content type of the body. Defaults to `application/octet-stream`.
+        ///
+        /// - Throws: ``Interaction/Error/canNotBeModified`` if the interaction or Pact can't be modified
+        /// (i.e. the mock server for it has already started) or an error has occurred.
+        ///
+        @discardableResult
+        public func body(_ body: Data, contentType: String = "application/octet-stream") throws -> Self {
+            try ffiProvider.withBody(handle: handle, body: body, contentType: contentType, interactionPart: .response)
+
+            return self
+        }
     }
 }

@@ -14,6 +14,7 @@ import PactMockServer
 public extension Interaction {
 
     struct Request: HeaderBuilder, BodyBuilder, QueryBuilder {
+
         private let ffiProvider: PactFFIProviding
         private let handle: InteractionHandle
 
@@ -29,7 +30,8 @@ public extension Interaction {
 
         /// Configures a query parameter for the Interaction.
         ///
-        /// - Throws: ``Interaction/Error/canNotBeModified`` if the interaction or Pact can't be modified (i.e. the mock server for it has already started).
+        /// - Throws: ``Interaction/Error/canNotBeModified`` if the interaction or Pact can't be modified (i.e. the mock server
+        /// for it has already started).
         ///
         /// - Parameters:
         ///   - name: The name of the query parameter.
@@ -44,7 +46,8 @@ public extension Interaction {
 
         /// Configures the request header for the Interaction.
         ///
-        /// - Throws: ``Interaction/Error/canNotBeModified`` if the interaction or Pact can't be modified (i.e. the mock server for it has already started).
+        /// - Throws: ``Interaction/Error/canNotBeModified`` if the interaction or Pact can't be modified (i.e. the mock server
+        /// for it has already started).
         ///
         /// - Parameters:
         ///   - name: The name of the header parameter.
@@ -62,15 +65,36 @@ public extension Interaction {
         /// For JSON payloads, matching rules can be embedded in the `body`. See
         /// [IntegrationJson.md](https://github.com/pact-foundation/pact-reference/blob/master/rust/pact_ffi/IntegrationJson.md).
         ///
-        /// - Throws: ``Interaction/Error/canNotBeModified`` if the interaction or Pact can't be modified (i.e. the mock server for it has already started).
+        /// - Throws: ``Interaction/Error/canNotBeModified`` if the interaction or Pact can't be modified (i.e. the mock server
+        /// for it has already started).
+        ///
         /// - Parameters:
-        ///   - contentType:
-        ///       The content type of the body. Defaults to `text/plain`.
-        ///       If `nil`, or can't be parsed, it will set the content type as TEXT.
+        ///   - contentType: The content type of the body. Defaults to `text/plain`. If `nil`, or can't be parsed, it will
+        ///   set the content type as TEXT.
         ///   - body: The body contents. If the `body` is `nil` it will set the body contents as null.
         ///
         @discardableResult
         public func body(_ body: String? = nil, contentType: String = "text/plain") throws -> Self {
+            try ffiProvider.withBody(handle: handle, body: body, contentType: contentType, interactionPart: .request)
+
+            return self
+        }
+
+        /// Adds the binary body for the ``Interaction``.
+        ///
+        /// For HTTP and async message interactions, this will overwrite the body. With asynchronous messages, the
+        /// part parameter will be ignored. With synchronous messages, the request contents will be overwritten,
+        /// while a new response will be appended to the message.
+        ///
+        /// - Parameters:
+        ///   - body: Binary body content.
+        ///   - contentType: The content type of the body. Defaults to `application/octet-stream`.
+        ///
+        /// - Throws: ``Interaction/Error/canNotBeModified`` if the interaction or Pact can't be modified
+        /// (i.e. the mock server for it has already started) or an error has occurred.
+        ///
+        @discardableResult
+        public func body(_ body: Data, contentType: String = "application/octet-stream") throws -> Self {
             try ffiProvider.withBody(handle: handle, body: body, contentType: contentType, interactionPart: .request)
 
             return self

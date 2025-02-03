@@ -196,10 +196,9 @@ final class PactBuilderTests: XCTestCase {
 
         try await builder.verify { context in
             let urlRequest = try context.buildURLRequest(path: "/interaction", headers: [headerParam])
-            let (data, response) = try await URLSession(configuration: .ephemeral).data(for: urlRequest)
+            let (_, response) = try await URLSession(configuration: .ephemeral).data(for: urlRequest)
 
             let httpResponse = try XCTUnwrap(response as? HTTPURLResponse)
-            print(String(data: data, encoding: .utf8)!)
             XCTAssertEqual(httpResponse.statusCode, 200)
         }
     }
@@ -232,10 +231,9 @@ final class PactBuilderTests: XCTestCase {
 
         try await builder.verify { context in
             let urlRequest = try context.buildURLRequest(path: "/interaction", headers: [])
-            let (data, response) = try await URLSession(configuration: .ephemeral).data(for: urlRequest)
+            let (_, response) = try await URLSession(configuration: .ephemeral).data(for: urlRequest)
 
             let httpResponse = try XCTUnwrap(response as? HTTPURLResponse)
-            print(String(data: data, encoding: .utf8)!)
             XCTAssertEqual(httpResponse.statusCode, 200)
         }
     }
@@ -264,10 +262,9 @@ final class PactBuilderTests: XCTestCase {
                     queryParam.key: queryParam.values.joined(separator: ",")
                 ]
             )
-            let (data, response) = try await URLSession(configuration: .ephemeral).data(from: url)
+            let (_, response) = try await URLSession(configuration: .ephemeral).data(from: url)
 
             let httpResponse = try XCTUnwrap(response as? HTTPURLResponse)
-            print(String(data: data, encoding: .utf8)!)
             XCTAssertEqual(httpResponse.statusCode, 200)
         }
     }
@@ -304,10 +301,9 @@ final class PactBuilderTests: XCTestCase {
                         $0.merge($1) { (_, new) in new }
                     }
             )
-            let (data, response) = try await URLSession(configuration: .ephemeral).data(from: url)
+            let (_, response) = try await URLSession(configuration: .ephemeral).data(from: url)
 
             let httpResponse = try XCTUnwrap(response as? HTTPURLResponse)
-            print(String(data: data, encoding: .utf8)!)
             XCTAssertEqual(httpResponse.statusCode, 200)
         }
     }
@@ -367,11 +363,72 @@ final class PactBuilderTests: XCTestCase {
                 path: "/interaction",
                 body: FooBody(foo: "bar")
             )
-            let (data, response) = try await URLSession(configuration: .ephemeral).data(for: urlRequest)
+            let (_, response) = try await URLSession(configuration: .ephemeral).data(for: urlRequest)
 
             let httpResponse = try XCTUnwrap(response as? HTTPURLResponse)
-            print(String(data: data, encoding: .utf8)!)
             XCTAssertEqual(httpResponse.statusCode, 200)
+        }
+    }
+
+    func testInteractionWithBinaryBodyInRequest() async throws {
+        guard
+            let imagePath = Bundle(for: Self.self).path(forResource: "test_image", ofType: "jpg")
+        else {
+            preconditionFailure("Failed to find path for test image!")
+        }
+
+        let fileData = try Data(contentsOf: URL(fileURLWithPath: imagePath))
+
+        try builder
+            .uponReceiving("A request for an interaction")
+            .given(
+                "Some state expecting binary body",
+                withName: #function,
+                value: String(describing: #line)
+            )
+            .withRequest(method: .POST, path: "/uploads") { context in
+                try context.body(fileData)
+            }
+            .willRespond(with: 201)
+
+        try await builder.verify { context in
+            let urlRequest = try context.buildURLRequest(path: "/uploads", body: fileData)
+            let (_, response) = try await URLSession(configuration: .ephemeral).data(for: urlRequest)
+
+            let httpResponse = try XCTUnwrap(response as? HTTPURLResponse)
+            XCTAssertEqual(httpResponse.statusCode, 201)
+        }
+    }
+
+    func testInteractionWithBinaryBodyInResponse() async throws {
+        guard
+            let imagePath = Bundle(for: Self.self).path(forResource: "test_image", ofType: "jpg")
+        else {
+            preconditionFailure("Failed to find path for test image!")
+        }
+
+        let fileData = try Data(contentsOf: URL(fileURLWithPath: imagePath))
+
+        try builder
+            .uponReceiving("A request for an interaction")
+            .given(
+                "Some state expecting binary body",
+                withName: #function,
+                value: String(describing: #line)
+            )
+            .withRequest(method: .GET, path: "/uploads/0")
+            .willRespond(with: 200) { context in
+                try context.body(fileData)
+            }
+
+        try await builder.verify { context in
+            let url = try context.buildRequestURL(path: "/uploads/0")
+            let (responseData, response) = try await URLSession(configuration: .ephemeral).data(from: url)
+
+            let httpResponse = try XCTUnwrap(response as? HTTPURLResponse)
+            XCTAssertEqual(httpResponse.statusCode, 200)
+
+            XCTAssertEqual(fileData, responseData)
         }
     }
 }
@@ -388,6 +445,18 @@ private extension PactBuilder.ConsumerContext {
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         request.httpMethod = "POST"
         request.httpBody = try JSONEncoder().encode(body)
+
+        return request
+    }
+
+    func buildURLRequest(path: String, body: Data) throws -> URLRequest {
+        var components = try XCTUnwrap(URLComponents(url: mockServerURL, resolvingAgainstBaseURL: false))
+        components.path = path
+
+        var request = URLRequest(url: try XCTUnwrap(components.url))
+        request.setValue("application/octet-stream", forHTTPHeaderField: "Content-Type")
+        request.httpMethod = "POST"
+        request.httpBody = body
 
         return request
     }

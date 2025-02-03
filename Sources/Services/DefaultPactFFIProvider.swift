@@ -173,6 +173,19 @@ struct DefaultPactFFIProvider: PactFFIProviding {
         }
     }
 
+    func withBody(handle: InteractionHandle, body: Data, contentType: String, interactionPart: InteractionPart) throws {
+        let byteArray: [UInt8] = Array(body)
+        guard pactffi_with_binary_body(
+            handle,
+            interactionPart,
+            contentType.cString(using: .utf8),
+            byteArray,
+            byteArray.count
+        ) else {
+            throw Interaction.Error.canNotBeModified
+        }
+    }
+
     func withStatus(handle: InteractionHandle, status: Int) throws {
         guard pactffi_response_status(handle, UInt16(status)) else {
             throw Interaction.Error.canNotBeModified

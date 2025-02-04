@@ -129,3 +129,11 @@ pact-reference/rust/target/**/*
 
 # VSCode
 .vscode/
+
+
+###################
+# Generated       #
+###################
+
+PactSwiftMockServer-v*
+**/*.tmp

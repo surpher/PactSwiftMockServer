@@ -179,7 +179,7 @@ final class PactBuilderTests: XCTestCase {
 
     // MARK: - Headers
 
-    func testInteractionWithHeaderParameters() async throws {
+    func testInteractionWithHeaderParameter() async throws {
         let headerParam: (key: String, value: String) = ("foo", "bar")
 
         try builder
@@ -203,16 +203,33 @@ final class PactBuilderTests: XCTestCase {
         }
     }
 
-    func testInteractionWithHeaderParametersAndMatchers() async throws {
-        // TODO: - Fix this so it can handle an array not just array of one string!
-        let headerParam: (key: String, values: [String]) = ("foo", ["bar"])
-        let matcher = PactMatcher(
-            type: "pact:matcher:type",
-            value: "bar",
-            regex: #"\[a-zA-Z]+$"#,
-            example: "bar"
-        )
+    func testInteractionWithHeaderParameters() async throws {
+        try builder
+            .uponReceiving("A request for an interaction")
+            .given(
+                "Some state relying on header parameters",
+                withName: #function,
+                value: String(describing: #line)
+            )
+            .withRequest(method: .GET, path: "/interaction") { request in
+                try request.header("foo", values: ["bar"])
+                try request.header("bar", values: ["baz"])
+            }
+            .willRespond(with: 200) { response in
+                try response.header("baz", values: ["oof","rab"])
+            }
 
+        try await builder.verify { context in
+            let urlRequest = try context.buildURLRequest(path: "/interaction", headers: [("foo", "bar"), ("bar", "baz")])
+            let (_, response) = try await URLSession(configuration: .ephemeral).data(for: urlRequest)
+
+            let httpResponse = try XCTUnwrap(response as? HTTPURLResponse)
+            XCTAssertEqual(httpResponse.statusCode, 200)
+            XCTAssertEqual(httpResponse.value(forHTTPHeaderField: "baz"), "oof, rab")
+        }
+    }
+
+    func testInteractionWithHeaderParameterWithMultipleValues() async throws {
         try builder
             .uponReceiving("A request for an interaction")
             .given(
@@ -221,16 +238,13 @@ final class PactBuilderTests: XCTestCase {
                 value: String(describing: #line)
             )
             .withRequest(method: .GET, path: "/interaction") { context in
-                try context.header(
-                    headerParam.key,
-                    value: headerParam.values.joined(separator: ","),
-                    matcher: matcher
-                )
+                try context.header("foo", values: ["foo", "bar", "baz"])
             }
             .willRespond(with: 200)
 
         try await builder.verify { context in
-            let urlRequest = try context.buildURLRequest(path: "/interaction", headers: [])
+            let headers = [("foo", "foo"), ("foo", "bar"), ("foo", "baz")]
+            let urlRequest = try context.buildURLRequest(path: "/interaction", headers: headers)
             let (_, response) = try await URLSession(configuration: .ephemeral).data(for: urlRequest)
 
             let httpResponse = try XCTUnwrap(response as? HTTPURLResponse)

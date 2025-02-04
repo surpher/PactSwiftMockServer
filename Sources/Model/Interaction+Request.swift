@@ -51,11 +51,27 @@ public extension Interaction {
         ///
         /// - Parameters:
         ///   - name: The name of the header parameter.
-        ///   - values: The values for given header.
+        ///   - value: The value for given header.
         ///
         @discardableResult
         public func header(_ name: String, value: String) throws -> Self {
             try ffiProvider.withHeader(handle: handle, name: name, value: value, interactionPart: .request)
+
+            return self
+        }
+
+        /// Configures the request header for the Interaction.
+        ///
+        /// - Throws: ``Interaction/Error/canNotBeModified`` if the interaction or Pact can't be modified (i.e. the mock server
+        /// for it has already started).
+        ///
+        /// - Parameters:
+        ///   - name: The name of the header parameter.
+        ///   - values: The values for given header.
+        ///
+        @discardableResult
+        public func header(_ name: String, values: [String]) throws -> Self {
+            try ffiProvider.withHeader(handle: handle, name: name, values: values, interactionPart: .request)
 
             return self
         }

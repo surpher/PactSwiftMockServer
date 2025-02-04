@@ -162,6 +162,25 @@ struct DefaultPactFFIProvider: PactFFIProviding {
         }
     }
 
+    func withHeader(handle: InteractionHandle, name: String, values: [String], interactionPart: InteractionPart) throws {
+        guard values.isEmpty == false else {
+            try removeHeader(name: name, handle: handle, interactionPart: interactionPart)
+            return
+        }
+
+        try values.enumerated().forEach { offset, value in
+            guard pactffi_with_header_v2(
+                handle,
+                interactionPart,
+                name.cString(using: .utf8),
+                offset,
+                value.cString(using: .utf8)
+            ) else {
+                throw Interaction.Error.canNotBeModified
+            }
+        }
+    }
+
     func withBody(handle: InteractionHandle, body: String?, contentType: String, interactionPart: InteractionPart) throws {
         guard pactffi_with_body(
             handle,
@@ -264,6 +283,21 @@ struct DefaultPactFFIProvider: PactFFIProviding {
 }
 
 // MARK: - Private extensions
+
+private extension DefaultPactFFIProvider {
+
+    func removeHeader(name: String, handle: InteractionHandle, interactionPart: InteractionPart) throws {
+        guard pactffi_with_header_v2(
+            handle,
+            interactionPart,
+            name.cString(using: .utf8),
+            0,
+            "".cString(using: .utf8)
+        ) else {
+            throw Interaction.Error.canNotBeModified
+        }
+    }
+}
 
 private extension PactSpecification {
 

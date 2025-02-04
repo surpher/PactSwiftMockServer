@@ -117,6 +117,10 @@ final class MockPactFFIProvider: PactFFIProviding {
         throw MockPactFFIProviderError.notImplemented
     }
 
+    func withHeader(handle: InteractionHandle, name: String, values: [String], interactionPart: InteractionPart) throws {
+        throw MockPactFFIProviderError.notImplemented
+    }
+
     func withBody(handle: InteractionHandle, body: String?, contentType: String, interactionPart: InteractionPart) throws {
         throw MockPactFFIProviderError.notImplemented
     }

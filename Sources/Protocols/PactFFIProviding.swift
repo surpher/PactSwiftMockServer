@@ -64,6 +64,8 @@ protocol PactFFIProviding {
 
     func withHeader(handle: InteractionHandle, name: String, value: String, interactionPart: InteractionPart) throws
 
+    func withHeader(handle: InteractionHandle, name: String, values: [String], interactionPart: InteractionPart) throws
+
     func withBody(handle: InteractionHandle, body: String?, contentType: String, interactionPart: InteractionPart) throws
 
     func withBody(handle: InteractionHandle, body: Data, contentType: String, interactionPart: InteractionPart) throws

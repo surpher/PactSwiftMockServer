@@ -1,5 +1,17 @@
 # CHANGELOG
 
+## v1.1.1
+
+libpact_ffi-v0.4.25
+
+* dc260fe - Add release script pre-check (Marko Justinek)
+* 8e29088 - Fix path to referenced script file (Marko Justinek)
+* 9236e33 - Release script tweak (Marko Justinek)
+* 42517d7 - Restore changelog state (Marko Justinek)
+* 0198c46 - Fix release script (Marko Justinek)
+* 227a262 - Update submodules (Marko Justinek)
+* 5cd4fab - Fix header(_:values:) implementation (Marko Justinek)
+
 ## v1.1.0
 
 libpact_ffi-v0.4.25

@@ -293,7 +293,7 @@ function cleanup {
   echo -e "🧹 Removing $YELLOW$release_version_branch$NOCOLOR..."
   execute_cmd "git branch -D $release_version_branch"
 
-  execute_cmd "git stash pop"
+  execute_cmd "git stash apply stash@{0}"
   execute_cmd "git add . && git commit -m \"Update CHANGELOG.md and submodules for $VERSION_TAG release\""
 
   echo -e "🚮 Cleaning up..."

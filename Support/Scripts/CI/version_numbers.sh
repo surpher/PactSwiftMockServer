@@ -19,7 +19,7 @@
 #
 
 VERSION_NUMBER_SCRIPT_SOURCE_DIR="${BASH_SOURCE[0]%/*}"
-source "$VERSION_NUMBER_SCRIPT_SOURCE_DIR/Config/config.sh"
+source "$VERSION_NUMBER_SCRIPT_SOURCE_DIR/../Config/config.sh"
 
 function latest_tag {
   curl --silent "https://api.github.com/repos/$REPO_OWNER/$RELEASE_REPO_NAME/tags" | jq -r '.[0].name'

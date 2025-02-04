@@ -154,6 +154,11 @@ function stash_changelog {
   execute_cmd "git stash push -m \"Updated CHANGELOG.md for $VERSION_TAG\" -- \"$CHANGE_LOG\""
 }
 
+function stash_apply {
+  local stashIndex=${1:-"0"}
+  execute_cmd "git stash apply stash{$stashIndex}"
+}
+
 function tag_current_state_with_version {
   local version_tag=$VERSION_TAG
   echo -e "🏷️ Tagging current PactSwiftMockServer state..."
@@ -162,6 +167,7 @@ function tag_current_state_with_version {
 
 ##################
 # Submodules
+##################
 
 function git_commit_changelog_to_xcframework_submodule {
   local changelog_file="CHANGELOG.md"
@@ -253,7 +259,7 @@ function update_pactswiftmockserver_changelog {
 
   # Get the commits from last contribution for tag message
   echo -e "🪵 Git logging '${LATEST_TAG}..HEAD'..."
-  executeCommand "git log --pretty='* %h - %s (%an)' ${LATEST_TAG}..HEAD >> $TAG_MESSAGE_FILE"
+  executeCommand "git log --pretty='* [%h](https://github.com/$REPO_OWNER/$XCPRODUCT_NAME/commit/%h) - %s (%an)' ${LATEST_TAG}..HEAD >> $TAG_MESSAGE_FILE"
 
   # Show the new changes
   {
@@ -309,7 +315,7 @@ function cleanup {
   echo -e "🧹 Removing $YELLOW$release_version_branch$NOCOLOR..."
   execute_cmd "git branch -D $release_version_branch"
 
-  execute_cmd "git stash apply stash@{0}"
+  stash_apply 0
   execute_cmd "git add . && git commit -m \"Update CHANGELOG.md and submodules for $VERSION_TAG release\""
 
   echo -e "🚮 Cleaning up..."
@@ -405,6 +411,7 @@ pause_execution_and_cleanup $SHOULD_PAUSE_SCRIPT_EXECUTION
 # Stash CHANGELOG updates
 echo -e "📝 Stashing and re-applying CHANGELOG.md..."
 stash_changelog
+stash_apply 0
 pause_execution_and_cleanup $SHOULD_PAUSE_SCRIPT_EXECUTION
 
 # Create a temporary branch for the release

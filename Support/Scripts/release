@@ -123,10 +123,20 @@ function get_new_version_url {
 # Git functions
 ##################
 
+function git_check_clean_state {
+  echo -e "👮 Checking if current working directory is clean..."
+
+  if git diff-index --quiet HEAD --; then
+    echo "👍 Working directory is clean."
+  else
+    die "Working directory contains changes! Commit, stash or reset changes and try again."
+  fi
+}
+
 function git_checkout_new_release_candidate_branch {
   local release_version_branch="$1"
-  echo -e "Checking out new branch $YELLOW$release_version_branch$NOCOLOR..."
 
+  echo -e "🕊️ Checking out new branch $YELLOW$release_version_branch$NOCOLOR..."
   execute_cmd "git checkout -b \"$release_version_branch\""
 }
 
@@ -142,6 +152,12 @@ function git_commit_changelog_and_xcconfig {
 
 function stash_changelog {
   execute_cmd "git stash push -m \"Updated CHANGELOG.md for $VERSION_TAG\" -- \"$CHANGE_LOG\""
+}
+
+function tag_current_state_with_version {
+  local version_tag=$VERSION_TAG
+  echo -e "🏷️ Tagging current PactSwiftMockServer state..."
+  execute_cmd "git tag -a \"$version_tag\" -m \"Release: $version_tag\""
 }
 
 ##################
@@ -371,6 +387,10 @@ NEW_VERSION_CHECKSUM=""
 ################################
 # Prepare package for release
 ################################
+
+# Pre-checks
+git_check_clean_state
+pause_execution_and_cleanup $SHOULD_PAUSE_SCRIPT_EXECUTION
 
 # Bump up the MARKETING_VERSION in xcconfig so XCFramework uses the right version
 echo -e "👊 Bumping up ${BLUE}MARKETING_VERSION$NOCOLOR in xcconfig to $YELLOW$MARKETING_VERSION$NOCOLOR..."

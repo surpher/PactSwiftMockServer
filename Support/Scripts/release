@@ -133,9 +133,15 @@ function git_checkout_new_release_candidate_branch {
 function git_commit_changelog_and_xcconfig {
   local release_tag="${VERSION_TAG:-$1}"
 
+  execute_cmd "git status"
+
   echo -e "🩹 Committing $YELLOW$CHANGE_LOG$NOCOLOR, $YELLOW$CONFIGURATION_FILE$NOCOLOR and ${YELLOW}Package.swift$NOCOLOR to git..."
   execute_cmd "git add \"$CHANGE_LOG\" \"$CONFIGURATION_FILE\" Package.swift"
   execute_cmd "git commit -m \"Release: $release_tag\" -S"
+}
+
+function stash_changelog {
+  execute_cmd "git stash push -m \"Updated CHANGELOG.md for $VERSION_TAG\" -- \"$CHANGE_LOG\""
 }
 
 ##################
@@ -277,21 +283,21 @@ function update_pactswiftmockserver_changelog {
 }
 
 function cleanup {
-  # local git_clean="git clean -fdx"
+  local git_clean="git clean -fdx"
   local current_branch=$CURRENT_BRANCH
   local release_version_branch=$VERSION_BRANCH
 
-  # echo "🧹 Cleanning up..."
-  # execute_cmd "$git_clean"
-
   echo -e "⏮️ Checking out $YELLOW$current_branch$NOCOLOR..."
-  git checkout --force "$current_branch"
+  execute_cmd "git checkout --force $current_branch"
 
   echo -e "🧹 Removing $YELLOW$release_version_branch$NOCOLOR..."
-  git branch -D "$release_version_branch"
+  execute_cmd "git branch -D $release_version_branch"
 
-  # echo -e "🚮 Removing untracked files and directories..."
-  # execute_cmd "$git_clean"
+  execute_cmd "git stash pop"
+  execute_cmd "git add . && git commit -m \"Update CHANGELOG.md and submodules for $VERSION_TAG release\""
+
+  echo -e "🚮 Cleaning up..."
+  execute_cmd "$git_clean"
 }
 
 ##################
@@ -376,6 +382,11 @@ echo -e "📝 Update changelog for ${LIGHT_BLUE}PactSwiftMockServer$NOCOLOR"
 update_pactswiftmockserver_changelog
 pause_execution_and_cleanup $SHOULD_PAUSE_SCRIPT_EXECUTION
 
+# Stash CHANGELOG updates
+echo -e "📝 Stashing and re-applying CHANGELOG.md..."
+stash_changelog
+pause_execution_and_cleanup $SHOULD_PAUSE_SCRIPT_EXECUTION
+
 # Create a temporary branch for the release
 echo -e "⤴️ Creating a new branch $YELLOW$VERSION_BRANCH$NOCOLOR..."
 git_checkout_new_release_candidate_branch "$VERSION_BRANCH"
@@ -399,7 +410,7 @@ NEW_VERSION_CHECKSUM=$(get_new_checksum)
 pause_execution_and_cleanup $SHOULD_PAUSE_SCRIPT_EXECUTION
 
 # We have the references updated now now, commit changes to PactSwiftMockServer
-echo "💮 Commit changelog and xcconfig..."
+echo "💮 Commit changelog, xcconfig..."
 git_commit_changelog_and_xcconfig "$MARKETING_VERSION"
 pause_execution_and_cleanup $SHOULD_PAUSE_SCRIPT_EXECUTION
 

@@ -18,8 +18,11 @@
 #  IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #
 
+VERSION_NUMBER_SCRIPT_SOURCE_DIR="${BASH_SOURCE[0]%/*}"
+source "$VERSION_NUMBER_SCRIPT_SOURCE_DIR/Config/config.sh"
+
 function latest_tag {
-  git describe --tags "$(git rev-list --tags --max-count=1)" 2>/dev/null
+  curl --silent "https://api.github.com/repos/$REPO_OWNER/$RELEASE_REPO_NAME/tags" | jq -r '.[0].name'
 }
 
 # Gets the next bumped version number

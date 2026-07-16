@@ -188,6 +188,7 @@
 		ADBEF2FC2648FCF200486C4A /* PactVerificationFailure.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PactVerificationFailure.swift; sourceTree = "<group>"; };
 		ADC15DAF26CE98140010D900 /* ProviderVerificationError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProviderVerificationError.swift; sourceTree = "<group>"; };
 		ADC6C61226D0AFBD00844000 /* VerifierTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerifierTests.swift; sourceTree = "<group>"; };
+		ADD6DB6C3009A11B00AB782F /* libpact_ffi.version */ = {isa = PBXFileReference; lastKnownFileType = text; path = libpact_ffi.version; sourceTree = "<group>"; };
 		ADDE21FC2D5078E600C6FD6F /* test_image.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = test_image.jpg; sourceTree = "<group>"; };
 		ADE2550F26CE335400FA21A9 /* Verifier.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Verifier.swift; sourceTree = "<group>"; };
 		ADE647452D1121D100BE9AB3 /* ProviderVerificationErrorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProviderVerificationErrorTests.swift; sourceTree = "<group>"; };
@@ -255,6 +256,7 @@
 		AD1597E92648DE0E007CFAA5 = {
 			isa = PBXGroup;
 			children = (
+				ADD6DB6C3009A11B00AB782F /* libpact_ffi.version */,
 				A75EC3AD2942B2FB0054BADB /* CHANGELOG.md */,
 				A75EC3AC2942B2FB0054BADB /* LICENSE.md */,
 				A75EC3AE2942B2FB0054BADB /* README.md */,

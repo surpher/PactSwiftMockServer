@@ -13,7 +13,7 @@ The folder structure **MUST** be as follows (case sensitive!):
   |- iOS-simulator
   |- darwin
 
-If there are no binaries in these folders, build them using ./Support/build_rust_dependencies script.
+If there are no binaries in these folders, build them using `./Support/build_rust_dependencies script.`
 
 ## Upgrading libpact_ffi.a
 

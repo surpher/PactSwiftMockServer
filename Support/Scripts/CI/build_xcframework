@@ -27,10 +27,44 @@ TMP_DIR="${BUILD_XCFRAMEWORK_SOURCE_DIR}/../../../.tmp/build-xcframework"
 source "${BUILD_XCFRAMEWORK_SOURCE_DIR}/../utils.sh"
 source "${BUILD_XCFRAMEWORK_SOURCE_DIR}/../Config/config.sh"
 
+function print_usage {
+  cat <<EOF
+Usage: ${0##*/} <xcframework-version>
+
+Builds ${XCFRAMEWORK_NAME}.${XCFRAMEWORK_EXTENSION} for iOS, iOS Simulator, and
+macOS, assembles the XCFramework, zips it, and writes a SwiftPM checksum.
+
+Arguments:
+  <xcframework-version>   Version string for the archive, e.g. 1.2.3
+
+Options:
+  -h, --help              Show this help message and exit
+EOF
+}
+
 # Only use xcbeautify if it can be found in path.
 XCBEAUTIFY=$(command -v xcbeautify || command -v cat)
 
+# Handle -h/--help before anything else
+case "${1:-}" in
+  -h|--help)
+    print_usage
+    exit 0
+    ;;
+esac
+
+# Require exactly one non-empty argument: the version.
+# [[:space:]] covers spaces, tabs, and newlines.
+if [ "$#" -ne 1 ] || [ -z "${1//[[:space:]]/}" ]; then
+  echo "🚨 A non-empty <xcframework-version> argument is required." >&2
+  print_usage >&2
+  exit 1
+fi
+
 XCFRAMEWORK_VERSION="$1"
+
+XCFRAMEWORK_VERSION="$1"
+
 NEW_XCFRAMEWORK_ARCHIVE="$XCFRAMEWORK_NAME-$XCFRAMEWORK_VERSION"
 NEW_XCFRAMEWORK_PATH="$NEW_XCFRAMEWORK_ARCHIVE/$XCFRAMEWORK_NAME.$XCFRAMEWORK_EXTENSION"
 

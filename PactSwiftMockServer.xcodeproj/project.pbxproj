@@ -38,6 +38,7 @@
 		A7F18596296CED58003AE3F2 /* Logging.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7F18595296CED58003AE3F2 /* Logging.swift */; };
 		A7F18597296CED58003AE3F2 /* Logging.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7F18595296CED58003AE3F2 /* Logging.swift */; };
 		A7F18598296CED58003AE3F2 /* Logging.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7F18595296CED58003AE3F2 /* Logging.swift */; };
+		AD01D9AA300B0FD5000686C4 /* libpact_ffi.a in Frameworks */ = {isa = PBXBuildFile; fileRef = AD933642269C2DD80004EBD8 /* libpact_ffi.a */; };
 		AD1597FD2648DE0E007CFAA5 /* PactSwiftMockServer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AD1597F32648DE0E007CFAA5 /* PactSwiftMockServer.framework */; };
 		AD1598042648DE0E007CFAA5 /* PactSwiftMockServer.h in Headers */ = {isa = PBXBuildFile; fileRef = AD1597F62648DE0E007CFAA5 /* PactSwiftMockServer.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		AD1598212648DF73007CFAA5 /* PactSwiftMockServer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AD1598182648DF73007CFAA5 /* PactSwiftMockServer.framework */; };
@@ -47,7 +48,6 @@
 		AD1598522648F2E1007CFAA5 /* MockServerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD1598512648F2E1007CFAA5 /* MockServerTests.swift */; };
 		AD1598532648F2E1007CFAA5 /* MockServerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD1598512648F2E1007CFAA5 /* MockServerTests.swift */; };
 		AD3192DE2BD3A12000A6C2AC /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AD3192DD2BD3A12000A6C2AC /* SystemConfiguration.framework */; };
-		AD3771212BD387E700206BF2 /* libpact_ffi.a in Frameworks */ = {isa = PBXBuildFile; fileRef = AD933642269C2DD80004EBD8 /* libpact_ffi.a */; };
 		AD38D300264A33E800124396 /* PactSwiftMockServer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AD38D2F7264A33E800124396 /* PactSwiftMockServer.framework */; };
 		AD39522C2D371A79005C91DB /* Interaction+Request.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD39522B2D371A73005C91DB /* Interaction+Request.swift */; };
 		AD39522D2D371A79005C91DB /* Interaction+Request.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD39522B2D371A73005C91DB /* Interaction+Request.swift */; };
@@ -221,8 +221,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AD01D9AA300B0FD5000686C4 /* libpact_ffi.a in Frameworks */,
 				AD3192DE2BD3A12000A6C2AC /* SystemConfiguration.framework in Frameworks */,
-				AD3771212BD387E700206BF2 /* libpact_ffi.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -942,6 +942,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = ADBEF2F42648FB0600486C4A /* Target-iOS-Debug.xcconfig */;
 			buildSettings = {
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 			};
 			name = Debug;
 		};
@@ -949,6 +950,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = ADBEF2F82648FB0600486C4A /* Target-iOS-Release.xcconfig */;
 			buildSettings = {
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 			};
 			name = Release;
 		};
@@ -970,6 +972,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = ADBEF2F72648FB0600486C4A /* Target-macOS-Debug.xcconfig */;
 			buildSettings = {
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
 			};
 			name = Debug;
 		};
@@ -977,6 +980,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = ADBEF2F32648FB0600486C4A /* Target-macOS-Release.xcconfig */;
 			buildSettings = {
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
 			};
 			name = Release;
 		};
@@ -998,6 +1002,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = AD38D314264A347A00124396 /* Target-iPhone-iOS-Debug.xcconfig */;
 			buildSettings = {
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 			};
 			name = Debug;
 		};
@@ -1005,6 +1010,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = AD38D313264A346900124396 /* Target-iPhone-iOS-Release.xcconfig */;
 			buildSettings = {
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 			};
 			name = Release;
 		};

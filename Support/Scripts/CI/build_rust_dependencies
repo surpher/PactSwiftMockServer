@@ -269,21 +269,24 @@ executeCommand "cp ../target/aarch64-apple-ios/release/libpact_ffi.a \
 echo -e "${GREEN}👍  Copied arm64-ios binary.$NOCOLOR"
 
 echo "warning: iOS device binary is not copied as it fails to build from Rust file..."
+echo
 
 # Copy binary for iOS Simulator to workspace
 echo "🚚 Copying arm64 binary for iOS Simulator..."
 executeCommand "cp ../target/aarch64-apple-ios-sim/release/libpact_ffi.a \
   $WORKSPACE/Resources/iOS-simulator/libpact_ffi.a"
 echo -e "${GREEN}👍 Copied arm64-ios-sim binary.$NOCOLOR"
+echo
 
 # Copy darwin binary to workspace
 echo "🚚 Copying arm64-darwin binary..."
 executeCommand "cp  ../target/aarch64-apple-darwin/release/libpact_ffi.a \
   $WORKSPACE/Resources/darwin/libpact_ffi.a"
 echo -e "👍 ${GREEN}Copied darwin and arm64-darwin fattie.$NOCOLOR"
+echo
 
 echo "🏗 Copying pact_ffi.h from ${PWD}/include to ${WORKSPACE}/Sources"
-executeCommand "cp include/pact_ffi.h ${WORKSPACE}/Sources"cp
+executeCommand "cp include/pact_ffi.h ${WORKSPACE}/Sources"
 
 # Validate the binaries
 # log_binary_validation "$LOGS_DIR/binary_validation.log"

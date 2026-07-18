@@ -33,17 +33,13 @@ executeCommand "rustup target list | grep apple"
 
 # Supported target architectures
 TARGET_ARM64_DARWIN="aarch64-apple-darwin"    # macOS running on Apple Silicon machine
-TARGET_X86_64_DARWIN="x86_64-apple-darwin"    # macOS running on Intel machine
 TARGET_ARM64_IOS="aarch64-apple-ios"          # physical iOS device
 TARGET_ARM64_IOS_SIM="aarch64-apple-ios-sim"  # iOS Simulator running on Apple Silicon machine
-TARGET_x86_64_IOS="x86_64-apple-ios"          # iOS Simulator running on Intel machine
 
 TARGETS=(
   "$TARGET_ARM64_DARWIN"
   "$TARGET_ARM64_IOS"
   "$TARGET_ARM64_IOS_SIM"
-  "$TARGET_X86_64_DARWIN"
-  "$TARGET_x86_64_IOS"
 )
 
 # pact-reference/rust/pact_ffi/CMakeLists.txt uses nightly!

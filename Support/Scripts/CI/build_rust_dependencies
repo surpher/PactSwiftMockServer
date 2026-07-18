@@ -18,10 +18,25 @@
 #  IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #
 
+## Usage
+## ./Support/Scripts/CI/build_rust_dependencies [--clean-build]
+
 set -eu
 set -o pipefail
 
 SOURCE_DIR="${BASH_SOURCE[0]%/*}"
+
+function print_usage {
+  cat <<EOF
+Usage: ${0##*/} [options]
+
+Builds the libpact_ffi.a binaries (arm64) for iOS, iOS Simulator, and Darwin.
+
+Options:
+  --clean-build   Run 'cargo clean' in the pact-reference submodule before building
+  -h, --help      Show this help message and exit
+EOF
+}
 
 ########################
 #
@@ -34,6 +49,7 @@ WORKSPACE="${GITHUB_WORKSPACE:-$PWD}"
 LIBPACT_FFI_DIR="${WORKSPACE}/pact-reference/rust/pact_ffi"
 LIBPACT_FFI_VERSION=$(awk 'NR==1 {print; exit}' libpact_ffi.version)
 LOGS_DIR="${WORKSPACE}/.build"
+LIBPACT_RUST_DIR="${WORKSPACE}/pact-reference/rust"
 
 # "import"
 source "$SOURCE_DIR/../utils.sh"
@@ -80,7 +96,7 @@ function log_build_environment {
     echo
     echo "  SDK Version: $(xcrun --sdk macosx --show-sdk-path)"
     echo
-    echo "  lipo: $(lipo -v)"
+    echo "  lipo: $(xcrun --find lipo)"
     echo
     echo "  Rust targets:"
     rustup target list | sed 's/^/\t/'
@@ -120,6 +136,37 @@ function log_binary_validation {
   } >> "$output_file"
 }
 
+# Verify the active Xcode developer directory is set to a full Xcode install.
+# Fails (returns non-zero) if xcode-select is unset or points at the
+# standalone Command Line Tools, which lack the iOS simulator SDK.
+verify_xcode() {
+  local dev_dir
+  if ! dev_dir="$(xcode-select -p 2>/dev/null)"; then
+    echo "verify_xcode: xcode-select developer directory is not set" >&2
+    echo "  fix: sudo xcode-select -s /Applications/Xcode.app/Contents/Developer" >&2
+    return 1
+  fi
+
+  case "$dev_dir" in
+    *CommandLineTools*)
+      echo "verify_xcode: pointing at Command Line Tools ($dev_dir)" >&2
+      echo "  the iphonesimulator SDK requires full Xcode" >&2
+      echo "  fix: sudo xcode-select -s /Applications/Xcode.app/Contents/Developer" >&2
+      return 1
+      ;;
+  esac
+
+  if ! xcrun --sdk iphonesimulator --show-sdk-path >/dev/null 2>&1; then
+    echo "verify_xcode: iphonesimulator SDK could not be located ($dev_dir)" >&2
+    return 1
+  fi
+
+  echo "verify_xcode: OK ($dev_dir)"
+  return 0
+}
+
+verify_xcode
+
 # Print build environment
 log_build_environment "$LOGS_DIR/build_environment.log"
 
@@ -152,35 +199,51 @@ rustup_setDefaultToolchain
 # Add the required triples for supported architectures
 rustup_addTargets
 
+CLEAN_BUILD=false
+
+for arg in "$@"; do
+  case "$arg" in
+    --clean-build)
+      CLEAN_BUILD=true
+      ;;
+    -h|--help)
+      print_usage
+      exit 0
+      ;;
+    *)
+      echo "🚨 Unknown argument: $arg"
+      print_usage
+      exit 1
+      ;;
+  esac
+done
+
 ##############################################
-# Build libpact_ffi binaries
+# Optional clean build
 ##############################################
 
-# Set min deployment targets avoiding 'ld: warning's:
-# avoiding "Object file (__/libpact_ffi.a[arm64][232](b0401a448be314bb-zdict.o)) was built for newer 'macOS' version (14.2) than being linked (12.0)"
-unset MACOSX_DEPLOYMENT_TARGET
-export MACOSX_DEPLOYMENT_TARGET=12.0
+if [ "$CLEAN_BUILD" = true ]; then
+  echo "🧹 --clean-build passed — cleaning Rust target folder in submodule"
+  executeCommand "(cd $LIBPACT_RUST_DIR && cargo clean)"
+fi
 
-# avoiding "Object file (__/libpact_ffi.a[arm64][232](b0401a448be314bb-zdict.o)) was built for newer 'iOS-simulator' version (17.2) than being linked (13.0)"
-unset IPHONEOS_DEPLOYMENT_TARGET
-export IPHONEOS_DEPLOYMENT_TARGET=13.0
+##############################################
+# Build libpact_ffi binaries (arm64 only)
+#
+# Deployment-target vars are scoped PER build. IPHONEOS_DEPLOYMENT_TARGET must
+# NOT be in the environment during the darwin build: ring 0.16.20 compiles its
+# aarch64 asm via cc, and a stray IPHONEOS_DEPLOYMENT_TARGET tags that object as
+# iOS, which then fails to link into the macOS dylib.
+##############################################
 
-# Build for x86_64 architectures
-echo "🏗 Building libpact_ffi.a for x86_64 iOS Simulator"
-executeCommand "cargo build --target x86_64-apple-ios --release"
-
-echo "🏗 Building libpact_ffi.a for x86_64 Darwin"
-executeCommand "cargo build --target x86_64-apple-darwin --release"
-
-# Build for arm64 architectures
 echo "🏗 Building libpact_ffi.a for arm64 iOS Simulator"
-executeCommand "cargo build --target aarch64-apple-ios-sim --release"
-
-echo "🏗 Building libpact_ffi.a for arm64 Darwin"
-executeCommand "cargo build --target aarch64-apple-darwin --release"
+executeCommand "IPHONEOS_DEPLOYMENT_TARGET=15.0 cargo build --target aarch64-apple-ios-sim --release"
 
 echo "🏗 Building libpact_ffi.a for arm64 iOS device"
-executeCommand "cargo build --target aarch64-apple-ios --release"
+executeCommand "IPHONEOS_DEPLOYMENT_TARGET=15.0 cargo build --target aarch64-apple-ios --release"
+
+echo "🏗 Building libpact_ffi.a for arm64 Darwin"
+executeCommand "MACOSX_DEPLOYMENT_TARGET=14.0 cargo build --target aarch64-apple-darwin --release"
 
 echo -e "✅ ${GREEN}libpact_ffi.a binaries built$NOCOLOR"
 
@@ -207,24 +270,20 @@ echo -e "${GREEN}👍  Copied arm64-ios binary.$NOCOLOR"
 
 echo "warning: iOS device binary is not copied as it fails to build from Rust file..."
 
-# Create a fat binary for iOS Simulators and copy to workspace
-echo "🚚 Creating a fat binary for iOS Simulator (x86_64 and arm64)..."
-executeCommand "lipo -create \
-  ../target/x86_64-apple-ios/release/libpact_ffi.a \
-  ../target/aarch64-apple-ios-sim/release/libpact_ffi.a \
-  -output $WORKSPACE/Resources/iOS-simulator/libpact_ffi.a"
-echo -e "${GREEN}👍 Copied x86_64-ios and arm64-ios-sim fattie.$NOCOLOR"
+# Copy binary for iOS Simulator to workspace
+echo "🚚 Copying arm64 binary for iOS Simulator..."
+executeCommand "cp ../target/aarch64-apple-ios-sim/release/libpact_ffi.a \
+  $WORKSPACE/Resources/iOS-simulator/libpact_ffi.a"
+echo -e "${GREEN}👍 Copied arm64-ios-sim binary.$NOCOLOR"
 
-# Create a fat darwin binary and copy to workspace
-echo "🚚 Copying darwin and arm64-darwin into a fat binary..."
-executeCommand "lipo -create \
-  ../target/x86_64-apple-darwin/release/libpact_ffi.a \
-  ../target/aarch64-apple-darwin/release/libpact_ffi.a \
-  -output $WORKSPACE/Resources/darwin/libpact_ffi.a"
+# Copy darwin binary to workspace
+echo "🚚 Copying arm64-darwin binary..."
+executeCommand "cp  ../target/aarch64-apple-darwin/release/libpact_ffi.a \
+  $WORKSPACE/Resources/darwin/libpact_ffi.a"
 echo -e "👍 ${GREEN}Copied darwin and arm64-darwin fattie.$NOCOLOR"
 
 echo "🏗 Copying pact_ffi.h from ${PWD}/include to ${WORKSPACE}/Sources"
-executeCommand "cp include/pact_ffi.h ${WORKSPACE}/Sources"
+executeCommand "cp include/pact_ffi.h ${WORKSPACE}/Sources"cp
 
 # Validate the binaries
 # log_binary_validation "$LOGS_DIR/binary_validation.log"

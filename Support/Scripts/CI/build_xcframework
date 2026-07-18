@@ -67,25 +67,23 @@ echo "👍 Framework for physical arm64 device built"
 echo "🏗  Building for iOS Simulator..."
 xcodebuild archive \
     -sdk iphonesimulator IPHONEOS_DEPLOYMENT_TARGET="$IPHONEOS_DEPLOYMENT_TARGET" \
-    -arch x86_64 \
     -arch arm64 \
     -scheme "$XCPRODUCT_NAME-iOS" \
     -archivePath "$TMP_DIR/iphonesimulator/$XCPRODUCT_NAME.xcarchive" \
     BUILD_LIBRARY_FOR_DISTRIBUTION=YES \
     SKIP_INSTALL=NO | $XCBEAUTIFY
-echo "👍 Framework for iOS Simulator built for x86_64 and arm64 architecture"
+echo "👍 Framework for iOS Simulator built for arm64 architecture"
 
 # macOS
 echo "🏗  Building for macOS..."
 xcodebuild archive \
     -sdk macosx MACOSX_DEPLOYMENT_TARGET="$MACOSX_DEPLOYMENT_TARGET" \
-    -arch x86_64 \
     -arch arm64 \
     -scheme "$XCPRODUCT_NAME-macOS" \
     -archivePath "$TMP_DIR/macos/$XCPRODUCT_NAME.xcarchive" \
     BUILD_LIBRARY_FOR_DISTRIBUTION=YES \
     SKIP_INSTALL=NO | $XCBEAUTIFY
-echo "👍  Framework for macOS built for x86_64 and arm64 architectures"
+echo "👍  Framework for macOS built for arm64 architectures"
 
 # XCFramework
 echo "🏗  Building XCFramework..."

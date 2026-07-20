@@ -18,7 +18,7 @@ LD_RUNPATH_SEARCH_PATHS = $(inherited) @executable_path/Frameworks @loader_path/
 LIBRARY_SEARCH_PATHS = $(inherited) $(PROJECT_DIR)/Resources/darwin $(PLATFORM_DIR)/Developer/usr/lib
 FRAMEWORK_SEARCH_PATHS = $(inherited) $(PROJECT_DIR)/Resources/darwin
 
-OTHER_LDFLAGS = -weak_framework XCTEST -weak-lXCTestSwiftSupport
+OTHER_LDFLAGS = -weak_framework XCTEST -weak-lXCTestSwiftSupport -lbz2 -llzma
 
 DYLIB_COMPATIBILITY_VERSION = 1
 DYLIB_CURRENT_VERSION = 1

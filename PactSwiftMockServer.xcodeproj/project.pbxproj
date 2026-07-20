@@ -86,6 +86,9 @@
 		ADE2551026CE335400FA21A9 /* Verifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADE2550F26CE335400FA21A9 /* Verifier.swift */; };
 		ADE2551126CE335400FA21A9 /* Verifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADE2550F26CE335400FA21A9 /* Verifier.swift */; };
 		ADE2551226CE335400FA21A9 /* Verifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADE2550F26CE335400FA21A9 /* Verifier.swift */; };
+		FE0000000000000000000002 /* VerificationOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE0000000000000000000001 /* VerificationOptions.swift */; };
+		FE0000000000000000000003 /* VerificationOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE0000000000000000000001 /* VerificationOptions.swift */; };
+		FE0000000000000000000004 /* VerificationOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE0000000000000000000001 /* VerificationOptions.swift */; };
 		ADE647462D1121DC00BE9AB3 /* ProviderVerificationErrorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADE647452D1121D100BE9AB3 /* ProviderVerificationErrorTests.swift */; };
 		ADE647472D1121DC00BE9AB3 /* ProviderVerificationErrorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADE647452D1121D100BE9AB3 /* ProviderVerificationErrorTests.swift */; };
 		ADE6474D2D1125F500BE9AB3 /* PactFFIProviding.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADE6474C2D1125EC00BE9AB3 /* PactFFIProviding.swift */; };
@@ -191,6 +194,7 @@
 		ADD6DB6C3009A11B00AB782F /* libpact_ffi.version */ = {isa = PBXFileReference; lastKnownFileType = text; path = libpact_ffi.version; sourceTree = "<group>"; };
 		ADDE21FC2D5078E600C6FD6F /* test_image.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = test_image.jpg; sourceTree = "<group>"; };
 		ADE2550F26CE335400FA21A9 /* Verifier.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Verifier.swift; sourceTree = "<group>"; };
+		FE0000000000000000000001 /* VerificationOptions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VerificationOptions.swift; sourceTree = "<group>"; };
 		ADE647452D1121D100BE9AB3 /* ProviderVerificationErrorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProviderVerificationErrorTests.swift; sourceTree = "<group>"; };
 		ADE6474C2D1125EC00BE9AB3 /* PactFFIProviding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PactFFIProviding.swift; sourceTree = "<group>"; usesTabs = 0; };
 		ADE647502D11285400BE9AB3 /* DefaultPactFFIProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultPactFFIProvider.swift; sourceTree = "<group>"; };
@@ -441,6 +445,7 @@
 			isa = PBXGroup;
 			children = (
 				ADE2550F26CE335400FA21A9 /* Verifier.swift */,
+				FE0000000000000000000001 /* VerificationOptions.swift */,
 			);
 			path = ProviderVerification;
 			sourceTree = "<group>";
@@ -796,6 +801,7 @@
 				AD39522E2D371A79005C91DB /* Interaction+Request.swift in Sources */,
 				AD3952352D371B79005C91DB /* InteractionPart+Extension.swift in Sources */,
 				ADE2551026CE335400FA21A9 /* Verifier.swift in Sources */,
+				FE0000000000000000000002 /* VerificationOptions.swift in Sources */,
 				A7F18577296BE177003AE3F2 /* BodyBuilder.swift in Sources */,
 				A7840F43294A923000CF22EF /* PactBuilder.swift in Sources */,
 				AD1598312648E32F007CFAA5 /* MockServer.swift in Sources */,
@@ -840,6 +846,7 @@
 				AD39522C2D371A79005C91DB /* Interaction+Request.swift in Sources */,
 				AD3952362D371B79005C91DB /* InteractionPart+Extension.swift in Sources */,
 				ADE2551126CE335400FA21A9 /* Verifier.swift in Sources */,
+				FE0000000000000000000003 /* VerificationOptions.swift in Sources */,
 				A7F18578296BE177003AE3F2 /* BodyBuilder.swift in Sources */,
 				A7840F44294A923000CF22EF /* PactBuilder.swift in Sources */,
 				AD1598322648E32F007CFAA5 /* MockServer.swift in Sources */,
@@ -888,6 +895,7 @@
 				AD39522D2D371A79005C91DB /* Interaction+Request.swift in Sources */,
 				ADD7CB12264B4A080091A286 /* MockServer.swift in Sources */,
 				ADE2551226CE335400FA21A9 /* Verifier.swift in Sources */,
+				FE0000000000000000000004 /* VerificationOptions.swift in Sources */,
 				A7840F45294A923000CF22EF /* PactBuilder.swift in Sources */,
 				ADE6474E2D1125F500BE9AB3 /* PactFFIProviding.swift in Sources */,
 				A743EC412946E8C700EE315D /* Pact.swift in Sources */,

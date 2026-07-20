@@ -31,26 +31,26 @@ class VerifierTests: XCTestCase {
 
     // MARK: - Tests
 
-    func testVerificationFails() {
-        let result = testSubject.verifyProvider(options: validArgs)
+    func testVerificationFailsForMissingPactDirectory() {
+        let options = VerificationOptions(
+            provider: .init(port: 1234),
+            sources: [.directory("../NonExistingDir")]
+        )
+
+        let result = testSubject.verifyProvider(options: options)
+
         XCTAssertEqual(result, .failure(.verificationFailed))
     }
 
-    func testInvalidArguments() {
-        let result = testSubject.verifyProvider(options: invalidArgs)
-        XCTAssertEqual(result, .failure(.invalidArguments))
-    }
+    func testVerificationFailsForMissingPactFile() {
+        let options = VerificationOptions(
+            provider: .init(port: 1234),
+            sources: [.file("../Non/Existing/invalid/path.json")]
+        )
 
-}
+        let result = testSubject.verifyProvider(options: options)
 
-private extension VerifierTests {
-
-    var validArgs: String {
-        "--port\n1234\n--dir\n../NonExistingDir"
-    }
-
-    var invalidArgs: String {
-        "--port\n1234\n--dir\n../Non\n/Existing/invalid/\npath"
+        XCTAssertEqual(result, .failure(.verificationFailed))
     }
 
 }

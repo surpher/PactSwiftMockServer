@@ -28,7 +28,7 @@ public enum ProviderVerificationError: Error, Equatable {
     /// Unknown error
     case unknown
 
-    /// Defines ProviderVerificationError with the code returned from pactffi_verify()
+    /// Defines ProviderVerificationError with the code returned from pactffi_verifier_execute()
     init(code: Int32) {
         switch code {
         case 1: self = .verificationFailed

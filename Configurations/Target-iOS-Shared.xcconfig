@@ -22,7 +22,7 @@ FRAMEWORK_SEARCH_PATHS = $(inherited) $(PROJECT_DIR)/Resources/iOS-simulator
 LD_RUNPATH_SEARCH_PATHS = $(inherited) @executable_path/Frameworks @loader_path/Frameworks
 HEADER_SEARCH_PATHS = $(PROJECT_DIR)/Sources/Headers
 
-OTHER_LDFLAGS = -weak_framework XCTEST -weak-lXCTestSwiftSupport
+OTHER_LDFLAGS = -weak_framework XCTEST -weak-lXCTestSwiftSupport -lbz2 -llzma
 
 DEFINES_MODULE = YES
 CODE_SIGN_IDENTITY =

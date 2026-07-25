@@ -19,7 +19,9 @@ FRAMEWORK_SEARCH_PATHS = $(inherited) $(PROJECT_DIR)/Resources/iOS-device
 LD_RUNPATH_SEARCH_PATHS = $(inherited) @executable_path/Frameworks @loader_path/Frameworks
 HEADER_SEARCH_PATHS = $(PROJECT_DIR)/Sources/Headers
 
-OTHER_LDFLAGS = -weak_framework XCTEST -weak-lXCTestSwiftSupport -lbz2 -llzma
+// UIKit: libpact_ffi.a references _UIApplicationMain via os_info -> objc2-ui-kit
+// (pact_ffi -> pact-plugin-driver -> os_info), which reads the OS version from UIDevice.
+OTHER_LDFLAGS = -weak_framework XCTEST -weak-lXCTestSwiftSupport -lbz2 -llzma -framework UIKit
 
 DEFINES_MODULE = YES
 CODE_SIGN_STYLE = Automatic

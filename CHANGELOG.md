@@ -1,5 +1,19 @@
 # CHANGELOG
 
+## v1.2.0
+
+libpact_ffi-v0.5.4
+
+* [a93cce7](https://github.com/surpher/PactSwiftMockServer/commit/a93cce7) - fix: Update xcconfig for iOS targets (surpher)
+* [26848ee](https://github.com/surpher/PactSwiftMockServer/commit/26848ee) - fix: Release script (surpher)
+* [89f3fc3](https://github.com/surpher/PactSwiftMockServer/commit/89f3fc3) - fix: link libbz2/liblzma and update version test for pact_ffi 0.5.4 (José Jeria)
+* [7c3cad2](https://github.com/surpher/PactSwiftMockServer/commit/7c3cad2) - feat: migrate provider verifier to the pactffi_verifier_* handle API (José Jeria)
+* [a01fb86](https://github.com/surpher/PactSwiftMockServer/commit/a01fb86) - WIP: Bumps pact-reference and libpact_ffi to 0.5.4 (surpher)
+* [67c028e](https://github.com/surpher/PactSwiftMockServer/commit/67c028e) - chore: Refactor supporting build scripts (surpher)
+* [c749c42](https://github.com/surpher/PactSwiftMockServer/commit/c749c42) - chore: Bump libpact_ffi to 0.4.9 (surpher)
+* [cba0426](https://github.com/surpher/PactSwiftMockServer/commit/cba0426) - Improvements to release script (Marko Justinek)
+* [b8a4ced](https://github.com/surpher/PactSwiftMockServer/commit/b8a4ced) - Format CHANGELOG.md list (Marko Justinek)
+
 ## v1.1.1
 
 libpact_ffi-v0.4.25

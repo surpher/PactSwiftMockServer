@@ -105,8 +105,8 @@ final class MockPactFFIProvider: PactFFIProviding {
         throw MockPactFFIProviderError.notImplemented
     }
 
-    func withQueryParameter(handle: InteractionHandle, name: String, value: String) throws {
-        subject.send(name + "=" + value)
+    func withQueryParameter(handle: InteractionHandle, name: String, values: [String]) throws {
+        values.forEach { subject.send(name + "=" + $0) }
     }
 
     func withQueryParameterWithoutAssociatedValue(handle: InteractionHandle, name: String) throws {

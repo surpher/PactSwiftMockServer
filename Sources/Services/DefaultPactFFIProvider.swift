@@ -128,14 +128,21 @@ struct DefaultPactFFIProvider: PactFFIProviding {
         pactffi_new_interaction(handle, description.cString(using: .utf8))
     }
 
-    func withQueryParameter(handle: InteractionHandle, name: String, value: String) throws {
-        guard pactffi_with_query_parameter_v2(
-            handle,
-            name.cString(using: .utf8),
-            0,
-            value.cString(using: .utf8)
-        ) else {
-            throw Interaction.Error.canNotBeModified
+    func withQueryParameter(handle: InteractionHandle, name: String, values: [String]) throws {
+        guard values.isEmpty == false else {
+            try withQueryParameterWithoutAssociatedValue(handle: handle, name: name)
+            return
+        }
+
+        try values.enumerated().forEach { offset, value in
+            guard pactffi_with_query_parameter_v2(
+                handle,
+                name.cString(using: .utf8),
+                offset,
+                value.cString(using: .utf8)
+            ) else {
+                throw Interaction.Error.canNotBeModified
+            }
         }
     }
 

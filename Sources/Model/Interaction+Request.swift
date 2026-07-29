@@ -30,6 +30,10 @@ public extension Interaction {
 
         /// Configures a query parameter for the Interaction.
         ///
+        /// Each value is configured at its own index, so a parameter with multiple values is recorded as repeated
+        /// occurrences of the same key (eg. `?foo=bar&foo=baz`). Passing an empty `values` array configures the query
+        /// parameter without an associated value (eg. `?foo`).
+        ///
         /// - Throws: ``Interaction/Error/canNotBeModified`` if the interaction or Pact can't be modified (i.e. the mock server
         /// for it has already started).
         ///
@@ -39,7 +43,7 @@ public extension Interaction {
         ///
         @discardableResult
         public func queryParam(name: String, values: [String]) throws -> Self {
-            try ffiProvider.withQueryParameter(handle: handle, name: name, value: values.joined(separator: ","))
+            try ffiProvider.withQueryParameter(handle: handle, name: name, values: values)
 
             return self
         }

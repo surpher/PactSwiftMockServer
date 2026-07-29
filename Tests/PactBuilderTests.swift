@@ -255,32 +255,21 @@ final class PactBuilderTests: XCTestCase {
     // MARK: - Query Parameters
 
     func testInteractionWithQueryParameter() async throws {
-        let queryParam: (key: String, values: [String]) = ("item", ["value"])
+        try await verifyQueryParameterInteraction(
+            name: "item",
+            values: ["value"],
+            state: "Some state relying on query parameters"
+        )
+    }
 
-        try builder
-            .uponReceiving("A request for an interaction")
-            .given(
-                "Some state relying on query parameters",
-                withName: #function,
-                value: String(describing: #line)
-            )
-            .withRequest(method: .GET, path: "/interaction") { context in
-                try context.queryParam(name: queryParam.key, values: queryParam.values)
-            }
-            .willRespond(with: 200)
-
-        try await builder.verify { context in
-            let url = try context.buildRequestURL(
-                path: "/interaction",
-                queryItems: [
-                    queryParam.key: queryParam.values.joined(separator: ",")
-                ]
-            )
-            let (_, response) = try await URLSession(configuration: .ephemeral).data(from: url)
-
-            let httpResponse = try XCTUnwrap(response as? HTTPURLResponse)
-            XCTAssertEqual(httpResponse.statusCode, 200)
-        }
+    // Each value is expected as its own occurrence of the key (`?item=value&item=otherValue`),
+    // not as a single comma separated value.
+    func testInteractionWithQueryParameterWithMultipleValues() async throws {
+        try await verifyQueryParameterInteraction(
+            name: "item",
+            values: ["value", "otherValue"],
+            state: "Some state relying on a query parameter with multiple values"
+        )
     }
 
     func testInteractionWithQueryParameters() async throws {
@@ -310,9 +299,12 @@ final class PactBuilderTests: XCTestCase {
                 path: "/interaction",
                 queryItems: queryParams
                     .shuffled()
-                    .compactMap { [$0.key: $0.values.joined(separator: ",")] }
-                    .reduce(into: [String: String]()) {
-                        $0.merge($1) { (_, new) in new }
+                    .flatMap { queryParam in
+                        guard queryParam.values.isEmpty == false else {
+                            return [URLQueryItem(name: queryParam.key, value: nil)]
+                        }
+
+                        return queryParam.values.map { URLQueryItem(name: queryParam.key, value: $0) }
                     }
             )
             let (_, response) = try await URLSession(configuration: .ephemeral).data(from: url)
@@ -449,6 +441,38 @@ final class PactBuilderTests: XCTestCase {
 
 // MARK: - Private
 
+private extension PactBuilderTests {
+
+    /// Sets up an interaction expecting a single query parameter and verifies it against a request
+    /// sending every value as its own occurrence of the key.
+    func verifyQueryParameterInteraction(
+        name: String,
+        values: [String],
+        state: String,
+        stateName: String = #function,
+        stateValue: Int = #line
+    ) async throws {
+        try builder
+            .uponReceiving("A request for an interaction")
+            .given(state, withName: stateName, value: String(describing: stateValue))
+            .withRequest(method: .GET, path: "/interaction") { context in
+                try context.queryParam(name: name, values: values)
+            }
+            .willRespond(with: 200)
+
+        try await builder.verify { context in
+            let url = try context.buildRequestURL(
+                path: "/interaction",
+                queryItems: values.map { URLQueryItem(name: name, value: $0) }
+            )
+            let (_, response) = try await URLSession(configuration: .ephemeral).data(from: url)
+
+            let httpResponse = try XCTUnwrap(response as? HTTPURLResponse)
+            XCTAssertEqual(httpResponse.statusCode, 200)
+        }
+    }
+}
+
 private extension PactBuilder.ConsumerContext {
 
     func buildURLRequest<T: Encodable>(path: String, body: T) throws -> URLRequest {
@@ -487,9 +511,16 @@ private extension PactBuilder.ConsumerContext {
     }
 
     func buildRequestURL(path: String, queryItems: [String: String?] = [:]) throws -> URL {
+        try buildRequestURL(
+            path: path,
+            queryItems: queryItems.map { URLQueryItem(name: $0.key, value: $0.value) }
+        )
+    }
+
+    func buildRequestURL(path: String, queryItems: [URLQueryItem]) throws -> URL {
         var components = try XCTUnwrap(URLComponents(url: mockServerURL, resolvingAgainstBaseURL: false))
         components.path = path
-        components.queryItems = queryItems.map { URLQueryItem(name: $0.key, value: $0.value) }
+        components.queryItems = queryItems
         return try XCTUnwrap(components.url)
     }
 }

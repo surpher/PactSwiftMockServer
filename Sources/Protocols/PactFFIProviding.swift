@@ -58,7 +58,7 @@ protocol PactFFIProviding {
 
     func interactionTestName(handle: InteractionHandle, name: String) throws
 
-    func withQueryParameter(handle: InteractionHandle, name: String, value: String) throws
+    func withQueryParameter(handle: InteractionHandle, name: String, values: [String]) throws
 
     func withQueryParameterWithoutAssociatedValue(handle: InteractionHandle, name: String) throws
 

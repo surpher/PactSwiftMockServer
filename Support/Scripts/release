@@ -32,7 +32,7 @@ set -eu
 set -o pipefail
 
 function show_help {
-  echo "Usage: $0 -v {major|minor|patch} [-d description] [--dry-run] [-i | --interactive] [--draft] [--pre-release]"
+  echo "Usage: $0 -v {major|minor|patch} [-d description] [--dry-run] [-i | --interactive] [--draft] [--pre-release] [--skip-rust-build]"
   echo
   echo "OPTIONS"
   echo "  -v, --version         Version number to bump. Possible values are 'major', 'minor' or 'patch'."
@@ -41,6 +41,10 @@ function show_help {
   echo "  -i, --interactive     Pauses after every step to allow for manual intervention."
   echo "      --draft           Creates a draft release."
   echo "      --pre-release     Creates a pre-release."
+  echo "      --skip-rust-build Skips building the libpact_ffi.a binaries and releases whatever is"
+  echo "                        already in Resources/. Only safe when those binaries were built from"
+  echo "                        the libpact_ffi version this release claims. Equivalent to setting"
+  echo "                        SHOULD_BUILD_RUST_BIN=false."
   echo
   echo "  -h, --help            Display this message"
   echo
@@ -370,6 +374,10 @@ while [[ $# -gt 0 ]]; do
             RELEASE_OPTIONS="$RELEASE_OPTIONS --prerelease"
             shift
             ;;
+        --skip-rust-build)
+            SHOULD_BUILD_RUST_BIN=false
+            shift
+            ;;
         -h|--help)
             show_help
             ;;
@@ -423,6 +431,22 @@ pause_execution_and_cleanup $SHOULD_PAUSE_SCRIPT_EXECUTION
 if [ "$SHOULD_BUILD_RUST_BIN" = true ]; then
   echo "🏗️ Building libpact_ffi binaries..."
   eval "$RELEASE_SOURCE_DIR/CI/build_rust_dependencies"
+  pause_execution_and_cleanup $SHOULD_PAUSE_SCRIPT_EXECUTION
+else
+  # A release is exactly the wrong place to be quiet about not rebuilding, so
+  # report what is about to be shipped and where it came from.
+  echo -e "⏭️  ${YELLOW}Skipping libpact_ffi build — releasing the binaries already in Resources/$NOCOLOR"
+  echo "ℹ️ Expected libpact_ffi version: $(awk 'NR==1 {print; exit}' "$LIBPACT_FFI_VERSION_FILE")"
+
+  for resource_dir in Resources/darwin Resources/iOS-device Resources/iOS-simulator; do
+    resource_lib="$resource_dir/libpact_ffi.a"
+    if [ -f "$resource_lib" ]; then
+      echo "ℹ️ $resource_lib — built $(date -r "$resource_lib" '+%Y-%m-%d %H:%M')"
+    else
+      die "'$resource_lib' is missing. Run without --skip-rust-build to build it."
+    fi
+  done
+
   pause_execution_and_cleanup $SHOULD_PAUSE_SCRIPT_EXECUTION
 fi
 

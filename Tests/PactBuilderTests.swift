@@ -230,6 +230,10 @@ final class PactBuilderTests: XCTestCase {
     }
 
     func testInteractionWithHeaderParameterWithMultipleValues() async throws {
+        // `If-Match` is deliberate. Multiple values are sent as one comma separated header line, and
+        // the Pact core only splits that back into separate values for header names it knows to be
+        // multi-value per RFC 9110 (see `MULTI_VALUE_HEADERS` in pact_models/src/headers.rs). A custom
+        // name such as `foo` arrives as the single value "foo,bar,baz" and never matches three values.
         try builder
             .uponReceiving("A request for an interaction")
             .given(
@@ -238,12 +242,12 @@ final class PactBuilderTests: XCTestCase {
                 value: String(describing: #line)
             )
             .withRequest(method: .GET, path: "/interaction") { context in
-                try context.header("foo", values: ["foo", "bar", "baz"])
+                try context.header("If-Match", values: ["foo", "bar", "baz"])
             }
             .willRespond(with: 200)
 
         try await builder.verify { context in
-            let headers = [("foo", "foo"), ("foo", "bar"), ("foo", "baz")]
+            let headers = [("If-Match", "foo"), ("If-Match", "bar"), ("If-Match", "baz")]
             let urlRequest = try context.buildURLRequest(path: "/interaction", headers: headers)
             let (_, response) = try await URLSession(configuration: .ephemeral).data(for: urlRequest)
 

@@ -285,6 +285,78 @@ for arg in "$@"; do
 done
 
 ##############################################
+# Pin rustls to a single crypto provider
+#
+# rustls refuses to pick a provider when more than one of its 'ring' and
+# 'aws-lc-rs' features is enabled — it panics with "Could not automatically
+# determine the process-level CryptoProvider from Rustls crate features". That
+# panic poisons a mutex inside pact_ffi, and the next pactffi_free_pact_handle
+# unwraps the PoisonError in a nounwind context, which aborts the whole test
+# process. It takes out every TLS mock server test.
+#
+# Both features end up enabled because the workspace mixes reqwest majors:
+# pact_matching/pact_models use reqwest 0.12 "rustls-tls-native-roots" (ring),
+# while pact_ffi/pact_verifier/pact_consumer use reqwest 0.13 "rustls", whose
+# definition is ["__rustls-aws-lc-rs", ...] — so it drags in aws-lc-rs. Cargo
+# unions the two and rustls sees both.
+#
+# pact_mock_server depends on rustls/ring directly and implements the TLS mock
+# server, so ring is the provider to keep. reqwest 0.13 exposes
+# "rustls-no-provider", which is "rustls" minus the forced backend — switching to
+# it leaves ring as the only provider (and drops the aws-lc-sys C build).
+#
+# This is patched here rather than in the submodule because the checkout above
+# resets it on every run. Remove once fixed upstream in pact-reference.
+##############################################
+
+function pin_rustls_to_ring {
+  local manifests=(
+    "pact_ffi/Cargo.toml"
+    "pact_verifier/Cargo.toml"
+    "pact_consumer/Cargo.toml"
+  )
+  local manifest
+
+  for manifest in "${manifests[@]}"; do
+    local path="$LIBPACT_RUST_DIR/$manifest"
+
+    if [ ! -f "$path" ]; then
+      die "'$path' not found — the pact-reference layout changed, so the rustls provider patch needs revisiting."
+    fi
+
+    # Only rewrite the reqwest line, and only the exact "rustls" feature entry.
+    if grep -q '^reqwest = .*"rustls"' "$path"; then
+      executeCommand "sed -i '' 's/^\(reqwest = .*\)\"rustls\"/\1\"rustls-no-provider\"/' \"$path\""
+      echo "🔧 Pinned reqwest to 'rustls-no-provider' in $manifest"
+    elif grep -q '^reqwest = .*"rustls-no-provider"' "$path"; then
+      echo "ℹ️ $manifest already uses 'rustls-no-provider'"
+    else
+      echo "⚠️ $manifest has no plain reqwest \"rustls\" feature — upstream may have fixed this already."
+    fi
+  done
+}
+
+# Fail the build rather than ship a binary that aborts the moment a TLS mock
+# server starts.
+function verify_single_rustls_provider {
+  local features
+  features=$(cd "$LIBPACT_RUST_DIR" && cargo tree --edges no-dev --format "{f}" -p rustls 2>/dev/null | head -1)
+
+  echo "ℹ️ rustls features resolved to: ${features:-<none>}"
+
+  case "$features" in
+    *aws-lc-rs*|*aws_lc_rs*)
+      die "rustls still has an aws-lc-rs feature enabled alongside ring.
+  A TLS mock server will panic and abort the test process.
+  Run 'cargo tree --edges no-dev,features -i rustls' in $LIBPACT_RUST_DIR to find what enables it."
+      ;;
+  esac
+}
+
+pin_rustls_to_ring
+verify_single_rustls_provider
+
+##############################################
 # Optional clean build
 ##############################################
 

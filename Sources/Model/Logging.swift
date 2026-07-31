@@ -212,9 +212,21 @@ private extension Logging.Sink {
 }
 
 public extension Array where Element == Logging.Sink.Config {
+
+    /// Default sinks.
+    ///
+    /// The buffer sink deliberately filters at ``Logging/Filter/debug`` rather than
+    /// ``Logging/Filter/trace``. At `trace` the underlying Pact library logs entire request and
+    /// response bodies, and for a binary body that is slow enough that a mock server can still be
+    /// recording the match when `pactffi_mock_server_matched` is polled — the interaction then gets
+    /// reported as a missing request even though it matched.
+    ///
+    /// - Note: Raise this to `trace` only when
+    /// debugging the Pact library itself, and expect binary body interactions to be flaky if you do.
+    ///
     static let defaultSinks: Self = [
         Element(.standardError, filter: .info),
-        Element(.buffer, filter: .trace),
+        Element(.buffer, filter: .debug),
     ]
 }
 

@@ -85,6 +85,20 @@ function execute_cmd {
   fi
 }
 
+# Report something a dry run deliberately does not do.
+#
+# 'execute_cmd' only covers work expressed as a command string. File edits, copies
+# and the nested build scripts are plain shell, so each of those needs an explicit
+# guard or a --dry-run would still rewrite tracked files and rebuild everything.
+function dry_run_skip {
+  echo -e "${CYAN}DRY RUN:$NOCOLOR $*"
+}
+
+# True when the run must not touch anything on disk.
+function is_dry_run {
+  [ "$DRY_RUN" = true ]
+}
+
 function pause_execution_and_cleanup {
   local should_pause=$1
   #local command="git clean -fdx && git checkout $CURRENT_BRANCH && git reset --hard HEAD~1"
@@ -102,6 +116,13 @@ function update_manifest_file_with_version_and_checksum {
     new_version_url=$(get_new_version_url "$VERSION_TAG")
     new_checksum=$(get_new_checksum)
 
+    if is_dry_run; then
+      dry_run_skip "would update $package_file with"
+      echo "             url:      $new_version_url"
+      echo "             checksum: $new_checksum"
+      return 0
+    fi
+
     sed -i '' \
       -e "s|url: \".*\"|url: \"$new_version_url\"|" \
       -e "s|checksum: \".*\"|checksum: \"$new_checksum\"|" \
@@ -110,7 +131,15 @@ function update_manifest_file_with_version_and_checksum {
 
 function get_new_checksum {
   if [ -z "$NEW_VERSION_CHECKSUM" ]; then
-    NEW_VERSION_CHECKSUM=$(swift package compute-checksum "$VERSIONED_XCFRAMEWORK_NAME.zip")
+    # A dry run does not build the XCFramework, so there is no archive to hash.
+    # Return an obvious placeholder rather than failing, so the rest of the flow
+    # can still be exercised — and so nobody mistakes it for a real checksum.
+    if is_dry_run && [ ! -f "$VERSIONED_XCFRAMEWORK_NAME.zip" ]; then
+      NEW_VERSION_CHECKSUM="0000000000000000000000000000000000000000000000000000000000000000"
+      dry_run_skip "no $VERSIONED_XCFRAMEWORK_NAME.zip to hash — using placeholder checksum" >&2
+    else
+      NEW_VERSION_CHECKSUM=$(swift package compute-checksum "$VERSIONED_XCFRAMEWORK_NAME.zip")
+    fi
   fi
   echo "$NEW_VERSION_CHECKSUM"
 }
@@ -132,6 +161,12 @@ function git_check_clean_state {
 
   if git diff-index --quiet HEAD --; then
     echo "👍 Working directory is clean."
+  elif is_dry_run; then
+    # A dry run writes nothing, so a dirty tree cannot corrupt a release. Refusing
+    # to run here would make it impossible to rehearse a release while working on
+    # the very changes being released.
+    echo -e "⚠️ ${YELLOW}Working directory contains changes.$NOCOLOR A real release will refuse to start:"
+    git status --short | sed 's/^/     /'
   else
     die "Working directory contains changes! Commit, stash or reset changes and try again."
   fi
@@ -178,9 +213,18 @@ function git_commit_changelog_to_xcframework_submodule {
   local package_file="Package.swift"
   local version_tag=$VERSION_TAG
 
-  {
+  # A subshell, so the working directory is restored however this exits. The old
+  # form relied on a 'cd -' that was itself wrapped in execute_cmd, meaning a dry
+  # run entered the submodule and never came back out — every later step then ran
+  # against the wrong directory.
+  (
     echo -e "📝 Copying ${YELLOW}$changelog_file$NOCOLOR to $YELLOW$SUBMODULE_XCFRAMEWORK$NOCOLOR submodule..."
-    cp "$changelog_file" "$SUBMODULE_XCFRAMEWORK/$changelog_file"
+    if is_dry_run; then
+      dry_run_skip "would copy $changelog_file to $SUBMODULE_XCFRAMEWORK/$changelog_file"
+    else
+      cp "$changelog_file" "$SUBMODULE_XCFRAMEWORK/$changelog_file"
+    fi
+
     cd "$SUBMODULE_XCFRAMEWORK"
 
     # Update Package.swift with the new version and checksum
@@ -198,8 +242,7 @@ function git_commit_changelog_to_xcframework_submodule {
     execute_cmd "git tag -a \"$version_tag\" -m \"Release: $version_tag\""
     execute_cmd "git push origin main"
     execute_cmd "git push origin \"$version_tag\""
-    execute_cmd "cd -"
-  }
+  )
 }
 
 function git_update_main_repo_with_submodule_reference {
@@ -251,6 +294,12 @@ function github_create_pull_request_for_new_version {
 function update_version_file {
   local marketing_version="MARKETING_VERSION = $1"
   local config_file=$CONFIGURATION_FILE
+
+  if is_dry_run; then
+    dry_run_skip "would set line 2 of $config_file to '$marketing_version' (currently '$(sed -n '2p' "$config_file")')"
+    return 0
+  fi
+
   sed -i '' "2s/.*/$marketing_version/" "$config_file"
 }
 
@@ -286,7 +335,21 @@ function update_pactswiftmockserver_changelog {
   local release_notes_existing=
   release_notes_existing=$(tail -n +2 "$CHANGE_LOG")
 
-  # Inject the new commits between title and last release
+  # Inject the new commits between title and last release.
+  #
+  # $CHANGE_LOG is tracked, so a dry run must not rewrite it — $TAG_MESSAGE_FILE is
+  # gitignored and still written, since the release notes are worth seeing and
+  # nothing tracked depends on it.
+  if is_dry_run; then
+    dry_run_skip "would prepend the section below to $CHANGE_LOG (left untouched)"
+    echo "-----------------"
+    echo "## ${VERSION_TAG}"
+    echo
+    cat "${TAG_MESSAGE_FILE}"
+    echo "-----------------"
+    return 0
+  fi
+
   {
     echo "$release_notes_title"
     echo
@@ -428,7 +491,18 @@ git_checkout_new_release_candidate_branch "$VERSION_BRANCH"
 pause_execution_and_cleanup $SHOULD_PAUSE_SCRIPT_EXECUTION
 
 # Build libpact_ffi dependencies (if needed)
-if [ "$SHOULD_BUILD_RUST_BIN" = true ]; then
+#
+# Skipped on a dry run: it rewrites Resources/, checks out the pact-reference
+# submodule and takes minutes. It would also be built against the un-bumped
+# MARKETING_VERSION, since a dry run leaves the xcconfig alone.
+if is_dry_run; then
+  if [ "$SHOULD_BUILD_RUST_BIN" = true ]; then
+    dry_run_skip "would build libpact_ffi binaries via CI/build_rust_dependencies"
+  else
+    dry_run_skip "would skip the libpact_ffi build (--skip-rust-build) and ship Resources/ as-is"
+  fi
+  pause_execution_and_cleanup $SHOULD_PAUSE_SCRIPT_EXECUTION
+elif [ "$SHOULD_BUILD_RUST_BIN" = true ]; then
   echo "🏗️ Building libpact_ffi binaries..."
   eval "$RELEASE_SOURCE_DIR/CI/build_rust_dependencies"
   pause_execution_and_cleanup $SHOULD_PAUSE_SCRIPT_EXECUTION
@@ -451,8 +525,16 @@ else
 fi
 
 # Building the XCFramework
-echo "🏗️ Building new XCFramework..."
-eval "$RELEASE_SOURCE_DIR/CI/build_xcframework" "$VERSION_TAG"
+#
+# Also skipped on a dry run: it runs three xcodebuild archives and produces the
+# zip that the checksum is taken from. See get_new_checksum for the placeholder
+# used in its place.
+if is_dry_run; then
+  dry_run_skip "would build the XCFramework via CI/build_xcframework $VERSION_TAG"
+else
+  echo "🏗️ Building new XCFramework..."
+  eval "$RELEASE_SOURCE_DIR/CI/build_xcframework" "$VERSION_TAG"
+fi
 pause_execution_and_cleanup $SHOULD_PAUSE_SCRIPT_EXECUTION
 
 # Create a checksum for the new XCFramework
@@ -498,15 +580,22 @@ pause_execution_and_cleanup $SHOULD_PAUSE_SCRIPT_EXECUTION
 ##################
 
 if [ "$DRY_RUN" = true ]; then
-  echo "🍸 Dry run done..."
-  read -r -p "Clean up what has been generated during dry run? [Y/n]" -n 1 USER_INPUT
-  echo
-  if [[ $USER_INPUT =~ ^[Yy]$ ]]; then
-    cleanup
-  else
-    echo "🙌 Leaving everything that's been generated during dry run as is..."
-    exit 0
+  # Nothing tracked was changed, no branch was created and nothing was pushed, so
+  # there is nothing for 'cleanup' to undo. Offering it here was misleading: its
+  # steps are themselves routed through execute_cmd, so answering "yes" only
+  # printed 'git clean -fdx' and friends without ever reverting the edits the dry
+  # run used to leave behind.
+  echo "🍸 Dry run done — no files, branches, tags or releases were changed."
+
+  # The one artefact a dry run does create. It is gitignored, but leaving it
+  # behind makes the next run look like it has stale notes.
+  if [ -f "$TAG_MESSAGE_FILE" ]; then
+    rm -f "$TAG_MESSAGE_FILE"
+    echo "🚮 Removed $TAG_MESSAGE_FILE"
   fi
+
+  echo -e "👉 Verify the output above, then re-run without ${YELLOW}--dry-run$NOCOLOR to release."
+  exit 0
 else
   cleanup
 fi

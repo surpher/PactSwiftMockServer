@@ -33,10 +33,41 @@ Usage: ${0##*/} [options]
 Builds the libpact_ffi.a binaries (arm64) for iOS, iOS Simulator, and Darwin.
 
 Options:
-  --clean-build   Run 'cargo clean' in the pact-reference submodule before building
-  -h, --help      Show this help message and exit
+  --clean-build             Run 'cargo clean' in the pact-reference submodule before building
+  --skip-submodule-update   Build the pact-reference submodule exactly as it is on disk: no
+                            'git submodule update', no checkout of the tag in
+                            'libpact_ffi.version', and no patching of its manifests.
+                            Use this to build a local branch or uncommitted changes, e.g. when
+                            preparing a fix to send upstream. The binaries produced will NOT
+                            correspond to the pinned libpact_ffi version, so don't release them.
+  -h, --help                Show this help message and exit
 EOF
 }
+
+# Parsed before anything with side effects: the submodule checkout and the rustup
+# installs below both act on the machine, and '--help' should not trigger either.
+CLEAN_BUILD=false
+SKIP_SUBMODULE_UPDATE=false
+
+for arg in "$@"; do
+  case "$arg" in
+    --clean-build)
+      CLEAN_BUILD=true
+      ;;
+    --skip-submodule-update)
+      SKIP_SUBMODULE_UPDATE=true
+      ;;
+    -h|--help)
+      print_usage
+      exit 0
+      ;;
+    *)
+      echo "🚨 Unknown argument: $arg"
+      print_usage
+      exit 1
+      ;;
+  esac
+done
 
 ########################
 #
@@ -166,9 +197,21 @@ function install_libpact_ffi {
 
   # A merge that silently dropped the Lua objects would only surface much later,
   # as a link failure in Xcode, so assert one symbol is really there.
-  if ! nm -g "$destination" 2>/dev/null | grep -q 'T _lua_yieldk$'; then
+  #
+  # nm's output is dumped to a file rather than piped: it exits non-zero on these
+  # archives because it cannot read the LLVM bitcode that rustc emits for some
+  # objects ("Unknown attribute kind"), and under 'set -o pipefail' that failure
+  # would mask a successful grep and fail the build on a perfectly good binary.
+  local symbol_dump
+  symbol_dump=$(mktemp -t libpact_ffi_symbols)
+  nm -g "$destination" >"$symbol_dump" 2>/dev/null || true
+
+  if ! grep -q 'T _lua_yieldk$' "$symbol_dump"; then
+    rm -f "$symbol_dump"
     die "'$destination' still has no Lua symbols after merging '$lua_lib'."
   fi
+
+  rm -f "$symbol_dump"
 }
 
 function log_binary_validation {
@@ -240,16 +283,37 @@ log_build_environment "$LOGS_DIR/build_environment.log"
 # Rust codebase prep
 ####################################
 
-# Update pact-reference submodule
-echo "🔃 Updating pact-reference submodule"
-executeCommand "git submodule update --remote --recursive"
+if [ "$SKIP_SUBMODULE_UPDATE" = true ]; then
+  echo "⏭️  --skip-submodule-update passed — using the pact-reference submodule as-is"
+  echo "⚠️ ${YELLOW}These binaries will not match ${LIBPACT_FFI_VERSION} — do not cut a release from them.$NOCOLOR"
 
-echo "ℹ️ Changing location to ${LIBPACT_FFI_DIR}"
-executeCommand "cd $LIBPACT_FFI_DIR"
+  # Record what actually got built. Without this the provenance of the resulting
+  # binaries is unknowable, which matters precisely because they are off-version.
+  echo "ℹ️ Submodule HEAD:  $(git -C "$LIBPACT_RUST_DIR" rev-parse --short HEAD 2>/dev/null || echo unknown)"
+  echo "ℹ️ Submodule ref:   $(git -C "$LIBPACT_RUST_DIR" describe --tags --always --dirty 2>/dev/null || echo unknown)"
 
-echo "ℹ️ Checking out ${LIBPACT_FFI_VERSION}"
-executeCommand "git fetch --all --tags"
-executeCommand "git checkout tags/$LIBPACT_FFI_VERSION"
+  local_changes=$(git -C "$LIBPACT_RUST_DIR" status --porcelain 2>/dev/null || true)
+  if [ -n "$local_changes" ]; then
+    echo "ℹ️ Uncommitted changes in the submodule:"
+    echo "$local_changes" | sed 's/^/     /'
+  else
+    echo "ℹ️ Submodule working tree is clean"
+  fi
+
+  echo "ℹ️ Changing location to ${LIBPACT_FFI_DIR}"
+  executeCommand "cd $LIBPACT_FFI_DIR"
+else
+  # Update pact-reference submodule
+  echo "🔃 Updating pact-reference submodule"
+  executeCommand "git submodule update --remote --recursive"
+
+  echo "ℹ️ Changing location to ${LIBPACT_FFI_DIR}"
+  executeCommand "cd $LIBPACT_FFI_DIR"
+
+  echo "ℹ️ Checking out ${LIBPACT_FFI_VERSION}"
+  executeCommand "git fetch --all --tags"
+  executeCommand "git checkout tags/$LIBPACT_FFI_VERSION"
+fi
 
 ###############################
 # Setup rust environment
@@ -264,25 +328,6 @@ rustup_setDefaultToolchain
 
 # Add the required triples for supported architectures
 rustup_addTargets
-
-CLEAN_BUILD=false
-
-for arg in "$@"; do
-  case "$arg" in
-    --clean-build)
-      CLEAN_BUILD=true
-      ;;
-    -h|--help)
-      print_usage
-      exit 0
-      ;;
-    *)
-      echo "🚨 Unknown argument: $arg"
-      print_usage
-      exit 1
-      ;;
-  esac
-done
 
 ##############################################
 # Pin rustls to a single crypto provider
@@ -340,7 +385,9 @@ function pin_rustls_to_ring {
 # server starts.
 function verify_single_rustls_provider {
   local features
-  features=$(cd "$LIBPACT_RUST_DIR" && cargo tree --edges no-dev --format "{f}" -p rustls 2>/dev/null | head -1)
+  # '|| true' guards against 'set -o pipefail': cargo can be SIGPIPE'd by head,
+  # which would otherwise abort the script under 'set -e'.
+  features=$(cd "$LIBPACT_RUST_DIR" && cargo tree --edges no-dev --format "{f}" -p rustls 2>/dev/null | head -1 || true)
 
   echo "ℹ️ rustls features resolved to: ${features:-<none>}"
 
@@ -353,7 +400,17 @@ function verify_single_rustls_provider {
   esac
 }
 
-pin_rustls_to_ring
+# With --skip-submodule-update the submodule is the thing being worked on, so the
+# script must not rewrite its manifests underneath you — that would pollute the
+# diff you are about to commit or send upstream. The check below still runs, so a
+# provider conflict is reported either way rather than shipping a binary that
+# aborts as soon as a TLS mock server starts.
+if [ "$SKIP_SUBMODULE_UPDATE" = true ]; then
+  echo "⏭️  Not patching submodule manifests (--skip-submodule-update)"
+else
+  pin_rustls_to_ring
+fi
+
 verify_single_rustls_provider
 
 ##############################################

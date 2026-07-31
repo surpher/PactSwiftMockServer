@@ -105,6 +105,72 @@ function log_build_environment {
   } >> "$output_file"
 }
 
+##############################################
+# Vendored Lua
+#
+# pact_ffi depends on pact_plugin_driver -> mlua -> mlua-sys, and mlua-sys
+# compiles Lua from source into its own 'liblua5.4.a', then asks Cargo to link
+# it via 'cargo:rustc-link-lib=static=lua5.4'. Cargo only honours that directive
+# when it links a final binary; a '--crate-type staticlib' archive holds only
+# the objects of this crate graph, so every '_lua*'/'_luaopen_*' symbol is left
+# undefined and the consuming Xcode target dies with
+# "ld: symbol(s) not found for architecture arm64".
+#
+# onig_sys needs no such treatment: it compiles its C directly into the crate's
+# own objects instead of handing Cargo a prebuilt archive.
+#
+# So the two archives have to be merged by hand, per target triple.
+##############################################
+
+# Echo the path to the most recently built liblua5.4.a for a target triple,
+# or an empty string when there is none.
+function find_lua_archive {
+  local target="$1"
+  local build_dir="$LIBPACT_RUST_DIR/target/$target/release/build"
+  local newest=""
+  local candidate
+
+  # The build directory carries a cargo hash that changes between builds, and
+  # stale hashes are left behind, so glob and keep the newest match.
+  for candidate in $(find "$build_dir" -type f -name 'liblua5.4.a' -path '*mlua-sys*' 2>/dev/null); do
+    if [ -z "$newest" ] || [ "$candidate" -nt "$newest" ]; then
+      newest="$candidate"
+    fi
+  done
+
+  echo "$newest"
+}
+
+# Merge a target's libpact_ffi.a with its vendored liblua5.4.a, writing the
+# single self-contained archive to $2.
+function install_libpact_ffi {
+  local target="$1"
+  local destination="$2"
+  local ffi_lib="$LIBPACT_RUST_DIR/target/$target/release/libpact_ffi.a"
+  local lua_lib
+
+  if [ ! -f "$ffi_lib" ]; then
+    die "'$ffi_lib' not found — the cargo build for $target did not produce a static library."
+  fi
+
+  lua_lib="$(find_lua_archive "$target")"
+  if [ -z "$lua_lib" ]; then
+    die "No 'liblua5.4.a' found for $target under $LIBPACT_RUST_DIR/target/$target/release/build.
+  mlua-sys builds Lua into a separate archive that has to be merged into libpact_ffi.a,
+  otherwise linking PactSwiftMockServer fails on undefined '_lua*' symbols."
+  fi
+
+  # libtool warns about the (harmless) objects in libpact_ffi.a that carry no
+  # symbols; stderr is left alone so real failures stay visible.
+  executeCommand "xcrun libtool -static -o \"$destination\" \"$ffi_lib\" \"$lua_lib\""
+
+  # A merge that silently dropped the Lua objects would only surface much later,
+  # as a link failure in Xcode, so assert one symbol is really there.
+  if ! nm -g "$destination" 2>/dev/null | grep -q 'T _lua_yieldk$'; then
+    die "'$destination' still has no Lua symbols after merging '$lua_lib'."
+  fi
+}
+
 function log_binary_validation {
   mkdir -p "$LOGS_DIR"
   local output_file="$1"
@@ -259,29 +325,25 @@ executeCommand "cd .."
 # Pact Mock Server
 #######################
 
-# Copy the compiled binaries into PactSwiftMockServer project
-echo "🏗 Copying binaries from ${PWD} to ${WORKSPACE}/Resources"
+# Copy the compiled binaries into PactSwiftMockServer project, merging each one
+# with its vendored liblua5.4.a on the way (see "Vendored Lua" above).
+echo "🏗 Copying binaries from ${LIBPACT_RUST_DIR}/target to ${WORKSPACE}/Resources"
 
-# Copy binary for an iOS device
+# Binary for an iOS device
 echo "🚚 Copying arm64-ios (iOS device) binary..."
-executeCommand "cp ../target/aarch64-apple-ios/release/libpact_ffi.a \
-  $WORKSPACE/Resources/iOS-device/libpact_ffi.a"
+install_libpact_ffi "$TARGET_ARM64_IOS" "$WORKSPACE/Resources/iOS-device/libpact_ffi.a"
 echo -e "${GREEN}👍  Copied arm64-ios binary.$NOCOLOR"
-
-echo "warning: iOS device binary is not copied as it fails to build from Rust file..."
 echo
 
-# Copy binary for iOS Simulator to workspace
+# Binary for iOS Simulator
 echo "🚚 Copying arm64 binary for iOS Simulator..."
-executeCommand "cp ../target/aarch64-apple-ios-sim/release/libpact_ffi.a \
-  $WORKSPACE/Resources/iOS-simulator/libpact_ffi.a"
+install_libpact_ffi "$TARGET_ARM64_IOS_SIM" "$WORKSPACE/Resources/iOS-simulator/libpact_ffi.a"
 echo -e "${GREEN}👍 Copied arm64-ios-sim binary.$NOCOLOR"
 echo
 
-# Copy darwin binary to workspace
+# Binary for Darwin
 echo "🚚 Copying arm64-darwin binary..."
-executeCommand "cp  ../target/aarch64-apple-darwin/release/libpact_ffi.a \
-  $WORKSPACE/Resources/darwin/libpact_ffi.a"
+install_libpact_ffi "$TARGET_ARM64_DARWIN" "$WORKSPACE/Resources/darwin/libpact_ffi.a"
 echo -e "👍 ${GREEN}Copied darwin and arm64-darwin fattie.$NOCOLOR"
 echo
 
